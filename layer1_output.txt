@@ -1,0 +1,52 @@
+### Explanation
+A quadratic equation is an equation where the highest power of the variable is 2.  
+Its standard form is ax^2 + bx + c = 0. Here a, b, c are constants and a ≠ 0.
+
+Key parts:
+- a is the quadratic coefficient.  
+- b is the linear coefficient.  
+- c is the constant term.
+
+Ways to solve a quadratic:
+1. Factoring. Find two numbers that multiply to a·c and add to b. Then split and factor by grouping. This works when factors are simple integers.
+2. Completing the square. Rewrite the left side as a perfect square. Then take square roots. This always works and leads to the quadratic formula.
+3. Quadratic formula. Use x = [-b ± sqrt(b^2 − 4ac)] / (2a). This always gives the exact roots.
+4. Graphing. The graph is a parabola. Its vertex and intercepts help find solutions.
+
+Discriminant (Δ) = b^2 − 4ac. It tells the root types:
+- Δ > 0 → two distinct real roots.  
+- Δ = 0 → one real root (double root).  
+- Δ < 0 → two complex (non-real) conjugate roots.
+
+Other useful facts:
+- The axis of symmetry is x = −b/(2a).  
+- The parabola opens up if a > 0, and down if a < 0.  
+- Always check that a ≠ 0. If a = 0 the equation is linear, not quadratic.
+
+Exam tips:
+- Write the equation in standard form first.  
+- Compute the discriminant to decide the method.  
+- Watch signs while plugging into the formula.  
+- Simplify radicals if possible.
+
+### Example
+Solve x^2 − 5x + 6 = 0.
+
+Method 1 — Factoring:
+Find numbers that multiply to 6 and add to −5. They are −2 and −3.
+So x^2 − 5x + 6 = (x − 2)(x − 3) = 0.
+Hence x = 2 or x = 3.
+
+Method 2 — Quadratic formula:
+a = 1, b = −5, c = 6.
+Δ = b^2 − 4ac = 25 − 24 = 1.
+x = [−b ± √Δ] / (2a) = [5 ± 1] / 2.
+So x = (5+1)/2 = 3 or x = (5−1)/2 = 2.
+
+Both methods give x = 2 and x = 3.
+
+### Summary
+A quadratic has form ax^2 + bx + c = 0 with a ≠ 0.  
+Use factoring, completing the square, or the quadratic formula x = [−b ± √(b^2−4ac)]/(2a).  
+The discriminant Δ = b^2 − 4ac tells you how many and what type of roots to expect.  
+The parabola’s axis is x = −b/(2a) and it opens up when a > 0.

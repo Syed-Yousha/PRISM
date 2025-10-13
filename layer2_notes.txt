@@ -1,0 +1,56 @@
+### Frame 1 – Topic Introduction
+- Quadratic equation → highest power = 2
+- Standard form → ax^2 + bx + c = 0  (a ≠ 0)
+- Visual → parabola (graph of y = ax^2 + bx + c)
+
+### Frame 2 – Parts & quick checks
+- a → quadratic coefficient  
+- b → linear coefficient  
+- c → constant term  
+- Quick exam check → ensure a ≠ 0 (otherwise linear)
+
+### Frame 3 – Main methods to solve
+- Factoring → quick when integer factors exist  
+- Completing the square → always works; rewrites as (x + p)^2 = q  
+- Quadratic formula → always works: x = [−b ± √(b^2 − 4ac)] / (2a)  
+- Graphing → use intercepts & vertex for visual understanding
+
+### Frame 4 – Discriminant (root nature)
+- Δ = b^2 − 4ac
+  → Δ > 0 : two distinct real roots  
+  → Δ = 0 : one real double root  
+  → Δ < 0 : two complex conjugate roots
+
+### Frame 5 – Parabola geometry
+- Axis of symmetry → x = −b/(2a)  
+- Vertex → (−b/(2a), f(−b/(2a)))  
+- Opens up if a > 0, opens down if a < 0
+
+### Frame 6 – Example: x^2 − 5x + 6 = 0 (factoring)
+- Look for numbers → multiply = 6, add = −5 → −2 and −3  
+- Factor → (x − 2)(x − 3) = 0  
+- Roots → x = 2, x = 3
+
+### Frame 7 – Same example: quadratic formula
+- a = 1, b = −5, c = 6  
+- Δ = (−5)^2 − 4·1·6 = 25 − 24 = 1  
+- x = [−(−5) ± √1] / (2·1) = (5 ± 1)/2 → x = 3 or 2
+
+### Frame 8 – Completing the square (fast sketch)
+- Start: ax^2 + bx + c = 0 → divide by a  
+- Form: x^2 + (b/a)x = −c/a  
+- Add (b/2a)^2 both sides → (x + b/2a)^2 = ...  
+- Take square roots → leads to quadratic formula
+
+### Frame 9 – Exam tips & checklist
+- Put into standard form first.  
+- Compute Δ to choose method.  
+- Watch signs when plugging into formula.  
+- Simplify radicals.  
+- If stuck → try completing the square or formula.
+
+### Frame 10 – Quick summary
+- Core formula → x = [−b ± √(b^2 − 4ac)]/(2a)  
+- Use Δ to predict root types.  
+- Remember axis x = −b/(2a) and a ≠ 0.  
+- Practice factoring speed + formula accuracy.
