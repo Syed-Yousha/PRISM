@@ -66,7 +66,7 @@ def get_random_var_label_group(axis, label_name, color=GREY, initial_value=None,
     return Group(tracker, tip, label)
 
 
-class MaxProcess(InteractiveScene):
+class MaxProcess(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up intervals
         intervals = VGroup(UnitInterval() for _ in range(3))
@@ -145,7 +145,7 @@ class MaxProcess(InteractiveScene):
         )
 
 
-class SqrtProcess(InteractiveScene):
+class SqrtProcess(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # A fair bit of copy pasting from above
         # Set up intervals
@@ -201,7 +201,7 @@ class SqrtProcess(InteractiveScene):
         )
 
 
-class SquareAndSquareRoot(InteractiveScene):
+class SquareAndSquareRoot(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         lines = VGroup(
@@ -219,7 +219,7 @@ class SquareAndSquareRoot(InteractiveScene):
         ))
 
 
-class GawkAtEquivalence(InteractiveScene):
+class GawkAtEquivalence(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         expr = VGroup(
@@ -241,7 +241,7 @@ class GawkAtEquivalence(InteractiveScene):
         self.wait()
 
 
-class VisualizeMaxOfPairCDF(InteractiveScene):
+class VisualizeMaxOfPairCDF(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Setup axes and trackers
         axes = Axes((0, 1, 0.1), (0, 1, 0.1), width=6, height=6)
@@ -320,8 +320,8 @@ class VisualizeMaxOfPairCDF(InteractiveScene):
         coord_label.update()
 
         self.play(
-            ShowCreation(v_line),
-            ShowCreation(h_line),
+            Create(v_line),
+            Create(h_line),
             FadeIn(xy_dot),
             FadeIn(coord_label[0::3]),
             FadeTransform(x1_label.copy(), coord_label["x_1"], remover=True),
@@ -364,7 +364,7 @@ class VisualizeMaxOfPairCDF(InteractiveScene):
             self.add(line, xy_dot)
             self.play(
                 tracker.animate.set_value(0),
-                ShowCreation(line),
+                Create(line),
                 run_time=3
             )
             self.play(tracker.animate.set_value(0.7), run_time=3)
@@ -557,7 +557,7 @@ class VisualizeMaxOfPairCDF(InteractiveScene):
         )
 
 
-class MaxOfThreeTex(InteractiveScene):
+class MaxOfThreeTex(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         expr = TexText(R"max(rand(), rand(), rand()) $\leftrightarrow$ rand()$^{1 / 3}$")
@@ -566,7 +566,7 @@ class MaxOfThreeTex(InteractiveScene):
         self.wait()
 
 
-class Arrows(InteractiveScene):
+class Arrows(Scene)  # Changed from InteractiveScene:
     def construct(self):
         arrows = Vector(DOWN, thickness=5).replicate(3)
         arrows.arrange(RIGHT, buff=1.0)

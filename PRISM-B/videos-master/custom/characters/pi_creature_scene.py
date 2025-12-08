@@ -3,24 +3,23 @@ from collections.abc import Iterable
 
 import random
 
-from manimlib.animation.transform import ReplacementTransform
-from manimlib.animation.transform import Transform
-from manimlib.animation.transform import ApplyMethod
-from manimlib.animation.composition import LaggedStart
-from manimlib.animation.fading import FadeIn
-from manimlib.animation.fading import FadeTransform
-from manimlib.constants import *
-from manimlib.mobject.mobject import Group
-from manimlib.mobject.frame import ScreenRectangle
-from manimlib.mobject.frame import FullScreenFadeRectangle
-from manimlib.mobject.svg.drawings import SpeechBubble
-from manimlib.mobject.svg.drawings import ThoughtBubble
-from manimlib.mobject.types.vectorized_mobject import VGroup
-from manimlib.scene.interactive_scene import InteractiveScene
-from manimlib.scene.scene import Scene
-from manimlib.utils.rate_functions import squish_rate_func
-from manimlib.utils.rate_functions import there_and_back
-from manimlib.utils.space_ops import get_norm
+from manim.animation.transform import ReplacementTransform
+from manim.animation.transform import Transform
+from manim.animation.transform import ApplyMethod
+from manim.animation.composition import LaggedStart
+from manim.animation.fading import FadeIn
+from manim.animation.fading import FadeTransform
+from manim import *
+from manim.mobject.mobject import Group
+from manim.mobject.frame import ScreenRectangle
+from manim.mobject.frame import FullScreenFadeRectangle
+from manim.mobject.svg.drawings import SpeechBubble
+from manim.mobject.svg.drawings import ThoughtBubble
+from manim.mobject.types.vectorized_mobject import VGroup
+from manim.scene.scene import Scene  # Changed from InteractiveScene to Scene
+from manim.utils.rate_functions import squish_rate_func
+from manim.utils.rate_functions import there_and_back
+from manim.utils.space_ops import get_norm
 
 from custom.characters.pi_creature import Mortimer
 from custom.characters.pi_creature import PiCreature
@@ -31,10 +30,10 @@ from custom.characters.pi_creature_animations import RemovePiCreatureBubble
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from manimlib.typing import ManimColor, Vect3
+    from manim import ManimColor, Vect3
 
 
-class PiCreatureScene(InteractiveScene):
+class PiCreatureScene(Scene):  # Changed from InteractiveScene to Scene
     total_wait_time: float = 0
     seconds_to_blink: float = 3
     pi_creatures_start_on_screen: bool = True

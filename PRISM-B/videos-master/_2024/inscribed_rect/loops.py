@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from manimlib.typing import Vect3, Vect4
 
 
-class LoopScene(InteractiveScene):
+class LoopScene(Scene)  # Changed from InteractiveScene:
     def get_dot_group(
         self,
         vect_tracker: ValueTracker,
@@ -100,7 +100,7 @@ class StateThePuzzle(LoopScene):
         curve_words.to_edge(LEFT)
 
         self.play(
-            ShowCreation(loop),
+            Create(loop),
             Write(curve_words, time_span=(3, 5)),
             run_time=9
         )
@@ -120,7 +120,7 @@ class StateThePuzzle(LoopScene):
         self.play(quad_tracker.animate.set_value(square_params), run_time=3)
         polygon.update()
         self.add(polygon, dots)
-        self.play(ShowCreation(polygon, suspend_mobject_updating=True))
+        self.play(Create(polygon, suspend_mobject_updating=True))
         self.play(
             Write(inscribed_words),
             FadeOut(curve_words, LEFT)
@@ -217,7 +217,7 @@ class StateThePuzzle(LoopScene):
 
         self.play(
             FadeOut(title, UP),
-            ShowCreation(red_line)
+            Create(red_line)
         )
         self.play(
             VGroup(square_word, red_line).animate.shift(0.75 * DOWN),
@@ -304,7 +304,7 @@ class ReframeToPairsOfPoints(LoopScene):
         self.play(quad_tracker.animate.set_value(rect_params), run_time=8)
         polygon.update()
         self.play(
-            ShowCreation(polygon, suspend_mobject_updating=True),
+            Create(polygon, suspend_mobject_updating=True),
             loop.animate.set_stroke(width=2, opacity=0.5),
             run_time=2
         )
@@ -327,7 +327,7 @@ class ReframeToPairsOfPoints(LoopScene):
             labels[1].animate.set_fill(RED),
         )
         self.wait()
-        self.play(LaggedStartMap(ShowCreation, lines, lag_ratio=0.5))
+        self.play(LaggedStartMap(Create, lines, lag_ratio=0.5))
         self.wait()
 
         # Show the midpoint
@@ -414,7 +414,7 @@ class ReframeToPairsOfPoints(LoopScene):
 
         # Show various rectangles
         polygon.update()
-        self.play(ShowCreation(polygon, suspend_mobject_updating=True))
+        self.play(Create(polygon, suspend_mobject_updating=True))
         for line in [line2, line1, line2]:
             self.play(Rotate(line, 100 * DEG), run_time=4)
         self.wait()
@@ -430,7 +430,7 @@ class ShowTheSurface(LoopScene):
         # Curve
         loop = get_example_loop()
         loop_func = get_quick_loop_func(loop)
-        self.play(ShowCreation(loop, run_time=2))
+        self.play(Create(loop, run_time=2))
 
         # Pair of points
         uv_tracker = ValueTracker([0, 0.5])
@@ -576,7 +576,7 @@ class ShowTheSurface(LoopScene):
             run_time=4
         )
         self.play(
-            ShowCreation(rect),
+            Create(rect),
             loop.animate.set_stroke(width=2)
         )
         self.wait(2)
@@ -680,7 +680,7 @@ class ShowTheSurface(LoopScene):
 
         self.add(abcd_tracker)
         self.play(
-            ShowCreation(rect, suspend_mobject_updating=True),
+            Create(rect, suspend_mobject_updating=True),
         )
         self.wait()
 
@@ -993,7 +993,7 @@ class ChangeTheSurface(ShowTheSurface):
         return surface
 
 
-class ParameterizeTheLoop(InteractiveScene):
+class ParameterizeTheLoop(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up the loop
         loop = get_example_loop(width=5)
@@ -1139,7 +1139,7 @@ class ParameterizeTheLoop(InteractiveScene):
         int_y_group.suspend_updating()
         self.play(
             FadeIn(y_axis),
-            VFadeIn(int_x_group),
+            FadeIn(int_x_group),
             x_axis.animate.shift(y_axis.n2p(0) - x_axis.n2p(0)),
             FadeTransformPieces(loop_y_group.copy(), int_y_group),
             run_time=2
@@ -1186,8 +1186,8 @@ class ParameterizeTheLoop(InteractiveScene):
         coord_lines.suspend_updating()
         self.play(
             FadeIn(square),
-            ShowCreation(v_line),
-            ShowCreation(h_line),
+            Create(v_line),
+            Create(h_line),
             y_tip.animate.flip(UP, about_edge=LEFT),
             x_tip.animate.flip(RIGHT, about_edge=DOWN),
             x_dec.animate.move_to(coord_label[1]),
@@ -1236,13 +1236,13 @@ class ParameterizeTheLoop(InteractiveScene):
         self.play(xy_tracker.animate.set_value([0, 0]), run_time=2)
         self.play(
             frame.animate.set_height(9),
-            ShowCreation(left_edge),
+            Create(left_edge),
             xy_tracker.animate.set_value([0, 1]),
             run_time=12
         )
         xy_tracker.set_value([1, 0])
         self.play(
-            ShowCreation(right_edge),
+            Create(right_edge),
             xy_tracker.animate.set_value([1, 1]),
             run_time=8
         )
@@ -1272,14 +1272,14 @@ class ParameterizeTheLoop(InteractiveScene):
         xy_tracker.set_value([0, 0])
         self.play(
             xy_tracker.animate.set_value([1, 0]),
-            ShowCreation(bottom_edge),
+            Create(bottom_edge),
             Write(bottom_tips, time_span=(2, 4)),
             run_time=4
         )
         xy_tracker.set_value([0, 1])
         self.play(
             xy_tracker.animate.set_value([1, 1]),
-            ShowCreation(top_edge),
+            Create(top_edge),
             Write(top_tips, time_span=(2, 4)),
             run_time=4
         )
@@ -1443,7 +1443,7 @@ class ParameterizeTheLoop(InteractiveScene):
         fold_line.set_stroke(Color("red"), 2)
 
         self.play(
-            ShowCreation(fold_line),
+            Create(fold_line),
             *map(FadeOut, [v_line, h_line, coord_label, square_point, x_tip, y_tip]),
         )
         self.wait()
@@ -1538,7 +1538,7 @@ class ParameterizeTheLoop(InteractiveScene):
 
         self.add(pieces, old_tris, fold_line)
         self.play(
-            ShowCreation(cut_line),
+            Create(cut_line),
             Write(cut_tips, time_span=(0.5, 1.5)),
             FadeIn(pieces),
             FadeOut(old_tris),
@@ -1678,7 +1678,7 @@ class ParameterizeTheLoop(InteractiveScene):
             FadeIn(torus_point),
         )
         self.play(
-            ShowCreation(torus_fold_line),
+            Create(torus_fold_line),
             xy_tracker.animate.set_value([0.99, 0.99]),
             run_time=5
         )
@@ -1821,7 +1821,7 @@ class DiscussOrderOfPoints(LoopScene):
         self.play(
             FadeOut(loop),
             FadeIn(pair_group2),
-            VFadeIn(rect),
+            FadeIn(rect),
             frame.animate.move_to(mid_dot.get_center() + 0.5 * UP).set_height(6)
         )
         self.play(
@@ -1960,8 +1960,8 @@ class MapTheStripOntoTheSurface(ShowTheSurface):
         edge.set_stroke(width=3)
         loop_copy = loop.copy().set_stroke(opacity=1)
         self.play(
-            ShowCreation(edge),
-            ShowCreation(loop_copy),
+            Create(edge),
+            Create(loop_copy),
             uv_tracker.animate.set_value([0.999, 0.999]),
             run_time=5,
         )
@@ -2044,7 +2044,7 @@ class MapTheStripOntoTheSurface(ShowTheSurface):
             run_time=3,
         )
         self.play(
-            ShowCreation(rectangle, time_span=(0, 2)),
+            Create(rectangle, time_span=(0, 2)),
             frame.animate.reorient(36, 68, 0, (-2.89, -0.15, 0.74), 8.11),
             run_time=8
         )
@@ -2107,7 +2107,7 @@ class GenericLoopPair(ShowTheSurface):
             self.wait(0.5)
 
 
-class SudaneseBand(InteractiveScene):
+class SudaneseBand(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Tranform mobius to Sudanese
         frame = self.frame
@@ -2216,7 +2216,7 @@ class ShowSurfaceReflection(ShowTheSurface):
         self.wait(12)
 
 
-class ConstructKleinBottle(InteractiveScene):
+class ConstructKleinBottle(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add arrow diagram
         square = Square()
@@ -2594,8 +2594,8 @@ class ShowAngleInformation(ShowTheSurface):
         theta.next_to(arc.pfp(0.5), RIGHT, SMALL_BUFF).shift(SMALL_BUFF * UP)
 
         self.play(
-            ShowCreation(h_line),
-            ShowCreation(arc),
+            Create(h_line),
+            Create(arc),
             Write(theta),
         )
 
@@ -2654,7 +2654,7 @@ class ShowAngleInformation(ShowTheSurface):
         self.play(
             FadeOut(brace),
             FadeOut(d_label),
-            ShowCreation(elbow),
+            Create(elbow),
             Write(perp_label),
         )
 
@@ -2677,7 +2677,7 @@ class ShowAngleInformation(ShowTheSurface):
         )
         square.update().suspend_updating()
         square.set_stroke(YELLOW, 3)
-        self.play(ShowCreation(square))
+        self.play(Create(square))
         self.wait()
 
         # Comment on four dimension
@@ -2885,8 +2885,8 @@ class TrackTheAngle(ShowTheSurface):
         theta_label = always_redraw(lambda: self.get_theta_label(connecting_line))
 
         self.play(
-            VFadeIn(theta_label, suspend_mobject_updating=True),
-            VFadeIn(angle_label, suspend_mobject_updating=True),
+            FadeIn(theta_label, suspend_mobject_updating=True),
+            FadeIn(angle_label, suspend_mobject_updating=True),
             FadeOut(line),
             FadeIn(pair_group),
             loop.animate.set_stroke(WHITE, 1, 0.5)
@@ -3032,7 +3032,7 @@ class MobiusStripsAndKleinBottlesIn4D(ConstructKleinBottle):
             )
 
 
-class MusicalIntervalsAsPairs(InteractiveScene):
+class MusicalIntervalsAsPairs(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add piano
         piano = Piano()[:39]
@@ -3093,11 +3093,11 @@ class MusicalIntervalsAsPairs(InteractiveScene):
             FadeOut(piano[:15]),
             keys.animate.set_opacity(0.5),
             FadeOut(piano[27:]),
-            VFadeIn(key_labels),
+            FadeIn(key_labels),
         )
         self.remove(key_labels)
         self.play(
-            ShowCreation(circle),
+            Create(circle),
             LaggedStart(
                 (FadeTransform(Group(key), dot)
                 for key, dot in zip(keys, dots)),

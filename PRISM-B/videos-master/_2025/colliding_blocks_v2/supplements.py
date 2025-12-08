@@ -1,7 +1,7 @@
 from manim_imports_ext import *
 
 
-class ShowPastVideos(InteractiveScene):
+class ShowPastVideos(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Show the video
         title = Text("2019 Video:", font_size=72)
@@ -98,7 +98,7 @@ class ConfettiSpiril(Animation):
         self.mobject.shift(vert_shift * DOWN)
 
 
-class Confetti(InteractiveScene):
+class Confetti(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         num_confetti_squares = 300
@@ -145,14 +145,14 @@ class HappyPiDay(TeacherStudentsScene):
         self.wait(4)
 
 
-class Leftrightarrow(InteractiveScene):
+class Leftrightarrow(Scene)  # Changed from InteractiveScene:
     def construct(self):
         arrow = Tex(R"\longleftrightarrow", font_size=90)
         self.play(GrowFromCenter(arrow, run_time=2))
         self.wait(2)
 
 
-class GroversAlgorithmLabel(InteractiveScene):
+class GroversAlgorithmLabel(Scene)  # Changed from InteractiveScene:
     def construct(self):
         labels = VGroup(
             TexText("Quantum Computing"),
@@ -167,7 +167,7 @@ class GroversAlgorithmLabel(InteractiveScene):
         self.wait()
 
 
-class UnsolvedReference(InteractiveScene):
+class UnsolvedReference(Scene)  # Changed from InteractiveScene:
     def construct(self):
         rect = Rectangle(8, 1.25)
         rect.set_stroke(RED, 4)
@@ -175,11 +175,11 @@ class UnsolvedReference(InteractiveScene):
         label.set_color(RED)
         label.next_to(rect, UP, buff=MED_SMALL_BUFF)
 
-        self.play(ShowCreation(rect), FadeIn(label, 0.25 * UP))
+        self.play(Create(rect), FadeIn(label, 0.25 * UP))
         self.wait()
 
 
-class Recap(InteractiveScene):
+class Recap(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         morty = Mortimer()
@@ -187,7 +187,7 @@ class Recap(InteractiveScene):
         self.wait()
 
 
-class RewindArrows(InteractiveScene):
+class RewindArrows(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         arrows = ArrowTip(angle=PI).get_grid(1, 3)
@@ -219,14 +219,14 @@ class CommentOnElastic(TeacherStudentsScene):
         self.wait(3)
 
 
-class WritePiDigits(InteractiveScene):
+class WritePiDigits(Scene)  # Changed from InteractiveScene:
     def construct(self):
         eq = Tex(R"\pi = 3.14159265358 \dots")
         self.play(FadeIn(eq, lag_ratio=0.25, run_time=4))
         self.wait()
 
 
-class ReactToQuantumComparisson(InteractiveScene):
+class ReactToQuantumComparisson(Scene)  # Changed from InteractiveScene:
     def construct(self):
         randy = Randolph(height=3)
         randy.to_edge(LEFT).shift(DOWN)
@@ -245,7 +245,7 @@ class ReactToQuantumComparisson(InteractiveScene):
         self.wait()
 
 
-class LoadSolutionIntoHead(InteractiveScene):
+class LoadSolutionIntoHead(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         self.add(FullScreenFadeRectangle().set_fill(interpolate_color(GREY_E, BLACK, 0.5), 1))
@@ -255,7 +255,7 @@ class LoadSolutionIntoHead(InteractiveScene):
         bubble[0][-1].set_fill(GREEN_SCREEN, 1)
 
         self.play(
-            ShowCreation(bubble),
+            Create(bubble),
             randy.change("concentrating", 3 * UR)
         )
         for _ in range(2):
@@ -263,7 +263,7 @@ class LoadSolutionIntoHead(InteractiveScene):
             self.wait(2)
 
 
-class ShowMassRatioToCountChart(InteractiveScene):
+class ShowMassRatioToCountChart(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Chart
         n_terms = 6
@@ -304,7 +304,7 @@ class ShowMassRatioToCountChart(InteractiveScene):
             self.wait()
 
 
-class StateThePuzzle(InteractiveScene):
+class StateThePuzzle(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         question = TexText(
@@ -316,7 +316,7 @@ class StateThePuzzle(InteractiveScene):
         self.wait()
 
 
-class EnergyAndMomentumLaws(InteractiveScene):
+class EnergyAndMomentumLaws(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         laws = VGroup(
@@ -382,7 +382,7 @@ class ProblemSolvingPrinciplesWithPis(TeacherStudentsScene):
             morty.change("raise_right_hand", underline),
             self.change_students("pondering", "pondering", "pondering", look_at=underline),
             FadeIn(title, lag_ratio=0.1),
-            ShowCreation(underline),
+            Create(underline),
         )
         self.play(morty.change("tease", stds))
         self.wait()
@@ -421,7 +421,7 @@ class ProblemSolvingPrinciplesWithPis(TeacherStudentsScene):
             self.wait()
 
 
-class StaysConstant(InteractiveScene):
+class StaysConstant(Scene)  # Changed from InteractiveScene:
     word = "Unchanged!"
     color = YELLOW
 
@@ -447,7 +447,7 @@ class NoteChange(StaysConstant):
     color = RED
 
 
-class SimpleArrow(InteractiveScene):
+class SimpleArrow(Scene)  # Changed from InteractiveScene:
     def construct(self):
         arrow = Vector(0.5 * DL)
         self.play(GrowArrow(arrow))
@@ -466,7 +466,7 @@ class KeyStep(TeacherStudentsScene):
         self.wait(3)
 
 
-class StateSpaceLabel(InteractiveScene):
+class StateSpaceLabel(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         title = TexText("``State Space''", font_size=60)
@@ -482,7 +482,7 @@ class StateSpaceLabel(InteractiveScene):
         self.wait()
 
 
-class HoldUpEllipseVsCircle(InteractiveScene):
+class HoldUpEllipseVsCircle(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Show pi
         radius = 3
@@ -506,7 +506,7 @@ class HoldUpEllipseVsCircle(InteractiveScene):
         arc_len_label.f_always.move_to(lambda: 1.4 * arc.get_end())
 
         self.add(radial_line, radial_label)
-        self.play(ShowCreation(circle, run_time=3))
+        self.play(Create(circle, run_time=3))
         self.add(arc, arc_len_label)
         self.play(theta_tracker.animate.set_value(PI), run_time=3)
         self.wait()
@@ -524,7 +524,7 @@ class HoldUpEllipseVsCircle(InteractiveScene):
 
         self.play(
             MoveToTarget(circle_group),
-            VFadeIn(morty),
+            FadeIn(morty),
         )
         self.play(Blink(morty))
         self.wait()
@@ -551,7 +551,7 @@ class AskWhy(TeacherStudentsScene):
         self.wait()
 
 
-class PiTime1e5(InteractiveScene):
+class PiTime1e5(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         value = Integer(PI * 1e5, font_size=60)
@@ -578,7 +578,7 @@ class HighlightTheSlope(TeacherStudentsScene):
         self.wait()
         self.play(
             FlashAround(slope),
-            ShowCreation(rect),
+            Create(rect),
             self.change_students("pondering", "pondering", "thinking", look_at=slope)
         )
         self.wait()
@@ -591,7 +591,7 @@ class HighlightTheSlope(TeacherStudentsScene):
         self.wait(4)
 
 
-class MostOfTheReasoning(InteractiveScene):
+class MostOfTheReasoning(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         morty = Mortimer(height=2.5).flip()
@@ -632,7 +632,7 @@ class StareAtDiagram(TeacherStudentsScene):
         self.wait()
 
 
-class AskHowThisIsHelpful(InteractiveScene):
+class AskHowThisIsHelpful(Scene)  # Changed from InteractiveScene:
     def construct(self):
         randy = Randolph()
         randy.to_corner(DL)
@@ -758,7 +758,7 @@ class ReferenceSmallAngleApproximations(TeacherStudentsScene):
         self.add(title)
 
 
-class ExplainSmallAngleApprox(InteractiveScene):
+class ExplainSmallAngleApprox(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Setup
         frame = self.frame
@@ -793,7 +793,7 @@ class ExplainSmallAngleApprox(InteractiveScene):
         self.add(radial_line)
         self.add(radial_label)
         self.play(
-            ShowCreation(circle),
+            Create(circle),
             UpdateFromFunc(point, lambda m: m.move_to(circle.get_end())),
             frame.animate.set_height(5),
             run_time=3
@@ -857,12 +857,12 @@ class ExplainSmallAngleApprox(InteractiveScene):
         y_label.always.next_to(y_line, RIGHT, buff=0.05)
 
         self.play(LaggedStart(
-            ShowCreation(y_line, suspend_mobject_updating=True),
-            VFadeIn(y_label),
+            Create(y_line, suspend_mobject_updating=True),
+            FadeIn(y_label),
             FadeOut(h_radial_line),
             FadeOut(radial_label),
-            ShowCreation(x_line, suspend_mobject_updating=True),
-            VFadeIn(x_label),
+            Create(x_line, suspend_mobject_updating=True),
+            FadeIn(x_label),
             lag_ratio=0.15
         ))
         self.play(LaggedStart(
@@ -882,7 +882,7 @@ class ExplainSmallAngleApprox(InteractiveScene):
         self.play(
             Write(tan_eq[R"\approx"]),
             TransformFromCopy(tan_eq[R"\over"][0], tan_eq[R"\over"][1]),
-            ShowCreation(lil_rect),
+            Create(lil_rect),
         )
         self.play(
             TransformFromCopy(tan_eq["{x}"][0], tan_eq["1"][0]),
@@ -916,7 +916,7 @@ class AngryStudents(TeacherStudentsScene):
         self.wait(3)
 
 
-class DigitsOfPi(InteractiveScene):
+class DigitsOfPi(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         pi_text = Path(Path(__file__).parent, "digits_of_pi.txt").read_text()
@@ -982,7 +982,7 @@ class DigitsOfPi(InteractiveScene):
         self.wait()
 
 
-class WriteExactSolution(InteractiveScene):
+class WriteExactSolution(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Title
         title = Text("Answer", font_size=72)
@@ -991,7 +991,7 @@ class WriteExactSolution(InteractiveScene):
         VGroup(title, underline).set_color(YELLOW)
         self.play(
             FadeIn(title, lag_ratio=0.1),
-            ShowCreation(underline)
+            Create(underline)
         )
 
         # Answer
@@ -1013,7 +1013,7 @@ class WriteExactSolution(InteractiveScene):
         self.wait()
 
 
-class ExactSolutionForMatt(InteractiveScene):
+class ExactSolutionForMatt(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Answer
         kw = dict(
@@ -1047,7 +1047,7 @@ class ExactSolutionForMatt(InteractiveScene):
 
         self.play(FadeIn(equations[0], lag_ratio=0.25))
         self.wait()
-        self.play(ShowCreation(rect), FadeIn(words[0], 0.25 * UP))
+        self.play(Create(rect), FadeIn(words[0], 0.25 * UP))
         self.wait()
         self.play(
             rect.animate.set_color(GREEN),
@@ -1073,7 +1073,7 @@ class ExactSolutionForMatt(InteractiveScene):
 
         # Cross out arctan
         exmark = Cross(equations[0][R"\text{arctan}"])
-        self.play(ShowCreation(exmark))
+        self.play(Create(exmark))
         self.wait()
         self.play(
             FadeOut(exmark),
@@ -1119,7 +1119,7 @@ class WhoCares(TeacherStudentsScene):
         self.wait(5)
 
 
-class SimplifyingMessiness(InteractiveScene):
+class SimplifyingMessiness(Scene)  # Changed from InteractiveScene:
     samples = 4
 
     def construct(self):
@@ -1140,7 +1140,7 @@ class SimplifyingMessiness(InteractiveScene):
         )
         mid_arrow = Arrow(rough_circle, circle, buff=0.25, thickness=5, path_arc=1 * DEG)
 
-        self.play(ShowCreation(rough_circle))
+        self.play(Create(rough_circle))
         self.wait()
         self.play(
             LaggedStartMap(GrowArrow, arrows, lag_ratio=0.7),
@@ -1158,7 +1158,7 @@ class SimplifyingMessiness(InteractiveScene):
         self.wait()
 
 
-class HiddenConnections(InteractiveScene):
+class HiddenConnections(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Transition from circle
         circle = Circle(radius=2)
@@ -1220,7 +1220,7 @@ class HiddenConnections(InteractiveScene):
         self.wait()
 
 
-class WebOfConnections(InteractiveScene):
+class WebOfConnections(Scene)  # Changed from InteractiveScene:
     n_points = 1000
 
     def setup(self):
@@ -1313,11 +1313,11 @@ class ShowSimpleWeb(WebOfConnections):
                     stroke_opacity=random.random()**10
                 )
                 dense_web.add(line)
-        self.play(ShowCreation(dense_web, lag_ratio=1 / len(dense_web), run_time=5))
+        self.play(Create(dense_web, lag_ratio=1 / len(dense_web), run_time=5))
         self.wait(5)
 
 
-class GrowingWhiteDot(InteractiveScene):
+class GrowingWhiteDot(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         dot = GlowDot(radius=1)

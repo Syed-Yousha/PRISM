@@ -126,7 +126,7 @@ class Superposition(Group):
 ###
 
 
-class ReferenceSummary(InteractiveScene):
+class ReferenceSummary(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Laptop
         laptop = Laptop()
@@ -150,7 +150,7 @@ class ReferenceSummary(InteractiveScene):
         self.wait(2)
 
 
-class WriteQuantumComputingTitle(InteractiveScene):
+class WriteQuantumComputingTitle(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         title = Text("Quantum Computing", font_size=120)
@@ -197,7 +197,7 @@ class MentionQuiz(TeacherStudentsScene):
         self.wait(3)
 
 
-class QuizMarks(InteractiveScene):
+class QuizMarks(Scene)  # Changed from InteractiveScene:
     def construct(self):
         marks = VGroup(
             Exmark().set_color(RED),
@@ -277,7 +277,7 @@ class StudentsCommentOnQuiz(TeacherStudentsScene):
         self.wait(3)
 
 
-class Wrong(InteractiveScene):
+class Wrong(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         morty = Mortimer()
@@ -302,7 +302,7 @@ class Wrong(InteractiveScene):
         self.wait()
 
 
-class WriteCheckMark(InteractiveScene):
+class WriteCheckMark(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         check = Checkmark()
@@ -315,7 +315,7 @@ class WriteCheckMark(InteractiveScene):
         self.wait()
 
 
-class ExpressSkepticism(InteractiveScene):
+class ExpressSkepticism(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         randy = Randolph(height=3.5)
@@ -328,14 +328,14 @@ class ExpressSkepticism(InteractiveScene):
                 self.wait(2)
 
 
-class WriteGroversAlgorithm(InteractiveScene):
+class WriteGroversAlgorithm(Scene)  # Changed from InteractiveScene:
     def construct(self):
         text = TexText("Grover's Algorithm", font_size=60)
         self.play(Write(text))
         self.wait()
 
 
-class TwoThirdsDivision(InteractiveScene):
+class TwoThirdsDivision(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         self.add(FullScreenRectangle().set_fill(GREY_E, 0.5))
@@ -358,7 +358,7 @@ class TwoThirdsDivision(InteractiveScene):
         self.wait()
 
 
-class ReactToStrangeness(InteractiveScene):
+class ReactToStrangeness(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         randy = Randolph()
@@ -373,7 +373,7 @@ class ReactToStrangeness(InteractiveScene):
             self.wait(2)
 
 
-class DotsAndArrow(InteractiveScene):
+class DotsAndArrow(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         dots = Tex(R"\cdots", font_size=160)
@@ -388,17 +388,17 @@ class DotsAndArrow(InteractiveScene):
         self.wait()
 
 
-class BigCross(InteractiveScene):
+class BigCross(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         cross = Cross(Rectangle(4, 7))
         max_width = 15
         cross.set_stroke(RED, width=[0, max_width, max_width, max_width, 1])
-        self.play(ShowCreation(cross))
+        self.play(Create(cross))
         self.wait()
 
 
-class VectSize16(InteractiveScene):
+class VectSize16(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         brace = Brace(Line(3 * DOWN, 3 * UP), RIGHT)
@@ -408,7 +408,7 @@ class VectSize16(InteractiveScene):
         self.wait()
 
 
-class MoreDimensionsNote(InteractiveScene):
+class MoreDimensionsNote(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         words = TexText(R"(Except $2^k$ dimensions instead of 3)")
@@ -457,7 +457,7 @@ class QuestionsOnTheStateVector(TeacherStudentsScene):
         self.wait(3)
 
 
-class MagnifyingGlassOverComputer(InteractiveScene):
+class MagnifyingGlassOverComputer(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         comp = get_quantum_computer_symbol(height=2.5)
@@ -474,14 +474,14 @@ class MagnifyingGlassOverComputer(InteractiveScene):
         self.wait()
 
 
-class SimpleSampleValue(InteractiveScene):
+class SimpleSampleValue(Scene)  # Changed from InteractiveScene:
     def construct(self):
         value = Tex(R"|0011\rangle", font_size=60)
         value.set_fill(border_width=2)
         self.add(value)
 
 
-class BitVsQubitMatrix(InteractiveScene):
+class BitVsQubitMatrix(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up frame
         boxes = Rectangle(5, 3).get_grid(2, 2, buff=0)
@@ -551,7 +551,7 @@ class ConfusionAtPresmises(TeacherStudentsScene):
         self.wait(3)
 
 
-class BitExamples(InteractiveScene):
+class BitExamples(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # All bits
         circuit = get_bit_circuit(1)
@@ -594,7 +594,7 @@ class BitExamples(InteractiveScene):
         self.wait()
 
 
-class KetDefinition(InteractiveScene):
+class KetDefinition(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         square = Rectangle(1, 0.75)
@@ -660,7 +660,7 @@ class KetDefinition(InteractiveScene):
             last = example
 
 
-class ClassicalGates(InteractiveScene):
+class ClassicalGates(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Title
         title = Text("Logic Gates", font_size=60)
@@ -725,15 +725,15 @@ class ClassicalGates(InteractiveScene):
         self.wait()
 
 
-class HLine(InteractiveScene):
+class HLine(Scene)  # Changed from InteractiveScene:
     def construct(self):
         line = Line(UP, DOWN).set_height(FRAME_HEIGHT)
         line.set_stroke(GREY_B, 2)
-        self.play(ShowCreation(line))
+        self.play(Create(line))
         self.wait()
 
 
-class ShowQubitThroughTwoHadamardGates(InteractiveScene):
+class ShowQubitThroughTwoHadamardGates(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add the line
         line = Line(4 * LEFT, 4 * RIGHT)
@@ -778,7 +778,7 @@ class ShowQubitThroughTwoHadamardGates(InteractiveScene):
         self.wait()
         self.play(dot.animate.move_to(line.get_center()))
         self.play(
-            ShowCreation(mid_sym_lines, lag_ratio=0),
+            Create(mid_sym_lines, lag_ratio=0),
             GrowFromPoint(mid_sym_rect, dot.get_center()),
             GrowFromPoint(symbols[1], dot.get_center()),
         )
@@ -842,7 +842,7 @@ class GroverPreviewBox(TeacherStudentsScene):
         self.wait(5)
 
 
-class SimpleMagnifyingGlass(InteractiveScene):
+class SimpleMagnifyingGlass(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         glass = get_magnifying_glass(height=3)
@@ -861,7 +861,7 @@ class SimpleMagnifyingGlass(InteractiveScene):
         self.wait()
 
 
-class ShowAbstractionArrows(InteractiveScene):
+class ShowAbstractionArrows(Scene)  # Changed from InteractiveScene:
     def construct(self):
         arrows = VGroup(
             Arrow(point + 4 * LEFT, ORIGIN + 0.35 * point, buff=1.0, thickness=5)
@@ -871,7 +871,7 @@ class ShowAbstractionArrows(InteractiveScene):
         self.play(LaggedStartMap(GrowArrow, arrows, lag_ratio=0.1))
 
 
-class WriteGroversAlgorithm2(InteractiveScene):
+class WriteGroversAlgorithm2(Scene)  # Changed from InteractiveScene:
     def construct(self):
         text = TexText("Grover's Algorithm", font_size=72)
         text.to_edge(UP)
@@ -898,7 +898,7 @@ class StareAtPicture(TeacherStudentsScene):
         self.wait(5)
 
 
-class TryingToDescribeComputing(InteractiveScene):
+class TryingToDescribeComputing(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Characters
         randy = Randolph()
@@ -1011,7 +1011,7 @@ class TryingToDescribeComputing(InteractiveScene):
         self.wait()
 
 
-class ProbForMillionDim(InteractiveScene):
+class ProbForMillionDim(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Context
         context = VGroup(
@@ -1045,7 +1045,7 @@ class ProbForMillionDim(InteractiveScene):
         self.wait()
 
 
-class AskAreYouSure(InteractiveScene):
+class AskAreYouSure(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         randy = Randolph()
@@ -1090,7 +1090,7 @@ class AskAreYouSure(InteractiveScene):
         self.wait(2)
 
 
-class WrapUpList(InteractiveScene):
+class WrapUpList(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # List
         morty = Mortimer()
@@ -1136,7 +1136,7 @@ class WrapUpList(InteractiveScene):
             self.wait()
 
 
-class WriteShorName(InteractiveScene):
+class WriteShorName(Scene)  # Changed from InteractiveScene:
     def construct(self):
         name = Text("Peter Shor", font_size=72)
         name.to_corner(UR)
@@ -1144,7 +1144,7 @@ class WriteShorName(InteractiveScene):
         self.wait()
 
 
-class OneWordSummary(InteractiveScene):
+class OneWordSummary(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Replace "Parallelism" with "Pythagoras"
         prompt = Text("Source of the speed-up", font_size=72)
@@ -1162,7 +1162,7 @@ class OneWordSummary(InteractiveScene):
         self.add(prompt)
         self.add(words[0])
         self.wait()
-        self.play(ShowCreation(strike))
+        self.play(Create(strike))
         self.play(
             FadeIn(words[1], 0.5 * DOWN),
             words[0].animate.scale(0.75).shift(2 * DOWN).set_opacity(0.25),
@@ -1171,7 +1171,7 @@ class OneWordSummary(InteractiveScene):
         self.wait()
 
 
-class PythagoreanIntuition(InteractiveScene):
+class PythagoreanIntuition(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up axes
         x_range = y_range = z_range = (-2, 2)
@@ -1206,7 +1206,7 @@ class PythagoreanIntuition(InteractiveScene):
         self.add(square, dot)
         for line, one in zip(side_lines[:2], ones):
             self.play(
-                ShowCreation(line),
+                Create(line),
                 FadeIn(one, 0.5 * line.get_vector()),
                 dot.animate.move_to(line.get_end())
             )
@@ -1227,7 +1227,7 @@ class PythagoreanIntuition(InteractiveScene):
             sqrt.next_to(diag.pfp(0.5), UL, buff=0.05)
 
         self.play(
-            ShowCreation(diag),
+            Create(diag),
             dot.animate.move_to(square.get_corner(UR)),
             TransformFromCopy(ones[:2], sqrts[0]["1"], time_span=(1, 2)),
             *(
@@ -1252,14 +1252,14 @@ class PythagoreanIntuition(InteractiveScene):
         self.add(cube, side_lines[:2])
         self.play(
             FadeIn(axes_group),
-            ShowCreation(cube, lag_ratio=0.1, time_span=(0.5, 2.0)),
+            Create(cube, lag_ratio=0.1, time_span=(0.5, 2.0)),
             frame.animate.reorient(-16, 68, 0, (0.45, 0.98, 1.05), 4.36),
             run_time=2
         )
         frame.add_ambient_rotation(DEG)
         line = side_lines[2]
         self.play(
-            ShowCreation(line),
+            Create(line),
             FadeIn(ones[2], 0.5 * line.get_vector()),
             dot.animate.move_to(line.get_end())
         )
@@ -1277,7 +1277,7 @@ class PythagoreanIntuition(InteractiveScene):
             sqrt.rotate(90 * DEG, RIGHT)
             sqrt.next_to(diag3.get_center(), LEFT + OUT, SMALL_BUFF)
 
-        self.play(ShowCreation(diag3, run_time=2))
+        self.play(Create(diag3, run_time=2))
         self.play(
             TransformFromCopy(ones[2], new_sqrts[0]["1"][0], time_span=(1, 2)),
             TransformFromCopy(sqrts[1], new_sqrts[0][R"\sqrt{2}"][0], time_span=(1, 2)),
@@ -1441,7 +1441,7 @@ class PatronScroll(PatreonEndScreen):
                 self.wait()
 
 
-class ConstructQRCode2(InteractiveScene):
+class ConstructQRCode2(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         code = SVGMobject("channel_support_QR_code")
@@ -1476,7 +1476,7 @@ class ConstructQRCode2(InteractiveScene):
         self.add(background, union_pieces, squares, corner_pieces)
         self.play(
             frame.animate.to_default_state(),
-            ShowCreation(
+            Create(
                 union_pieces,
                 lag_ratio=0,
             ),

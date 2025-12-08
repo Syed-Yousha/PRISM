@@ -4,44 +4,33 @@ import json
 from tqdm import tqdm as ProgressDisplay
 from pathlib import Path
 
-from manimlib.animation.animation import Animation
-from manimlib.animation.composition import Succession
-from manimlib.animation.composition import LaggedStartMap
-from manimlib.animation.composition import AnimationGroup
-from manimlib.animation.creation import Write
-from manimlib.animation.transform import ApplyMethod
-from manimlib.animation.indication import VShowPassingFlash
-from manimlib.animation.fading import FadeIn
-from manimlib.animation.fading import FadeOut
-from manimlib.animation.fading import VFadeIn
-from manimlib.constants import *
-from manimlib.mobject.mobject import Mobject
-from manimlib.mobject.frame import FullScreenRectangle
-from manimlib.mobject.frame import ScreenRectangle
-from manimlib.mobject.geometry import Circle
-from manimlib.mobject.geometry import DashedLine
-from manimlib.mobject.geometry import Line
-from manimlib.mobject.geometry import Rectangle
-from manimlib.mobject.geometry import Square
-from manimlib.mobject.types.image_mobject import ImageMobject
-from manimlib.mobject.svg.tex_mobject import TexText
-from manimlib.mobject.svg.text_mobject import Text
-from manimlib.mobject.svg.drawings import SpeechBubble
-from manimlib.mobject.types.vectorized_mobject import VGroup
-from manimlib.mobject.types.vectorized_mobject import VMobject
-from manimlib.scene.scene import Scene
-from manimlib.scene.interactive_scene import InteractiveScene
-from manimlib.utils.directories import get_directories
-from manimlib.utils.rate_functions import linear
-from manimlib.utils.iterables import remove_list_redundancies
-from manimlib.utils.space_ops import midpoint
+from manim import (
+    Animation, Succession, LaggedStartMap, AnimationGroup,
+    Write, ApplyMethod, ShowPassingFlash,
+    FadeIn, FadeOut,  # Replaced VFadeIn with FadeIn
+    *,  # All constants
+)
+from manim.mobject.mobject import Mobject
+from manim.mobject.frame import FullScreenRectangle, ScreenRectangle
+from manim.mobject.geometry import (
+    Circle, DashedLine, Line, Rectangle, Square
+)
+from manim.mobject.types.image_mobject import ImageMobject
+from manim.mobject.svg.text_mobject import Text
+from manim.mobject.svg.drawings import SpeechBubble
+from manim.mobject.types.vectorized_mobject import VGroup, VMobject
+from manim.scene.scene import Scene  # Replaced InteractiveScene with Scene
+from manim.utils.directories import get_directories
+from manim.utils.rate_functions import linear
+from manim.utils.iterables import remove_list_redundancies
+from manim.utils.space_ops import midpoint
 
 from custom.characters.pi_creature import Mortimer
 from custom.characters.pi_creature import Randolph
 from custom.characters.pi_creature_animations import Blink
 
 
-class PatreonEndScreen(InteractiveScene):
+class PatreonEndScreen(Scene):  # Changed from InteractiveScene to Scene
     title_text = "Clicky Stuffs"
     show_pis = True
     max_patron_group_size = 20
@@ -245,7 +234,7 @@ class SideScrollEndScreen(PatreonEndScreen):
         self.scroll(
             self.name_labels,
             LaggedStartMap(
-                VShowPassingFlash,
+                ShowPassingFlash,  # Changed from VShowPassingFlash to ShowPassingFlash
                 self.elements.copy().set_stroke(WHITE, 5).insert_n_curves(100),
                 time_width=2,
                 run_time=3,

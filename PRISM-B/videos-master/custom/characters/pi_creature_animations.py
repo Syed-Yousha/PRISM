@@ -1,24 +1,24 @@
 from __future__ import annotations
 
-from manimlib.animation.composition import AnimationGroup
-from manimlib.animation.fading import FadeOut
-from manimlib.animation.creation import DrawBorderThenFill
-from manimlib.animation.creation import Write
-from manimlib.animation.transform import ApplyMethod
-from manimlib.animation.transform import MoveToTarget
-from manimlib.constants import *
-from manimlib.mobject.mobject import Group
-from manimlib.mobject.mobject import Mobject
-from manimlib.mobject.svg.drawings import SpeechBubble
-from manimlib.utils.rate_functions import squish_rate_func
-from manimlib.utils.rate_functions import there_and_back
+from manim.animation.composition import AnimationGroup
+from manim.animation.fading import FadeOut
+from manim.animation.creation import DrawBorderThenFill
+from manim.animation.creation import Write
+from manim.animation.transform import ApplyMethod
+from manim.animation.transform import MoveToTarget
+from manim import *
+from manim.mobject.mobject import Group
+from manim.mobject.mobject import Mobject
+from manim.mobject.svg.drawings import SpeechBubble
+from manim.utils.rate_functions import squish_rate_func
+from manim.utils.rate_functions import there_and_back
 
 from custom.characters.pi_creature import PiCreature
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from typing import Callable
-    from manimlib.typing import Vect3
+    from manim import Vect3
 
 class Blink(ApplyMethod):
     def __init__(

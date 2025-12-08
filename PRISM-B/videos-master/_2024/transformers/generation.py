@@ -109,7 +109,7 @@ def next_token_bar_chart(
     return bar_groups
 
 
-class SimpleAutogregression(InteractiveScene):
+class SimpleAutogregression(Scene)  # Changed from InteractiveScene:
     text_corner = 3.5 * UP + 0.75 * RIGHT
     line_len = 31
     font_size = 35
@@ -432,7 +432,7 @@ class AnnotateNextWord(SimpleAutogregression):
         dist_rect.set_stroke(YELLOW, 2)
 
         self.play(
-            ShowCreation(highlight),
+            Create(highlight),
             GrowArrow(arrow)
         )
         self.wait()
@@ -626,7 +626,7 @@ class ChatBotPrompt(SimpleAutogregression):
         sys_rect.set_stroke(GREEN, 2)
 
         self.play(
-            ShowCreation(sys_rect),
+            Create(sys_rect),
             system_prompt.animate.set_color(GREEN_B)
         )
         self.wait()

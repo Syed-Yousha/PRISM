@@ -6,7 +6,7 @@ from _2024.transformers.embedding import *
 # Intro chapter
 
 
-class GPTInitials(InteractiveScene):
+class GPTInitials(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Write name
         frame = self.frame
@@ -93,7 +93,7 @@ class GPTInitials(InteractiveScene):
         line.set_stroke(YELLOW)
         self.play(LaggedStart(
             MoveToTarget(words),
-            ShowCreation(line),
+            Create(line),
             frame.animate.center(),
             morty.change("thinking", words.target[0]).set_opacity(0),
             Write(t_lines, stroke_width=2),
@@ -123,7 +123,7 @@ class GPTInitials(InteractiveScene):
         self.wait()
 
 
-class DifferentUsesOfModel(InteractiveScene):
+class DifferentUsesOfModel(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up sentences
         sentences = VGroup(
@@ -191,11 +191,11 @@ class DifferentUsesOfModel(InteractiveScene):
         right_arrow.set_stroke(TEAL_C, opacity=0.8)
 
         self.play(
-            LaggedStartMap(ShowCreation, left_arrows, lag_ratio=0.5),
+            LaggedStartMap(Create, left_arrows, lag_ratio=0.5),
             self.frame.animate.move_to(DOWN),
             images.animate.shift(UP),
         )
-        self.play(ShowCreation(right_arrow))
+        self.play(Create(right_arrow))
         self.wait()
 
         # Show word vectors
@@ -217,7 +217,7 @@ class DifferentUsesOfModel(InteractiveScene):
         self.wait()
 
 
-class BigMatrixMultiplication(InteractiveScene):
+class BigMatrixMultiplication(Scene)  # Changed from InteractiveScene:
     mat_dims = (12, 12)
     random_seed = 9
 
@@ -236,7 +236,7 @@ class BigMatrixMultiplication(InteractiveScene):
         self.wait()
 
 
-class LongListOFQuestions(InteractiveScene):
+class LongListOFQuestions(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add word and vector
         word = Text("Queen")
@@ -292,7 +292,7 @@ class LongListOFQuestions(InteractiveScene):
         lag_ratio = 0.3
         self.play(
             LaggedStart(
-                (ShowCreation(line_group, lag_ratio=0)
+                (Create(line_group, lag_ratio=0)
                 for line_group in connections),
                 lag_ratio=lag_ratio,
             ),
@@ -303,7 +303,7 @@ class LongListOFQuestions(InteractiveScene):
         self.wait()
 
 
-class ChatBotIcon(InteractiveScene):
+class ChatBotIcon(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add bot
         bot = SVGMobject("ChatBot")
@@ -321,13 +321,13 @@ class ChatBotIcon(InteractiveScene):
         arrow.next_to(bot, LEFT).match_y(bot[0])
 
         self.play(
-            ShowCreation(arrow),
+            Create(arrow),
             Write(bot),
         )
         self.wait()
 
 
-class GamePlan(InteractiveScene):
+class GamePlan(Scene)  # Changed from InteractiveScene:
     screen_opacity = 0.0
 
     def construct(self):
@@ -370,7 +370,7 @@ class GamePlan(InteractiveScene):
         self.play(
             highlight_video(tr_vids[0], tr_vids),
             MaintainPositionRelativeTo(here_group, tr_vids[0]),
-            VFadeIn(here_group),
+            FadeIn(here_group),
         )
         self.wait()
 
@@ -404,7 +404,7 @@ class GamePlan(InteractiveScene):
 
         self.play(
             FadeOut(here_group),
-            ShowCreation(curly),
+            Create(curly),
             FadeIn(screen, RIGHT),
             FadeInFromPoint(topics[0], here_group.get_center()),
         )
@@ -497,7 +497,7 @@ class GamePlan(InteractiveScene):
             ),
         )
         self.play(
-            ShowCreation(tr_rect),
+            Create(tr_rect),
             FadeIn(tr_label),
         )
         self.wait()
@@ -601,7 +601,7 @@ class Outdated(TeacherStudentsScene):
         self.wait(3)
 
 
-class ConvolutionComment(InteractiveScene):
+class ConvolutionComment(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         morty = Mortimer()
@@ -646,7 +646,7 @@ class HoldUpExample(TeacherStudentsScene):
         self.wait(5)
 
 
-class ReactToWordVectors(InteractiveScene):
+class ReactToWordVectors(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         morty = Mortimer().flip()
@@ -683,7 +683,7 @@ class ReactToWordVectors(InteractiveScene):
         self.wait()
 
 
-class DimensionComparrison(InteractiveScene):
+class DimensionComparrison(Scene)  # Changed from InteractiveScene:
     def construct(self):
         titles = VGroup(
             Text("3d vectors"),
@@ -703,7 +703,7 @@ class DimensionComparrison(InteractiveScene):
         lines.set_stroke(GREY_B, 2)
 
         self.play(
-            ShowCreation(lines, lag_ratio=0.5),
+            Create(lines, lag_ratio=0.5),
             LaggedStartMap(Write, titles, lag_ratio=0.5)
         )
         self.wait()
@@ -727,7 +727,7 @@ class AtLeastKindOf(TeacherStudentsScene):
         self.wait(4)
 
 
-class NetworkEndAnnotation(InteractiveScene):
+class NetworkEndAnnotation(Scene)  # Changed from InteractiveScene:
     opacity = 0.5
 
     def construct(self):
@@ -762,7 +762,7 @@ class NetworkEndAnnotation(InteractiveScene):
         self.play(FadeOut(rect))
 
 
-class LowTempHighTempContrast(InteractiveScene):
+class LowTempHighTempContrast(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         titles = VGroup(
@@ -918,7 +918,7 @@ class HighlightAttentionTitle(TeacherStudentsScene):
             self.change_students("sassy", "confused", "pondering", look_at=sentence)
         )
         self.play(
-            ShowCreation(par_line),
+            Create(par_line),
             morty.animate.look_at(par_line),
             FadeIn(par_box),
             self.change_students("pondering", look_at=par_line),
@@ -975,7 +975,7 @@ class SimplerExample(TeacherStudentsScene):
         self.wait(6)
 
 
-class NotQuiteTrue(InteractiveScene):
+class NotQuiteTrue(Scene)  # Changed from InteractiveScene:
     def construct(self):
         morty = Mortimer()
         morty.to_corner(DR)
@@ -1032,11 +1032,11 @@ class ShoutSoftmax(TeacherStudentsScene):
         self.wait(5)
 
 
-class LeftArcSmaller(InteractiveScene):
+class LeftArcSmaller(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         arrow = Arrow(RIGHT, LEFT, path_arc=1.0 * PI, stroke_color=RED, stroke_width=8)
-        self.play(ShowCreation(arrow))
+        self.play(Create(arrow))
         self.wait()
 
 
@@ -1067,7 +1067,7 @@ class CalledMasking(TeacherStudentsScene):
         self.wait(5)
 
 
-class ReferenceLargerContextTechnologies(InteractiveScene):
+class ReferenceLargerContextTechnologies(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         words = VGroup(
@@ -1105,7 +1105,7 @@ class AskAboutCrossAttention(TeacherStudentsScene):
         self.wait(5)
 
 
-class SelfVsCrossFrames(InteractiveScene):
+class SelfVsCrossFrames(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add screens
         self.add(FullScreenRectangle())
@@ -1130,7 +1130,7 @@ class SelfVsCrossFrames(InteractiveScene):
         self.wait()
 
 
-class OngoingTranscription(InteractiveScene):
+class OngoingTranscription(Scene)  # Changed from InteractiveScene:
     def construct(self):
         phrase = Text("or maybe audio input of speech, and an ongoing transcription")
         words = break_into_words(phrase)
@@ -1188,7 +1188,7 @@ class SeekingMatchedParameters(TeacherStudentsScene):
         self.wait(4)
 
 
-class HeadName(InteractiveScene):
+class HeadName(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         title = Text("One head of attention", font_size=72)
@@ -1204,7 +1204,7 @@ class HeadName(InteractiveScene):
         self.wait()
 
 
-class DInputAndOutputOfValue(InteractiveScene):
+class DInputAndOutputOfValue(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         d_embed = 12_288
@@ -1279,7 +1279,7 @@ class AskAboutOutput(TeacherStudentsScene):
         self.wait(5)
 
 
-class OneThirdOfWhatYouNeed(InteractiveScene):
+class OneThirdOfWhatYouNeed(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         self.add(FullScreenRectangle().fix_in_frame())
@@ -1304,17 +1304,17 @@ class OneThirdOfWhatYouNeed(InteractiveScene):
         self.add(title)
         self.wait()
         self.add(all_word, cross)
-        self.play(ShowCreation(cross), all_word.animate.set_fill(opacity=0.5))
+        self.play(Create(cross), all_word.animate.set_fill(opacity=0.5))
         self.play(
             FadeTransform(all_word.copy(), correction),
-            ShowCreation(lines, lag_ratio=0),
+            Create(lines, lag_ratio=0),
         )
         self.wait()
         self.play(self.frame.animate.set_y(-3.75).set_height(11), run_time=2)
         self.wait()
 
 
-class MoreResourcesBelow(InteractiveScene):
+class MoreResourcesBelow(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         self.add(FullScreenRectangle())
@@ -1463,7 +1463,7 @@ class RefreshersNeverHurt(TeacherStudentsScene):
         self.wait(3)
 
 
-class EmbeddingLabel(InteractiveScene):
+class EmbeddingLabel(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Background
         bg = ImageMobject("/Users/grant/3Blue1Brown Dropbox/3Blue1Brown/videos/2024/transformers/images/EmbeddingStill.jpg")
@@ -1502,7 +1502,7 @@ class EmbeddingLabel(InteractiveScene):
         self.wait(1.5)
 
 
-class ThatWhichDoesntKillHeader(InteractiveScene):
+class ThatWhichDoesntKillHeader(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         words = Text("That which does not kill you only makes you")
@@ -1518,7 +1518,7 @@ class ThatWhichDoesntKillHeader(InteractiveScene):
         self.add(rect, words, brace)
 
 
-class QuickAttentionDescription(InteractiveScene):
+class QuickAttentionDescription(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # To be added standing on an Attention block
         morty = Mortimer(height=2)
@@ -1530,7 +1530,7 @@ class QuickAttentionDescription(InteractiveScene):
             self.wait(2)
 
 
-class QuickMLPDescription(InteractiveScene):
+class QuickMLPDescription(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # To be added standing on an MLP block
         morty = Mortimer(height=2, color=GREY_C)
@@ -1541,7 +1541,7 @@ class QuickMLPDescription(InteractiveScene):
             self.wait(2)
 
 
-class ContrastBetweenSimpleComputationDifficultInterpretation(InteractiveScene):
+class ContrastBetweenSimpleComputationDifficultInterpretation(Scene)  # Changed from InteractiveScene:
     def construct(self):
         morty = Mortimer(height=2).to_edge(DOWN, buff=1.0)
         morty.body.insert_n_curves(100)
@@ -1571,7 +1571,7 @@ class ContrastBetweenSimpleComputationDifficultInterpretation(InteractiveScene):
         self.wait()
 
 
-class AmbientChangingDots(InteractiveScene):
+class AmbientChangingDots(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         dots = Dot().get_grid(20, 30)
@@ -1601,7 +1601,7 @@ class MakeSomeAssumptions(TeacherStudentsScene):
         self.wait(6)
 
 
-class MovingToSecondToken(InteractiveScene):
+class MovingToSecondToken(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add phrase
         phrase = Text("Michael Jordan plays the sport of")
@@ -1633,7 +1633,7 @@ class MovingToSecondToken(InteractiveScene):
         highlight_rect = SurroundingRectangle(VGroup(rects[:2], embeddings[:2]))
 
         self.play(
-            ShowCreation(highlight_rect),
+            Create(highlight_rect),
             tokens[2:].animate.fade(0.5),
             rects[2:].animate.fade(0.5),
             arrows[2:].animate.fade(0.5),
@@ -1678,12 +1678,12 @@ class WhatAboutBiggerThanOne(TeacherStudentsScene):
         self.wait(3)
 
 
-class HighlightRect(InteractiveScene):
+class HighlightRect(Scene)  # Changed from InteractiveScene:
     def construct(self):
         rect = Rectangle(1, 3)
         rect.scale(0.5)
         rect.set_stroke(MAROON_B, 3)
-        self.play(ShowCreation(rect))
+        self.play(Create(rect))
         self.wait()
 
 
@@ -1705,7 +1705,7 @@ class AskWhy(TeacherStudentsScene):
         self.wait(2)
 
 
-class GPT3Logo(InteractiveScene):
+class GPT3Logo(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         gpt3_label = Text("GPT-3", font="Consolas", font_size=72)
@@ -1723,7 +1723,7 @@ class GPT3Logo(InteractiveScene):
         self.wait()
 
 
-class AndGate(InteractiveScene):
+class AndGate(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         gate = SVGMobject("and_gate")
@@ -1738,7 +1738,7 @@ class AndGate(InteractiveScene):
         self.wait()
 
 
-class MJFactsAsVectorSum(InteractiveScene):
+class MJFactsAsVectorSum(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         facts = VGroup(
@@ -1806,7 +1806,7 @@ class ThatsIt(TeacherStudentsScene):
         self.wait(3)
 
 
-class AddTwoMatrixSizes(InteractiveScene):
+class AddTwoMatrixSizes(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         rect = Rectangle(3.0, 1.0)
@@ -1816,7 +1816,7 @@ class AddTwoMatrixSizes(InteractiveScene):
         total.next_to(rect, UP)
 
         self.play(
-            ShowCreation(rect),
+            Create(rect),
             Write(total)
         )
         self.wait()
@@ -1879,7 +1879,7 @@ class ReflectOnTwoThings(TeacherStudentsScene):
 
         # Show vector clump
         self.play(
-            VFadeIn(points[2]),
+            FadeIn(points[2]),
             Rotate(vectors, PI, axis=UP, run_time=8),
             self.change_students("confused", "hesitant", "erm", look_at=points[2]),
             morty.change("surprised", points[2]),
@@ -1938,7 +1938,7 @@ class AskIfThisIsReal(TeacherStudentsScene):
         self.wait(4)
 
 
-class SingleNeuronVsMultiple(InteractiveScene):
+class SingleNeuronVsMultiple(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add network
         radius = 0.1
@@ -1989,7 +1989,7 @@ class SingleNeuronVsMultiple(InteractiveScene):
             Restore(name, lag_ratio=0.05),
             run_time=2
         )
-        self.play(ShowCreation(rect))
+        self.play(Create(rect))
         self.wait()
         network.add(rect, name)
 
@@ -2010,7 +2010,7 @@ class SingleNeuronVsMultiple(InteractiveScene):
         self.play(
             network.animate.to_edge(LEFT),
             TransformFromCopy(network, network_copy),
-            ShowCreation(v_line),
+            Create(v_line),
         )
         self.play(LaggedStart(
             Write(ex, stroke_color=RED),
@@ -2020,7 +2020,7 @@ class SingleNeuronVsMultiple(InteractiveScene):
         self.wait()
 
 
-class WriteSuperposition(InteractiveScene):
+class WriteSuperposition(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         word = Text("Superposition", font_size=120)
@@ -2041,7 +2041,7 @@ class WriteSuperposition(InteractiveScene):
         self.wait()
 
 
-class JohnsonLindenstraussName(InteractiveScene):
+class JohnsonLindenstraussName(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         text = VGroup(
@@ -2056,7 +2056,7 @@ class JohnsonLindenstraussName(InteractiveScene):
         )
 
 
-class ContrastGPTDimensionSizes(InteractiveScene):
+class ContrastGPTDimensionSizes(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Setup
         openai_logo = SVGMobject("OpenAI.svg")
@@ -2121,7 +2121,7 @@ class ReferenceSAP(TeacherStudentsScene):
         self.wait(5)
 
 
-class DetailsNotDiscussed(InteractiveScene):
+class DetailsNotDiscussed(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         title = Text("Details not discussed")
@@ -2162,7 +2162,7 @@ class DetailsNotDiscussed(InteractiveScene):
         self.wait()
 
 
-class TriPanelWithPi(InteractiveScene):
+class TriPanelWithPi(Scene)  # Changed from InteractiveScene:
     def construct(self):
         vlines = Line(UP, DOWN).replicate(2)
         vlines.set_height(FRAME_HEIGHT / 2)
@@ -2190,7 +2190,7 @@ class TriPanelWithPi(InteractiveScene):
         self.wait()
 
 
-class WriteRLHF(InteractiveScene):
+class WriteRLHF(Scene)  # Changed from InteractiveScene:
     def construct(self):
         words = VGroup(
             Text("Reinforcement"),
@@ -2209,7 +2209,7 @@ class WriteRLHF(InteractiveScene):
         self.wait()
 
 
-class ListOfFacts(InteractiveScene):
+class ListOfFacts(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Title
         title = Text("Facts", font_size=120)

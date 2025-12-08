@@ -4,7 +4,7 @@ from _2024.transformers.embedding import *
 from _2024.transformers.generation import *
 
 
-class DialTest(InteractiveScene):
+class DialTest(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         dial = Dial(radius=0.5)
@@ -17,7 +17,7 @@ class DialTest(InteractiveScene):
         self.play(machine.random_change_animation())
 
 
-class MLWithinDeepL(InteractiveScene):
+class MLWithinDeepL(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Organize boxes
         kw = dict(font_size=36, opacity=0.25)
@@ -161,12 +161,12 @@ class MLWithinDeepL(InteractiveScene):
 
         self.play(
             FadeIn(network.layers[0]),
-            ShowCreation(network.lines[0], lag_ratio=0.01),
+            Create(network.lines[0], lag_ratio=0.01),
             FadeIn(network.layers[1], lag_ratio=0.5),
             run_time=2
         )
         self.play(
-            ShowCreation(network.lines[1], lag_ratio=0.01),
+            Create(network.lines[1], lag_ratio=0.01),
             FadeIn(network.layers[2], lag_ratio=0.5),
             run_time=2
         )
@@ -208,7 +208,7 @@ class MLWithinDeepL(InteractiveScene):
 
         self.play(
             FadeOut(network, 2 * DOWN),
-            ShowCreation(arrow),
+            Create(arrow),
             FadeInFromPoint(pile_words, dl_box.title.get_center(), path_arc=path_arc),
             FadeOut(network, DOWN)
         )
@@ -295,16 +295,16 @@ class MLWithinDeepL(InteractiveScene):
         return network
 
 
-class ShowCross(InteractiveScene):
+class ShowCross(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         cross = Cross(Square(side_length=5))
         cross.set_stroke(width=[0, 30, 0])
-        self.play(ShowCreation(cross))
+        self.play(Create(cross))
         self.wait()
 
 
-class FlashThroughImageData(InteractiveScene):
+class FlashThroughImageData(Scene)  # Changed from InteractiveScene:
     time_per_example = 0.1
 
     def construct(self):
@@ -327,7 +327,7 @@ class FlashThroughImageData(InteractiveScene):
                     release_texture(tid)
 
 
-class FlashThroughTextData2(InteractiveScene):
+class FlashThroughTextData2(Scene)  # Changed from InteractiveScene:
     n_examples = 200
     time_per_example = 0.1
     window_size = 50
@@ -356,7 +356,7 @@ class FlashThroughTextData2(InteractiveScene):
             self.remove(phrase)
 
 
-class TweakedMachine(InteractiveScene):
+class TweakedMachine(Scene)  # Changed from InteractiveScene:
     n_tweaks = 200
     time_per_example = 0.1
 
@@ -389,7 +389,7 @@ class TweakedMachine(InteractiveScene):
             self.wait(self.time_per_example)
 
 
-class PremiseOfML(InteractiveScene):
+class PremiseOfML(Scene)  # Changed from InteractiveScene:
     box_center = RIGHT
     n_examples = 50
     random_seed = 316
@@ -633,7 +633,7 @@ class PremiseOfML(InteractiveScene):
         col_rect = SurroundingRectangle(column)
         col_rect.set_stroke(YELLOW, 2)
 
-        self.play(ShowCreation(col_rect))
+        self.play(Create(col_rect))
         self.play(
             FadeOut(VGroup(param_label, equiv), UP),
             MoveToTarget(weights_label),
@@ -651,7 +651,7 @@ class PremiseOfML(InteractiveScene):
                 FadeTransform(top_dials[n].copy(), weight_parts[n])
                 for n in indices
             )),
-            LaggedStartMap(ShowCreation, dial_lines),
+            LaggedStartMap(Create, dial_lines),
             run_time=1
         )
         self.wait()
@@ -676,7 +676,7 @@ class PremiseOfML(InteractiveScene):
         self.play(
             FadeIn(func_wrapper),
             FadeIn(nl_words, lag_ratio=0.1),
-            ShowCreation(nl_arrow),
+            Create(nl_arrow),
         )
         self.wait()
 
@@ -726,7 +726,7 @@ class PremiseOfML(InteractiveScene):
         )
         self.play(
             TransformFromCopy(expr_rect, x01_rect),
-            ShowCreation(rect_lines, lag_ratio=0),
+            Create(rect_lines, lag_ratio=0),
             FadeInFromPoint(layer1.elements[0], expr_rect.get_center()),
         )
         self.play(ShowIncreasingSubsets(layer1[1:-1]))
@@ -784,7 +784,7 @@ class PremiseOfML(InteractiveScene):
         self.play(
             FadeIn(machine, scale=0.8),
             FadeIn(weights_label, shift=DOWN),
-            ShowCreation(dial_lines, lag_ratio=0.1),
+            Create(dial_lines, lag_ratio=0.1),
             FadeIn(weighted_sum, shift=UP),
             FadeOut(layers, scale=0.8),
         )
@@ -820,7 +820,7 @@ class PremiseOfML(InteractiveScene):
             FadeOut(out_data, DOWN),
             in_word.animate.next_to(in_array, UP),
             FadeIn(matrix, lag_ratio=0.1),
-            ShowCreation(brace, lag_ratio=0),
+            Create(brace, lag_ratio=0),
             weights_label.animate.set_height(0.5).next_to(matrix, UP, buff=MED_SMALL_BUFF),
             Uncreate(dial_lines, lag_ratio=0.1),
             FadeOut(col_rect),
@@ -871,8 +871,8 @@ class PremiseOfML(InteractiveScene):
         # Vector an data slice
         v_rect = SurroundingRectangle(vector.get_entries())
         self.play(
-            ShowCreation(v_rect),
-            ShowCreation(col_rect),
+            Create(v_rect),
+            Create(col_rect),
         )
         self.wait()
         self.play(
@@ -1033,7 +1033,7 @@ class PremiseOfMLWithMatrices(PremiseOfML):
     random_seed = 6
 
 
-class LinearRegression(InteractiveScene):
+class LinearRegression(Scene)  # Changed from InteractiveScene:
     radom_seed = 1
 
     def construct(self):
@@ -1084,7 +1084,7 @@ class LinearRegression(InteractiveScene):
 
         self.play(
             FadeIn(title, UP),
-            ShowCreation(line),
+            Create(line),
         )
         self.wait()
 
@@ -1171,7 +1171,7 @@ class LinearRegression(InteractiveScene):
             self.wait(0.5)
 
 
-class ShowGPT3Numbers(InteractiveScene):
+class ShowGPT3Numbers(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Title
         gpt3_label = Text("GPT-3", font="Consolas", font_size=72)
@@ -1487,7 +1487,7 @@ class ShowGPT3Numbers(InteractiveScene):
         )
         self.wait()
         self.play(
-            ShowCreation(lines, lag_ratio=0),
+            Create(lines, lag_ratio=0),
             FadeIn(total_box),
             FadeTransform(exprs[0][-11:].copy(), total),
             FadeTransform(exprs[7][-11:].copy(), total),
@@ -1663,7 +1663,7 @@ class ShowGPT3Numbers(InteractiveScene):
         self.wait()
 
 
-class DistinguishWeightsAndData(InteractiveScene):
+class DistinguishWeightsAndData(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up titles
         weights_title, data_title = titles = VGroup(
@@ -1773,7 +1773,7 @@ class DistinguishWeightsAndData(InteractiveScene):
                 for group in [mat_nums, vec_nums]),
                 lag_ratio=0.5
             ),
-            ShowCreation(v_line),
+            Create(v_line),
         )
         self.play(
             Write(weights_title),
@@ -1811,7 +1811,7 @@ class DistinguishWeightsAndData(InteractiveScene):
             self.wait()
 
 
-class SoftmaxBreakdown(InteractiveScene):
+class SoftmaxBreakdown(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Show example probability distribution
         word_strs = ['Dumbledore', 'Flitwick', 'Mcgonagall', 'Quirrell', 'Snape', 'Sprout', 'Trelawney']
@@ -1996,7 +1996,7 @@ class SoftmaxBreakdown(InteractiveScene):
         sum_num.next_to(sum_arrow, DOWN)
 
         self.play(
-            ShowCreation(rhs_rect),
+            Create(rhs_rect),
             FadeIn(rhs_words),
         )
         self.wait()
@@ -2137,7 +2137,7 @@ class SoftmaxBreakdown(InteractiveScene):
                 FadeTransform(exp_part.copy(), exp_sum)
                 for exp_part in exp_parts
             ), lag_ratio=0.01),
-            LaggedStartMap(ShowCreation, lines, lag_ratio=0.01),
+            LaggedStartMap(Create, lines, lag_ratio=0.01),
             run_time=1
         )
         self.wait()
@@ -2365,7 +2365,7 @@ class SoftmaxBreakdown(InteractiveScene):
             self.wait()
 
 
-class CostFunction(InteractiveScene):
+class CostFunction(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add graph
         axes = Axes((0, 1, 0.1), (0, 5, 1), width=10, height=6)
@@ -2417,7 +2417,7 @@ class CostFunction(InteractiveScene):
 
         # Animate in graph
         self.play(
-            ShowCreation(graph, run_time=3),
+            Create(graph, run_time=3),
             Write(expr, run_time=2),
         )
         self.wait()

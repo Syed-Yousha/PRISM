@@ -10,7 +10,7 @@ def get_lozenge(side_length=1):
     return result
 
 
-class ShowLozenge(InteractiveScene):
+class ShowLozenge(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add Lozenge
         lozenge = get_lozenge()
@@ -35,17 +35,17 @@ class ShowLozenge(InteractiveScene):
         angle_labels.set_z_index(1)
 
         self.play(
-            ShowCreation(lozenge, time_span=(1, 2.5)),
+            Create(lozenge, time_span=(1, 2.5)),
             VShowPassingFlash(lozenge.copy().insert_n_curves(20).set_stroke(width=5), time_width=2),
             run_time=3
         )
         self.play(
             Write(arc1_label),
-            ShowCreation(arc1),
+            Create(arc1),
         )
         self.play(
             Write(arc2_label),
-            ShowCreation(arc2),
+            Create(arc2),
         )
         self.add(angle_labels)
         self.wait()
@@ -96,7 +96,7 @@ class ShowLozenge(InteractiveScene):
         self.wait()
 
 
-class CubesAsHexagonTiling(InteractiveScene):
+class CubesAsHexagonTiling(Scene)  # Changed from InteractiveScene:
     n = 4
     colors = [GREY, GREY, GREY]
 
@@ -230,7 +230,7 @@ class AmbientTilingChanges(CubesAsHexagonTiling):
                 self.animate_out_with_rotation(old_cube)
 
 
-class RotationMove(InteractiveScene):
+class RotationMove(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add hex
         lozenge = Polygon(math.sqrt(3) * LEFT, UP, math.sqrt(3) * RIGHT, DOWN)
@@ -267,7 +267,7 @@ class AmbientTilingChangesHexagonBound(AmbientTilingChanges):
     n = 4
 
 
-class IntroduceHexagonFilling(InteractiveScene):
+class IntroduceHexagonFilling(Scene)  # Changed from InteractiveScene:
     N = 15
     tile_color = GREY_C
     highlight_color = TEAL
@@ -403,7 +403,7 @@ class DrawHexagon(IntroduceHexagonFilling):
         brace_label = brace.get_text("4")
 
         self.play(
-            ShowCreation(hexagon),
+            Create(hexagon),
             VShowPassingFlash(hexagon.copy().set_stroke(width=5).insert_n_curves(20), time_width=2),
             run_time=2
         )
@@ -485,7 +485,7 @@ class ShowAsThreeD(CubesAsHexagonTiling):
             self.add_cube(cube)
 
 
-class Project3DCube(InteractiveScene):
+class Project3DCube(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set axes
         frame = self.frame
@@ -900,7 +900,7 @@ class Project4DCube(Project3DCube):
         )
         self.wait()
         self.play(
-            ShowCreation(edge_connectors, lag_ratio=0),
+            Create(edge_connectors, lag_ratio=0),
             TransformFromCopy(*cube_shells),
             TransformFromCopy(low_labels, high_labels),
             label_group4d[1][1::2].animate.set_opacity(1),
@@ -1228,7 +1228,7 @@ class ShowRhombicDodecTesselation(Project4DCube):
         )
 
 
-class CubeToHypercubeAnalogy(InteractiveScene):
+class CubeToHypercubeAnalogy(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Vertices
 
@@ -1238,7 +1238,7 @@ class CubeToHypercubeAnalogy(InteractiveScene):
         pass
 
 
-class AskStripQuestion(InteractiveScene):
+class AskStripQuestion(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add circle
         radius = 2.5
@@ -1250,12 +1250,12 @@ class AskStripQuestion(InteractiveScene):
         radius_label.next_to(radial_line, UP, SMALL_BUFF)
 
         self.play(
-            ShowCreation(radial_line),
+            Create(radial_line),
             FadeIn(radius_label, RIGHT)
         )
         self.play(
             Rotate(radial_line, 2 * PI, about_point=circle.get_center()),
-            ShowCreation(circle),
+            Create(circle),
             run_time=2
         )
         self.wait()
@@ -1735,7 +1735,7 @@ class StruggleWithStrips(AskStripQuestion):
         return super().get_strip(*args, **kwargs)
 
 
-class SphereStrips(InteractiveScene):
+class SphereStrips(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Axes
         frame = self.frame
@@ -1778,7 +1778,7 @@ class SphereStrips(InteractiveScene):
         circle.set_clip_plane(UP, 10)  # Why?
         plane.set_clip_plane(UP, 10)  # Why?
 
-        self.play(ShowCreation(pre_strip, run_time=2))
+        self.play(Create(pre_strip, run_time=2))
         self.wait()
 
         # Expand
@@ -1886,7 +1886,7 @@ class SphereStrips(InteractiveScene):
         cylinder_mesh.set_clip_plane(UP, 20)
         cylinder_mesh.match_height(sphere)
 
-        self.play(ShowCreation(cylinder_mesh, lag_ratio=0.01))
+        self.play(Create(cylinder_mesh, lag_ratio=0.01))
         self.wait()
 
         # Project the strip
@@ -1955,7 +1955,7 @@ class SphereStrips(InteractiveScene):
         strips.set_opacity(0.5)
 
         self.play(
-            ShowCreation(strips, lag_ratio=0.9),
+            Create(strips, lag_ratio=0.9),
             frame.animate.reorient(-17, 31, 0),
             run_time=10
         )
@@ -1983,12 +1983,12 @@ class SphereStrips(InteractiveScene):
         return strip
 
 
-class MongesTheorem(InteractiveScene):
+class MongesTheorem(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add circles
         circ1, circ2, circ3 = circles = self.get_initial_circles()
 
-        self.play(LaggedStartMap(ShowCreation, circles, lag_ratio=0.5, run_time=2))
+        self.play(LaggedStartMap(Create, circles, lag_ratio=0.5, run_time=2))
         self.wait()
 
         # Add tangents
@@ -2118,7 +2118,7 @@ class MongesTheorem(InteractiveScene):
 
         self.play(
             frame.animate.reorient(-50, 74, 0, (0.22, 0.32, -1.5), 9.17),
-            ShowCreation(tangent_plane, time_span=(0, 2)),
+            Create(tangent_plane, time_span=(0, 2)),
             run_time=6,
         )
         self.wait()
@@ -2128,13 +2128,13 @@ class MongesTheorem(InteractiveScene):
             run_time=4
         )
         for line in plane_lines:
-            self.play(ShowCreation(line, run_time=2))
+            self.play(Create(line, run_time=2))
             self.wait()
 
         self.add(xy_plane, tangent_plane, plane_lines)
-        self.play(ShowCreation(xy_plane, time_span=(0, 2)))
+        self.play(Create(xy_plane, time_span=(0, 2)))
         self.wait()
-        self.play(ShowCreation(monge_line, suspend_mobject_updating=True))
+        self.play(Create(monge_line, suspend_mobject_updating=True))
         self.wait()
 
         # Move circles to problem position
@@ -2167,7 +2167,7 @@ class MongesTheorem(InteractiveScene):
         partial_tangent_plane.set_shading(0.25, 0.25, 0.25)
 
         self.add(partial_tangent_plane)
-        self.play(ShowCreation(partial_tangent_plane))
+        self.play(Create(partial_tangent_plane))
         self.wait()
         self.play(self.frame.animate.reorient(27, 75, 0))
         self.play(
@@ -2214,7 +2214,7 @@ class MongesTheorem(InteractiveScene):
         tip_lines = always_redraw(get_tip_lines)
         tip_lines.suspend_updating()
 
-        self.play(ShowCreation(tip_lines[0]))
+        self.play(Create(tip_lines[0]))
         self.play(self.frame.animate.reorient(-1, 83, 0, (-1.2, 0.14, -0.2)), run_time=3)
         self.wait()
 
@@ -2235,7 +2235,7 @@ class MongesTheorem(InteractiveScene):
             self.frame.animate.reorient(-129, 75, 0, (-1.92, 0.22, 0.0)),
             run_time=4
         )
-        self.play(ShowCreation(tip_lines[1:], lag_ratio=0.5, run_time=2))
+        self.play(Create(tip_lines[1:], lag_ratio=0.5, run_time=2))
         self.wait()
 
         # Add plane
@@ -2247,7 +2247,7 @@ class MongesTheorem(InteractiveScene):
         plane.suspend_updating()
 
         self.play(
-            ShowCreation(plane),
+            Create(plane),
             self.frame.animate.reorient(-74, 66, 0, (-1.92, 0.22, 0.0)),
             run_time=4
         )
@@ -2429,7 +2429,7 @@ class GeneralCentersOfSimilarity(MongesTheorem):
             label.shift_onto_screen()
             self.play(
                 ghost.animate.scale(0, about_point=dot.get_center()),
-                ShowCreation(lines, lag_ratio=0),
+                Create(lines, lag_ratio=0),
                 FadeIn(dot),
                 FadeIn(label)
             )
@@ -2568,7 +2568,7 @@ class SimilarDiagrams(MongesTheorem):
         self.wait()
 
 
-class AskAboutVolumeOfParallelpiped(InteractiveScene):
+class AskAboutVolumeOfParallelpiped(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Axes and plane
         frame = self.frame
@@ -2616,7 +2616,7 @@ class AskAboutVolumeOfParallelpiped(InteractiveScene):
         self.wait(30)
 
 
-class TriangleAreaFormula(InteractiveScene):
+class TriangleAreaFormula(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up triangle
         plane = NumberPlane(faded_line_ratio=1)
@@ -2730,7 +2730,7 @@ class TriangleAreaFormula(InteractiveScene):
         self.wait()
 
 
-class LogicForArea(InteractiveScene):
+class LogicForArea(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         det_tex = Tex(R"""
@@ -2761,7 +2761,7 @@ class LogicForArea(InteractiveScene):
         self.add(equations)
 
 
-class FourDDet(InteractiveScene):
+class FourDDet(Scene)  # Changed from InteractiveScene:
     def construct(self):
         det_tex = Tex(R"""
             \frac{1}{6}\det\left[\begin{array}{cccc}
@@ -2780,7 +2780,7 @@ class FourDDet(InteractiveScene):
         self.add(group)
 
 
-class RandomVectorStatistics(InteractiveScene):
+class RandomVectorStatistics(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Show 2d distribution
         chart = self.get_random_angle_data_histogram(2, step_size=2)
@@ -2882,7 +2882,7 @@ class RandomVectorStatistics(InteractiveScene):
         return chart
 
 
-class ProbabilityQuestion(InteractiveScene):
+class ProbabilityQuestion(Scene)  # Changed from InteractiveScene:
     N = 6
 
     def construct(self):
@@ -2947,7 +2947,7 @@ class ProbabilityQuestion(InteractiveScene):
         label.next_to(rect, DOWN)
         label.set_color(TEAL)
 
-        self.play(ShowCreation(rect))
+        self.play(Create(rect))
         self.play(Write(label))
         self.wait()
 
@@ -2990,7 +2990,7 @@ class ProbabilityQuestion(InteractiveScene):
         )
 
 
-class IntersectingCircles(InteractiveScene):
+class IntersectingCircles(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add circles
         circles = Circle(radius=2).replicate(4)
@@ -3015,11 +3015,11 @@ class IntersectingCircles(InteractiveScene):
         dots.add_updater(lambda m: m.set_points(circles.pair_intersections))
 
         circles[3].set_opacity(0)
-        self.play(LaggedStartMap(ShowCreation, circles, lag_ratio=0.7))
+        self.play(LaggedStartMap(Create, circles, lag_ratio=0.7))
         self.play(FadeIn(dots))
         self.wait()
         circles[3].set_stroke(opacity=1)
-        self.play(ShowCreation(circles[3]))
+        self.play(Create(circles[3]))
         self.add(circles)
         self.wait()
 
@@ -3058,10 +3058,10 @@ class IntersectingCircles(InteractiveScene):
             FadeIn(centers, lag_ratio=0.5)
         )
         self.wait()
-        self.play(ShowCreation(radial_lines[:3], lag_ratio=0.75))
+        self.play(Create(radial_lines[:3], lag_ratio=0.75))
         self.wait()
         for i in range(3, 8, 2):
-            self.play(ShowCreation(radial_lines[i:i + 2], lag_ratio=0.5, run_time=1))
+            self.play(Create(radial_lines[i:i + 2], lag_ratio=0.5, run_time=1))
             self.wait()
         self.wait()
         self.play(
@@ -3089,7 +3089,7 @@ class IntersectingCircles(InteractiveScene):
             run_time=3
         )
         circles[3].set_stroke(opacity=1)
-        self.play(ShowCreation(circles[3]))
+        self.play(Create(circles[3]))
         self.wait()
 
     def place_circles_by_vectors(self, circles, vectors):
@@ -3206,7 +3206,7 @@ class TriPod(MongesTheorem):
             dot = GlowDot(point)
             int_dots.add(dot)
             self.play(
-                ShowCreation(pair, lag_ratio=0),
+                Create(pair, lag_ratio=0),
             )
             self.wait()
 

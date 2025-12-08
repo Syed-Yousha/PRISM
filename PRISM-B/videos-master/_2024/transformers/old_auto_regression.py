@@ -65,7 +65,7 @@ def gpt3_predict_next_token(text, n_shown=10, random_seed=0):
     return top_tokens, top_probs
 
 
-class SimpleAutogregression(InteractiveScene):
+class SimpleAutogregression(Scene)  # Changed from InteractiveScene:
     text_corner = 3.5 * UP + 0.75 * RIGHT
     line_len = 31
     font_size = 35
@@ -375,7 +375,7 @@ class AnnotateNextWord(SimpleAutogregression):
         dist_rect.set_stroke(YELLOW, 2)
 
         self.play(
-            ShowCreation(highlight),
+            Create(highlight),
             GrowArrow(arrow)
         )
         self.wait()
@@ -549,11 +549,11 @@ class AthleteCompletion(SimpleAutogregression):
             ),
         )
         self.play(
-            ShowCreation(out_arrow),
+            Create(out_arrow),
             FadeIn(bar_groups, lag_ratio=0.1)
         )
         self.wait()
-        self.play(ShowCreation(top_rect))
+        self.play(Create(top_rect))
 
         # Reshow parameters
         self.play(

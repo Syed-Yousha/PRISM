@@ -1,4 +1,4 @@
-from manimlib import *
+from manim import *
 
 
 # Related to pi creatures

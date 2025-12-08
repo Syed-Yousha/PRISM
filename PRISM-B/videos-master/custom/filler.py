@@ -1,4 +1,4 @@
-from manimlib.scene.scene import Scene
+from manim import Scene
 
 
 class ExternallyAnimatedScene(Scene):

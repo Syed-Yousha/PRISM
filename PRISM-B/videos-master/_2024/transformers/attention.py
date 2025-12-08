@@ -7,7 +7,7 @@ from _2024.transformers.embedding import break_into_tokens
 from _2024.transformers.embedding import get_piece_rectangles
 
 
-class AttentionPatterns(InteractiveScene):
+class AttentionPatterns(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add sentence
         phrase = " a fluffy blue creature roamed the verdant forest"
@@ -66,7 +66,7 @@ class AttentionPatterns(InteractiveScene):
         self.play(
             LaggedStartMap(DrawBorderThenFill, noun_rects),
             Animation(noun_mobs),
-            LaggedStartMap(ShowCreation, adj_arrows, lag_ratio=0.2, run_time=1.5),
+            LaggedStartMap(Create, adj_arrows, lag_ratio=0.2, run_time=1.5),
         )
         kw = dict(time_width=2, max_stroke_width=10, lag_ratio=0.2, path_arc=150 * DEGREES)
         self.play(
@@ -249,7 +249,7 @@ class AttentionPatterns(InteractiveScene):
             image.next_to(emb_sym_primes[n], DOWN, buff=MED_SMALL_BUFF)
 
         self.play(
-            ShowCreation(full_connections, lag_ratio=0.01, run_time=2),
+            Create(full_connections, lag_ratio=0.01, run_time=2),
             LaggedStart(
                 (TransformFromCopy(sym1, sym2)
                 for sym1, sym2 in zip(emb_syms, emb_sym_primes)),
@@ -476,7 +476,7 @@ class AttentionPatterns(InteractiveScene):
         q_rects = VGroup(map(SurroundingRectangle, [q_sym, rhs]))
         e_rects.set_stroke(TEAL, 3)
         q_rects.set_stroke(YELLOW, 3)
-        self.play(ShowCreation(e_rects, lag_ratio=0.2))
+        self.play(Create(e_rects, lag_ratio=0.2))
         self.wait()
         self.play(Transform(e_rects, q_rects))
         self.wait()
@@ -536,7 +536,7 @@ class AttentionPatterns(InteractiveScene):
             for sym, v in zip(noun_q_syms, [UL, UR])
         )
         noun_q_lines.set_stroke(GREY, 1)
-        self.play(ShowCreation(noun_q_lines, lag_ratio=0))
+        self.play(Create(noun_q_lines, lag_ratio=0))
         self.wait()
 
         # Set up keys
@@ -629,9 +629,9 @@ class AttentionPatterns(InteractiveScene):
         )
         VGroup(mat_rect, lil_rect, *lines).set_stroke(GREY_A, 1)
 
-        self.play(ShowCreation(lil_rect))
+        self.play(Create(lil_rect))
         self.play(
-            ShowCreation(lines, lag_ratio=0),
+            Create(lines, lag_ratio=0),
             TransformFromCopy(lil_rect, mat_rect),
             FadeInFromPoint(matrix, lil_rect.get_center()),
         )
@@ -685,8 +685,8 @@ class AttentionPatterns(InteractiveScene):
             frame.animate.set_height(15, about_edge=UP).set_x(-2).set_anim_args(run_time=3),
             MoveToTarget(q_groups),
             MoveToTarget(word_groups),
-            ShowCreation(h_lines, lag_ratio=0.2),
-            ShowCreation(v_lines, lag_ratio=0.2),
+            Create(h_lines, lag_ratio=0.2),
+            Create(v_lines, lag_ratio=0.2),
             FadeOut(fade_rects),
         )
 
@@ -768,7 +768,7 @@ class AttentionPatterns(InteractiveScene):
         q_rects.set_stroke(YELLOW, 2)
 
         self.play(
-            ShowCreation(k_rects, lag_ratio=0.5, run_time=2),
+            Create(k_rects, lag_ratio=0.5, run_time=2),
             LaggedStartMap(
                 FlashAround, k_groups[1:3],
                 color=TEAL,
@@ -817,7 +817,7 @@ class AttentionPatterns(InteractiveScene):
         self.play(
             *(dtg.animate.scale(1.25) for dtg in dots_to_grow),
             *(CountInFrom(ndp, run_time=1) for ndp in high_numerical_dot_prods[:2]),
-            *(VFadeIn(ndp) for ndp in high_numerical_dot_prods[:2]),
+            *(FadeIn(ndp) for ndp in high_numerical_dot_prods[:2]),
             *(FadeOut(dot_prod, run_time=0.5) for dot_prod in dot_prods),
         )
         self.wait()
@@ -828,7 +828,7 @@ class AttentionPatterns(InteractiveScene):
         att_words.next_to(att_arrow.pfp(0.4), UL)
 
         self.play(
-            ShowCreation(att_arrow),
+            Create(att_arrow),
             Write(att_words),
         )
         self.wait()
@@ -844,7 +844,7 @@ class AttentionPatterns(InteractiveScene):
         )
         self.play(
             CountInFrom(low_numerical_dot_prod),
-            VFadeIn(low_numerical_dot_prod),
+            FadeIn(low_numerical_dot_prod),
             FadeOut(dots[5][3]),
         )
         self.wait()
@@ -881,7 +881,7 @@ class AttentionPatterns(InteractiveScene):
 
         index = words.index("creature")
         self.play(
-            ShowCreation(col_rect),
+            Create(col_rect),
             grid_lines.animate.set_stroke(opacity=0.5),
             ndp_columns[:index].animate.set_opacity(0.35),
             ndp_columns[index + 1:].animate.set_opacity(0.35),
@@ -991,7 +991,7 @@ class AttentionPatterns(InteractiveScene):
             mask_rects.add(mask_rect)
 
         lag_ratio=1.0 / len(mask_rects)
-        self.play(ShowCreation(mask_rects, lag_ratio=lag_ratio))
+        self.play(Create(mask_rects, lag_ratio=lag_ratio))
         self.play(
             LaggedStart(
                 (dot.animate.scale(0) for dot in masked_dots),
@@ -1159,7 +1159,7 @@ class AttentionPatterns(InteractiveScene):
         self.play(
             frame.animate.reorient(0, 0, 0, (-2.6, -4.79, 0.0), 15.07).set_anim_args(run_time=2),
             MoveToTarget(emb_sym),
-            ShowCreation(sum_rect),
+            Create(sum_rect),
             FadeIn(creature, UP),
             FadeOut(wv_word),
             FadeOut(big_wv_sym),
@@ -1336,7 +1336,7 @@ class AttentionPatterns(InteractiveScene):
         )
         result_rect.set_stroke(TEAL, 3)
         self.play(
-            ShowCreation(result_rect)
+            Create(result_rect)
         )
         self.wait()
 
@@ -1450,7 +1450,7 @@ class AttentionPatterns(InteractiveScene):
         ###
 
 
-class MyseteryNovel(InteractiveScene):
+class MyseteryNovel(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Create paragraphs
         text = Path(DATA_DIR, "murder_story.txt").read_text()
@@ -1545,7 +1545,7 @@ class MyseteryNovel(InteractiveScene):
         )
 
 
-class RoadNotTaken(InteractiveScene):
+class RoadNotTaken(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add poem
         stanza_strs = [
@@ -1625,7 +1625,7 @@ class RoadNotTaken(InteractiveScene):
         self.play(GrowArrow(arrow))
         self.wait()
         self.play(
-            ShowCreation(less_rect),
+            Create(less_rect),
             less.animate.set_fill(opacity=1),
             arrow.animate.match_x(less),
         )
@@ -1692,7 +1692,7 @@ class RoadNotTaken(InteractiveScene):
         # Show less again
         self.play(
             arrow.animate.rotate(-PI / 4).next_to(less, DOWN, SMALL_BUFF),
-            ShowCreation(less_rect),
+            Create(less_rect),
             less.animate.set_fill(WHITE, 1)
         )
         self.wait()
@@ -1712,7 +1712,7 @@ class RoadNotTaken(InteractiveScene):
         self.wait()
 
 
-class QueryMap(InteractiveScene):
+class QueryMap(Scene)  # Changed from InteractiveScene:
     map_tex = "W_Q"
     map_color = YELLOW
     src_name = "Creature"
@@ -1847,7 +1847,7 @@ class KeyMap(QueryMap):
     out_vect_coords = (-1.75, -1)
 
 
-class DescribeAttentionEquation(InteractiveScene):
+class DescribeAttentionEquation(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Stage image
         image = ImageMobject("AttentionPaperStill")
@@ -1892,13 +1892,13 @@ class DescribeAttentionEquation(InteractiveScene):
             big_rects.add(big_rect)
 
             self.play(
-                ShowCreation(lil_rect),
+                Create(lil_rect),
                 equation[sym].animate.set_color(color),
             )
             self.play(
                 TransformFromCopy(lil_rect, big_rect),
                 FadeInFromPoint(arr, lil_rect.get_center()),
-                ShowCreation(lines, lag_ratio=0)
+                Create(lines, lag_ratio=0)
             )
         self.wait()
 
@@ -2080,7 +2080,7 @@ class DescribeAttentionEquation(InteractiveScene):
         return result
 
 
-class ShowAllPossibleNextTokenPredictions(InteractiveScene):
+class ShowAllPossibleNextTokenPredictions(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add phrase
         phrase = Text("the fluffy blue creature roamed the verdant forest despite")
@@ -2166,7 +2166,7 @@ class ShowAllPossibleNextTokenPredictions(InteractiveScene):
         pass
 
 
-class ShowMasking(InteractiveScene):
+class ShowMasking(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up two patterns
         shape = (6, 6)
@@ -2224,7 +2224,7 @@ class ShowMasking(InteractiveScene):
         rects = VGroup(map(SurroundingRectangle, changers))
         rects.set_stroke(RED, 3)
 
-        self.play(LaggedStartMap(ShowCreation, rects))
+        self.play(LaggedStartMap(Create, rects))
         self.play(
             LaggedStartMap(FadeOut, rects),
             LaggedStartMap(MoveToTarget, changers)
@@ -2256,7 +2256,7 @@ class ShowMasking(InteractiveScene):
         self.wait()
 
 
-class ScalingAPattern(InteractiveScene):
+class ScalingAPattern(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Position grid
         N = 50
@@ -2310,7 +2310,7 @@ class ScalingAPattern(InteractiveScene):
         self.wait()
 
 
-class IntroduceValueMatrix(InteractiveScene):
+class IntroduceValueMatrix(Scene)  # Changed from InteractiveScene:
     def setup(self):
         self.fix_new_entries_in_frame = False
         super().setup()
@@ -2436,9 +2436,9 @@ class IntroduceValueMatrix(InteractiveScene):
             GrowFromCenter(matrix_brace),
             FadeIn(matrix_label, shift=0.25 * UP)
         )
-        self.play(ShowCreation(in_vect_rect))
+        self.play(Create(in_vect_rect))
         self.play(
-            ShowCreation(in_vect_path),
+            Create(in_vect_path),
             TransformFromCopy(fluff_emb, in_vect, path_arc=-20 * DEGREES),
             run_time=2
         )
@@ -2456,7 +2456,7 @@ class IntroduceValueMatrix(InteractiveScene):
         value_label.set_backstroke()
         self.fix_new_entries_in_frame = True
         self.play(
-            ShowCreation(value_rect),
+            Create(value_rect),
             FadeIn(value_label, lag_ratio=0.1)
         )
         self.wait()
@@ -2500,7 +2500,7 @@ class IntroduceValueMatrix(InteractiveScene):
         )
         self.play(
             TransformFromCopy(blue_emb, blue_in_vect),
-            ShowCreation(blue_path),
+            Create(blue_path),
             FadeOut(in_vect, 3 * DOWN),
             run_time=1.5
         )
@@ -2517,7 +2517,7 @@ class IntroduceValueMatrix(InteractiveScene):
         rhs_rect.set_stroke(RED, 2)
 
         self.fix_new_entries_in_frame = True
-        self.play(ShowCreation(rhs_rect))
+        self.play(Create(rhs_rect))
         self.fix_new_entries_in_frame = False
         self.add(diff2)
         self.play(
@@ -2558,7 +2558,7 @@ class IntroduceValueMatrix(InteractiveScene):
         super().add(*mobjects)
 
 
-class CountMatrixParameters(InteractiveScene):
+class CountMatrixParameters(Scene)  # Changed from InteractiveScene:
     count_font_size = 36
 
     def construct(self):
@@ -2620,7 +2620,7 @@ class CountMatrixParameters(InteractiveScene):
         question.next_to(matrices, RIGHT, LARGE_BUFF)
 
         self.play(
-            ShowCreation(rects, lag_ratio=5e-3, run_time=2),
+            Create(rects, lag_ratio=5e-3, run_time=2),
             Write(question)
         )
         self.play(FadeOut(rects))
@@ -2748,7 +2748,7 @@ class CountMatrixParameters(InteractiveScene):
         self.add(big_rect, val_rhs_copy)
         self.play(
             FadeIn(big_rect),
-            ShowCreation(val_rhs_rect)
+            Create(val_rhs_rect)
         )
         self.wait()
         self.play(
@@ -2767,7 +2767,7 @@ class CountMatrixParameters(InteractiveScene):
         cross = Cross(val_product, stroke_width=[0, 12, 0]).scale(1.1)
         self.play(LaggedStart(
             FadeOut(qk_groups, 2 * UR, scale=0.5),
-            ShowCreation(cross),
+            Create(cross),
             frame.animate.set_height(FRAME_HEIGHT).move_to(RIGHT),
             run_time=2,
             lag_ratio=0.1
@@ -3011,7 +3011,7 @@ class CountMatrixParameters(InteractiveScene):
         return equation
 
 
-class LowRankTransformation(InteractiveScene):
+class LowRankTransformation(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add three sets of axes
         frame = self.frame
@@ -3074,7 +3074,7 @@ class LowRankTransformation(InteractiveScene):
         title.next_to(big_rect, UP, buff=MED_LARGE_BUFF)
 
         self.play(
-            ShowCreation(big_rect),
+            Create(big_rect),
             FadeIn(title, shift=0.25 * UP)
         )
         self.wait(5)
@@ -3101,7 +3101,7 @@ class LowRankTransformation(InteractiveScene):
         return plane
 
 
-class ThinkAboutOverallMap(InteractiveScene):
+class ThinkAboutOverallMap(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         rect = Rectangle(6.5, 2.75)
@@ -3111,13 +3111,13 @@ class ThinkAboutOverallMap(InteractiveScene):
         label.next_to(rect, UP, aligned_edge=LEFT)
         label.shift(0.5 * RIGHT)
         self.play(
-            ShowCreation(rect),
+            Create(rect),
             FadeIn(label, UP),
         )
         self.wait()
 
 
-class CrossAttention(InteractiveScene):
+class CrossAttention(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Show both
         en_tokens = self.get_words("I do not want to pet it")
@@ -3158,7 +3158,7 @@ class CrossAttention(InteractiveScene):
                 )
                 lines.add(line)
 
-        self.play(ShowCreation(lines, lag_ratio=0.01, run_time=2))
+        self.play(Create(lines, lag_ratio=0.01, run_time=2))
         self.wait(2)
         self.play(FadeOut(lines))
 
@@ -3301,7 +3301,7 @@ class CrossAttention(InteractiveScene):
         return get_sym
 
 
-class CarCrashedExample(InteractiveScene):
+class CarCrashedExample(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add sentence
         sentence = Text("... when suddenly they crashed the car into a tree ...")
@@ -3326,7 +3326,7 @@ class CarCrashedExample(InteractiveScene):
         self.wait()
 
 
-class TwoHarrysExample(InteractiveScene):
+class TwoHarrysExample(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         s1, s2 = sentences = VGroup(
@@ -3358,7 +3358,7 @@ class TwoHarrysExample(InteractiveScene):
         context_anim(s2)
 
 
-class ManyTypesOfUpdates(InteractiveScene):
+class ManyTypesOfUpdates(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add matrices
         shapes = [(4, 8), (4, 8), (8, 4), (4, 8)]
@@ -3468,7 +3468,7 @@ class ManyTypesOfUpdates(InteractiveScene):
             self.play(
                 FadeOut(last_group),
                 # FadeIn(desc, shift=0.25 * UP),
-                ShowCreation(connections, lag_ratio=0.25, run_time=0.5 * len(connections)),
+                Create(connections, lag_ratio=0.25, run_time=0.5 * len(connections)),
                 LaggedStart(
                     (self.get_matrix_update_anim(mat)
                     for mat in matrices),
@@ -3500,7 +3500,7 @@ class ManyTypesOfUpdates(InteractiveScene):
         )
 
 
-class MultiHeadedAttention(InteractiveScene):
+class MultiHeadedAttention(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Mention head
         background_rect = FullScreenRectangle()
@@ -3840,7 +3840,7 @@ class MultiHeadedAttention(InteractiveScene):
 
         self.play(
             LaggedStartMap(MoveToTarget, value_diagrams),
-            LaggedStartMap(ShowCreation, rects),
+            LaggedStartMap(Create, rects),
             LaggedStartMap(GrowArrow, arrows),
             LaggedStartMap(FadeIn, delta_Es, shift=0.5 * DOWN),
         )
@@ -3885,7 +3885,7 @@ class MultiHeadedAttention(InteractiveScene):
             Write(og_emb_plus),
             FadeIn(og_label, shift=RIGHT),
         )
-        self.play(ShowCreation(lil_rect))
+        self.play(Create(lil_rect))
         self.wait()
         self.play(
             ReplacementTransform(lil_rect, big_rect),
@@ -3894,7 +3894,7 @@ class MultiHeadedAttention(InteractiveScene):
         self.wait()
 
 
-class OutputMatrix(InteractiveScene):
+class OutputMatrix(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up all heads
         matrix_pairs = VGroup(self.get_factored_value_map() for x in range(3))
@@ -3942,7 +3942,7 @@ class OutputMatrix(InteractiveScene):
                 FadeIn(label, 0.25 * UP),
                 LaggedStartMap(FadeIn, pair, scale=1.25, lag_ratio=0.5),
                 LaggedStartMap(FadeIn, mat_labels, lag_ratio=0.5),
-                ShowCreation(rect),
+                Create(rect),
             )
         self.play(Write(dots))
         self.wait()
@@ -4002,7 +4002,7 @@ class OutputMatrix(InteractiveScene):
         out_label.next_to(out_rect, LEFT)
 
         self.play(
-            ShowCreation(out_rect),
+            Create(out_rect),
             FadeIn(out_label, shift=0.25 * LEFT, scale=1.25),
         )
         self.wait()
@@ -4033,7 +4033,7 @@ class OutputMatrix(InteractiveScene):
         return matrices
 
 
-class Parallelizability(InteractiveScene):
+class Parallelizability(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up curves
         n_instances = 20

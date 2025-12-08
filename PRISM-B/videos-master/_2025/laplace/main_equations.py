@@ -4,7 +4,7 @@ from _2025.laplace.exponentials import SPlane
 from _2025.laplace.exponentials import get_exp_graph_icon
 
 
-class DrivenHarmonicOscillatorEquation(InteractiveScene):
+class DrivenHarmonicOscillatorEquation(Scene)  # Changed from InteractiveScene:
     def construct(self):
         colors = color_gradient([TEAL, RED], 3, interp_by_hsl=True)
         equation = Tex(
@@ -19,7 +19,7 @@ class DrivenHarmonicOscillatorEquation(InteractiveScene):
         self.add(equation)
 
 
-class SimpleCosGraph(InteractiveScene):
+class SimpleCosGraph(Scene)  # Changed from InteractiveScene:
     rotation_frequency = TAU / 4
 
     def construct(self):
@@ -71,7 +71,7 @@ class SimpleCosGraph(InteractiveScene):
         ]
 
 
-class BreakUpCosineTex(InteractiveScene):
+class BreakUpCosineTex(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Show sum
         pure_cos = Tex(R"\cos(t)", font_size=72)
@@ -105,7 +105,7 @@ class BreakUpCosineTex(InteractiveScene):
         self.wait()
 
 
-class TranslateToNewLanguage(InteractiveScene):
+class TranslateToNewLanguage(Scene)  # Changed from InteractiveScene:
     graph_resolution = (301, 301)
     show_integral = True
     label_config = dict(
@@ -141,7 +141,7 @@ class TranslateToNewLanguage(InteractiveScene):
 
         self.play(LaggedStart(
             FadeIn(axes),
-            ShowCreation(graph),
+            Create(graph),
             FadeIn(graph_label),
             FadeIn(s_plane_name, lag_ratio=0.1),
             LaggedStartMap(FadeIn, exp_pieces, lag_ratio=0.1),
@@ -248,7 +248,7 @@ class TranslateToNewLanguage(InteractiveScene):
             self.add(graph_copy, rect, Fs_label, integral)
             self.play(
                 FadeOut(rect),
-                ShowCreation(graph_copy),
+                Create(graph_copy),
                 frame.animate.reorient(-2, 67, 0, (-0.95, -0.06, 1.91), 9.45),
                 run_time=8
             )
@@ -286,7 +286,7 @@ class TranslateToNewLanguage(InteractiveScene):
 
         self.add(pole_lines, key_pieces, lt_graph)
         self.play(
-            ShowCreation(pole_lines, lag_ratio=0.1),
+            Create(pole_lines, lag_ratio=0.1),
         )
         self.play(
             frame.animate.reorient(0, 0, 0, (-0.98, 0.82, 0.0), 10.00),
@@ -314,7 +314,7 @@ class TranslateToNewLanguage(InteractiveScene):
 
         self.play(
             Restore(top_rect),
-            ShowCreation(h_line, time_span=(1, 2)),
+            Create(h_line, time_span=(1, 2)),
             VGroup(axes, graph).animate.shift(2 * DOWN),
             VGroup(graph_label, arrow, fancy_L, Fs_label).animate.shift(3 * DOWN),
             frame.animate.reorient(-17, 90, 0, (-2.86, 1.57, 3.14), 10.95),
@@ -375,7 +375,7 @@ class TranslateToNewLanguage(InteractiveScene):
         return get_exp_graph_icon(s, **kwargs)
 
 
-class TranslateDifferentialEquation(InteractiveScene):
+class TranslateDifferentialEquation(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Translate the equations
         colors = color_gradient([TEAL, RED], 3, interp_by_hsl=True)
@@ -438,7 +438,7 @@ class TranslateDifferentialEquation(InteractiveScene):
         self.wait()
 
 
-class DesiredMachine(InteractiveScene):
+class DesiredMachine(Scene)  # Changed from InteractiveScene:
     show_ode = True
 
     def construct(self):
@@ -559,7 +559,7 @@ class DesiredMachine(InteractiveScene):
         self.play(
             LaggedStartMap(FadeOut, mobs, run_time=2),
             TransformFromCopy(out_func["e^{s_1 {t}}"][0], exp_piece, run_time=2),
-            VFadeIn(randy, time_span=(0.5, 2.0)),
+            FadeIn(randy, time_span=(0.5, 2.0)),
             randy.change("confused", exp_piece).set_anim_args(run_time=2),
         )
         self.play(Blink(randy))
@@ -582,7 +582,7 @@ class DesiredMachine(InteractiveScene):
         return machine
 
 
-class ExpDeriv(InteractiveScene):
+class ExpDeriv(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         t2c = {"{t}": BLUE, "{s}": YELLOW}
@@ -641,9 +641,9 @@ class IntroduceTransform(SPlane):
         self.add(laplace_transform_word)
         self.wait()
         self.play(LaggedStart(
-            VFadeIn(randy),
+            FadeIn(randy),
             randy.change("confused", transform_word),
-            ShowCreation(transform_word_rect),
+            Create(transform_word_rect),
             laplace_word.animate.set_opacity(0.5),
             LaggedStartMap(FadeIn, q_marks, shift=0.5 * UP, lag_ratio=0.25),
             lag_ratio=0.1
@@ -761,7 +761,7 @@ class IntroduceTransform(SPlane):
 
         self.play(laplace_word.animate.set_fill(opacity=1).scale(1.5).next_to(transform_word, UP, MED_SMALL_BUFF, LEFT))
         self.play(
-            ShowCreation(rect),
+            Create(rect),
             GrowArrow(vect),
             randy.change("pondering", rect),
         )
@@ -818,7 +818,7 @@ class IntroduceTransform(SPlane):
         s_vect.next_to(lt_def["{s}"][0], UP, SMALL_BUFF)
 
         self.play(
-            ShowCreation(rect),
+            Create(rect),
             randy.change('confused')
         )
         self.wait()
@@ -857,7 +857,7 @@ class IntroduceTransform(SPlane):
         F_rect.set_stroke(RED, 2)
 
         self.play(
-            ShowCreation(F_rect),
+            Create(F_rect),
             s_vect.animate.next_to(F_rect, UP, SMALL_BUFF).set_color(RED)
         )
         self.wait()
@@ -893,7 +893,7 @@ class IntroduceTransform(SPlane):
         VGroup(rect, outer_rects).set_stroke(RED, 2)
 
         self.play(
-            ShowCreation(rect),
+            Create(rect),
             outer_part.animate.set_fill(opacity=0.2),
             F_lhs.animate.set_fill(opacity=0.2),
         )
@@ -975,7 +975,7 @@ class IntroduceTransform(SPlane):
         f_rect = SurroundingRectangle(f_term, buff=0.05)
         f_rect.set_stroke(PINK, 2)
 
-        self.play(ShowCreation(f_rect))
+        self.play(Create(f_rect))
         self.play(
             TransformMatchingTex(
                 lt_def,
@@ -985,7 +985,7 @@ class IntroduceTransform(SPlane):
             ),
             f_rect.animate.surround(cos_term, buff=0.05),
             F_lhs.animate.shift((lt_of_cos.get_width() - lt_def.get_width()) * 0.5 * LEFT),
-            *map(ShowCreation, imag_circles),
+            *map(Create, imag_circles),
         )
         self.play(FadeOut(f_rect))
         self.wait()
@@ -1007,7 +1007,7 @@ class IntroduceTransform(SPlane):
         # Show the graph
         self.play(
             cos_lt_group.animate.to_edge(LEFT, buff=MED_SMALL_BUFF).set_fill(opacity=1),
-            ShowCreation(graph[0]),
+            Create(graph[0]),
             Write(graph[1], stroke_width=1, time_span=(2, 4)),
             frame.animate.reorient(-28, 74, 0, OUT, 8.37),
             run_time=4,
@@ -1055,7 +1055,7 @@ class IntroduceTransform(SPlane):
 
         self.add(interior)
         self.play(
-            ShowCreation(interior_rect),
+            Create(interior_rect),
             cos_lt_group[:2].animate.set_fill(opacity=0.2),
         )
         self.wait()
@@ -1090,7 +1090,7 @@ class IntroduceTransform(SPlane):
         self.add(pair_copy),
         self.play(
             expanded.animate.set_fill(opacity=0.5),
-            ShowCreation(pair_rects, lag_ratio=0.5)
+            Create(pair_rects, lag_ratio=0.5)
         )
         self.wait()
 
@@ -1226,7 +1226,7 @@ class IntroduceTransform(SPlane):
         self.wait()
 
 
-class SimpleToComplex(InteractiveScene):
+class SimpleToComplex(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add key expressions
         t2c = {"{t}": BLUE, "{s}": YELLOW}
@@ -1326,7 +1326,7 @@ class SimpleToComplex(InteractiveScene):
         self.play(frame.reorient(0, 0, 0, (5.5, 0.04, 0.0), 10), run_time=2)
 
 
-class SetSToMinus1(InteractiveScene):
+class SetSToMinus1(Scene)  # Changed from InteractiveScene:
     def construct(self):
         eq = Tex(R"\frac{1}{\minus 1} = \minus 1")
         eq[R"\minus 1"][0].set_color(YELLOW)
@@ -1334,7 +1334,7 @@ class SetSToMinus1(InteractiveScene):
         self.wait()
 
 
-class RealExtension(InteractiveScene):
+class RealExtension(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Show limited domain
         axes = Axes((-1, 10), (-1, 5), width=FRAME_WIDTH - 1, height=6)
@@ -1362,11 +1362,11 @@ class RealExtension(InteractiveScene):
 
         self.add(axes)
         self.play(
-            ShowCreation(partial_graph),
+            Create(partial_graph),
             Write(f_label)
         )
         self.play(
-            ShowCreation(limited_domain_line),
+            Create(limited_domain_line),
             FadeIn(limited_domain_words, lag_ratio=0.1)
         )
         self.wait()
@@ -1388,7 +1388,7 @@ class RealExtension(InteractiveScene):
             return result
 
         extension = get_extension()
-        self.play(ShowCreation(extension, lag_ratio=0, run_time=4))
+        self.play(Create(extension, lag_ratio=0, run_time=4))
 
         # Change around
         extension.save_state()
@@ -1447,7 +1447,7 @@ class RealExtension(InteractiveScene):
         return result
 
 
-class ComplexExtension(InteractiveScene):
+class ComplexExtension(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up input and output planes
         input_plane, output_plane = planes = VGroup(
@@ -1539,7 +1539,7 @@ class ComplexExtension(InteractiveScene):
         self.wait()
         self.play(FadeIn(possibilities[1][2:], lag_ratio=0.1))
         self.play(
-            ShowCreation(underline),
+            Create(underline),
             only_one.animate.set_fill(YELLOW)
         )
         self.wait()
@@ -1610,14 +1610,14 @@ class ComplexExtension(InteractiveScene):
         return VGroup(rect, rect_lines)
 
 
-class WriteFPrimeExists(InteractiveScene):
+class WriteFPrimeExists(Scene)  # Changed from InteractiveScene:
     def construct(self):
         words = TexText("$f'(z)$ Exists")
         self.play(Write(words))
         self.wait()
 
 
-class ZetaFunctionPlot(InteractiveScene):
+class ZetaFunctionPlot(Scene)  # Changed from InteractiveScene:
     # resolution = (51, 51)
     resolution = (1001, 1001)  # Probably takes like an hour to compute
 
@@ -1679,7 +1679,7 @@ class ZetaFunctionPlot(InteractiveScene):
         )
 
 
-class WriteZetaPrimeFact(InteractiveScene):
+class WriteZetaPrimeFact(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         formula = Tex(
@@ -1699,7 +1699,7 @@ class WriteZetaPrimeFact(InteractiveScene):
         self.wait()
 
 
-class SimpleExpToPole(InteractiveScene):
+class SimpleExpToPole(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         t2c = {"{t}": BLUE, "{s}": YELLOW}
@@ -1727,7 +1727,7 @@ class SimpleExpToPole(InteractiveScene):
         self.wait()
 
 
-class Linearity(InteractiveScene):
+class Linearity(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         t2c = {"f": GREEN, "g": BLUE, R"\mathcal{L}": GREY_A, R"\big\{": WHITE, R"\big\}": WHITE, "a": GREEN_A, "b": BLUE_A}
@@ -1757,7 +1757,7 @@ class Linearity(InteractiveScene):
         self.wait()
 
 
-class LaplaceTransformOfCosineSymbolically(InteractiveScene):
+class LaplaceTransformOfCosineSymbolically(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add defining integral
         frame = self.frame
@@ -1808,7 +1808,7 @@ class LaplaceTransformOfCosineSymbolically(InteractiveScene):
         cos_rect = SurroundingRectangle(lt_def[R"\cos({t})"])
         cos_rect.set_stroke(TEAL, 2)
 
-        self.play(ShowCreation(cos_rect))
+        self.play(Create(cos_rect))
         self.play(
             TransformMatchingTex(
                 lt_def.copy(),
@@ -1898,7 +1898,7 @@ class LaplaceTransformOfCosineSymbolically(InteractiveScene):
 
         VGroup(split_inside_rect, exp_transform_rects, pole_rects).set_stroke(TEAL, 2)
 
-        self.play(ShowCreation(split_inside_rect))
+        self.play(Create(split_inside_rect))
         self.wait()
         self.play(LaggedStart(*(
             TransformFromCopy(split_inside_rect, rect)
@@ -1934,7 +1934,7 @@ class LaplaceTransformOfCosineSymbolically(InteractiveScene):
             word.next_to(rect, DOWN, MED_LARGE_BUFF)
             self.play(
                 FadeIn(word, lag_ratio=0.1),
-                ShowCreation(rect),
+                Create(rect),
                 FadeOut(last_group)
             )
             self.wait()
@@ -1971,7 +1971,7 @@ class LaplaceTransformOfCosineSymbolically(InteractiveScene):
         cos_omega_rect.set_stroke(PINK, 2)
 
         self.play(
-            ShowCreation(cos_omega_rect),
+            Create(cos_omega_rect),
             TransformMatchingTex(cos_t, cos_omega),
             run_time=1
         )
@@ -2056,7 +2056,7 @@ class LaplaceTransformOfCosineSymbolically(InteractiveScene):
         answer_rect = SurroundingRectangle(answer.target)
         answer_rect.set_stroke(TEAL, 3)
         self.play(
-            ShowCreation(answer_rect),
+            Create(answer_rect),
             MoveToTarget(answer)
         )
         self.wait()
@@ -2085,7 +2085,7 @@ class LaplaceTransformOfCosineSymbolically(InteractiveScene):
         self.wait()
 
 
-class SimplePolesOverImaginaryLine(InteractiveScene):
+class SimplePolesOverImaginaryLine(Scene)  # Changed from InteractiveScene:
     def construct(self):
         s_plane = ComplexPlane((-5, 5), (-5, 5))
         s_plane.add_coordinate_labels()
@@ -2105,7 +2105,7 @@ class SimplePolesOverImaginaryLine(InteractiveScene):
         self.play(frame.animate.reorient(59, 78, 0, (-0.31, -0.1, 0.87), 10.53), run_time=12)
 
 
-class IntegrationByParts(InteractiveScene):
+class IntegrationByParts(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         t2c = {"{s}": YELLOW, "{t}": BLUE, R"\omega": PINK}
@@ -2223,7 +2223,7 @@ class AlternateBreakDown(TranslateToNewLanguage):
         )
         self.play(
             VShowPassingFlash(line.copy()),
-            ShowCreation(line),
+            Create(line),
             run_time=5
         )
         self.wait()

@@ -27,7 +27,7 @@ def for_later():
     )
 
 
-class LorenzAttractor(InteractiveScene):
+class LorenzAttractor(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up axes
         axes = ThreeDAxes(
@@ -104,7 +104,7 @@ class LorenzAttractor(InteractiveScene):
         curves.set_opacity(0)
         self.play(
             *(
-                ShowCreation(curve, rate_func=linear)
+                Create(curve, rate_func=linear)
                 for curve in curves
             ),
             run_time=evolution_time,

@@ -1,7 +1,7 @@
 from manim_imports_ext import *
 
 
-class IntroduceTrilogy(InteractiveScene):
+class IntroduceTrilogy(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add definition
         frame = self.frame
@@ -129,7 +129,7 @@ class WhoCares(TeacherStudentsScene):
         self.wait(3)
 
 
-class MiniLessonTitle(InteractiveScene):
+class MiniLessonTitle(Scene)  # Changed from InteractiveScene:
     def construct(self):
         title = Text("Visualizing complex exponents", font_size=72)
         title.to_edge(UP)
@@ -180,7 +180,7 @@ class ConfusionAndWhy(TeacherStudentsScene):
         self.wait(3)
 
 
-class ArrowBetweenScreens(InteractiveScene):
+class ArrowBetweenScreens(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         screens = ScreenRectangle().replicate(2)
@@ -191,14 +191,14 @@ class ArrowBetweenScreens(InteractiveScene):
         line = Line(screens[0].get_top(), screens[1].get_top(), path_arc=-120 * DEG, stroke_width=8, buff=0.25)
         VGroup(arrow, line).set_color(TEAL)
         self.play(
-            ShowCreation(line),
+            Create(line),
             FadeIn(arrow, time_span=(0.75, 1))
         )
         self.wait()
 
 
 
-class WhatAndWhy(InteractiveScene):
+class WhatAndWhy(Scene)  # Changed from InteractiveScene:
     def construct(self):
         words = VGroup(
             Tex(R"\text{1) Understanding } e^{i {t}} \\ \text{ intuitively}", t2c={R"{t}": GREY_B}),
@@ -219,7 +219,7 @@ class WhatAndWhy(InteractiveScene):
         # Test
 
 
-class PrequelToLaplace(InteractiveScene):
+class PrequelToLaplace(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # False goal of motivating the i
         pass
@@ -227,7 +227,7 @@ class PrequelToLaplace(InteractiveScene):
         # Swap out i and π for s and t
 
 
-class OtherExponentialDerivatives(InteractiveScene):
+class OtherExponentialDerivatives(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         kw = dict(t2c={"t": GREY_B})
@@ -246,7 +246,7 @@ class OtherExponentialDerivatives(InteractiveScene):
         self.wait()
 
 
-class VariousExponentials(InteractiveScene):
+class VariousExponentials(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         exp_st = Tex(R"e^{st}", t2c={"s": YELLOW, "t": BLUE}, font_size=90)
@@ -273,7 +273,7 @@ class VariousExponentials(InteractiveScene):
         self.wait()
 
 
-class WhyToWhat(InteractiveScene):
+class WhyToWhat(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Title text
         why = Text("Why", font_size=90)
@@ -304,7 +304,7 @@ class WhyToWhat(InteractiveScene):
         self.wait()
 
 
-class DerivativeOfExp(InteractiveScene):
+class DerivativeOfExp(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         frame = self.frame
@@ -349,7 +349,7 @@ class DerivativeOfExp(InteractiveScene):
 
         # Show labels
         for box, label in zip(boxes, labels):
-            self.play(ShowCreation(box), FadeIn(label))
+            self.play(Create(box), FadeIn(label))
 
         self.wait()
         full_group = VGroup(equation, boxes, labels)
@@ -370,7 +370,7 @@ class DerivativeOfExp(InteractiveScene):
         self.wait()
 
 
-class HighlightRect(InteractiveScene):
+class HighlightRect(Scene)  # Changed from InteractiveScene:
     def construct(self):
         img = ImageMobject('/Users/grant/3Blue1Brown Dropbox/3Blue1Brown/videos/2025/laplace/exponentials/DynamicExpIntuitionStill.png')
         img.set_height(FRAME_HEIGHT)
@@ -383,12 +383,12 @@ class HighlightRect(InteractiveScene):
         )
         rects.set_stroke(YELLOW, 2)
 
-        self.play(ShowCreation(rects[0]))
+        self.play(Create(rects[0]))
         self.play(TransformFromCopy(*rects))
         self.play(FadeOut(rects))
 
 
-class DefineI(InteractiveScene):
+class DefineI(Scene)  # Changed from InteractiveScene:
     def construct(self):
         eq = Tex(R"i = \sqrt{-1}", t2c={"i": YELLOW}, font_size=90)
         self.play(Write(eq))
@@ -406,7 +406,7 @@ class WaitWhy(TeacherStudentsScene):
         self.wait(4)
 
 
-class MultiplicationByI(InteractiveScene):
+class MultiplicationByI(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Example number
         plane = ComplexPlane(
@@ -438,7 +438,7 @@ class MultiplicationByI(InteractiveScene):
         self.add(vect_label)
         for line, label in zip(lines, line_labels):
             self.play(
-                ShowCreation(line),
+                Create(line),
                 FadeIn(label, 0.25 * line.get_vector())
             )
         self.wait()
@@ -486,7 +486,7 @@ class MultiplicationByI(InteractiveScene):
             Rotate(vect_copy, 90 * DEG, run_time=2, about_point=ORIGIN),
         )
         self.play(
-            ShowCreation(elbow)
+            Create(elbow)
         )
         self.wait()
 
@@ -542,7 +542,7 @@ class MultiplicationByI(InteractiveScene):
         self.wait()
 
 
-class UnitArcLengthsOnCircle(InteractiveScene):
+class UnitArcLengthsOnCircle(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Moving sectors
         arc = Arc(0, 1, radius=2.5, stroke_color=GREEN, stroke_width=8)
@@ -574,18 +574,18 @@ class UnitArcLengthsOnCircle(InteractiveScene):
         )
         for arc in arcs:
             one = Integer(1, font_size=24).move_to(1.0 * arc.get_center())
-            self.play(ShowCreation(arc, rate_func=linear, run_time=2))
+            self.play(Create(arc, rate_func=linear, run_time=2))
         self.wait()
 
 
-class SimpleIndicationRect(InteractiveScene):
+class SimpleIndicationRect(Scene)  # Changed from InteractiveScene:
     def construct(self):
         rect = Rectangle(3, 2)
         # Test
         self.play(FlashAround(rect, time_width=2.0, run_time=2, color=WHITE))
 
 
-class WriteSPlane(InteractiveScene):
+class WriteSPlane(Scene)  # Changed from InteractiveScene:
     def construct(self):
         title = Text("S-plane", font_size=72)
         title.set_color(YELLOW)
@@ -593,7 +593,7 @@ class WriteSPlane(InteractiveScene):
         self.wait()
 
 
-class ODEStoExp(InteractiveScene):
+class ODEStoExp(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         odes, exp = words = VGroup(
@@ -630,7 +630,7 @@ class ODEStoExp(InteractiveScene):
         self.wait()
 
 
-class GenLinearEquationToOscillator(InteractiveScene):
+class GenLinearEquationToOscillator(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # General equation
         a_texs = ["a_n", "a_2", "a_1", "a_0"]
@@ -667,7 +667,7 @@ class GenLinearEquationToOscillator(InteractiveScene):
         self.wait()
 
 
-class VLineOverZero(InteractiveScene):
+class VLineOverZero(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         rect = Square(0.25)
@@ -683,7 +683,7 @@ class VLineOverZero(InteractiveScene):
         self.wait()
 
 
-class KIsSomeConstant(InteractiveScene):
+class KIsSomeConstant(Scene)  # Changed from InteractiveScene:
     def construct(self):
         rect = SurroundingRectangle(Text("k"), buff=0.05)
         rect.set_stroke(YELLOW, 2)
@@ -691,11 +691,11 @@ class KIsSomeConstant(InteractiveScene):
         words.next_to(rect, UP, SMALL_BUFF)
         words.match_color(rect)
 
-        self.play(ShowCreation(rect), FadeIn(words))
+        self.play(Create(rect), FadeIn(words))
         self.wait()
 
 
-class WriteMu(InteractiveScene):
+class WriteMu(Scene)  # Changed from InteractiveScene:
     def construct(self):
         sym = Tex(R"\mu")
         rect = SurroundingRectangle(sym, buff=0.05)
@@ -705,7 +705,7 @@ class WriteMu(InteractiveScene):
         mu.next_to(rect, DOWN)
         self.play(
             Write(mu),
-            ShowCreation(rect)
+            Create(rect)
         )
         self.wait()
 
@@ -798,7 +798,7 @@ class ReferenceGuessingExp(TeacherStudentsScene):
         self.wait()
 
 
-class FromGuessToLaplace(InteractiveScene):
+class FromGuessToLaplace(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Words
         strategy = VGroup(
@@ -822,9 +822,9 @@ class FromGuessToLaplace(InteractiveScene):
         VGroup(guess_rect, guess_words).set_color(RED)
 
         self.play(LaggedStart(
-            ShowCreation(guess_rect),
+            Create(guess_rect),
             FadeIn(guess_words, lag_ratio=0.1),
-            ShowCreation(exp_rect),
+            Create(exp_rect),
             FadeIn(exp_words, lag_ratio=0.1),
             lag_ratio=0.25
         ))
@@ -861,12 +861,12 @@ class FromGuessToLaplace(InteractiveScene):
 
         self.play(
             Write(laplace_label),
-            ShowCreation(laplace_rect),
+            Create(laplace_rect),
         )
         self.wait()
 
 
-class JustAlgebra(InteractiveScene):
+class JustAlgebra(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         morty = Mortimer(mode="tease")
@@ -882,7 +882,7 @@ class JustAlgebra(InteractiveScene):
         self.wait()
 
 
-class BothPositiveNumbers(InteractiveScene):
+class BothPositiveNumbers(Scene)  # Changed from InteractiveScene:
     def construct(self):
         tex = Tex("k / m")
         self.add(tex)
@@ -894,7 +894,7 @@ class BothPositiveNumbers(InteractiveScene):
         plusses.set_fill(GREEN)
 
         self.play(
-            LaggedStartMap(ShowCreation, rects, lag_ratio=0.5),
+            LaggedStartMap(Create, rects, lag_ratio=0.5),
             LaggedStartMap(FadeIn, plusses, shift=0.25 * DOWN, lag_ratio=0.5)
         )
         self.wait()
@@ -914,7 +914,7 @@ class ButSpringsAreReal(TeacherStudentsScene):
         self.wait(4)
 
 
-class ShowIncreaseToK(InteractiveScene):
+class ShowIncreaseToK(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         k = Tex(R"k")
@@ -926,7 +926,7 @@ class ShowIncreaseToK(InteractiveScene):
         center = box.get_center()
 
         self.play(
-            ShowCreation(box),
+            Create(box),
             UpdateFromAlphaFunc(
                 arrow, lambda m, a: m.move_to(
                     center + interpolate(-1, 1, a) * UP
@@ -939,7 +939,7 @@ class ShowIncreaseToK(InteractiveScene):
         self.wait()
 
 
-class PureMathEquation(InteractiveScene):
+class PureMathEquation(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         t2c = {"x''(t)": RED, "x(t)": TEAL, R"\omega": PINK}
@@ -978,7 +978,7 @@ class PureMathEquation(InteractiveScene):
         self.wait()
 
 
-class LinearityDefinition(InteractiveScene):
+class LinearityDefinition(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Base differential equation string
         eq_str = R"m x''(t) + k x(t) = 0"
@@ -1079,7 +1079,7 @@ class ComplainAboutNeelessComplexity(TeacherStudentsScene):
         self.wait(5)
 
 
-class LetsGeneralize(InteractiveScene):
+class LetsGeneralize(Scene)  # Changed from InteractiveScene:
     def construct(self):
         morty = Mortimer()
         morty.to_corner(DR)
@@ -1090,19 +1090,19 @@ class LetsGeneralize(InteractiveScene):
         self.wait(3)
 
 
-class EquationRect(InteractiveScene):
+class EquationRect(Scene)  # Changed from InteractiveScene:
     def construct(self):
         rect = Rectangle(5.25, 1)
         rect.set_stroke(YELLOW, 3)
 
         # Test
-        self.play(ShowCreation(rect))
+        self.play(Create(rect))
         self.wait()
         self.play(rect.animate.stretch(0.5, 0).shift(4 * RIGHT).set_opacity(0))
         self.wait()
 
 
-class GeneralLinearEquation(InteractiveScene):
+class GeneralLinearEquation(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up equations
         a_texs = ["a_n", "a_2", "a_1", "a_0"]
@@ -1155,7 +1155,7 @@ class GeneralLinearEquation(InteractiveScene):
         zero_rect = SurroundingRectangle(ode[-2:])
         VGroup(x_rects, a_rects, full_rect, zero_rect).set_stroke(YELLOW, 2)
 
-        self.play(LaggedStartMap(ShowCreation, x_rects))
+        self.play(LaggedStartMap(Create, x_rects))
         self.wait()
         self.play(ReplacementTransform(x_rects, a_rects, lag_ratio=0.2))
         self.wait()
@@ -1194,7 +1194,7 @@ class GeneralLinearEquation(InteractiveScene):
         poly_rect.set_stroke(YELLOW, 1)
 
         self.play(
-            ShowCreation(poly_rect),
+            Create(poly_rect),
             FadeOut(factored["e^{{s}t}"]),
             FadeOut(factored[R"\left("]),
             FadeOut(factored[R"\right)"]),
@@ -1318,7 +1318,7 @@ class GeneralLinearEquation(InteractiveScene):
         rect.set_stroke(TEAL, 3)
         for root_label, graph in zip(root_labels, graphs):
             self.play(
-                ShowCreation(graph, time_span=(0.5, 2.0), suspend_mobject_updating=True),
+                Create(graph, time_span=(0.5, 2.0), suspend_mobject_updating=True),
                 rect.animate.surround(root_label, buff=0.1),
             )
         self.play(FadeOut(rect))
@@ -1348,7 +1348,7 @@ class GeneralLinearEquation(InteractiveScene):
             plus.move_to(VGroup(l1, l2)).shift(SMALL_BUFF * LEFT)
 
         self.play(
-            ShowCreation(solution_rect),
+            Create(solution_rect),
             Write(solution_word),
         )
         self.play(
@@ -1368,7 +1368,7 @@ class GeneralLinearEquation(InteractiveScene):
         self.wait()
 
         # Play with constants
-        self.play(LaggedStartMap(ShowCreation, const_rects, lag_ratio=0.15))
+        self.play(LaggedStartMap(Create, const_rects, lag_ratio=0.15))
         value_sets = [
             [1, 1, 1, 1, 1],
             [1j, -1j, 1 + 1j, -1 + 1j, -0.5],
@@ -1411,15 +1411,15 @@ class HoldUpGeneralLinear(TeacherStudentsScene):
         self.wait(5)
 
 
-class BigCross(InteractiveScene):
+class BigCross(Scene)  # Changed from InteractiveScene:
     def construct(self):
         cross = Cross(Rectangle(4, 1.5))
         cross.set_stroke(RED, width=(0, 8, 8, 8, 0))
-        self.play(ShowCreation(cross))
+        self.play(Create(cross))
         self.wait()
 
 
-class DifferentialEquation(InteractiveScene):
+class DifferentialEquation(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # ode to x
         x_term = Tex(R"x(t)", font_size=90)
@@ -1438,12 +1438,12 @@ class DifferentialEquation(InteractiveScene):
         self.wait()
 
 
-class DumbTrickAlgebra(InteractiveScene):
+class DumbTrickAlgebra(Scene)  # Changed from InteractiveScene:
     def construct(self):
         pass
 
 
-class LaplaceTransformAlgebra(InteractiveScene):
+class LaplaceTransformAlgebra(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add equation
         colors = color_gradient([TEAL, RED], 3, interp_by_hsl=True)
@@ -1496,7 +1496,7 @@ class LaplaceTransformAlgebra(InteractiveScene):
             srcs.add(src.copy())
             trgs.add(trg)
 
-        self.play(LaggedStartMap(ShowCreation, rects, lag_ratio=0.25, run_time=1.5))
+        self.play(LaggedStartMap(Create, rects, lag_ratio=0.25, run_time=1.5))
         self.play(
             LaggedStart(
                 *(FadeTransform(src, trg)
@@ -1557,7 +1557,7 @@ class LaplaceTransformAlgebra(InteractiveScene):
         )
 
 
-class ContrastDumbTrickAndLT(InteractiveScene):
+class ContrastDumbTrickAndLT(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         kw = dict(font_size=60)
@@ -1577,14 +1577,14 @@ class ContrastDumbTrickAndLT(InteractiveScene):
 
         self.play(
             LaggedStartMap(FadeIn, titles[::-1], lag_ratio=0.5),
-            LaggedStartMap(ShowCreation, underlines[::-1], lag_ratio=0.5),
-            ShowCreation(v_line, time_span=(0.5, 2.0)),
+            LaggedStartMap(Create, underlines[::-1], lag_ratio=0.5),
+            Create(v_line, time_span=(0.5, 2.0)),
             run_time=2
         )
         self.wait()
 
 
-class DifferentialEquationToAlgebra(InteractiveScene):
+class DifferentialEquationToAlgebra(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Associations
         t2c = {"{s}": YELLOW}
@@ -1616,12 +1616,12 @@ class DifferentialEquationToAlgebra(InteractiveScene):
         self.wait()
 
 
-class SimpleExp(InteractiveScene):
+class SimpleExp(Scene)  # Changed from InteractiveScene:
     def construct(self):
         self.add(Tex(R"e^{st}", t2c={"s": YELLOW}, font_size=60))
 
 
-class AtomsOfCalculus(InteractiveScene):
+class AtomsOfCalculus(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         expr = Tex(R"e^{s_n t}", font_size=72)
@@ -1637,7 +1637,7 @@ class AtomsOfCalculus(InteractiveScene):
         self.play(LaggedStart(
             Write(words),
             Write(arrow),
-            ShowCreation(rect)
+            Create(rect)
         ))
         self.wait()
 

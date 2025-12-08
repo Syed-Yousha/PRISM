@@ -1,7 +1,7 @@
 from manim_imports_ext import *
 
 
-class GroverPreview(InteractiveScene):
+class GroverPreview(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Setup blocks
         block_spacing = 1.0
@@ -92,7 +92,7 @@ class GroverPreview(InteractiveScene):
             curr_amplitudes = new_amplitudes
 
 
-class ClassicalSearch(InteractiveScene):
+class ClassicalSearch(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         in_out = VGroup(ArrowTip(), ArrowTip(angle=PI))
@@ -133,6 +133,6 @@ class ClassicalSearch(InteractiveScene):
         rect.set_stroke(GREEN, 3)
         self.play(
             items[:n].animate.set_opacity(0.5),
-            ShowCreation(rect),
+            Create(rect),
             items[n + 1:].animate.set_opacity(0.5),
         )

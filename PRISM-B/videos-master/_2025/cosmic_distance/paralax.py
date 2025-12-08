@@ -2,7 +2,7 @@ from manim_imports_ext import *
 from _2025.cosmic_distance.planets import *
 
 
-class SimpleDotsParalax(InteractiveScene):
+class SimpleDotsParalax(Scene)  # Changed from InteractiveScene:
     show_pi_perspective = False
 
     def construct(self):
@@ -25,14 +25,14 @@ class SimpleDotsParalax(InteractiveScene):
         self.add(cube)
         self.add(stars)
 
-        self.play(ShowCreation(stars, run_time=4))
+        self.play(Create(stars, run_time=4))
 
         # Add randy
         randy = Randolph(height=1)
         randy.next_to(cube, LEFT, buff=1)
 
         self.play(
-            VFadeIn(randy),
+            FadeIn(randy),
             randy.change("pondering", look_at=RIGHT)
         )
 
@@ -65,7 +65,7 @@ class SimpleDotsParalax(InteractiveScene):
         red_stars.set_color(RED)
 
         self.play(
-            ShowCreation(triangle),
+            Create(triangle),
             FadeIn(red_stars),
         )
 
@@ -74,7 +74,7 @@ class SimpleDotsFromPerspective(SimpleDotsParalax):
     show_pi_perspective = True
 
 
-class ParalxInSolarSystem(InteractiveScene):
+class ParalxInSolarSystem(Scene)  # Changed from InteractiveScene:
     show_celestial_sphere = False
 
     def construct(self):
@@ -123,7 +123,7 @@ class ParalxInSolarSystem(InteractiveScene):
 
         self.add(stars, orbit, earth)
         self.play(
-            ShowCreation(stars),
+            Create(stars),
             frame.animate.reorient(0, 71, 0, (2.29, -0.66, 0.52), 43.56),
             run_time=4,
         )
@@ -161,7 +161,7 @@ class ShowConstellationsDuringOrbit(ParalxInSolarSystem):
     show_celestial_sphere = True
 
 
-class ParalaxMeasurmentFromEarth(InteractiveScene):
+class ParalaxMeasurmentFromEarth(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add earth
         self.camera.light_source.move_to(500 * RIGHT)
@@ -239,7 +239,7 @@ class ParalaxMeasurmentFromEarth(InteractiveScene):
 
         self.play(
             frame.animate.set_width(20, about_edge=LEFT),
-            *map(ShowCreation, obs_lines),
+            *map(Create, obs_lines),
             FadeIn(obj),
             run_time=2
         )
@@ -312,7 +312,7 @@ class ParalaxMeasurmentFromEarth(InteractiveScene):
         brace_between = LineBrace(line_between, DOWN)
 
         self.play(
-            ShowCreation(line_between),
+            Create(line_between),
             earth.animate.set_fill(opacity=0.35).set_stroke(width=2, opacity=1),
             earth_pattern.animate.set_fill(opacity=0.75),
         )
@@ -349,7 +349,7 @@ class ParalaxMeasurmentFromEarth(InteractiveScene):
         tip_arc_label.next_to(tip_arc, LEFT, MED_SMALL_BUFF)
 
         self.play(LaggedStart(
-            ShowCreation(tip_arc),
+            Create(tip_arc),
             FadeTransform(angle_labels[0][1].copy(), tip_arc_label[R"\alpha"][0]),
             FadeTransform(angle_labels[1][1].copy(), tip_arc_label[R"\beta"][0]),
             Write(tip_arc_label[R"180^\circ"]),
@@ -570,7 +570,7 @@ class ParalaxMeasurmentFromEarth(InteractiveScene):
         return angle_labels
 
 
-class TransitOfVenus(InteractiveScene):
+class TransitOfVenus(Scene)  # Changed from InteractiveScene:
     path_y = -1
     include_image = False
 
@@ -622,7 +622,7 @@ class TransitOfVenusMiddle(TransitOfVenus):
     path_y = 0
 
 
-class NearbyStars(InteractiveScene):
+class NearbyStars(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add sun and earth
         orbit_radius = 3.5
@@ -742,14 +742,14 @@ class NearbyStars(InteractiveScene):
         self.add(star)
 
         self.play(
-            ShowCreation(obs_lines[0], suspend_mobject_updating=True),
+            Create(obs_lines[0], suspend_mobject_updating=True),
             FadeIn(obs_labels[0], 0.25 * UP),
             FadeIn(obs_points[0]),
         )
         self.wait()
         self.play(Rotate(orbit, PI), run_time=2)
         self.play(
-            ShowCreation(obs_lines[1], suspend_mobject_updating=True),
+            Create(obs_lines[1], suspend_mobject_updating=True),
             FadeIn(obs_labels[1], DOWN),
             FadeIn(obs_points[1]),
         )
@@ -800,13 +800,13 @@ class NearbyStars(InteractiveScene):
         arc_label.next_to(arc, LEFT, buff=SMALL_BUFF)
 
         self.play(
-            ShowCreation(line_to_star),
+            Create(line_to_star),
             obs_lines.animate.set_stroke(width=1),
             FadeIn(dist_label, RIGHT),
         )
         self.wait()
         self.play(
-            ShowCreation(arc),
+            Create(arc),
             Write(arc_label),
         )
         self.play(FlashAround(arc_label, run_time=2))

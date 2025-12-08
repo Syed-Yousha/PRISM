@@ -5,27 +5,27 @@ import logging
 
 import numpy as np
 
-from manimlib.animation.animation import Animation
-from manimlib.animation.composition import AnimationGroup
-from manimlib.animation.fading import FadeTransform
-from manimlib.animation.transform import ReplacementTransform
-from manimlib.constants import *
-from manimlib.mobject.mobject import _AnimationBuilder
-from manimlib.mobject.mobject import Mobject
-from manimlib.mobject.geometry import Circle
-from manimlib.mobject.svg.drawings import ThoughtBubble
-from manimlib.mobject.svg.drawings import SpeechBubble
-from manimlib.mobject.svg.svg_mobject import SVGMobject
-from manimlib.mobject.svg.text_mobject import Text
-from manimlib.mobject.types.vectorized_mobject import VGroup
-from manimlib.mobject.types.vectorized_mobject import VMobject
-from manimlib.utils.directories import get_directories
-from manimlib.utils.space_ops import get_norm
-from manimlib.utils.space_ops import normalize
+from manim.animation.animation import Animation
+from manim.animation.composition import AnimationGroup
+from manim.animation.fading import FadeTransform
+from manim.animation.transform import ReplacementTransform
+from manim import *
+from manim.mobject.mobject import _AnimationBuilder
+from manim.mobject.mobject import Mobject
+from manim.mobject.geometry import Circle
+from manim.mobject.svg.drawings import ThoughtBubble
+from manim.mobject.svg.drawings import SpeechBubble
+from manim.mobject.svg.svg_mobject import SVGMobject
+from manim.mobject.svg.text_mobject import Text
+from manim.mobject.types.vectorized_mobject import VGroup
+from manim.mobject.types.vectorized_mobject import VMobject
+from manim.utils.directories import get_directories
+from manim.utils.space_ops import get_norm
+from manim.utils.space_ops import normalize
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from manimlib.typing import ManimColor, Vect3
+    from manim import ManimColor, Vect3
 
 
 PI_CREATURE_SCALE_FACTOR: float = 0.5

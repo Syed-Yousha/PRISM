@@ -4,7 +4,7 @@ from pathlib import Path
 from manim_imports_ext import *
 
 
-class ExtractFramesFromFootage(InteractiveScene):
+class ExtractFramesFromFootage(Scene)  # Changed from InteractiveScene:
     video_file = "/Users/grant/3Blue1Brown Dropbox/3Blue1Brown/videos/2024/holograms/SceneModel/MultiplePOVs.2.mp4"
     image_dir = "/tmp/"
     frequency = 0.25

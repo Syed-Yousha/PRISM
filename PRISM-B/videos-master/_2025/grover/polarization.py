@@ -1,7 +1,7 @@
 from manim_imports_ext import *
 
 
-class BeamSplitter(InteractiveScene):
+class BeamSplitter(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add laser device
         frame = self.frame
@@ -25,13 +25,13 @@ class BeamSplitter(InteractiveScene):
 
         frame.reorient(-121, 76, 0, (-3.29, -0.25, -0.34), 4.80)
         self.add(pointer)
-        self.play(ShowCreation(beam, rate_func=lambda t: t**10))
+        self.play(Create(beam, rate_func=lambda t: t**10))
 
         # Set up linear vector field
         wave = self.get_wave(theta_tracker, start_point=pointer.get_right(), max_x=200)
 
         self.add(theta_tracker)
-        self.play(VFadeIn(wave))
+        self.play(FadeIn(wave))
         self.play(
             frame.animate.reorient(-57, 74, 0, (-3.29, -0.18, -0.18), 4.80),
             run_time=8
@@ -84,7 +84,7 @@ class BeamSplitter(InteractiveScene):
             FadeIn(plane_in_situ),
             TransformFromCopy(plane_in_situ, corner_plane, run_time=2)
         )
-        self.play(VFadeIn(corner_vector))
+        self.play(FadeIn(corner_vector))
         self.play(frame.animate.reorient(-80, 79, 0, (-3.36, 0.1, -0.46), 4.80), run_time=12)
 
         # Add beam splitter
@@ -193,20 +193,20 @@ class BeamSplitter(InteractiveScene):
             plane.set_stroke(opacity=0)
 
         self.play(
-            VFadeIn(h_plane),
-            VFadeIn(v_plane),
-            VFadeIn(soft_h_vect),
-            VFadeIn(soft_v_vect),
+            FadeIn(h_plane),
+            FadeIn(v_plane),
+            FadeIn(soft_h_vect),
+            FadeIn(soft_v_vect),
         )
         self.wait()
         self.play(
             Restore(h_plane, path_arc=30 * DEG),
-            VFadeIn(h_vect),
+            FadeIn(h_vect),
             Write(eq),
         )
         self.play(
             Restore(v_plane, path_arc=30 * DEG),
-            VFadeIn(v_vect),
+            FadeIn(v_vect),
             Write(plus),
         )
         self.wait(5)
@@ -245,7 +245,7 @@ class BeamSplitter(InteractiveScene):
         rhs.next_to(eq, RIGHT, 0.25)
 
         self.play(
-            VFadeIn(arc),
+            FadeIn(arc),
             Write(theta_label),
         )
         h_vect.force_unit = True

@@ -4,7 +4,7 @@
 # of fading which are now covered by arguments passed into FadeIn and
 # FadeOut
 
-from manimlib.animation.fading import FadeIn, FadeOut
+from manim import FadeIn, FadeOut, Succession
 
 
 class FadeInFromDown(FadeIn):
@@ -20,3 +20,13 @@ class FadeOutAndShiftDown(FadeOut):
 class FadeInFromLarge(FadeIn):
     def __init__(self, mobject, scale_factor=2, **kwargs):
         super().__init__(mobject, scale=(1 / scale_factor), **kwargs)
+
+
+class VFadeInThenOut(Succession):
+    """Community Edition equivalent of manimgl VFadeInThenOut.
+    Fades in a mobject then fades it out in succession."""
+    def __init__(self, mobject, **kwargs):
+        super().__init__(
+            FadeIn(mobject, **kwargs),
+            FadeOut(mobject, **kwargs)
+        )

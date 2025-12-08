@@ -461,7 +461,7 @@ def spherical_eversion(theta, phi, t):
     return new_pt[0][0][0]
 
 
-class SurfaceTestForSenia(InteractiveScene):
+class SurfaceTestForSenia(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         axes = ThreeDAxes()
@@ -492,6 +492,6 @@ class SurfaceTestForSenia(InteractiveScene):
         self.wait()
 
         self.play(
-            ShowCreation(surface),
+            Create(surface),
             self.frame.animate.reorient(41, 70, 0, (-0.17, 0.22, 0.06), 5.33)
         )

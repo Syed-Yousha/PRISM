@@ -4,25 +4,19 @@ import numpy as np
 import itertools as it
 import random
 
-from manimlib.constants import *
-from manimlib.scene.scene import Scene
-from manimlib.mobject.geometry import AnnularSector
-from manimlib.mobject.geometry import Circle
-from manimlib.mobject.geometry import Polygon
-from manimlib.mobject.svg.text_mobject import Text
-from manimlib.mobject.svg.tex_mobject import TexText
-from manimlib.mobject.types.vectorized_mobject import VGroup
-from manimlib.mobject.types.vectorized_mobject import VMobject
-from manimlib.utils.bezier import interpolate
-from manimlib.utils.space_ops import angle_of_vector
-from manimlib.utils.rate_functions import squish_rate_func
-from manimlib.utils.rate_functions import smooth
-from manimlib.animation.animation import Animation
-from manimlib.animation.transform import Restore
-from manimlib.animation.transform import Transform
-from manimlib.animation.composition import AnimationGroup
-from manimlib.animation.composition import LaggedStartMap
-from manimlib.animation.creation import Write
+from manim import *
+from manim.mobject.geometry import (
+    AnnularSector, Circle, Polygon
+)
+from manim.mobject.svg.text_mobject import Text
+from manim.mobject.types.vectorized_mobject import VGroup, VMobject
+from manim.utils.bezier import interpolate
+from manim.utils.space_ops import angle_of_vector
+from manim.utils.rate_functions import squish_rate_func, smooth
+from manim.animation.animation import Animation
+from manim.animation.transform import Restore, Transform
+from manim.animation.composition import AnimationGroup, LaggedStartMap
+from manim.animation.creation import Write
 
 
 class Logo(VMobject):

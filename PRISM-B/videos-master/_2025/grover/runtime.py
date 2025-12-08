@@ -3,7 +3,7 @@ from _2025.blocks_and_grover.qc_supplements import *
 from _2025.blocks_and_grover.state_vectors import DisectAQuantumComputer
 
 
-class Quiz(InteractiveScene):
+class Quiz(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up terms
         choices = VGroup(
@@ -87,7 +87,7 @@ class Quiz(InteractiveScene):
         clock = question[1]
         cycle_animation(ClockPassesTime(clock, hours_passed=12, run_time=24))
         self.play(
-            VFadeIn(question, suspend_mobject_updating=True, lag_ratio=0.01),
+            FadeIn(question, suspend_mobject_updating=True, lag_ratio=0.01),
             VGroup(choices, covers).animate.shift(DOWN).set_anim_args(run_time=2),
             frame.animate.match_x(choices).set_anim_args(run_time=2),
         )
@@ -140,7 +140,7 @@ class Quiz(InteractiveScene):
                 for bar in prob_bars),
                 lag_ratio=0.2,
             ),
-            VFadeIn(prob_labels)
+            FadeIn(prob_labels)
         )
         self.wait()
         for index in [1, 2, 0]:
@@ -172,7 +172,7 @@ class Quiz(InteractiveScene):
         # Add two additional answers
 
 
-class ShowOptionGraphs(InteractiveScene):
+class ShowOptionGraphs(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Axes
         x_max = 15
@@ -207,14 +207,14 @@ class ShowOptionGraphs(InteractiveScene):
         for graph, label in zip(graphs, labels):
             vect = label.get_center() - graph.get_end()
             self.play(
-                ShowCreation(graph),
-                VFadeIn(label),
+                Create(graph),
+                FadeIn(label),
                 UpdateFromFunc(label, lambda m: m.move_to(graph.get_end() + vect)),
             )
         self.wait()
 
 
-class NeedleInAHaystackProblem(InteractiveScene):
+class NeedleInAHaystackProblem(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up terms
         shown_numbers = list(range(20))
@@ -408,7 +408,7 @@ class NeedleInAHaystackProblem(InteractiveScene):
         )
 
 
-class LargeGuessAndCheck(InteractiveScene):
+class LargeGuessAndCheck(Scene)  # Changed from InteractiveScene:
     key_value = 42
     wait_time_per_mob = 0.1
     row_size = 10
@@ -447,7 +447,7 @@ class LargeGuessAndCheck(InteractiveScene):
             break
 
         rect = SurroundingRectangle(grid[n])
-        self.play(ShowCreation(rect), grid[n].animate.set_color(YELLOW))
+        self.play(Create(rect), grid[n].animate.set_color(YELLOW))
         self.wait()
 
 
@@ -469,7 +469,7 @@ class BigGuessAndCheck(LargeGuessAndCheck):
     row_size = 30
 
 
-class WriteClassicalBigO(InteractiveScene):
+class WriteClassicalBigO(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Background
         self.add(FullScreenRectangle().set_fill(GREY_E))
@@ -498,7 +498,7 @@ class WriteClassicalBigO(InteractiveScene):
         self.wait()
 
 
-class ReferenceNeedleInAHaystack(InteractiveScene):
+class ReferenceNeedleInAHaystack(Scene)  # Changed from InteractiveScene:
     key = 61
 
     def construct(self):
@@ -535,7 +535,7 @@ class ReferenceNeedleInAHaystack(InteractiveScene):
         self.add(fader, key_group, rect)
         self.play(
             FadeIn(fader),
-            ShowCreation(rect),
+            Create(rect),
         )
 
 
@@ -543,7 +543,7 @@ class ReferenceNeedleInAHaystack2(ReferenceNeedleInAHaystack):
     key = 31
 
 
-class SuperpositionAsParallelization(InteractiveScene):
+class SuperpositionAsParallelization(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up
         classical, quantum = symbols = VGroup(
@@ -648,7 +648,7 @@ class SuperpositionAsParallelization(InteractiveScene):
                 for mc in mini_classical),
                 lag_ratio=0.05,
             ),
-            LaggedStartMap(ShowCreation, lines),
+            LaggedStartMap(Create, lines),
         )
         self.wait()
         self.play(LaggedStart(
@@ -666,7 +666,7 @@ class ListTwoMisconceptions(TeacherStudentsScene):
         pass
 
 
-class LogTable(InteractiveScene):
+class LogTable(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up table
         n_samples = 9
@@ -737,7 +737,7 @@ class LogTable(InteractiveScene):
         self.play(LaggedStartMap(FadeIn, all_arrows, lag_ratio=0.25), run_time=3)
 
 
-class SecondMisconception(InteractiveScene):
+class SecondMisconception(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         title = Text("Misconception #2", font_size=90)
@@ -761,7 +761,7 @@ class SecondMisconception(InteractiveScene):
         self.play(Write(words, run_time=2))
         self.wait()
         self.play(LaggedStart(
-            ShowCreation(red_cross),
+            Create(red_cross),
             FadeIn(new_words, lag_ratio=0.1),
             FadeOut(title),
             lag_ratio=0.35
@@ -788,7 +788,7 @@ class SecondMisconception(InteractiveScene):
 
         self.play(FadeIn(product))
         self.play(
-            LaggedStartMap(ShowCreation, lines, lag_ratio=0.25),
+            LaggedStartMap(Create, lines, lag_ratio=0.25),
             LaggedStart(
                 (TransformFromCopy(product, factor)
                 for factor in factors),
@@ -799,7 +799,7 @@ class SecondMisconception(InteractiveScene):
         self.wait()
 
 
-class GroverTimeline(InteractiveScene):
+class GroverTimeline(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         timeline = NumberLine(
@@ -853,7 +853,7 @@ class GroverTimeline(InteractiveScene):
         self.play(
             GrowFromCenter(bbbv_dots[0]),
             TransformFromCopy(*bbbv_dots, path_arc=arc),
-            ShowCreation(bbbv_line),
+            Create(bbbv_line),
             FadeIn(bbbv_attribution, UP),
             FadeIn(footnote),
         )
@@ -890,7 +890,7 @@ class GroverTimeline(InteractiveScene):
         self.play(TransformFromCopy(bbbv_dots[0], grover_dots[0], path_arc=-PI))
         self.play(
             TransformFromCopy(*grover_dots, path_arc=arc),
-            ShowCreation(grover_line),
+            Create(grover_line),
             FadeIn(grover_name, UP),
         )
         self.wait()
@@ -919,7 +919,7 @@ class GroverTimeline(InteractiveScene):
             if n == 0:
                 self.play(
                     CountInFrom(example[0][1], 0),
-                    VFadeIn(example[0]),
+                    FadeIn(example[0]),
                 )
             elif n == 1:
                 self.play(
@@ -928,7 +928,7 @@ class GroverTimeline(InteractiveScene):
                 )
             sqrt_rect = SurroundingRectangle(sqrt_N, buff=SMALL_BUFF)
             sqrt_rect.set_stroke(WHITE, 2)
-            self.play(ShowCreation(sqrt_rect))
+            self.play(Create(sqrt_rect))
             self.play(
                 GrowArrow(example[1]),
                 sqrt_rect.animate.surround(example[2][1]).set_stroke(opacity=0),
@@ -948,7 +948,7 @@ class GroverTimeline(InteractiveScene):
         rect = SurroundingRectangle(big_O)
         rect.set_stroke(WHITE, 2)
 
-        self.play(ShowCreation(rect))
+        self.play(Create(rect))
         self.wait()
         self.play(
             VGroup(rect, big_O).animate.shift(DOWN),
@@ -958,7 +958,7 @@ class GroverTimeline(InteractiveScene):
         self.play(rect.animate.surround(runtime[1], buff=0.05))
 
 
-class NPProblemExamples(InteractiveScene):
+class NPProblemExamples(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Examples
         example_images = Group(
@@ -993,7 +993,7 @@ class NPProblemExamples(InteractiveScene):
         name.next_to(big_rect, buff=MED_LARGE_BUFF)
 
         self.play(LaggedStart(
-            ShowCreation(big_rect),
+            Create(big_rect),
             Write(name),
             # self.frame.animate.set_x(2),
             lag_ratio=0.2
@@ -1015,7 +1015,7 @@ class NPProblemExamples(InteractiveScene):
         return sudoku
 
 
-class ShowSha256(InteractiveScene):
+class ShowSha256(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         import hashlib
@@ -1115,7 +1115,7 @@ class ContrastTwoAlgorithmsFrame(DisectAQuantumComputer):
             )
 
 
-class QuantumCompilation(InteractiveScene):
+class QuantumCompilation(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Show circuitry
         machine = get_blackbox_machine()
@@ -1219,7 +1219,7 @@ class QuantumCompilation(InteractiveScene):
         check.set_color(GREEN)
         check.next_to(output, RIGHT)
 
-        self.play(ShowCreation(input_rect))
+        self.play(Create(input_rect))
         self.play(TransformFromCopy(input_rect, output_rect, path_arc=-45 * DEG))
         self.play(
             FadeOut(output_rect),

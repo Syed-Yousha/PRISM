@@ -1,7 +1,7 @@
 from manim_imports_ext import *
 
 
-class IncompleteSquares(InteractiveScene):
+class IncompleteSquares(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up top row
         squares = VGroup(self.get_square(n) for n in range(16))
@@ -37,7 +37,7 @@ class IncompleteSquares(InteractiveScene):
         self.play(
             MoveToTarget(groups, path_arc=45 * DEG, run_time=3),
         )
-        self.play(LaggedStartMap(ShowCreation, rects, lag_ratio=0.5))
+        self.play(LaggedStartMap(Create, rects, lag_ratio=0.5))
         self.wait()
 
         # Count the groups
@@ -127,7 +127,7 @@ class IncompleteSquares(InteractiveScene):
         rot_symbols.set_x(rects.get_x(LEFT) - rot_symbols.get_width() - MED_LARGE_BUFF)
 
         self.play(
-            ShowCreation(v_line),
+            Create(v_line),
             frame.animate.reorient(0, 0, 0, (-1.55, -2.67, 0.0), 10.59),
             FadeIn(rot_symbols)
         )

@@ -1,14 +1,11 @@
-from manimlib.constants import WHITE
-from manimlib.constants import BLACK
-from manimlib.constants import DOWN
-from manimlib.constants import UP
-from manimlib.constants import BLUE
-from manimlib.scene.scene import Scene
-from manimlib.mobject.frame import FullScreenRectangle
-from manimlib.mobject.frame import ScreenRectangle
-from manimlib.mobject.changing import AnimatedBoundary
-from manimlib.mobject.svg.tex_mobject import TexText
-from manimlib.animation.creation import Write
+from manim import (
+    WHITE, BLACK, DOWN, UP, BLUE,
+    Scene,
+    FullScreenRectangle, ScreenRectangle,
+    AnimatedBoundary,
+    Text,  # Replaced TexText with Text for Community Edition
+    Write
+)
 
 
 class Spotlight(Scene):
@@ -16,7 +13,7 @@ class Spotlight(Scene):
     title_font_size = 60
 
     def construct(self):
-        title = TexText(self.title, font_size=self.title_font_size)
+        title = Text(self.title, font_size=self.title_font_size)
         title.to_edge(UP)
 
         self.add(title)
@@ -59,7 +56,7 @@ class VideoWrapper(Scene):
         self.add(screen)
 
         if self.title:
-            title_text = self.title_text = TexText(
+            title_text = self.title_text = Text(
                 self.title,
                 **self.title_config,
             )

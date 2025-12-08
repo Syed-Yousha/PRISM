@@ -1,7 +1,7 @@
 from manim_imports_ext import *
 
 
-class WelchLabsIntroCard(InteractiveScene):
+class WelchLabsIntroCard(Scene)  # Changed from InteractiveScene:
     title_words = "This is a guest video by Welch Labs"
     subtitle_words = ""
     logo_file = "WelchLabsLogo"
@@ -49,7 +49,7 @@ class VilasIntroCard(WelchLabsIntroCard):
     bottom_words = "This is the 3rd of 5 of guest videos this summer while I am on leave"
 
 
-class SubManifolds(InteractiveScene):
+class SubManifolds(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up spaces
         blob = Circle(radius=1).stretch(2.4, 0, about_edge=LEFT)
@@ -118,7 +118,7 @@ class SubManifolds(InteractiveScene):
         training_data = get_training_data_examples(100)
 
         self.play(
-            ShowCreation(training_data, run_time=3),
+            Create(training_data, run_time=3),
             Write(no_training_words, run_time=1),
         )
         self.wait()
@@ -141,7 +141,7 @@ class SubManifolds(InteractiveScene):
         blob_words.set_backstroke(BLACK, 2)
 
         self.play(
-            ShowCreation(more_data, run_time=6),
+            Create(more_data, run_time=6),
             LaggedStartMap(Write, blobs),
             LaggedStartMap(FadeIn, blob_words),
             no_training_words.animate.scale(0.5).move_to(middle).set_backstroke(BLACK, 0).set_fill(BLACK),
@@ -150,12 +150,12 @@ class SubManifolds(InteractiveScene):
         self.wait()
 
 
-class ComposingFeatures(InteractiveScene):
+class ComposingFeatures(Scene)  # Changed from InteractiveScene:
     def construct(self):
         pass
 
 
-class IMOGoldOrganizations(InteractiveScene):
+class IMOGoldOrganizations(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         orgs = VGroup(
@@ -267,7 +267,7 @@ class EuclidEndScreen(SideScrollEndScreen):
     scroll_time = 30
 
 
-class SeriesOfFiveVideos(InteractiveScene):
+class SeriesOfFiveVideos(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add images
         self.add(FullScreenRectangle(fill_color=GREY_E))

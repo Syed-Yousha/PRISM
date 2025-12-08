@@ -2,7 +2,7 @@ from manim_imports_ext import *
 from _2025.laplace.integration import get_complex_graph
 
 
-class WriteLaplace(InteractiveScene):
+class WriteLaplace(Scene)  # Changed from InteractiveScene:
     def construct(self):
         title = Text("Laplace Transform", font_size=72)
         title.to_edge(UP)
@@ -10,7 +10,7 @@ class WriteLaplace(InteractiveScene):
         self.wait()
 
 
-class TwoLevels(InteractiveScene):
+class TwoLevels(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         words = VGroup(
@@ -25,7 +25,7 @@ class TwoLevels(InteractiveScene):
             self.wait()
 
 
-class TwoKeyIdeas(InteractiveScene):
+class TwoKeyIdeas(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         t2c = {"{s}": YELLOW, "{s_n}": YELLOW, "{t}": BLUE}
@@ -55,7 +55,7 @@ class TwoKeyIdeas(InteractiveScene):
             self.wait()
 
 
-class LevelsOfUnderstanding(InteractiveScene):
+class LevelsOfUnderstanding(Scene)  # Changed from InteractiveScene:
     def construct(self):
         items = BulletedList(
             "1) Use",
@@ -79,7 +79,7 @@ class LevelsOfUnderstanding(InteractiveScene):
             self.wait()
 
 
-class DrivingACar(InteractiveScene):
+class DrivingACar(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         car = Car()
@@ -167,7 +167,7 @@ class ReferenceWorkedExample(TeacherStudentsScene):
             morty.change("raise_left_hand", rect),
             self.change_students("pondering", "thinking", "erm", look_at=rect),
         )
-        self.play(ShowCreation(rect))
+        self.play(Create(rect))
         self.wait()
         self.play(
             morty.change("raise_right_hand", self.screen),
@@ -199,7 +199,7 @@ class ButWhatIsIt(TeacherStudentsScene):
         self.wait(3)
 
 
-class MoreInAMoment(InteractiveScene):
+class MoreInAMoment(Scene)  # Changed from InteractiveScene:
     def construct(self):
         morty = Mortimer()
         morty.body.insert_n_curves(1000)
@@ -209,7 +209,7 @@ class MoreInAMoment(InteractiveScene):
         self.wait()
 
 
-class YouAsAMathematician(InteractiveScene):
+class YouAsAMathematician(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         randy = Randolph(height=2.5)
@@ -251,7 +251,7 @@ class YouAsAMathematician(InteractiveScene):
             self.play(Blink(randy))
 
 
-class FullCosInsideSum(InteractiveScene):
+class FullCosInsideSum(Scene)  # Changed from InteractiveScene:
     def construct(self):
         tex = Tex(R"\frac{1}{2} \left( e^{(i - {s}){t}} + e^{(\minus i - {s}){t}} \right)", t2c={"{t}": BLUE, "{s}": YELLOW})
         self.add(tex)
@@ -292,7 +292,7 @@ class ReferenceTheIntegral(TeacherStudentsScene):
 
         self.play(
             morty.change("hesitant", int_rect),
-            ShowCreation(int_rect),
+            Create(int_rect),
             GrowArrow(arrow),
             self.change_students("pondering", "happy", "tease"),
         )
@@ -351,7 +351,7 @@ class ReferenceTheIntegral(TeacherStudentsScene):
         ft_rect = SurroundingRectangle(ft, buff=0.05)
         ft_rect.set_stroke(RED, 2)
         self.play(
-            ShowCreation(ft_rect)
+            Create(ft_rect)
         )
         self.play(
             VGroup(ft_rect, ft).animate.to_corner(UL).set_stroke(width=0).fade(0.5),
@@ -448,7 +448,7 @@ class ReferenceTheIntegral(TeacherStudentsScene):
         self.play(
             morty.change('raise_left_hand', exp_int),
             MoveToTarget(exp_int),
-            ShowCreation(exp_int_rect),
+            Create(exp_int_rect),
             self.change_students("pondering", "thinking", "happy", look_at=exp_int),
         )
         self.wait()
@@ -545,7 +545,7 @@ class TryADifferentInterpretation(TeacherStudentsScene):
         self.wait(4)
 
 
-class AskAboutZero(InteractiveScene):
+class AskAboutZero(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         randy = Randolph(height=2)
@@ -615,7 +615,7 @@ class ReferenceAnalyticContinuation(TeacherStudentsScene):
         self.wait(4)
 
 
-class PreviewAnalyticContinuation(InteractiveScene):
+class PreviewAnalyticContinuation(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         frame = self.frame
@@ -634,22 +634,22 @@ class PreviewAnalyticContinuation(InteractiveScene):
         frame.reorient(-1, 75, 0, (0.35, 0.49, 1.27), 7.85)
         self.add(plane, graph)
         self.play(
-            ShowCreation(graph),
+            Create(graph),
             frame.animate.reorient(-24, 72, 0, (0.97, 0.24, 0.97), 9.65),
             run_time=12
         )
 
 
-class SimpleRect(InteractiveScene):
+class SimpleRect(Scene)  # Changed from InteractiveScene:
     def construct(self):
         rect = Rectangle(4.5, 2)
         rect.set_stroke(YELLOW, 2)
 
-        self.play(ShowCreation(rect))
+        self.play(Create(rect))
         self.wait()
 
 
-class ReactingToCosineMachine(InteractiveScene):
+class ReactingToCosineMachine(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         randy = Randolph()
@@ -672,7 +672,7 @@ class ReactingToCosineMachine(InteractiveScene):
         self.wait(5)
 
 
-class PonderingCosineMachine(InteractiveScene):
+class PonderingCosineMachine(Scene)  # Changed from InteractiveScene:
     def construct(self):
         morty = Mortimer(height=1.5)
         morty.flip()
@@ -684,7 +684,7 @@ class PonderingCosineMachine(InteractiveScene):
             self.wait(2)
 
 
-class LaplaceFourierContrast(InteractiveScene):
+class LaplaceFourierContrast(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Titles and definitions
         self.add(FullScreenRectangle())
@@ -717,7 +717,7 @@ class LaplaceFourierContrast(InteractiveScene):
         self.wait()
 
 
-class NotWhatYouWouldSee(InteractiveScene):
+class NotWhatYouWouldSee(Scene)  # Changed from InteractiveScene:
     def construct(self):
         morty = Mortimer().flip()
         morty.to_corner(DL)
@@ -731,7 +731,7 @@ class NotWhatYouWouldSee(InteractiveScene):
         self.wait()
 
 
-class CosLTLogicReversal(InteractiveScene):
+class CosLTLogicReversal(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         self.add(FullScreenRectangle().set_fill(GREY_E, 0.5))
@@ -749,7 +749,7 @@ class CosLTLogicReversal(InteractiveScene):
         self.wait()
 
 
-class CosineEqualsWhat(InteractiveScene):
+class CosineEqualsWhat(Scene)  # Changed from InteractiveScene:
     def construct(self):
         self.add(FullScreenRectangle().set_fill(GREY_E, 0.5))
         cos = Tex(R"\cos(t) = ???", font_size=90, t2c={"t": BLUE})
@@ -783,14 +783,14 @@ class OhLookAtTheTime(TeacherStudentsScene):
         self.wait(3)
 
 
-class TimePassing(InteractiveScene):
+class TimePassing(Scene)  # Changed from InteractiveScene:
     def construct(self):
         clock = Clock()
         self.add(clock)
         self.play(ClockPassesTime(clock, hours_passed=2, run_time=10))
 
 
-class DerivativeRule(InteractiveScene):
+class DerivativeRule(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         t2c = {"t": BLUE, "s": YELLOW}

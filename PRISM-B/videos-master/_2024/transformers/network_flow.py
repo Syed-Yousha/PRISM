@@ -4,7 +4,7 @@ from _2024.transformers.helpers import *
 from _2024.transformers.embedding import *
 
 
-class HighLevelNetworkFlow(InteractiveScene):
+class HighLevelNetworkFlow(Scene)  # Changed from InteractiveScene:
     # example_text = "To date, the cleverest thinker of all time was blank"
     use_words = False
     # possible_next_tokens = [
@@ -187,7 +187,7 @@ class HighLevelNetworkFlow(InteractiveScene):
         self.add(rects[-1])
         self.play(LaggedStart(
             FadeIn(big_rect),
-            ShowCreation(arrow),
+            Create(arrow),
             Write(q_marks),
             lag_ratio=0.3,
         ))
@@ -344,7 +344,7 @@ class HighLevelNetworkFlow(InteractiveScene):
                 self.token_blocks[index].animate.scale(2, about_edge=DOWN),
                 self.token_blocks[:index].animate.shift(0.35 * LEFT),
                 FadeIn(highlight),
-                ShowCreation(rect),
+                Create(rect),
                 FadeIn(new_arrow, scale=4),
                 run_time=3
             ))
@@ -651,9 +651,9 @@ class HighLevelNetworkFlow(InteractiveScene):
         arrow.add_tip()
         arrow.set_color(YELLOW)
 
-        self.play(ShowCreation(rect))
+        self.play(Create(rect))
         self.play(
-            ShowCreation(arrow),
+            Create(arrow),
             GrowFromCenter(brace),
             LaggedStartMap(FadeIn, bars, shift=DOWN)
         )
@@ -959,8 +959,8 @@ class MentionContextSizeAndUnembedding(SimplifiedFlow):
             FadeIn(matrix, scale=0.8, shift=DR),
             *map(FadeOut, [self.token_blocks, self.token_arrows, self.final_word_question]),
         )
-        self.play(ShowCreation(rect))
-        self.play(MoveToTarget(vector), ShowCreation(last_vect_arrow))
+        self.play(Create(rect))
+        self.play(MoveToTarget(vector), Create(last_vect_arrow))
 
         # Show matrix vector product
         eq, rhs = show_matrix_vector_product(self, matrix, vector)
@@ -1024,7 +1024,7 @@ class MentionContextSizeAndUnembedding(SimplifiedFlow):
             LaggedStart(
                 FadeOut(brace_group),
                 DrawBorderThenFill(big_rect),
-                ShowCreation(softmax_arrow),
+                Create(softmax_arrow),
                 FadeIn(softmax_label, lag_ratio=0.1),
             ),
             MoveToTarget(prob_group, time_span=(1, 2))
@@ -1265,7 +1265,7 @@ class FlowForCHMNoText(FlowForCHM2):
         return super().get_block(*args, **kwargs)
 
 
-class TextPassageIntro(InteractiveScene):
+class TextPassageIntro(Scene)  # Changed from InteractiveScene:
     example_text = MentionContextSizeAndUnembedding.example_text
 
     def construct(self):
@@ -1448,7 +1448,7 @@ class MoleExample1(HighLevelNetworkFlow):
 
         self.play(
             LaggedStartMap(MoveToTarget, word_groups),
-            ShowCreation(v_lines, lag_ratio=0.5, time_span=(1, 2))
+            Create(v_lines, lag_ratio=0.5, time_span=(1, 2))
         )
 
         # Show vector embeddings
@@ -1482,7 +1482,7 @@ class MoleExample1(HighLevelNetworkFlow):
         )
         self.wait()
         self.play(
-            LaggedStartMap(ShowCreation, mole_vect_rects),
+            LaggedStartMap(Create, mole_vect_rects),
             VGroup(arrows[j] for j in non_mole_indices).animate.set_fill(opacity=0.5),
             VGroup(embs[j] for j in non_mole_indices).animate.set_fill(opacity=0.5),
         )

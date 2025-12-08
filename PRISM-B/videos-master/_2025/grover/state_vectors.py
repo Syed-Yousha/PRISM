@@ -50,7 +50,7 @@ class RandomSampling(Animation):
         self.mobject.set_submobjects(target.submobjects)
 
 
-class ContrstClassicalAndQuantum(InteractiveScene):
+class ContrstClassicalAndQuantum(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Titles
         classical, quantum = symbols = VGroup(
@@ -161,7 +161,7 @@ class ContrstClassicalAndQuantum(InteractiveScene):
                 frame.animate.set_x(0),
                 MoveToTarget(layer_names),
                 FadeIn(quantum, RIGHT),
-                ShowCreation(v_line),
+                Create(v_line),
                 Transform(layers_name, new_layers_name),
                 Group(num_mob, character, boxed_bits).animate.shift(RIGHT),
                 circuitry.animate.scale(0.8).shift(RIGHT)
@@ -250,7 +250,7 @@ class ContrstClassicalAndQuantum(InteractiveScene):
         self.play(
             frame.animate.reorient(0, 0, 0, (4.66, -2.55, 0.0), 13.19),
             morty.change("raise_right_hand", big_ket),
-            VFadeIn(morty),
+            FadeIn(morty),
             *(
                 TransformFromCopy(src, big_ket)
                 for src in [qubit_ket, qunit_ket]
@@ -419,7 +419,7 @@ class ContrstClassicalAndQuantum(InteractiveScene):
         return VGroup(boxes, bits)
 
 
-class AmbientStateVector(InteractiveScene):
+class AmbientStateVector(Scene)  # Changed from InteractiveScene:
     moving = False
 
     def construct(self):
@@ -456,7 +456,7 @@ class AmbientStateVector(InteractiveScene):
         sphere_mesh.set_stroke(WHITE, 0.5, 0.5)
 
         self.play(
-            ShowCreation(sphere),
+            Create(sphere),
             Write(sphere_mesh, lag_ratio=1e-3),
         )
         self.wait(10)
@@ -524,7 +524,7 @@ class FlipsToCertainDirection(AmbientStateVector):
         self.wait(6)
 
 
-class DisectAQuantumComputer(InteractiveScene):
+class DisectAQuantumComputer(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up the machine with a random pile of gates
         wires = Line(4 * LEFT, 4 * RIGHT).replicate(4)
@@ -617,7 +617,7 @@ class DisectAQuantumComputer(InteractiveScene):
         brace_label = brace.get_tex("2^4 = 16")
         brace_label.shift(0.2 * RIGHT + 0.05 * UP)
 
-        self.play(ShowCreation(output_rect))
+        self.play(Create(output_rect))
         self.wait()
         self.remove(output, output_rect)
         self.play(
@@ -739,7 +739,7 @@ class DisectAQuantumComputer(InteractiveScene):
         underline = Underline(title, buff=-0.05)
 
         self.play(
-            ShowCreation(underline, time_span=(1, 2)),
+            Create(underline, time_span=(1, 2)),
             Write(title, run_time=2),
         )
         self.wait()
@@ -869,7 +869,7 @@ class DisectAQuantumComputer(InteractiveScene):
         self.play(
             FadeIn(superposition),
             FadeOut(output),
-            ShowCreation(big_cross)
+            Create(big_cross)
         )
         self.wait(6)
         self.play(
@@ -905,7 +905,7 @@ class DisectAQuantumComputer(InteractiveScene):
             output_words.animate.shift(RIGHT),
         )
         self.wait()
-        self.play(ShowCreation(sample_rects[num]))
+        self.play(Create(sample_rects[num]))
         output[0].set_value(num)
         output.match_x(output_words)
         self.play(TransformFromCopy(all_qubits[num], output))
@@ -961,7 +961,7 @@ class DisectAQuantumComputer(InteractiveScene):
         vect_lines = self.get_connecting_lines(qc_label, state_vector, from_buff=-0.1, to_buff=0.1)
 
         self.play(LaggedStart(
-            ShowCreation(vect_lines, lag_ratio=0),
+            Create(vect_lines, lag_ratio=0),
             FadeInFromPoint(state_vector, qc_label.get_right()),
             MoveToTarget(comp_to_dist_arrow),
             dist_group.animate.next_to(comp_to_dist_arrow.target, RIGHT),
@@ -1152,7 +1152,7 @@ class DisectAQuantumComputer(InteractiveScene):
 
             # Comment on the value
             rect = SurroundingRectangle(all_qubits[key])
-            self.play(ShowCreation(rect, run_time=2))
+            self.play(Create(rect, run_time=2))
 
         # Show the squares of all the values
         sum_expr = Tex(
@@ -1193,11 +1193,11 @@ class DisectAQuantumComputer(InteractiveScene):
         )
         lines.set_stroke(YELLOW, 1)
 
-        self.play(ShowCreation(entry_rect))
+        self.play(Create(entry_rect))
         self.play(
             TransformFromCopy(entry_rect, value_rect),
             TransformFromCopy(entry, top_value),
-            ShowCreation(lines, lag_ratio=0),
+            Create(lines, lag_ratio=0),
             FadeOut(vector_title),
         )
         self.wait()
@@ -1573,7 +1573,7 @@ class Qubit(DisectAQuantumComputer):
             run_time=2,
             lag_ratio=0.1
         ))
-        self.play(ShowCreation(top_rule_rect))
+        self.play(Create(top_rule_rect))
         self.wait()
         self.play(LaggedStart(
             Transform(var_vect.copy(), coord_vect.copy().clear_updaters(), remover=True),
@@ -1637,7 +1637,7 @@ class Qubit(DisectAQuantumComputer):
         self.wait()
         self.add(vector_ghost)
         self.play(
-            ShowCreation(circle),
+            Create(circle),
             theta_tracker.animate.set_value(theta_tracker.get_value() + TAU),
             run_time=6,
         )
@@ -1726,7 +1726,7 @@ class Qubit(DisectAQuantumComputer):
         red_cross = Cross(var_vect_copy)
         red_cross.scale(1.5)
 
-        self.play(ShowCreation(red_cross))
+        self.play(Create(red_cross))
         self.wait()
         self.play(
             FadeOut(red_cross),
@@ -1806,7 +1806,7 @@ class Qubit(DisectAQuantumComputer):
             rect.set_stroke(YELLOW, 2)
             self.play(
                 MoveToTarget(faders),
-                ShowCreation(rect),
+                Create(rect),
             )
             self.play(
                 TransformFromCopy(movers[index + 1], movers_image[index + 1], path_arc=-30 * DEG),
@@ -1928,7 +1928,7 @@ class ShowAFewFlips(Qubit):
             )
 
 
-class ExponentiallyGrowingState(InteractiveScene):
+class ExponentiallyGrowingState(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Initialize vector
         label = TexText(R"State of a\\ 1 qubit computer")
@@ -2010,7 +2010,7 @@ class ExponentiallyGrowingState(InteractiveScene):
         return VGroup(brace, label)
 
 
-class InvisibleStateValues(InteractiveScene):
+class InvisibleStateValues(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         frame = self.frame
@@ -2031,7 +2031,7 @@ class InvisibleStateValues(InteractiveScene):
         frame.set_height(2, about_edge=UP)
         self.add(vect, indices)
         self.play(
-            LaggedStartMap(ShowCreation, rects, lag_ratio=0.25),
+            LaggedStartMap(Create, rects, lag_ratio=0.25),
             frame.animate.to_default_state(),
             run_time=5,
         )
@@ -2056,7 +2056,7 @@ class InvisibleStateValues(InteractiveScene):
         self.wait()
 
 
-class ThreeDSample(InteractiveScene):
+class ThreeDSample(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up axes
         frame = self.frame
@@ -2095,7 +2095,7 @@ class ThreeDSample(InteractiveScene):
 
         self.play(
             GrowArrow(vector),
-            VFadeIn(coord_array),
+            FadeIn(coord_array),
         )
         self.play(Rotate(vector, TAU, axis=OUT, about_point=ORIGIN, run_time=6))
         self.wait(5)
@@ -2148,7 +2148,7 @@ class ThreeDSample(InteractiveScene):
             self.set_vect_anim(vector, balanced_state, run_time=4),
             FadeIn(balance_name, lag_ratio=0.1, time_span=(3, 4)),
         )
-        self.play(LaggedStartMap(ShowCreation, coord_rects, lag_ratio=0.25))
+        self.play(LaggedStartMap(Create, coord_rects, lag_ratio=0.25))
         self.play(LaggedStartMap(FadeOut, coord_rects, lag_ratio=0.25))
         self.wait()
         self.play(
@@ -2263,7 +2263,7 @@ class ThreeDSample(InteractiveScene):
             self.wait()
 
 
-class GroversAlgorithm(InteractiveScene):
+class GroversAlgorithm(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up plane
         x_range = y_range = (-1, 1 - 1e-6)
@@ -2339,7 +2339,7 @@ class GroversAlgorithm(InteractiveScene):
         self.wait()
         self.play(
             TransformFromCopy(b_vect, b_vect_proj),
-            ShowCreation(dashed_line),
+            Create(dashed_line),
         )
         self.wait()
         self.play(
@@ -2394,7 +2394,7 @@ class GroversAlgorithm(InteractiveScene):
         self.play(
             FadeOut(b_vect_proj),
             FadeOut(dashed_line),
-            ShowCreation(arc),
+            Create(arc),
             FadeIn(alpha_label),
         )
         self.play(Write(lt_90))
@@ -2635,7 +2635,7 @@ class GroversAlgorithm(InteractiveScene):
             )
 
         def diag_flip(run_time=2, draw_time=0.5):
-            self.play(ShowCreation(diag_line, run_time=draw_time))
+            self.play(Create(diag_line, run_time=draw_time))
             self.play(
                 flipper.animate.flip(axis=diag_line.get_vector(), about_point=ORIGIN),
                 vect_ghosts.animate.set_fill(opacity=0.25),
@@ -2670,7 +2670,7 @@ class GroversAlgorithm(InteractiveScene):
             self.play(
                 FadeOut(diag_line),
                 TransformFromCopy(vector, v_part),
-                ShowCreation(h_line),
+                Create(h_line),
             )
             self.wait()
             self.play(GrowFromCenter(brace))
@@ -2705,14 +2705,14 @@ class GroversAlgorithm(InteractiveScene):
         self.wait()
         self.play(
             TransformFromCopy(vect_ghosts[0], vector, path_arc=theta),
-            ShowCreation(arcs[0])
+            Create(arcs[0])
         )
         self.play(TransformFromCopy(theta_label, arc_labels[0]))
         self.wait()
         for arc, label in zip(arcs[1:], arc_labels[1:]):
             self.play(
                 Rotate(vector, 2 * theta, about_point=ORIGIN),
-                ShowCreation(arc),
+                Create(arc),
                 FadeIn(label, shift=0.5 * (arc.get_end() - arc.get_start()))
             )
             self.wait()
@@ -2726,7 +2726,7 @@ class GroversAlgorithm(InteractiveScene):
             label.next_to(quarter_arc.pfp(0.5), UR, buff=0.05)
 
         self.play(
-            ShowCreation(quarter_arc),
+            Create(quarter_arc),
             Write(ninety_label),
         )
         self.wait()
@@ -2860,7 +2860,7 @@ class GroversAlgorithm(InteractiveScene):
         self.remove(theta_approx)
 
 
-class TwoFlipsEqualsRotation(InteractiveScene):
+class TwoFlipsEqualsRotation(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up planes
         plane = NumberPlane((-2, 2), (-2, 2))
@@ -2889,7 +2889,7 @@ class TwoFlipsEqualsRotation(InteractiveScene):
         flip_lines.set_stroke(WHITE, 4)
 
         for line in flip_lines:
-            self.play(ShowCreation(line, run_time=0.5))
+            self.play(Create(line, run_time=0.5))
             self.play(
                 randy.animate.flip(axis=line.get_vector(), about_point=plane.get_origin()),
                 plane.animate.flip(axis=line.get_vector(), about_point=plane.get_origin()),
@@ -2930,7 +2930,7 @@ class TwoFlipsEqualsRotation(InteractiveScene):
         two_theta_label.set_backstroke(BLACK, 3)
         two_theta_label.next_to(rot_arc, RIGHT, SMALL_BUFF)
 
-        self.play(ShowCreation(arc), Write(theta_label), run_time=1)
+        self.play(Create(arc), Write(theta_label), run_time=1)
         self.play(
             TransformFromCopy(arc, rot_arc),
             TransformFromCopy(theta_label, two_theta_label),
@@ -2938,7 +2938,7 @@ class TwoFlipsEqualsRotation(InteractiveScene):
         self.wait()
 
 
-class ComplexComponents(InteractiveScene):
+class ComplexComponents(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up vectors
         state = normalize(np.random.uniform(-1, 1, 4))
@@ -3039,7 +3039,7 @@ class ComplexComponents(InteractiveScene):
                 for elem, x in zip(dec_vect.elements, x_vect.elements)),
                 lag_ratio=0.05,
             ),
-            LaggedStartMap(ShowCreation, dot_lines),
+            LaggedStartMap(Create, dot_lines),
             ReplacementTransform(dec_vect.get_brackets(), x_vect.get_brackets(), time_span=(1, 2)),
             run_time=2
         )
@@ -3096,7 +3096,7 @@ class ComplexComponents(InteractiveScene):
         mag_label.next_to(brace.get_center(), DR, buff=0.05),
 
         self.play(
-            ShowCreation(c_line),
+            Create(c_line),
             GrowFromCenter(brace),
             FadeIn(mag_label),
         )
@@ -3115,7 +3115,7 @@ class ComplexComponents(InteractiveScene):
             lambda m: m.move_to(arc.pfp(0.5)).shift(0.5 * (arc.pfp(0.5) - plane.c2p(0)))
         )
 
-        self.play(ShowCreation(arc), FadeIn(phi_label))
+        self.play(Create(arc), FadeIn(phi_label))
         self.wait()
 
         # Show prob

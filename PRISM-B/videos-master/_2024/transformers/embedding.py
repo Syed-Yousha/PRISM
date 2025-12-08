@@ -116,7 +116,7 @@ def get_direction_lines(axes, direction, n_lines=500, color=YELLOW, line_length=
 # For chapter 5
 
 
-class LyingAboutTokens2(InteractiveScene):
+class LyingAboutTokens2(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Mention next word prediction task
         phrase = Text("The goal of our model is to predict the next word")
@@ -139,7 +139,7 @@ class LyingAboutTokens2(InteractiveScene):
         self.add(rects[-1])
         self.play(LaggedStart(
             FadeIn(big_rect),
-            ShowCreation(arrow),
+            Create(arrow),
             Write(q_marks),
             lag_ratio=0.3,
         ))
@@ -220,7 +220,7 @@ class LyingAboutTokens2(InteractiveScene):
             FadeOut(q_group),
             FadeOut(arrows),
             FadeOut(vectors),
-            ShowCreation(h_line),
+            Create(h_line),
             FadeIn(title1, lag_ratio=0.1),
             FadeIn(tokens),
         )
@@ -257,12 +257,12 @@ class LyingAboutTokens2(InteractiveScene):
             self.wait()
 
 
-class DiscussTokenization(InteractiveScene):
+class DiscussTokenization(Scene)  # Changed from InteractiveScene:
     def construct(self):
         pass
 
 
-class ImageTokens(InteractiveScene):
+class ImageTokens(Scene)  # Changed from InteractiveScene:
     n_divisions = 52
 
     def construct(self):
@@ -296,7 +296,7 @@ class ImageTokens(InteractiveScene):
         self.wait()
 
 
-class SoundTokens(InteractiveScene):
+class SoundTokens(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add wave form
         n_lines = 100
@@ -338,7 +338,7 @@ class SoundTokens(InteractiveScene):
         self.wait()
 
 
-class IntroduceEmbeddingMatrix(InteractiveScene):
+class IntroduceEmbeddingMatrix(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Load words
         words = [
@@ -605,11 +605,11 @@ class IntroduceEmbeddingMatrix(InteractiveScene):
         self.play(FadeTransform(
             top_equation[1:5:2].copy(), top_equation[-1]
         ))
-        self.play(ShowCreation(result_rect))
+        self.play(Create(result_rect))
         self.wait()
 
 
-class Word2VecScene(InteractiveScene):
+class Word2VecScene(Scene)  # Changed from InteractiveScene:
     default_frame_orientation = (-30, 70)
 
     axes_config = dict(
@@ -775,7 +775,7 @@ class AmbientWordEmbedding(Word2VecScene):
         self.wait(15)
 
 
-class ThreeDSpaceExample(InteractiveScene):
+class ThreeDSpaceExample(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up axes
         frame = self.frame
@@ -824,14 +824,14 @@ class ThreeDSpaceExample(InteractiveScene):
             rect.set_fill(line.get_color(), 0.3)
             rect.set_stroke(line.get_color(), width=2)
             self.play(
-                ShowCreation(line),
+                Create(line),
                 FadeInFromPoint(label, line.get_start()),
                 VFadeInThenOut(rect),
                 ChangeDecimalToValue(entry, value),
                 dot.animate.move_to(line.get_end()),
             )
             self.wait(0.5)
-        self.play(ShowCreation(vect))
+        self.play(Create(vect))
 
         # Wait for a bit
         self.wait(15)
@@ -845,7 +845,7 @@ class ThreeDSpaceExample(InteractiveScene):
             FadeOut(plane),
             LaggedStartMap(FadeOut, VGroup(*lines, vect, *labels)),
             frame.animate.reorient(-81, 61, 0, (-0.82, 0.6, 0.36), 8.95),
-            ShowCreation(points),
+            Create(points),
             run_time=2,
         )
         frame.add_ambient_rotation(5 * DEGREES)
@@ -886,13 +886,13 @@ class ThreeDSpaceExample(InteractiveScene):
         ))
         projection_lines.set_stroke()
 
-        self.play(ShowCreation(plane), Write(grid, lag_ratio=0.01, stroke_width=1))
+        self.play(Create(plane), Write(grid, lag_ratio=0.01, stroke_width=1))
         self.wait(2)
         self.play(
             axes.animate.set_stroke(opacity=0.25),
             points.animate.set_opacity(0.5),
             TransformFromCopy(points, projected_points),
-            ShowCreation(projection_lines, lag_ratio=0.05),
+            Create(projection_lines, lag_ratio=0.05),
             run_time=3
         )
         self.play(
@@ -903,7 +903,7 @@ class ThreeDSpaceExample(InteractiveScene):
         self.wait(15)
 
 
-class HighDimensionalSpaceCompanion(InteractiveScene):
+class HighDimensionalSpaceCompanion(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Vector example
         word = Text("bank")
@@ -1445,9 +1445,9 @@ class HitlerMussoliniExample(KingQueenExample):
             FadeIn(v3.label),
         )
         self.play(
-            ShowCreation(rect),
+            Create(rect),
             Transform(v3.copy(), v2, remover=True),
-            ShowCreation(diff)
+            Create(diff)
         )
         self.wait(2)
 
@@ -1594,7 +1594,7 @@ class PluralityDirection(Word2VecScene):
         self.add(cat.label, cats.label)
 
         self.wait(5)
-        self.play(ShowCreation(diff))
+        self.play(Create(diff))
         self.wait(10)
 
 
@@ -1721,7 +1721,7 @@ class ShowNearestNeighborsToJump(ShowNearestNeighbors):
         return ["hop", "skip", "leap", "bound", "bounce", "drop", "vault"]
 
 
-class DotProducts(InteractiveScene):
+class DotProducts(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add vectors
         plane = NumberPlane(
@@ -1868,7 +1868,7 @@ class DotProducts(InteractiveScene):
         )
         self.remove(result)
         self.add(zero)
-        self.play(ShowCreation(elbow))
+        self.play(Create(elbow))
         self.wait()
         self.remove(elbow, zero)
         self.add(result)
@@ -1882,7 +1882,7 @@ class DotProducts(InteractiveScene):
         dual_rotate(75, -95, run_time=8)
 
 
-class DotProductWithPluralDirection(InteractiveScene):
+class DotProductWithPluralDirection(Scene)  # Changed from InteractiveScene:
     vec_tex = R"\vec{\text{plur}}"
     ref_words = ["cat", "cats"]
     word_groups = [
@@ -2078,7 +2078,7 @@ class DotProductWithGenderDirection(DotProductWithPluralDirection):
     threshold = 1.0
 
 
-class RicherEmbedding(InteractiveScene):
+class RicherEmbedding(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add phrase
         phrase = Text("The King doth wake tonight and takes his rouse ...")
@@ -2341,7 +2341,7 @@ class MultipleMoleEmbeddings(Word2VecScene):
                 FadeOut(last_diff)
             )
             self.play(
-                ShowCreation(diff, time_span=(1, 2)),
+                Create(diff, time_span=(1, 2)),
                 TransformFromCopy(gen_vector, ref_vects[n], time_span=(1, 2)),
                 ContextAnimation(
                     phrase["mole"][0], phrase,
@@ -2568,7 +2568,7 @@ class UpdatingPoetryEmbedding(RicherEmbedding):
 
 # For chapter 7
 
-class SimpleSpaceExample(InteractiveScene):
+class SimpleSpaceExample(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Setup axes
         frame = self.frame
@@ -2586,7 +2586,7 @@ class SimpleSpaceExample(InteractiveScene):
         label.next_to(vect.get_center(), OUT + LEFT, buff=0)
 
         self.play(
-            ShowCreation(vect),
+            Create(vect),
             FadeIn(label, vect.get_vector())
         )
         self.wait(5)
@@ -2611,7 +2611,7 @@ class SimpleSpaceExample(InteractiveScene):
             lines = get_direction_lines(axes, new_vect.get_vector(), color=new_vect.get_color())
             self.play(
                 FadeOut(last_idea),
-                ShowCreation(new_vect),
+                Create(new_vect),
                 FadeIn(idea, new_vect.get_vector()),
                 LaggedStartMap(ShowCreationThenFadeOut, lines, lag_ratio=2 / len(lines), run_time=2)
             )
@@ -2897,7 +2897,7 @@ class MJSpace(SimpleSpaceExample):
 
         m_proj_line.suspend_updating()
         self.play(
-            ShowCreation(m_dashed_line),
+            Create(m_dashed_line),
             TransformFromCopy(Line(ORIGIN, emb.get_end(), flat_stroke=False), m_proj_line),
             FadeIn(formula, UP),
             vect_groups[1:].animate.set_opacity(0.25),
@@ -2951,7 +2951,7 @@ class MJSpace(SimpleSpaceExample):
         )
         j_proj_line.suspend_updating()
         self.play(
-            ShowCreation(j_dashed_line),
+            Create(j_dashed_line),
             TransformFromCopy(Line(ORIGIN, emb.get_end(), flat_stroke=False), j_proj_line),
         )
         j_proj_line.resume_updating()
@@ -3003,13 +3003,13 @@ class MJSpace(SimpleSpaceExample):
         )
         self.wait()
         self.play(
-            ShowCreation(m_dashed_line),
-            ShowCreation(m_proj_line),
+            Create(m_dashed_line),
+            Create(m_proj_line),
         )
         self.wait()
         self.play(
-            ShowCreation(j_dashed_line),
-            ShowCreation(j_proj_line),
+            Create(j_dashed_line),
+            Create(j_proj_line),
         )
         self.wait(20)
         self.play(

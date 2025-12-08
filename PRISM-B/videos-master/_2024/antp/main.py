@@ -3,7 +3,7 @@ import sympy
 from _2023.clt.main import ChartBars
 
 
-class TwinPrimScrolling(InteractiveScene):
+class TwinPrimScrolling(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Create list of primes
         n_max = 1000
@@ -82,7 +82,7 @@ class TwinPrimScrolling(InteractiveScene):
         self.wait(run_time)
 
 
-class Timeline(InteractiveScene):
+class Timeline(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Timeline
         timeline = NumberLine(
@@ -131,7 +131,7 @@ class Timeline(InteractiveScene):
         self.add(arrows)
 
 
-class InfinitePrimes(InteractiveScene):
+class InfinitePrimes(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         n_max = 150
@@ -190,7 +190,7 @@ class InfinitePrimes(InteractiveScene):
         self.add(prime_mobs)
 
 
-class ThoughtBubble(InteractiveScene):
+class ThoughtBubble(Scene)  # Changed from InteractiveScene:
     def construct(self):
         randy = Randolph()
         randy.to_edge(LEFT)
@@ -198,12 +198,12 @@ class ThoughtBubble(InteractiveScene):
         self.add(bubble, bubble.content)
 
 
-class SimpleBubble(InteractiveScene):
+class SimpleBubble(Scene)  # Changed from InteractiveScene:
     def construct(self):
         self.add(OldThoughtBubble())
 
 
-class EuclidProof(InteractiveScene):
+class EuclidProof(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Suppose finite
         prime_sequence = Tex(R"2, 3, 5, \dots , p_n", font_size=72)
@@ -319,7 +319,7 @@ class EuclidProof(InteractiveScene):
         self.add(inf_sequence, inf_arrow, inf_words)
 
 
-class PrimeDensityHistogram(InteractiveScene):
+class PrimeDensityHistogram(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Axes
         max_x = 10000
@@ -367,7 +367,7 @@ class PrimeDensityHistogram(InteractiveScene):
         self.add(bars)
 
 
-class PrimesNearMillion(InteractiveScene):
+class PrimesNearMillion(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add line
         T = int(1e6)
@@ -440,7 +440,7 @@ class PrimesNearMillion(InteractiveScene):
         self.wait(13)
         self.play(
             FadeTransform(words, lhs, run_time=1),
-            ShowCreation(arrow),
+            Create(arrow),
             FadeIn(example, time_span=(1, 2)),
         )
         self.wait(5)
@@ -475,7 +475,7 @@ class PrimesNearMillion(InteractiveScene):
         )
 
 
-class PrimePanning(InteractiveScene):
+class PrimePanning(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # (A bit too much copy paste from above)
         N_max = 500
@@ -503,7 +503,7 @@ class PrimePanning(InteractiveScene):
         self.wait(90)
 
 
-class SieveWithMod(InteractiveScene):
+class SieveWithMod(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Setup prime list title
         prime_title = Text("Primes: ", font_size=72)
@@ -599,7 +599,7 @@ class SieveWithMod(InteractiveScene):
             rows.target.move_to(grid, UP)
 
             self.play(
-                ShowCreation(highlight),
+                Create(highlight),
                 FadeOut(arrows),
                 FadeOut(reductions),
             )
@@ -661,7 +661,7 @@ class SieveWithMod(InteractiveScene):
                 group.remove(*to_remove)
 
 
-class DensityFormula(InteractiveScene):
+class DensityFormula(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Formula
         t2c = {
@@ -727,12 +727,12 @@ class DensityFormula(InteractiveScene):
         self.add(rhs)
 
 
-class OldGapsInPrimes(InteractiveScene):
+class OldGapsInPrimes(Scene)  # Changed from InteractiveScene:
     def construct(self):
         pass
 
 
-class NewGapsInPrimes(InteractiveScene):
+class NewGapsInPrimes(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Show number line
         x_min = 99980
@@ -803,7 +803,7 @@ class NewGapsInPrimes(InteractiveScene):
         self.wait()
 
 
-class CrankEmail(InteractiveScene):
+class CrankEmail(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Background
         rect = FullScreenRectangle(fill_color=WHITE, fill_opacity=1)
@@ -999,7 +999,7 @@ class CrankEmail(InteractiveScene):
                     rect.set_stroke(width=0)
                     rects.add(rect)
         self.play(
-            ShowCreation(crosses, lag_ratio=0),
+            Create(crosses, lag_ratio=0),
             FadeIn(rects, lag_ratio=0.1)
         )
 
@@ -1009,7 +1009,7 @@ class CrankEmail(InteractiveScene):
         )
 
 
-class SieveOfEratosthenes(InteractiveScene):
+class SieveOfEratosthenes(Scene)  # Changed from InteractiveScene:
     grid_shape = (10, 10)
     n_iterations = 10
     rect_buff = 0.1
@@ -1076,7 +1076,7 @@ class GiantSieve(SieveOfEratosthenes):
     #     ))
 
 
-class WannaProve(InteractiveScene):
+class WannaProve(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         randy = Randolph()

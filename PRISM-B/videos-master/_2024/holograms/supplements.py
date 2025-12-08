@@ -1,7 +1,7 @@
 from manim_imports_ext import *
 
 
-class PhotographVsHologram(InteractiveScene):
+class PhotographVsHologram(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         title = Text("Single piece of film")
@@ -34,7 +34,7 @@ class PhotographVsHologram(InteractiveScene):
             self.wait()
 
 
-class GlintArrow(InteractiveScene):
+class GlintArrow(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         circle = Circle(radius=0.25)
@@ -49,7 +49,7 @@ class GlintArrow(InteractiveScene):
         self.wait()
 
 
-class WriteHologram(InteractiveScene):
+class WriteHologram(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         title = Text("Hologram", font_size=96)
@@ -58,7 +58,7 @@ class WriteHologram(InteractiveScene):
         self.wait()
 
 
-class WriteTransmissionHologram(InteractiveScene):
+class WriteTransmissionHologram(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         title = Text("Transmission Hologram", font_size=96)
@@ -67,7 +67,7 @@ class WriteTransmissionHologram(InteractiveScene):
         self.wait()
 
 
-class WriteWhiteLightReflectionHologram(InteractiveScene):
+class WriteWhiteLightReflectionHologram(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         title = Text("White Light Reflection Hologram", font_size=72)
@@ -76,7 +76,7 @@ class WriteWhiteLightReflectionHologram(InteractiveScene):
         self.wait()
 
 
-class IndicationOnPhotograph(InteractiveScene):
+class IndicationOnPhotograph(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Image
         image = ImageMobject("ContrastWithPhotography")
@@ -98,7 +98,7 @@ class IndicationOnPhotograph(InteractiveScene):
         self.play(FadeIn(dot1), FlashAround(dot1, stroke_width=5, time_width=2, color=TEAL))
         self.play(
             TransformFromCopy(dot1, dot2, path_arc=-30 * DEGREES),
-            ShowCreation(arrow, run_time=2),
+            Create(arrow, run_time=2),
         )
         self.play(
             dot1.animate.move_to(p1),
@@ -114,7 +114,7 @@ class IndicationOnPhotograph(InteractiveScene):
         )
 
 
-class ContrastPhotographyAndHolography(InteractiveScene):
+class ContrastPhotographyAndHolography(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         title = Text("Information lost in ordinary photography", font_size=60)
@@ -134,7 +134,7 @@ class ContrastPhotographyAndHolography(InteractiveScene):
 
         self.play(
             FadeIn(title),
-            ShowCreation(underline)
+            Create(underline)
         )
 
         for point in points:
@@ -148,7 +148,7 @@ class ContrastPhotographyAndHolography(InteractiveScene):
         self.wait()
 
 
-class Outline(InteractiveScene):
+class Outline(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add top part
         frame = self.frame
@@ -266,7 +266,7 @@ class Outline(InteractiveScene):
 
         self.play(
             LaggedStartMap(Restore, mid_rects),
-            ShowCreation(outer_lines, lag_ratio=0),
+            Create(outer_lines, lag_ratio=0),
             frame.animate.set_y(0),
             FadeIn(mid_titles, time_span=(1.5, 2.0), lag_ratio=0.025),
             run_time=2
@@ -364,7 +364,7 @@ class GoalOfRediscovery(TeacherStudentsScene):
         self.wait(4)
 
 
-class NameCraigAndSally(InteractiveScene):
+class NameCraigAndSally(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         image = ImageMobject("CraigSallyPaulGrant")
@@ -395,7 +395,7 @@ class NameCraigAndSally(InteractiveScene):
         )
 
 
-class ShowALens(InteractiveScene):
+class ShowALens(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add lens
         arc = Arc(-30 * DEGREES, 60 * DEGREES)
@@ -421,7 +421,7 @@ class ShowALens(InteractiveScene):
         in_lines.insert_n_curves(100)
 
         self.add(in_lines, lens)
-        self.play(ShowCreation(in_lines, lag_ratio=0.01, run_time=2, rate_func=linear))
+        self.play(Create(in_lines, lag_ratio=0.01, run_time=2, rate_func=linear))
         self.wait()
 
         # Label viewing angle
@@ -433,7 +433,7 @@ class ShowALens(InteractiveScene):
         self.wait()
 
 
-class AskAboutRecordingPhase(InteractiveScene):
+class AskAboutRecordingPhase(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         morty = Mortimer()
@@ -492,7 +492,7 @@ class HowIsThisHelpful(TeacherStudentsScene):
         self.wait(5)
 
 
-class NoWhiteLight(InteractiveScene):
+class NoWhiteLight(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         white_label = VGroup(
@@ -512,7 +512,7 @@ class NoWhiteLight(InteractiveScene):
 
         self.add(white_label)
         self.wait()
-        self.play(ShowCreation(cross))
+        self.play(Create(cross))
         self.wait()
         self.play(
             FadeOut(VGroup(white_label, cross), DR),
@@ -521,7 +521,7 @@ class NoWhiteLight(InteractiveScene):
         self.wait()
 
 
-class AnnotateSetup(InteractiveScene):
+class AnnotateSetup(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add iamge
         image = ImageMobject("CraigSallyHologramSetup")
@@ -569,10 +569,10 @@ class AnnotateSetup(InteractiveScene):
         obj_beam_spread.set_stroke(GREEN_SCREEN, 1, 0.25)
 
         self.play(
-            ShowCreation(obj_beam, rate_func=linear),
+            Create(obj_beam, rate_func=linear),
             FadeIn(obj_beam_name, lag_ratio=0.1),
         )
-        self.play(ShowCreation(obj_beam_spread, lag_ratio=0, rate_func=rush_from))
+        self.play(Create(obj_beam_spread, lag_ratio=0, rate_func=rush_from))
         self.wait()
 
         # Show reference beam
@@ -604,7 +604,7 @@ class AnnotateSetup(InteractiveScene):
         self.wait()
 
 
-class ArrowWithQMark(InteractiveScene):
+class ArrowWithQMark(Scene)  # Changed from InteractiveScene:
     def construct(self):
         arrow = Arrow(3 * LEFT, 3 * RIGHT, path_arc=-PI / 2)
         q_marks = Tex(R"???", font_size=72)
@@ -618,7 +618,7 @@ class ArrowWithQMark(InteractiveScene):
         self.wait()
 
 
-class ProblemSolvingTipNumber1(InteractiveScene):
+class ProblemSolvingTipNumber1(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Title
         title = Text("Universal problem-solving tip #1", font_size=72)
@@ -630,13 +630,13 @@ class ProblemSolvingTipNumber1(InteractiveScene):
         words.set_color(YELLOW)
 
         self.play(LaggedStartMap(FadeIn, parts, shift=0.25 * UP, lag_ratio=0.25, run_time=2))
-        self.play(ShowCreation(underline))
+        self.play(Create(underline))
         self.wait()
         self.play(Write(words), run_time=3)
         self.wait()
 
 
-class NameElectromagneticField(InteractiveScene):
+class NameElectromagneticField(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         name1 = Text("Electromagetic Field")
@@ -741,7 +741,7 @@ class HoldUpDiffractionEquation(TeacherStudentsScene):
         self.wait(4)
 
 
-class AskAboutCenterBeam(InteractiveScene):
+class AskAboutCenterBeam(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         randy = Randolph()
@@ -754,7 +754,7 @@ class AskAboutCenterBeam(InteractiveScene):
         self.play(randy.animate.look_at(3 * DR))
 
 
-class DistanceApproximation(InteractiveScene):
+class DistanceApproximation(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         expr = Tex(R"\sqrt{L^2 + x^2} \approx L + \frac{x^2}{2L}")
@@ -773,14 +773,14 @@ class DistanceApproximation(InteractiveScene):
         self.play(Write(expr))
         self.wait()
         self.play(
-            ShowCreation(circle),
+            Create(circle),
             GrowArrow(arrow),
             FadeIn(words)
         )
         self.wait()
 
 
-class CircleDiffractionEquation(InteractiveScene):
+class CircleDiffractionEquation(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add equation
         self.add(FullScreenRectangle())
@@ -803,7 +803,7 @@ class CircleDiffractionEquation(InteractiveScene):
         self.wait()
 
 
-class DiffractionGratingGreenLaserExampleNumbers(InteractiveScene):
+class DiffractionGratingGreenLaserExampleNumbers(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         lines = VGroup(
@@ -823,7 +823,7 @@ class DiffractionGratingGreenLaserExampleNumbers(InteractiveScene):
         self.add(lines)
 
 
-class AnnotateZerothOrderBeam2(InteractiveScene):
+class AnnotateZerothOrderBeam2(Scene)  # Changed from InteractiveScene:
     def construct(self):
         image = ImageMobject("DiffractionGratingGreenLaser.jpg")
         # self.add(image.set_height(FRAME_HEIGHT))
@@ -876,7 +876,7 @@ class AnnotateZerothOrderBeam2(InteractiveScene):
         self.wait()
 
 
-class ExactSpacingQuestion(InteractiveScene):
+class ExactSpacingQuestion(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         question = Text("What is the exact spacing?", font_size=72)
@@ -917,7 +917,7 @@ class DejaVu(TeacherStudentsScene):
         self.wait(3)
 
 
-class WhatAHologramReconstructs(InteractiveScene):
+class WhatAHologramReconstructs(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         self.add(FullScreenRectangle())
@@ -937,7 +937,7 @@ class WhatAHologramReconstructs(InteractiveScene):
 
         self.play(
             FadeIn(title),
-            ShowCreation(underline)
+            Create(underline)
         )
 
         self.play(
@@ -971,7 +971,7 @@ class AskAboutHigherOrderBeams(TeacherStudentsScene):
         self.wait(6)
 
 
-class BinaryVsSinusoidalDiffraction(InteractiveScene):
+class BinaryVsSinusoidalDiffraction(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add axes
         top_axes, low_axes = two_axes = VGroup(
@@ -1014,7 +1014,7 @@ class BinaryVsSinusoidalDiffraction(InteractiveScene):
             self.play(
                 graph.animate.set_stroke(width=2),
                 VShowPassingFlash(graph.copy().set_stroke(width=5), time_width=3, rate_func=linear),
-                # ShowCreation(graph, rate_func=linear),
+                # Create(graph, rate_func=linear),
                 FadeIn(grating, lag_ratio=1e-3),
                 run_time=2
             )
@@ -1118,7 +1118,7 @@ class NeedsMoreRigor(TeacherStudentsScene):
         self.wait(4)
 
 
-class CompareFilmTypes(InteractiveScene):
+class CompareFilmTypes(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         categories = VGroup(
@@ -1178,7 +1178,7 @@ class TheresADeeperIssue(TeacherStudentsScene):
         self.wait(2)
 
 
-class SharpMindedViewer(InteractiveScene):
+class SharpMindedViewer(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         self.add(FullScreenRectangle())
@@ -1195,7 +1195,7 @@ class SharpMindedViewer(InteractiveScene):
         self.wait()
 
 
-class WhatThisExplanationLacks(InteractiveScene):
+class WhatThisExplanationLacks(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Title
         title = Text("Gaps in the single-point explanation", font_size=60)
@@ -1204,7 +1204,7 @@ class WhatThisExplanationLacks(InteractiveScene):
 
         self.play(
             FadeIn(title, lag_ratio=0.1),
-            ShowCreation(underline),
+            Create(underline),
         )
         self.wait()
 
@@ -1227,7 +1227,7 @@ class WhatThisExplanationLacks(InteractiveScene):
         self.wait()
 
 
-class SimplicityToGenerality(InteractiveScene):
+class SimplicityToGenerality(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Initialize little triangles
         frame = self.frame
@@ -1290,13 +1290,13 @@ class SimplicityToGenerality(InteractiveScene):
             run_time=2
         )
         self.play(
-            ShowCreation(new_surface, run_time=3),
+            Create(new_surface, run_time=3),
             frame.animate.reorient(58, 66, 0, (-0.27, -0.05, -0.23), 4.29).set_anim_args(run_time=4),
         )
         self.play(frame.animate.reorient(50, 79, 0, (-0.27, -0.05, -0.23), 4.29), run_time=3)
 
 
-class ModeledAs2D(InteractiveScene):
+class ModeledAs2D(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         words = Text("Modeled as 2D")
@@ -1311,7 +1311,7 @@ class ModeledAs2D(InteractiveScene):
         self.wait()
 
 
-class ThinkingAboutRediscovery(InteractiveScene):
+class ThinkingAboutRediscovery(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         randy = Randolph()
@@ -1394,12 +1394,12 @@ class IntroduceFormalSection(TeacherStudentsScene):
             FadeIn(plane, UP),
         )
         self.play(
-            ShowCreation(h_line),
+            Create(h_line),
             FadeIn(a_label, 0.5 * RIGHT),
             z_dot.animate.move_to(plane.n2p(a)),
         )
         self.play(
-            ShowCreation(v_line),
+            Create(v_line),
             FadeIn(b_label, 0.5 * UP),
             z_dot.animate.move_to(plane.n2p(z)),
         )
@@ -1410,12 +1410,12 @@ class IntroduceFormalSection(TeacherStudentsScene):
         self.wait(2)
 
 
-class HoldUpEquation(InteractiveScene):
+class HoldUpEquation(Scene)  # Changed from InteractiveScene:
     def construct(self):
         pass
 
 
-class GaborQuote(InteractiveScene):
+class GaborQuote(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         quote = TexText(R"""
@@ -1432,7 +1432,7 @@ class GaborQuote(InteractiveScene):
         self.wait()
 
 
-class GaborQuote2(InteractiveScene):
+class GaborQuote2(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         quote = TexText(R"""
@@ -1445,7 +1445,7 @@ class GaborQuote2(InteractiveScene):
         self.wait()
 
 
-class ComplexConjugateFact(InteractiveScene):
+class ComplexConjugateFact(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Show conjugate
         z = complex(2, 1)
@@ -1511,7 +1511,7 @@ class ComplexConjugateFact(InteractiveScene):
         self.wait()
 
 
-class PrepareComplexAlgebra(InteractiveScene):
+class PrepareComplexAlgebra(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         lines = VGroup(
@@ -1547,14 +1547,14 @@ class PrepareComplexAlgebra(InteractiveScene):
         )
         self.wait()
         self.play(
-            ShowCreation(rect),
+            Create(rect),
             lines[:2].animate.set_opacity(0.5),
             lines[2][R"R - c"].animate.set_opacity(0.5),
         )
         self.wait()
 
 
-class ComplexAlgebra(InteractiveScene):
+class ComplexAlgebra(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add first lines
         lines = VGroup(
@@ -1649,7 +1649,7 @@ class ComplexAlgebra(InteractiveScene):
         )
         arrows.set_color(RED)
 
-        self.play(ShowCreation(pair_rects, lag_ratio=0.1))
+        self.play(Create(pair_rects, lag_ratio=0.1))
         self.play(
             FadeIn(real_label, lag_ratio=0.1),
             LaggedStartMap(GrowArrow, arrows)
@@ -1691,7 +1691,7 @@ class ComplexAlgebra(InteractiveScene):
         fade_opacity = 0.5
 
         self.play(
-            ShowCreation(box1_lines, lag_ratio=0.5),
+            Create(box1_lines, lag_ratio=0.5),
             FadeIn(l2_rects[0]),
             FadeIn(l2_rects[3]),
             FadeTransform(l2_groups[0].copy(), l3_groups[0], time_span=(0.5, 2)),
@@ -1720,7 +1720,7 @@ class ComplexAlgebra(InteractiveScene):
         )
         self.play(
             FadeIn(l2_rects[1]),
-            ShowCreation(box2_line),
+            Create(box2_line),
             FadeIn(l3_rects[1], time_span=(0.5, 1.5)),
             TransformMatchingShapes(l2_groups[1].copy(), l3_groups[1], run_time=1),
             FadeIn(l3_plusses[1]),
@@ -1743,7 +1743,7 @@ class ComplexAlgebra(InteractiveScene):
         )
         self.play(
             FadeTransform(l2_groups[2].copy(), l3_groups[2], run_time=1.5),
-            ShowCreation(box3_line, run_time=1.5),
+            Create(box3_line, run_time=1.5),
             FadeIn(l2_rects[1]),
             FadeIn(l3_rects[2], time_span=(0.5, 1.5)),
             FadeIn(l3_plusses[2])
@@ -1775,7 +1775,7 @@ class ComplexAlgebra(InteractiveScene):
         ).set_stroke(WHITE, 2)
 
 
-class PlaneAfterFilm(InteractiveScene):
+class PlaneAfterFilm(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         image = ImageMobject("FilmFromBehind")
@@ -1820,7 +1820,7 @@ class EndScreen(PatreonEndScreen):
 
 # Old stubs
 
-class DoubleSlitSupplementaryGraphs(InteractiveScene):
+class DoubleSlitSupplementaryGraphs(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Setup all three axes, with labels
 
@@ -1830,13 +1830,13 @@ class DoubleSlitSupplementaryGraphs(InteractiveScene):
         ...
 
 
-class DistApproximations(InteractiveScene):
+class DistApproximations(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Show sqrt(L^2 + x^2) approx L + x/(2L) approx L
         pass
 
 
-class DiffractionEquation(InteractiveScene):
+class DiffractionEquation(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add equation
         equation = Tex(R"{d} \cdot \sin(\theta) = \lambda", font_size=60)

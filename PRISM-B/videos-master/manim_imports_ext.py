@@ -1,6 +1,7 @@
-from manimlib import *
-from manimlib.mobject.svg.old_tex_mobject import *
+# Manim Community Edition imports
+from manim import *
 
+# Import custom extensions (will need conversion)
 from custom.backdrops import *
 from custom.banner import *
 from custom.characters.pi_creature import *

@@ -18,7 +18,7 @@ def get_zeta_zeros(n_zeros=10):
     return [complex(mpmath.zetazero(k + 1)) for k in range(n_zeros)]
 
 
-class ZetaSum(InteractiveScene):
+class ZetaSum(Scene)  # Changed from InteractiveScene:
     n_vects = 100
     max_N = 100_000
     show_c = True

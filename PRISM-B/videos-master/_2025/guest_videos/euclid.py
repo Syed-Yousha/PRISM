@@ -1,7 +1,7 @@
 from manim_imports_ext import *
 
 
-class FlattenCone(InteractiveScene):
+class FlattenCone(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add surfaces
         frame = self.frame
@@ -59,7 +59,7 @@ class FlattenCone(InteractiveScene):
         frame.set_x(1e-1)
         self.play(
             frame.animate.reorient(50, 80, 0),
-            ShowCreation(cone, time_span=(0, 2)),
+            Create(cone, time_span=(0, 2)),
             run_time=4
         )
 
@@ -88,11 +88,11 @@ class FlattenCone(InteractiveScene):
         flat_div_line = get_div_line(flat_cone_func)
 
         self.play(
-            ShowCreation(cone_line, time_span=(0, 3)),
+            Create(cone_line, time_span=(0, 3)),
             frame.animate.reorient(0, 2, 0),
             run_time=4,
         )
-        self.play(ShowCreation(cone_div_line))
+        self.play(Create(cone_div_line))
         self.wait()
 
         # Flatten
@@ -108,7 +108,7 @@ class FlattenCone(InteractiveScene):
         self.wait()
 
 
-class SquareOnASphere(InteractiveScene):
+class SquareOnASphere(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add sphere
         frame = self.frame
@@ -132,7 +132,7 @@ class SquareOnASphere(InteractiveScene):
         all_lines = VGroup(line1)
 
         self.play(
-            ShowCreation(line1, time_span=(0, 2)),
+            Create(line1, time_span=(0, 2)),
             frame.animate.reorient(5, 57, 0),
             run_time=3
         )
@@ -150,8 +150,8 @@ class SquareOnASphere(InteractiveScene):
             new_line = self.get_rotated_arc(last_line, 90 * DEG)
             new_line.reverse_points()
             self.play(
-                ShowCreation(new_line, time_span=(0, 2)),
-                ShowCreation(elbow, time_span=(0, 1)),
+                Create(new_line, time_span=(0, 2)),
+                Create(elbow, time_span=(0, 1)),
                 frame.animate.reorient(*orientation),
                 run_time=3
             )

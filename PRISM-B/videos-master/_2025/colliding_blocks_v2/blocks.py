@@ -90,7 +90,7 @@ class ClackAnimation(Restore):
         super().__init__(circles, lag_ratio=0.1, run_time=run_time, **kwargs)
 
 
-class Blocks(InteractiveScene):
+class Blocks(Scene)  # Changed from InteractiveScene:
     initial_positions = [10.5, 8]
     initial_velocities = [-0.975, 0]
     masses = [10, 1]
@@ -191,7 +191,7 @@ class Blocks(InteractiveScene):
             frame.animate.reorient(-12, 3, 0, (-3.41, -1.48, 0.01), 4.63),
             blocks[0].mass_label.animate.set_opacity(1),
             blocks[1].mass_label.animate.set_opacity(1),
-            VFadeIn(velocity_vectors),
+            FadeIn(velocity_vectors),
             FadeOut(p_equation, time_span=(1, 2)),
             run_time=3
         )
@@ -216,7 +216,7 @@ class Blocks(InteractiveScene):
             rects[1].set_stroke(YELLOW, 3)
             self.play(
                 FadeOut(last_rects),
-                ShowCreation(rects, lag_ratio=0),
+                Create(rects, lag_ratio=0),
             )
             self.wait()
             last_rects = rects
@@ -241,7 +241,7 @@ class Blocks(InteractiveScene):
         label_targets.clear_updaters()
 
         self.play(
-            VFadeIn(dec_equation, time_span=(1.5, 2)),
+            FadeIn(dec_equation, time_span=(1.5, 2)),
             Transform(VGroup(*labels).copy().clear_updaters(), label_targets, remover=True, run_time=2, lag_ratio=1e-3),
         )
         self.wait()
@@ -288,7 +288,7 @@ class Blocks(InteractiveScene):
 
         self.play(
             frame.animate.reorient(-2, 2, 0, (-2.82, -0.66, 0.11), 5.96),
-            VFadeIn(p_dec_equation),
+            FadeIn(p_dec_equation),
             Transform(VGroup(*labels).copy().clear_updaters(), label_targets, remover=True),
             run_time=2
         )
@@ -363,7 +363,7 @@ class Blocks(InteractiveScene):
         x_label.shift_onto_screen(buff=SMALL_BUFF)
         y_label.next_to(plane.y_axis.get_top(), DR, SMALL_BUFF)
 
-        self.play(ShowCreation(plane, lag_ratio=2e-2))
+        self.play(Create(plane, lag_ratio=2e-2))
         self.play(
             Write(x_label[:2]),
             TransformFromCopy(ke_equation["v_1"][0], x_label["v_1"][0]),
@@ -462,7 +462,7 @@ class Blocks(InteractiveScene):
 
         self.play(
             FadeOut(p_equation),
-            ShowCreation(ke_rect),
+            Create(ke_rect),
             Write(question, run_time=1),
         )
         self.wait()
@@ -488,7 +488,7 @@ class Blocks(InteractiveScene):
         self.wait()
         self.play(
             traced_path.animate.set_stroke(WHITE, 1, 0.25),
-            ShowCreation(ellipse),
+            Create(ellipse),
             run_time=3
         )
         self.wait()
@@ -516,7 +516,7 @@ class Blocks(InteractiveScene):
 
         self.play(LaggedStartMap(GrowArrow, squish_arrows, lag_ratio=1e-2, run_time=1))
         self.play(
-            ShowCreation(underlines, lag_ratio=0),
+            Create(underlines, lag_ratio=0),
         )
         self.wait()
         self.play(FadeOut(squish_arrows), FadeOut(underlines))
@@ -528,7 +528,7 @@ class Blocks(InteractiveScene):
             SurroundingRectangle(xy_equation[R"\text{E}"], buff=SMALL_BUFF),
         )
         E_rects.set_stroke(YELLOW, 1)
-        self.play(ShowCreation(E_rects, lag_ratio=0))
+        self.play(Create(E_rects, lag_ratio=0))
         self.play(
             marked_velocity.animate.set_value([-0.5, 0]),
             ellipse.animate.scale(0.25),
@@ -587,7 +587,7 @@ class Blocks(InteractiveScene):
         words.next_to(rect, DOWN)
         words.set_color(YELLOW)
         self.play(
-            ShowCreation(rect),
+            Create(rect),
             Write(words),
             run_time=1
         )
@@ -706,11 +706,11 @@ class Blocks(InteractiveScene):
         x_rect.stretch(0.05, 0, about_point=plane.c2p(-2.7, 0))
 
         self.wait()
-        self.play(ShowCreation(lil_block_rect))
+        self.play(Create(lil_block_rect))
         self.wait()
         self.play(ReplacementTransform(lil_block_rect, y_rect))
         self.wait()
-        self.play(ShowCreation(big_block_rect))
+        self.play(Create(big_block_rect))
         self.wait()
         self.play(ReplacementTransform(big_block_rect, x_rect))
         self.play(x_rect.animate.shift(0.2 * RIGHT), run_time=4, rate_func=lambda t: wiggle(t, 5))
@@ -779,7 +779,7 @@ class Blocks(InteractiveScene):
             )
         )
         self.wait()
-        self.play(ShowCreation(p1_rects, lag_ratio=0))
+        self.play(Create(p1_rects, lag_ratio=0))
         self.wait()
         self.play(ReplacementTransform(p1_rects, p2_rects))
         self.wait()
@@ -797,7 +797,7 @@ class Blocks(InteractiveScene):
         slope_eq.next_to(p_line.pfp(0.6), RIGHT)
 
         self.play(
-            ShowCreation(p_line),
+            Create(p_line),
             FadeOut(arc),
         )
         self.wait()
@@ -917,7 +917,7 @@ class Blocks(InteractiveScene):
             FadeIn(endzone)
         )
         self.wait(4)
-        self.play(ShowCreation(endzone_line), Write(endzone_line_label))
+        self.play(Create(endzone_line), Write(endzone_line_label))
         self.wait(2)
         self.play(Write(slope_label))
         self.wait(20)
@@ -1459,7 +1459,7 @@ class IntroduceSetup(BasicBlockCount):
 
         self.play(
             FadeIn(lil_block_label),
-            ShowCreation(lil_block_rect),
+            Create(lil_block_rect),
             GrowArrow(lil_block_arrow),
         )
         self.wait()
@@ -1477,7 +1477,7 @@ class IntroduceSetup(BasicBlockCount):
 
         self.play(
             VFadeOut(big_block_vect),
-            VFadeIn(self.count_label),
+            FadeIn(self.count_label),
         )
         self.wait(10)
 
@@ -1582,7 +1582,7 @@ class MovementOfWall(Blocks):
         self.wait()
 
 
-class CirclePuzzle(InteractiveScene):
+class CirclePuzzle(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add axes
         x_axis, y_axis = axes = VGroup(Line(1.5 * LEFT, 1.5 * RIGHT), Line(UP, DOWN))
@@ -1608,7 +1608,7 @@ class CirclePuzzle(InteractiveScene):
         circle = Circle(radius=3)
         circle.set_stroke(YELLOW, 2)
 
-        self.play(ShowCreation(circle))
+        self.play(Create(circle))
         self.wait()
 
         # Set up lines
@@ -1636,16 +1636,16 @@ class CirclePuzzle(InteractiveScene):
         right_shift = (slope_dec.get_width() - count.get_width()) * RIGHT
 
         self.play(
-            ShowCreation(lines[0]),
+            Create(lines[0]),
             state_point.animate.move_to(lines[0].get_end()),
             FadeIn(slope_label),
         )
         self.wait()
         self.play(
             slope_label.animate.next_to(count_label, DOWN, aligned_edge=RIGHT).shift(right_shift),
-            VFadeIn(count_label),
+            FadeIn(count_label),
             ChangeDecimalToValue(count, 2),
-            ShowCreation(lines[1]),
+            Create(lines[1]),
             state_point.animate.move_to(lines[1].get_end()),
         )
         self.wait()
@@ -1653,7 +1653,7 @@ class CirclePuzzle(InteractiveScene):
         # Show remaining lines
         for line in lines[2:]:
             self.play(
-                ShowCreation(line),
+                Create(line),
                 state_point.animate.move_to(line.get_end()),
                 ChangeDecimalToValue(count, count.get_value() + 1)
             )
@@ -1676,7 +1676,7 @@ class CirclePuzzle(InteractiveScene):
                 lag_ratio=0.5,
                 run_time=6
             ),
-            ShowCreation(count_rect)
+            Create(count_rect)
         )
 
         # Vary the slope
@@ -1829,7 +1829,7 @@ class CirclePuzzle(InteractiveScene):
         two_theta_label.next_to(lil_two_arc.pfp(0.9), DL, SMALL_BUFF)
 
         self.play(
-            ShowCreation(lil_arc),
+            Create(lil_arc),
             Write(theta_label),
         )
         self.wait()
@@ -1917,7 +1917,7 @@ class CirclePuzzle(InteractiveScene):
             self.play(
                 Animation(ghost_line, remover=True),
                 Animation(ghost_arc, remover=True),
-                ShowCreation(line),
+                Create(line),
                 state_point.animate.move_to(line.get_end()),
                 Restore(arc),
                 FadeIn(two_theta_label, arc.saved_state.pfp(0.5) - arc.pfp(0.5)),
@@ -1934,7 +1934,7 @@ class CirclePuzzle(InteractiveScene):
         self.add(full_screen_rect, bold_lines)
         self.play(
             FadeIn(full_screen_rect),
-            ShowCreation(endzone_line),
+            Create(endzone_line),
         )
         self.wait()
         self.play(
@@ -1968,7 +1968,7 @@ class CirclePuzzle(InteractiveScene):
             FadeOut(past_state_points, lag_ratio=0.1),
             FadeOut(state_point),
         )
-        self.play(ShowCreation(slope_label_rect))
+        self.play(Create(slope_label_rect))
 
         self.play(
             FadeIn(rhs),
@@ -2041,12 +2041,12 @@ class CirclePuzzle(InteractiveScene):
         )
         self.wait()
         self.play(
-            ShowCreation(dy_line),
+            Create(dy_line),
             TransformFromCopy(new_slope_eq[R"\Delta y"][0], dy_label)
         )
         self.wait()
         self.play(
-            ShowCreation(dx_line),
+            Create(dx_line),
             TransformFromCopy(new_slope_eq[R"\Delta x"][0], dx_label)
         )
         self.wait()
@@ -2062,7 +2062,7 @@ class CirclePuzzle(InteractiveScene):
         tan_eq.next_to(new_slope_eq, DOWN, buff=0.5, aligned_edge=LEFT)
 
         self.play(
-            ShowCreation(arc),
+            Create(arc),
             Write(theta_label),
         )
         self.play(
@@ -2134,7 +2134,7 @@ class CirclePuzzle(InteractiveScene):
         ))
         self.wait()
         self.play(FadeIn(example_arctan, DOWN))
-        self.play(ShowCreation(example_arctan_rect))
+        self.play(Create(example_arctan_rect))
         self.wait()
 
     def get_lines(self, circle, slope, stroke_color=WHITE, stroke_width=2):

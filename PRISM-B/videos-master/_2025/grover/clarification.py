@@ -108,7 +108,7 @@ class Sudoku(VGroup):
         return grid
 
 
-class Intro(InteractiveScene):
+class Intro(Scene)  # Changed from InteractiveScene:
     random_seed = 1
 
     def construct(self):
@@ -161,7 +161,7 @@ class HowDoYouKnowWhichAxis(TeacherStudentsScene):
         self.wait(5)
 
 
-class SudokuChecker(InteractiveScene):
+class SudokuChecker(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Introduce, and add solution
         sudoku = Sudoku(height=6)
@@ -212,7 +212,7 @@ class SudokuChecker(InteractiveScene):
         self.play(UpdateFromFunc(sudoku.unlocked_numbers, randomize_numbers, run_time=10))
 
 
-class SudokuCheckingCode(InteractiveScene):
+class SudokuCheckingCode(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Thanks Claude!
         code = Code("""
@@ -257,7 +257,7 @@ class SudokuCheckingCode(InteractiveScene):
         self.wait()
 
 
-class ArrowToQC(InteractiveScene):
+class ArrowToQC(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         icon = get_quantum_computer_symbol(height=2.5)
@@ -272,7 +272,7 @@ class ArrowToQC(InteractiveScene):
         self.wait()
 
 
-class CompiledSudokuVerifier(InteractiveScene):
+class CompiledSudokuVerifier(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up
         sudoku = Sudoku(height=5)
@@ -354,7 +354,7 @@ class CompiledSudokuVerifier(InteractiveScene):
             self.play(FadeOut(mark), FadeOut(output))
 
 
-class StateVectorsAsABasis(InteractiveScene):
+class StateVectorsAsABasis(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Axes
         frame = self.frame
@@ -433,7 +433,7 @@ class StateVectorsAsABasis(InteractiveScene):
         self.wait(20)
 
 
-class OperationsOnQC(InteractiveScene):
+class OperationsOnQC(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Bad output
         icon = get_quantum_computer_symbol(height=3)
@@ -459,13 +459,13 @@ class OperationsOnQC(InteractiveScene):
             FadeIn(bad_output, shift=2 * RIGHT, scale=2),
             lag_ratio=0.5
         ))
-        self.play(ShowCreation(big_cross))
+        self.play(Create(big_cross))
         self.wait()
         self.play(FadeOut(in_ket), FadeOut(bad_output), FadeOut(big_cross))
         self.wait()
 
 
-class TwoByTwoGrid(InteractiveScene):
+class TwoByTwoGrid(Scene)  # Changed from InteractiveScene:
     random_seed = 1
 
     def construct(self):
@@ -685,7 +685,7 @@ class AskWhyThatsTrue(TeacherStudentsScene):
         self.wait(3)
 
 
-class ListOfConfusions(InteractiveScene):
+class ListOfConfusions(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         items = BulletedList(
@@ -716,7 +716,7 @@ class ListOfConfusions(InteractiveScene):
         self.wait()
 
 
-class SolveSHAWord(InteractiveScene):
+class SolveSHAWord(Scene)  # Changed from InteractiveScene:
     def construct(self):
         words = VGroup(
             TexText(R"Solve for ${x}$"),
@@ -742,7 +742,7 @@ class ThatsOnMe(TeacherStudentsScene):
         self.wait(3)
 
 
-class ShowSuperposition(InteractiveScene):
+class ShowSuperposition(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Axes
         frame = self.frame
@@ -830,7 +830,7 @@ class ShowSuperposition(InteractiveScene):
             for mob in [col, vect_label]
         )
         rects.set_stroke(YELLOW, 2)
-        self.play(ShowCreation(rects[0]))
+        self.play(Create(rects[0]))
         self.wait(5)
         self.play(Transform(*rects))
         self.wait(7)
@@ -845,7 +845,7 @@ class ShowSuperposition(InteractiveScene):
         self.wait(8)
 
 
-class NorthEastTraveler(InteractiveScene):
+class NorthEastTraveler(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add compass
         compass = self.get_compass()
@@ -959,7 +959,7 @@ class NorthEastTraveler(InteractiveScene):
         label.next_to(midpoint, normalize(midpoint - about_point))
 
         self.play(LaggedStart(
-            ShowCreation(arc),
+            Create(arc),
             FadeIn(label),
             Rotate(mobject, 90 * DEG, about_point=about_point),
             lag_ratio=0.5
@@ -968,14 +968,14 @@ class NorthEastTraveler(InteractiveScene):
         return VGroup(arc, label)
 
 
-class SimpleTwobitKet(InteractiveScene):
+class SimpleTwobitKet(Scene)  # Changed from InteractiveScene:
     def construct(self):
         group = KetGroup(BitString(2, 2))
         group.scale(2)
         self.add(group)
 
 
-class ShowLinearityExample(InteractiveScene):
+class ShowLinearityExample(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add machine
         machine = get_blackbox_machine()
@@ -1043,7 +1043,7 @@ class ShowLinearityExample(InteractiveScene):
         self.wait()
 
 
-class ZGateExample(InteractiveScene):
+class ZGateExample(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         z_gates = VGroup(get_blackbox_machine(label_tex="Z") for n in range(3))
@@ -1115,7 +1115,7 @@ class ZGateExample(InteractiveScene):
         self.wait()
 
 
-class PassSuperpositionIntoVerifier(InteractiveScene):
+class PassSuperpositionIntoVerifier(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up machine
         frame = self.frame
@@ -1258,7 +1258,7 @@ class PassSuperpositionIntoVerifier(InteractiveScene):
         self.add(lines, Point(), pre_machine)
         self.play(
             Transform(pre_machine, new_machines),
-            LaggedStartMap(ShowCreation, lines)
+            LaggedStartMap(Create, lines)
         )
         self.wait()
         self.play(
@@ -1334,7 +1334,7 @@ class IsThisUseful(TeacherStudentsScene):
         self.wait(4)
 
 
-class SudokuBruteForce(InteractiveScene):
+class SudokuBruteForce(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         words = Text("Comically inefficient\nbrute force approach:")
@@ -1377,7 +1377,7 @@ class SudokuBruteForce(InteractiveScene):
         self.wait()
 
 
-class ShaInversionCounts(InteractiveScene):
+class ShaInversionCounts(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         classical = VGroup(
@@ -1400,7 +1400,7 @@ class ShaInversionCounts(InteractiveScene):
         self.wait()
 
 
-class SkepticalPiCreature(InteractiveScene):
+class SkepticalPiCreature(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         randy = Randolph().to_edge(DOWN).shift(3 * LEFT)
@@ -1427,7 +1427,7 @@ class SkepticalPiCreature(InteractiveScene):
         self.wait()
 
 
-class FactoringNumbers(InteractiveScene):
+class FactoringNumbers(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Show factoring number
         factor_values = [314159265359, 1618033988749]
@@ -1459,7 +1459,7 @@ class FactoringNumbers(InteractiveScene):
         self.wait()
 
 
-class FourBitAdder(InteractiveScene):
+class FourBitAdder(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         circuit = SVGMobject("Four_bit_adder_with_carry_lookahead")

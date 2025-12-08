@@ -2,7 +2,7 @@ from manim_imports_ext import *
 from _2025.cosmic_distance.planets import *
 
 
-class TerenceLabel(InteractiveScene):
+class TerenceLabel(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         title = Text("Terence Tao", font_size=72)
@@ -31,7 +31,7 @@ class TerenceLabel(InteractiveScene):
         self.wait()
 
 
-class IntroducingTao(InteractiveScene):
+class IntroducingTao(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add images
         with_erdos = ImageMobject("TerryTaoPaulErdos")
@@ -61,7 +61,7 @@ class IntroducingTao(InteractiveScene):
         self.wait()
 
 
-class PilesOfResearchTopics(InteractiveScene):
+class PilesOfResearchTopics(Scene)  # Changed from InteractiveScene:
     def construct(self):
         folder = '/Users/grant/3Blue1Brown Dropbox/3Blue1Brown/videos/2025/cosmic_distance/supplements/TerenceTaoPapers'
         images = Group()
@@ -82,7 +82,7 @@ class PilesOfResearchTopics(InteractiveScene):
         self.play(LaggedStartMap(FadeIn, images, shift=0.2 * UP, lag_ratio=0.5, run_time=12))
 
 
-class AskingTaoForTopics(InteractiveScene):
+class AskingTaoForTopics(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         morty = Mortimer()
@@ -114,7 +114,7 @@ class AskingTaoForTopics(InteractiveScene):
         self.play(tau[:4].animate.stretch(0, 1, about_edge=DOWN), rate_func=squish_rate_func(there_and_back, 0.4, 0.6))
 
 
-class TableOfContents(InteractiveScene):
+class TableOfContents(Scene)  # Changed from InteractiveScene:
     def construct(self):
         items = VGroup(
             Text("Rung 1: Earth"),
@@ -203,7 +203,7 @@ class TableOfContents(InteractiveScene):
         self.wait(2)
 
 
-class MainCharacterTimeline(InteractiveScene):
+class MainCharacterTimeline(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add the timeline
         frame = self.frame
@@ -392,7 +392,7 @@ class MainCharacterTimeline(InteractiveScene):
         self.play(
             Write(venus_words),
             FadeIn(venus_points),
-            ShowCreation(venus_arrows),
+            Create(venus_arrows),
         )
         self.wait()
 
@@ -412,7 +412,7 @@ class MainCharacterTimeline(InteractiveScene):
             FadeOut(venus_arrows),
             venus_points.animate.set_opacity(0.5),
             Write(star_words),
-            ShowCreation(star_arrow),
+            Create(star_arrow),
             FadeIn(star_point),
             huygens_image.animate.set_opacity(0.5),
             FadeOut(romer_image),
@@ -447,7 +447,7 @@ class MainCharacterTimeline(InteractiveScene):
         self.wait()
 
 
-class WhatVsHow(InteractiveScene):
+class WhatVsHow(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         titles = VGroup(
@@ -462,14 +462,14 @@ class WhatVsHow(InteractiveScene):
         v_line = Line(UP, DOWN).set_height(FRAME_HEIGHT)
         self.play(
             FadeIn(titles[0], 0.5 * UP),
-            ShowCreation(v_line),
+            Create(v_line),
         )
         self.wait()
         self.play(FadeIn(titles[1], 0.5 * UP))
         self.wait()
 
 
-class ProjectionTheorem(InteractiveScene):
+class ProjectionTheorem(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add plane
         frame = self.frame
@@ -537,7 +537,7 @@ class ProjectionTheorem(InteractiveScene):
         return projection
 
 
-class RouleauxTriangle(InteractiveScene):
+class RouleauxTriangle(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add triangle
         arcs = VGroup(
@@ -571,7 +571,7 @@ class RouleauxTriangle(InteractiveScene):
         projection.move_to(v_lines.get_bottom())
 
         self.play(
-            *map(ShowCreation, v_lines),
+            *map(Create, v_lines),
             TransformFromCopy(shape, projection),
             run_time=2
         )
@@ -587,7 +587,7 @@ class RouleauxTriangle(InteractiveScene):
         )
 
 
-class WellOfSyene(InteractiveScene):
+class WellOfSyene(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         image_path = Path(self.file_writer.output_directory, "../KurtArtwork/TheWellOfSyene.jpg").resolve()
@@ -620,7 +620,7 @@ class WellOfSyene(InteractiveScene):
         )
 
 
-class NileLabels(InteractiveScene):
+class NileLabels(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add image
         image_path = Path(self.file_writer.output_directory, "Nile.png").resolve()
@@ -656,7 +656,7 @@ class NileLabels(InteractiveScene):
             FadeIn(alex_label, lag_ratio=0.1),
         )
         self.play(
-            ShowCreation(line, run_time=2),
+            Create(line, run_time=2),
             FadeIn(syene_point, time_span=(1, 2)),
             FadeIn(syene_label, lag_ratio=0.1, time_span=(1, 2)),
         )
@@ -665,7 +665,7 @@ class NileLabels(InteractiveScene):
         self.wait()
 
 
-class EarthSizeRatios(InteractiveScene):
+class EarthSizeRatios(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         equation = Tex(R"""
@@ -689,11 +689,11 @@ class EarthSizeRatios(InteractiveScene):
 
         # Highlight dist
         rect = SurroundingRectangle(dist_term)
-        self.play(ShowCreation(rect))
+        self.play(Create(rect))
         self.play(FadeOut(rect))
 
 
-class AccuracyLabel(InteractiveScene):
+class AccuracyLabel(Scene)  # Changed from InteractiveScene:
     def construct(self):
         label = VGroup(
             TexText("Estimate: $R_E = ...$"),
@@ -701,7 +701,7 @@ class AccuracyLabel(InteractiveScene):
         )
 
 
-class MoonOrbitCalculation(InteractiveScene):
+class MoonOrbitCalculation(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Pure ratio
         ratio_tex = R"{\text{28 days} \over \text{4 hours}}"
@@ -725,7 +725,7 @@ class MoonOrbitCalculation(InteractiveScene):
         self.wait()
         self.play(
             RMO.animate.set_color(TEAL),
-            ShowCreation(RMO_rect),
+            Create(RMO_rect),
             FadeIn(RMO_words, lag_ratio=0.1),
         )
         self.wait()
@@ -765,12 +765,12 @@ class MoonOrbitCalculation(InteractiveScene):
         value.next_to(rect, DOWN)
         value.match_color(rect)
 
-        self.play(ShowCreation(rect))
+        self.play(Create(rect))
         self.play(Write(value))
         self.wait()
 
 
-class FullLunarEclipseDistance(InteractiveScene):
+class FullLunarEclipseDistance(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add terms
         R_e = 1.5
@@ -811,7 +811,7 @@ class FullLunarEclipseDistance(InteractiveScene):
         self.play(FadeIn(R_m_brace))
 
 
-class ThreePointFiveCorrection(InteractiveScene):
+class ThreePointFiveCorrection(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         four_hours = Text("4 hours")
@@ -820,12 +820,12 @@ class ThreePointFiveCorrection(InteractiveScene):
         cross = Line(LEFT, RIGHT).replace(four_hours, 0)
         cross.set_stroke(RED, 6)
 
-        self.play(ShowCreation(cross))
+        self.play(Create(cross))
         self.play(Write(correction))
         self.wait()
 
 
-class ShowFourLittleCircles(InteractiveScene):
+class ShowFourLittleCircles(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add image
         image_path = Path(self.file_writer.output_directory, "LunarEclipseComposite.jpg").resolve()
@@ -843,7 +843,7 @@ class ShowFourLittleCircles(InteractiveScene):
         four_circles.rotate(8 * DEG)
         four_circles.move_to([1.503, -0.043, 0.])
 
-        self.play(ShowCreation(lil_circle))
+        self.play(Create(lil_circle))
         self.wait()
         self.play(LaggedStart(
             (TransformFromCopy(lil_circle, circ)
@@ -854,7 +854,7 @@ class ShowFourLittleCircles(InteractiveScene):
         self.wait()
 
 
-class AskAboutMoonrise(InteractiveScene):
+class AskAboutMoonrise(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         question = Text("What does the duration\nof a moonrise tell you?", font_size=60)
@@ -863,7 +863,7 @@ class AskAboutMoonrise(InteractiveScene):
         self.wait()
 
 
-class MoonSizeCalculation(InteractiveScene):
+class MoonSizeCalculation(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         eq = Tex(
@@ -895,7 +895,7 @@ class MoonSizeCalculation(InteractiveScene):
         VGroup(top_rect, low_rect, top_label, low_label).set_color(TEAL)
 
         self.play(
-            ShowCreation(top_rect),
+            Create(top_rect),
             FadeIn(top_label, lag_ratio=0.1),
         )
         self.wait()
@@ -909,7 +909,7 @@ class MoonSizeCalculation(InteractiveScene):
         self.wait()
 
 
-class MoonSunRatios(InteractiveScene):
+class MoonSunRatios(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Write equation
         equation = Tex(
@@ -937,7 +937,7 @@ class MoonSunRatios(InteractiveScene):
         self.wait()
 
 
-class ArrowBackAndForth(InteractiveScene):
+class ArrowBackAndForth(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         arrow = Arrow(3 * LEFT, 3 * RIGHT, path_arc=-90 * DEG, thickness=6)
@@ -947,7 +947,7 @@ class ArrowBackAndForth(InteractiveScene):
         self.wait()
 
 
-class AngleLabel(InteractiveScene):
+class AngleLabel(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         arc = Arc(180 * DEG, -10 * DEG, radius=2)
@@ -957,7 +957,7 @@ class AngleLabel(InteractiveScene):
         self.add(arc, theta)
 
 
-class AristarchusDistanceEstimate(InteractiveScene):
+class AristarchusDistanceEstimate(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         t2c = {"D_S": YELLOW, "D_M": GREY_B}
@@ -975,7 +975,7 @@ class AristarchusDistanceEstimate(InteractiveScene):
         self.wait()
 
 
-class AristarchusSunSizeEstimate(InteractiveScene):
+class AristarchusSunSizeEstimate(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Mostly copied from above
         t2c = {"R_S": YELLOW, "R_E": BLUE}
@@ -993,7 +993,7 @@ class AristarchusSunSizeEstimate(InteractiveScene):
         self.wait()
 
 
-class CrossAndCheck(InteractiveScene):
+class CrossAndCheck(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         cross = Cross(Square())
@@ -1006,14 +1006,14 @@ class CrossAndCheck(InteractiveScene):
         checkmark.set_fill(GREEN)
         checkmark.next_to(cross, UP)
 
-        self.play(ShowCreation(cross))
+        self.play(Create(cross))
         self.wait()
         self.play(FadeOut(cross))
         self.play(FadeIn(checkmark, UP))
         self.wait()
 
 
-class OtherGreeks(InteractiveScene):
+class OtherGreeks(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         folder = '/Users/grant/3Blue1Brown Dropbox/3Blue1Brown/videos/2025/cosmic_distance/KurtArtwork/'
@@ -1037,7 +1037,7 @@ class OtherGreeks(InteractiveScene):
         )
 
 
-class EqualAreas1(InteractiveScene):
+class EqualAreas1(Scene)  # Changed from InteractiveScene:
     angle = 30 * DEG
     radius = 2
     run_time = 1
@@ -1066,7 +1066,7 @@ class EqualAreas2(EqualAreas1):
     run_time = 1
 
 
-class EvenWithMathRight(InteractiveScene):
+class EvenWithMathRight(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         words = TexText(R"Even when you have the math right\\you don't necessarily get to the truth", font_size=36)
@@ -1075,7 +1075,7 @@ class EvenWithMathRight(InteractiveScene):
         self.wait()
 
 
-class CopernicusConclusions(InteractiveScene):
+class CopernicusConclusions(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add title
         title = TexText("Copernicus", font_size=48)
@@ -1142,7 +1142,7 @@ class CopernicusConclusions(InteractiveScene):
             self.wait()
 
 
-class UniversalProblemSolvingTip(InteractiveScene):
+class UniversalProblemSolvingTip(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         title = Text("Universal Problem Solving Tip #1", font_size=60)
@@ -1163,7 +1163,7 @@ class UniversalProblemSolvingTip(InteractiveScene):
         self.wait()
 
 
-class CountUpDates(InteractiveScene):
+class CountUpDates(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         day_tracker = ValueTracker(1)
@@ -1196,7 +1196,7 @@ class CountUpDates(InteractiveScene):
         return result
 
 
-class ScaleIndicator(InteractiveScene):
+class ScaleIndicator(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         power_tracker = ValueTracker(0)
@@ -1257,7 +1257,7 @@ class ScaleIndicator(InteractiveScene):
         return 1.0 - clip(inverse_interpolate(0.25, 0.75, abs(exp_diff)), 0, 1)
 
 
-class Subscribe(InteractiveScene):
+class Subscribe(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         morty = Mortimer()

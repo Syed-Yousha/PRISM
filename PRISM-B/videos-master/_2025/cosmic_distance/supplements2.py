@@ -6,7 +6,7 @@ from manim_imports_ext import *
 from _2025.cosmic_distance.planets import *
 
 
-class StatsToVenus(InteractiveScene):
+class StatsToVenus(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         title = TexText(R"Nearest distance to Venus $\approx$ 39,000,000 km $\approx 6{,}200 \times R_E$")
@@ -21,7 +21,7 @@ class StatsToVenus(InteractiveScene):
         self.wait()
 
 
-class AngleDeviationForVenusParallax(InteractiveScene):
+class AngleDeviationForVenusParallax(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         title = TexText(R"Angle deviation $ = 2 \tan^{-1}(1 / 6200) \approx$ 1 arc-minute = $\displaystyle \frac{1}{60} \cdot 1^\circ$")
@@ -31,7 +31,7 @@ class AngleDeviationForVenusParallax(InteractiveScene):
         self.wait()
 
 
-class SunInTheSky(InteractiveScene):
+class SunInTheSky(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add pictures
         frame = self.frame
@@ -95,7 +95,7 @@ class SunInTheSky(InteractiveScene):
 
         self.play(
             FadeIn(sun_label),
-            ShowCreation(dashed_lines),
+            Create(dashed_lines),
         )
         self.wait()
 
@@ -166,7 +166,7 @@ class SunInTheSky(InteractiveScene):
         self.wait()
 
 
-class ShowDuration(InteractiveScene):
+class ShowDuration(Scene)  # Changed from InteractiveScene:
     max_time = 4 * 3600 + 20 * 20 + 35
     run_time = 12
     clock_color = BLACK
@@ -205,7 +205,7 @@ class LongerDuration(ShowDuration):
     run_time = 12
 
 
-class SevenHourMarker(InteractiveScene):
+class SevenHourMarker(Scene)  # Changed from InteractiveScene:
     def construct(self):
         brace = Brace(Line(2 * LEFT, 2 * RIGHT))
         label = Tex(R"\sim 7 \text{ hours}")
@@ -217,7 +217,7 @@ class SevenHourMarker(InteractiveScene):
         self.wait()
 
 
-class VenusTransitTimeline(InteractiveScene):
+class VenusTransitTimeline(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         frame = self.frame
@@ -283,7 +283,7 @@ class Count20Minutes(ShowDuration):
     clock_color = WHITE
 
 
-class Antidisk(InteractiveScene):
+class Antidisk(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         rect = FullScreenRectangle()
@@ -294,7 +294,7 @@ class Antidisk(InteractiveScene):
         self.add(rect)
 
 
-class LabelIo(InteractiveScene):
+class LabelIo(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Background
         im = ImageMobject('/Users/grant/3Blue1Brown Dropbox/3Blue1Brown/videos/2025/cosmic_distance/supplements2/JovianSystem.png')
@@ -328,7 +328,7 @@ class LabelIo(InteractiveScene):
             )
 
 
-class TwoAU(InteractiveScene):
+class TwoAU(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         braces = VGroup(
@@ -344,7 +344,7 @@ class TwoAU(InteractiveScene):
         self.wait()
 
 
-class SpeedOfLightFrame(InteractiveScene):
+class SpeedOfLightFrame(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         # title = Text("Real-time\ndepiction\nof the\nspeed of\nlight", alignment="LEFT", font_size=60)
@@ -375,7 +375,7 @@ class SpeedOfLightFrame(InteractiveScene):
         self.wait()
 
 
-class CompareLightSpeedEstimates(InteractiveScene):
+class CompareLightSpeedEstimates(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         words = VGroup(
@@ -389,7 +389,7 @@ class CompareLightSpeedEstimates(InteractiveScene):
             self.wait()
 
 
-class DemonstrateAnArcSecond(InteractiveScene):
+class DemonstrateAnArcSecond(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add circle
         frame = self.frame
@@ -571,7 +571,7 @@ class DemonstrateAnArcSecond(InteractiveScene):
         return label
 
 
-class ArcMinuteLabels(InteractiveScene):
+class ArcMinuteLabels(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         brace = Brace(Line(3 * DOWN, 3 * UP), LEFT)
@@ -589,15 +589,15 @@ class ArcMinuteLabels(InteractiveScene):
             self.wait()
 
 
-class ConnectingLine(InteractiveScene):
+class ConnectingLine(Scene)  # Changed from InteractiveScene:
     def construct(self):
         line = Line(2 * UP, 2 * DOWN)
         line.set_stroke(GREEN, 8)
-        self.play(ShowCreation(line))
+        self.play(Create(line))
         self.play(line.animate.set_stroke(width=0), run_time=2)
 
 
-class LightYearLabel(InteractiveScene):
+class LightYearLabel(Scene)  # Changed from InteractiveScene:
     def construct(self):
         label = Text("4.25 Light years")
         self.play(Write(label))
@@ -605,7 +605,7 @@ class LightYearLabel(InteractiveScene):
         self.play(FadeOut(label))
 
 
-class CompareTwoStars(InteractiveScene):
+class CompareTwoStars(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up two stars
         frame = self.frame
@@ -632,7 +632,7 @@ class CompareTwoStars(InteractiveScene):
             DashedLine(randy.eyes[1].get_right(), stars[1].get_center()),
         ).set_stroke(WHITE, 1))
 
-        self.play(*map(ShowCreation, lines))
+        self.play(*map(Create, lines))
         self.add(lines)
         self.wait()
         self.play(
@@ -643,7 +643,7 @@ class CompareTwoStars(InteractiveScene):
         self.wait()
 
 
-class InverseSquareLaw(InteractiveScene):
+class InverseSquareLaw(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Initial area
         frame = self.frame
@@ -711,7 +711,7 @@ class InverseSquareLaw(InteractiveScene):
         sphere_highlight.scale(1.01)
         sphere_highlight.set_color(BLUE, 0.2)
 
-        self.play(ShowCreation(sphere_highlight, run_time=2))
+        self.play(Create(sphere_highlight, run_time=2))
         self.play(FadeOut(sphere_highlight))
         self.wait(3)
 
@@ -777,7 +777,7 @@ class InverseSquareLaw(InteractiveScene):
         return pieces, master_opacity_tracker
 
 
-class WriteInverseSquareLaw(InteractiveScene):
+class WriteInverseSquareLaw(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         eq = Tex(R"\text{Apparent brightness} = \text{const} \cdot {\text{Absolute brightness} \over (\text{distance})^2}")
@@ -797,7 +797,7 @@ class WriteInverseSquareLaw(InteractiveScene):
             self.wait()
 
 
-class MeasuringNearbyStars(InteractiveScene):
+class MeasuringNearbyStars(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add the sun
         frame = self.frame
@@ -850,7 +850,7 @@ class MeasuringNearbyStars(InteractiveScene):
             vect = normalize(np.cross(line.get_end(), frame.get_implied_camera_location()))
             label.next_to(line.pfp(0.33), vect, SMALL_BUFF)
             self.play(
-                ShowCreation(line),
+                Create(line),
                 FadeIn(label, shift=0.25 * OUT),
                 FadeOut(last_group),
             )
@@ -912,7 +912,7 @@ class MeasuringNearbyStars(InteractiveScene):
 
         self.play(
             frame.animate.reorient(0, 0, 0, (-0.75, -1.45, 0.0), 5.71).set_anim_args(run_time=3),
-            ShowCreation(ms_circle),
+            Create(ms_circle),
             Write(ms_label)
         )
         self.wait()
@@ -1074,7 +1074,7 @@ class MeasuringNearbyStars(InteractiveScene):
         return glows
 
 
-class WriteHarvardComputer(InteractiveScene):
+class WriteHarvardComputer(Scene)  # Changed from InteractiveScene:
     def construct(self):
         words = Text("Harvard Computers", font_size=72)
         words.set_backstroke(BLACK, 8)
@@ -1083,7 +1083,7 @@ class WriteHarvardComputer(InteractiveScene):
         self.wait()
 
 
-class LineToDistantStar(InteractiveScene):
+class LineToDistantStar(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add Galaxy
         path = os.path.join(self.file_writer.get_output_file_rootname().parent, "GalaxyStill.png")
@@ -1106,7 +1106,7 @@ class LineToDistantStar(InteractiveScene):
         star.f_always.set_radius(lambda: 0.1 * (2 + math.sin(self.time)))
 
         self.play(
-            ShowCreation(line),
+            Create(line),
             FadeIn(line_label, lag_ratio=0.1, time_span=(1, 3)),
             galaxy.animate.set_opacity(0.75),
             FadeIn(star),
@@ -1115,7 +1115,7 @@ class LineToDistantStar(InteractiveScene):
         self.wait(12)
 
 
-class SolarSpectrum(InteractiveScene):
+class SolarSpectrum(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Get data
         data_file = '/Users/grant/3Blue1Brown Dropbox/3Blue1Brown/videos/2025/cosmic_distance/Data/solar_spectrum.csv'
@@ -1208,7 +1208,7 @@ class SolarSpectrum(InteractiveScene):
         hyd_words.next_to(spectral_lines, UP, LARGE_BUFF)
 
         self.play(
-            LaggedStartMap(ShowCreation, spectral_lines),
+            LaggedStartMap(Create, spectral_lines),
             FadeOut(arrows),
             lines.animate.set_stroke(opacity=0.2),
             self.frame.animate.reorient(0, 0, 0, (3.42, 0.49, 0.0), 12.00).set_anim_args(run_time=2),
@@ -1273,7 +1273,7 @@ class SolarSpectrum(InteractiveScene):
         )
 
 
-class LeavittLabel(InteractiveScene):
+class LeavittLabel(Scene)  # Changed from InteractiveScene:
     def construct(self):
         text = TexText(R"From Leavitt's\\1912 Paper")
         text.to_corner(UL)
@@ -1281,7 +1281,7 @@ class LeavittLabel(InteractiveScene):
         self.wait()
 
 
-class GalaxyFarFarAway(InteractiveScene):
+class GalaxyFarFarAway(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         words = Text("A Galaxy Far\n Far Away", font_size=120)
@@ -1293,7 +1293,7 @@ class GalaxyFarFarAway(InteractiveScene):
         self.play(words.animate.shift(20 * UP), run_time=5)
 
 
-class GalacticSurveyData(InteractiveScene):
+class GalacticSurveyData(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Gather data
         frame = self.frame
@@ -1360,7 +1360,7 @@ class GalacticSurveyData(InteractiveScene):
         )
 
 
-class RungsUpToGalaxies(InteractiveScene):
+class RungsUpToGalaxies(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         rungs = VGroup(
@@ -1387,7 +1387,7 @@ class RungsUpToGalaxies(InteractiveScene):
             self.wait()
 
 
-class WriteLeGentil(InteractiveScene):
+class WriteLeGentil(Scene)  # Changed from InteractiveScene:
     def construct(self):
         name = Text("Guillaume Le Gentil", font_size=72)
         name.to_corner(UL)

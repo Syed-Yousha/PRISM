@@ -24,7 +24,7 @@ def get_exp_graph_icon(s, t_range=(0, 7), y_max=4, pos_real_scalar=0.1, neg_real
     return VGroup(rect, axes, graph)
 
 
-class IntroduceEulersFormula(InteractiveScene):
+class IntroduceEulersFormula(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add plane
         plane = ComplexPlane(
@@ -59,9 +59,9 @@ class IntroduceEulersFormula(InteractiveScene):
         pi.set_backstroke(BLACK, 3)
 
         self.play(
-            ShowCreation(arc),
+            Create(arc),
             t_tracker.animate.set_value(PI),
-            VFadeIn(t_dec, time_span=(0, 1)),
+            FadeIn(t_dec, time_span=(0, 1)),
             run_time=2
         )
         pi.move_to(t_dec, DR)
@@ -105,7 +105,7 @@ class IntroduceEulersFormula(InteractiveScene):
                 lag_ratio=0.1,
                 run_time=3
             ),
-            VFadeIn(randy),
+            FadeIn(randy),
             randy.says("This again?", mode="sassy", bubble_direction=LEFT)
         )
         self.play(Blink(randy))
@@ -193,7 +193,7 @@ class IntroduceEulersFormula(InteractiveScene):
         self.play(
             TransformFromCopy(formula[R"\pi"][0], pi_label),
             LaggedStartMap(FadeIn, VGroup(circle, radius, radius_label)),
-            ShowCreation(arc),
+            Create(arc),
         )
         self.play(
             FadeTransform(formula["i"][0].copy(), i_eq["i"][0]),
@@ -209,7 +209,7 @@ class IntroduceEulersFormula(InteractiveScene):
         q_marks.next_to(i_rect, UP, SMALL_BUFF)
 
         self.play(
-            ShowCreation(i_rect),
+            Create(i_rect),
             FadeIn(q_marks, 0.25 * UP, lag_ratio=0.25)
         )
         self.wait()
@@ -231,7 +231,7 @@ class IntroduceEulersFormula(InteractiveScene):
         self.wait()
 
 
-class ExpGraph(InteractiveScene):
+class ExpGraph(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up graph
         axes = Axes((-1, 4), (0, 20), width=10, height=6)
@@ -265,7 +265,7 @@ class ExpGraph(InteractiveScene):
         ))
 
         self.play(
-            ShowCreation(v_line, suspend_mobject_updating=True),
+            Create(v_line, suspend_mobject_updating=True),
             FadeIn(height_label, UP, suspend_mobject_updating=True),
         )
         self.wait()
@@ -292,11 +292,11 @@ class ExpGraph(InteractiveScene):
         ))
         deriv_label.always.next_to(tan_v_line, RIGHT, SMALL_BUFF)
 
-        self.play(ShowCreation(tangent_line, suspend_mobject_updating=True))
+        self.play(Create(tangent_line, suspend_mobject_updating=True))
         self.play(
-            VFadeIn(unit_line),
-            VFadeIn(unit_label),
-            VFadeIn(tan_v_line, suspend_mobject_updating=True),
+            FadeIn(unit_line),
+            FadeIn(unit_label),
+            FadeIn(tan_v_line, suspend_mobject_updating=True),
             TransformFromCopy(title, deriv_label),
         )
         self.play(
@@ -310,7 +310,7 @@ class ExpGraph(InteractiveScene):
             self.play(t_tracker.animate.set_value(t), run_time=5)
 
 
-class DefiningPropertyOfExp(InteractiveScene):
+class DefiningPropertyOfExp(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Key property
         tex_kw = dict(t2c={"{t}": GREY_B, "x": BLUE})
@@ -362,7 +362,7 @@ class DefiningPropertyOfExp(InteractiveScene):
         self.wait()
 
 
-class ExampleExponentials(InteractiveScene):
+class ExampleExponentials(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Show the family
         pass
@@ -372,7 +372,7 @@ class ExampleExponentials(InteractiveScene):
         # Show e^t as its own derivative
 
 
-class ImaginaryInputsToTheTaylorSeries(InteractiveScene):
+class ImaginaryInputsToTheTaylorSeries(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add complex plane
         plane = ComplexPlane(
@@ -513,7 +513,7 @@ class ImaginaryInputsToTheTaylorSeries(InteractiveScene):
         self.play(t_tracker.animate.set_value(0), run_time=5)
         self.play(
             t_tracker.animate.set_value(max_theta),
-            ShowCreation(semi_circle),
+            Create(semi_circle),
             run_time=12
         )
         self.play(t_tracker.animate.set_value(PI), run_time=6)
@@ -568,7 +568,7 @@ class ImaginaryInputsToTheTaylorSeries(InteractiveScene):
         return MoveToTarget(group)
 
 
-class ComplexExpGraph(InteractiveScene):
+class ComplexExpGraph(Scene)  # Changed from InteractiveScene:
     s_value = 1j
     orientation1 = (-77, -1, 0, (1.01, -0.1, 3.21), 7.55)
     orientation2 = (-33, -2, 0, (1.68, -0.09, 3.79), 10.88)
@@ -621,7 +621,7 @@ class ComplexExpGraph(InteractiveScene):
         self.play(
             frame.animate.reorient(*self.orientation2),
             t_tracker.animate.set_value(12).set_anim_args(rate_func=linear),
-            VFadeIn(t_axis, time_span=(0, 1)),
+            FadeIn(t_axis, time_span=(0, 1)),
             run_time=12
         )
         self.play(
@@ -641,7 +641,7 @@ class AltComplexExpGraph(ComplexExpGraph):
     orientation2 = (-21, -5, 0, (1.47, -0.44, 3.88), 12.29)
 
 
-class SPlane(InteractiveScene):
+class SPlane(Scene)  # Changed from InteractiveScene:
     tex_to_color_map = {"s": YELLOW, "t": BLUE, R"\omega": PINK}
     s_plane_x_range = (-2, 2)
     s_label_font_size = 36
@@ -759,7 +759,7 @@ class SPlane(InteractiveScene):
         p_vect_copy = p_vect.copy().clear_updaters()
 
         self.play(
-            ShowCreation(v_part.rect),
+            Create(v_part.rect),
             FadeIn(v_part.label),
             GrowArrow(v_vect),
         )
@@ -1089,7 +1089,7 @@ class SPlane(InteractiveScene):
         ))
 
 
-class FamilyOfRealExp(InteractiveScene):
+class FamilyOfRealExp(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Graphs
         axes = Axes((-1, 8), (-1, 5))
@@ -1106,7 +1106,7 @@ class FamilyOfRealExp(InteractiveScene):
         label["s"].set_color(YELLOW)
 
         self.add(axes, label)
-        self.play(ShowCreation(graph, suspend_mobject_updating=True))
+        self.play(Create(graph, suspend_mobject_updating=True))
         self.play(
             s_tracker.animate.set_value(-1),
             graph.animate.set_color(YELLOW),
@@ -1115,7 +1115,7 @@ class FamilyOfRealExp(InteractiveScene):
         self.wait()
 
 
-class ForcedOscillatorSolutionForm(InteractiveScene):
+class ForcedOscillatorSolutionForm(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Create linear combination
         exp_texs = [Rf"e^{{s_{n} t}}" for n in range(1, 5)]
@@ -1198,8 +1198,8 @@ class ForcedOscillatorSolutionForm(InteractiveScene):
 
         self.play(
             FadeIn(number_lines),
-            VFadeIn(tips),
-            VFadeIn(c_labels),
+            FadeIn(tips),
+            FadeIn(c_labels),
             random_tuning_animation()
         )
         for _ in range(6):
@@ -1274,7 +1274,7 @@ class ForcedOscillatorSolutionForm(InteractiveScene):
             FadeIn(constraint_words, lag_ratio=0.1),
             FadeOut(checkmark),
             FadeOut(actually),
-            LaggedStartMap(ShowCreation, const_rects, lag_ratio=0.25),
+            LaggedStartMap(Create, const_rects, lag_ratio=0.25),
             LaggedStartMap(GrowArrow, underlines),
         )
         self.play(FadeOut(const_rects, lag_ratio=0.1))
@@ -1505,7 +1505,7 @@ class BreakingDownFunctions(ForcedOscillatorSolutionForm):
             GrowArrow(arrows[2]),
             GrowArrow(arrows[3]),
             FadeIn(arrow_labels[2]),
-            VFadeIn(rot_vect)
+            FadeIn(rot_vect)
         )
         self.wait()
         self.play(VFadeOut(rot_vect))
@@ -1573,12 +1573,12 @@ class BreakingDownFunctions(ForcedOscillatorSolutionForm):
             FadeIn(integral_eq[R"ds"]),
             LaggedStartMap(FadeOut, dot_line, lag_ratio=0.5, scale=0.25, time_span=(0.3, 2)),
             VShowPassingFlash(thick_line, run_time=2),
-            ShowCreation(line, run_time=2),
+            Create(line, run_time=2),
         )
         self.wait()
 
 
-class Thumbnail(InteractiveScene):
+class Thumbnail(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Spiral
         spiral_color = TEAL
@@ -1649,7 +1649,7 @@ class Thumbnail(InteractiveScene):
         self.add(abi)
 
 
-class Thumbnail2(InteractiveScene):
+class Thumbnail2(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         theta = 140 * DEG
@@ -1881,7 +1881,7 @@ class DefineSPlane(SPlane):
         rect = SurroundingRectangle(exp_pieces[6], buff=SMALL_BUFF)
         rect.set_stroke(TEAL, 3)
 
-        self.play(ShowCreation(rect))
+        self.play(Create(rect))
         self.wait()
         self.play(rect.animate.surround(VGroup(exp_plane, exp_plane_label)))
         self.play(FadeOut(rect))

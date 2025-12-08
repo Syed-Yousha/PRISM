@@ -5,7 +5,7 @@ from _2024.transformers.helpers import *
 from manim_imports_ext import *
 
 
-class LastTwoChapters(InteractiveScene):
+class LastTwoChapters(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Show last two chapters
         frame = self.frame
@@ -109,7 +109,7 @@ class LastTwoChapters(InteractiveScene):
 
         self.play(
             Group(att_blocks, att_title).animate.fade(0.5),
-            ShowCreation(rect),
+            Create(rect),
             Write(question),
             GrowArrow(arrow),
         )
@@ -227,7 +227,7 @@ class MLPIcon(LastTwoChapters):
         self.wait()
 
 
-class MLPStepsPreview(InteractiveScene):
+class MLPStepsPreview(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Setup framing
         background = FullScreenRectangle()
@@ -325,7 +325,7 @@ class MLPStepsPreview(InteractiveScene):
         low_matrices.target.move_to(low_frame, DOWN).shift(MED_SMALL_BUFF * UP)
 
         self.play(
-            ShowCreation(strike),
+            Create(strike),
             FadeOut(titles[1][1]),
             titles[1][0].animate.set_opacity(0.5)
         )
@@ -374,7 +374,7 @@ class MLPStepsPreview(InteractiveScene):
         self.wait()
 
 
-class MatricesVsIntuition(InteractiveScene):
+class MatricesVsIntuition(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add matrix
         matrix = WeightMatrix(shape=(15, 15))
@@ -387,7 +387,7 @@ class MatricesVsIntuition(InteractiveScene):
         self.add(matrix)
 
 
-class BasicMLPWalkThrough(InteractiveScene):
+class BasicMLPWalkThrough(Scene)  # Changed from InteractiveScene:
     random_seed = 1
 
     def construct(self):
@@ -428,7 +428,7 @@ class BasicMLPWalkThrough(InteractiveScene):
 
         self.play(
             MoveToTarget(embedding_array),
-            ShowCreation(highlight_rect),
+            Create(highlight_rect),
         )
         self.wait()
 
@@ -481,7 +481,7 @@ class BasicMLPWalkThrough(InteractiveScene):
 
         self.play(
             LaggedStartMap(FadeIn, vects, shift=RIGHT, lag_ratio=0.8),
-            LaggedStartMap(ShowCreation, arrows, lag_ratio=0.8),
+            LaggedStartMap(Create, arrows, lag_ratio=0.8),
             LaggedStartMap(FadeIn, arrow_labels, lag_ratio=0.8),
         )
         self.wait()
@@ -491,7 +491,7 @@ class BasicMLPWalkThrough(InteractiveScene):
 
         self.play(
             frame.animate.reorient(15, -4, 0, (0.82, -1.91, 0.04), 7.18),
-            ShowCreation(sum_circuit, lag_ratio=0.1),
+            Create(sum_circuit, lag_ratio=0.1),
             run_time=2
         )
         self.play(
@@ -906,12 +906,12 @@ class BasicMLPWalkThrough(InteractiveScene):
         bias_rect = SurroundingRectangle(bias.get_entries()[0])
 
         self.play(
-            ShowCreation(fe_rect),
+            Create(fe_rect),
             FadeIn(fe_eq, RIGHT),
             Write(fe_expr)
         )
         self.wait()
-        self.play(ShowCreation(bias_rect))
+        self.play(Create(bias_rect))
         self.wait()
         self.play(bias_rect.animate.surround(fe_expr[1]))
         self.wait()
@@ -1023,7 +1023,7 @@ class BasicMLPWalkThrough(InteractiveScene):
         div_eq.next_to(frame.get_corner(UR), DL, buff=MED_LARGE_BUFF)
         div_eq.shift(RIGHT)
 
-        self.play(ShowCreation(bias_rect))
+        self.play(Create(bias_rect))
         self.play(
             GrowArrow(bias_arrow),
             FadeInFromPoint(bias_count, bias_arrow.get_start()),
@@ -1120,11 +1120,11 @@ class BasicMLPWalkThrough(InteractiveScene):
                 zero_right_rects.add(SurroundingRectangle(e2, color=RED))
         VGroup(neg_left_rects, zero_right_rects, pos_left_rects, pos_right_rects).set_stroke(width=2)
 
-        self.play(ShowCreation(neg_left_rects, lag_ratio=0.5))
+        self.play(Create(neg_left_rects, lag_ratio=0.5))
         self.wait()
         self.play(
             TransformFromCopy(neg_left_rects, zero_right_rects, lag_ratio=0.5),
-            ShowCreation(neg_arrows, lag_ratio=0.5),
+            Create(neg_arrows, lag_ratio=0.5),
             FadeOut(relu_arrow),
         )
         self.wait()
@@ -1132,11 +1132,11 @@ class BasicMLPWalkThrough(InteractiveScene):
             FadeOut(neg_left_rects, lag_ratio=0.25),
             FadeOut(zero_right_rects, lag_ratio=0.25),
             FadeOut(neg_arrows, lag_ratio=0.25),
-            ShowCreation(pos_left_rects)
+            Create(pos_left_rects)
         )
         self.wait()
         self.play(
-            ShowCreation(pos_arrows, lag_ratio=0.5),
+            Create(pos_arrows, lag_ratio=0.5),
             TransformFromCopy(pos_left_rects, pos_right_rects, lag_ratio=0.5),
         )
         self.wait()
@@ -1185,7 +1185,7 @@ class BasicMLPWalkThrough(InteractiveScene):
 
         self.play(
             frame.animate.reorient(0, 0, 0, (2.61, 0.97, 0.0), 11.5),
-            ShowCreation(fe_rect),
+            Create(fe_rect),
             GrowFromCenter(under_brace),
         )
         self.play(
@@ -1222,7 +1222,7 @@ class BasicMLPWalkThrough(InteractiveScene):
             FadeTransform(relu_title_full, gelu_title_full),
             relu_graph_label.animate.set_fill(opacity=0.25),
             relu_graph.animate.set_stroke(opacity=0.25),
-            ShowCreation(gelu_graph),
+            Create(gelu_graph),
             TransformFromCopy(relu_graph_label, gelu_graph_label)
         )
         self.wait(2)
@@ -1247,7 +1247,7 @@ class BasicMLPWalkThrough(InteractiveScene):
             plot.animate.set_width(2).next_to(relu_arrow, DOWN),
             FadeOut(VGroup(relu_graph_label, gelu_graph_label, gelu_graph)),
             Write(neuron_word),
-            ShowCreation(neuron_arrows, lag_ratio=0.2, run_time=3),
+            Create(neuron_arrows, lag_ratio=0.2, run_time=3),
             LaggedStartMap(
                 FlashAround, phase1_copy[2].get_entries(),
                 time_width=3.0,
@@ -1287,7 +1287,7 @@ class BasicMLPWalkThrough(InteractiveScene):
             Write(dots),
         )
         self.play(TransformFromCopy(emb, up_emb))
-        self.play(ShowCreation(lines, lag_ratio=3 / len(lines)))
+        self.play(Create(lines, lag_ratio=3 / len(lines)))
         self.wait()
         self.play(
             LaggedStart(*map(FadeOut, [up_emb, *lines, blocking_rect, *dots]), lag_ratio=0.01)
@@ -1308,7 +1308,7 @@ class BasicMLPWalkThrough(InteractiveScene):
 
         self.play(
             frame.animate.reorient(0, 0, 0, (2.45, 0.58, 0.0), 9.65),
-            ShowCreation(entry_rect),
+            Create(entry_rect),
             Write(active_words, run_time=1),
         )
         self.wait()
@@ -1482,7 +1482,7 @@ class BasicMLPWalkThrough(InteractiveScene):
         zero = Tex("0", font_size=60).move_to(n0_term, DR).set_color(RED)
 
         self.play(
-            ShowCreation(col_rect),
+            Create(col_rect),
             col_matrix[1][1:].animate.set_opacity(0.5),
             n_labels[1:].animate.set_opacity(0.5),
             scaled_cols[1:].animate.set_opacity(0.5),
@@ -1577,7 +1577,7 @@ class BasicMLPWalkThrough(InteractiveScene):
         self.add(faded_sum_circuit)
         self.play(
             frame.animate.reorient(13, -8, 0, (0.15, -2.05, 0.0), 6.52),
-            ShowCreation(sum_circuit, lag_ratio=0.5),
+            Create(sum_circuit, lag_ratio=0.5),
             low_emb_label.animate.shift(0.2 * LEFT).set_anim_args(time_span=(0, 1)),
             FadeOut(output_emb),
             run_time=2,
@@ -1613,7 +1613,7 @@ class BasicMLPWalkThrough(InteractiveScene):
         self.play(
             frame.animate.reorient(4, -6, 0, (-0.29, -1.76, 0.02), 7.70),
             FadeIn(mj, lag_ratio=0.1),
-            ShowCreation(mj_arrow)
+            Create(mj_arrow)
         )
         self.play(Transform(mj.copy(), emb.copy().set_opacity(0), lag_ratio=0.005, remover=True, run_time=2))
         mover = emb.copy()
@@ -1624,7 +1624,7 @@ class BasicMLPWalkThrough(InteractiveScene):
             frame.animate.reorient(-3, -5, 0, (1.09, -1.48, -0.03), 9.61),
             FadeTransform(mj.copy(), mjb[:3]),
             FadeTransformPieces(mj.copy()[-1:], mjb[3:]),
-            ShowCreation(mjb_arrow),
+            Create(mjb_arrow),
             run_time=2,
         )
         self.wait(2)
@@ -1685,7 +1685,7 @@ class BasicMLPWalkThrough(InteractiveScene):
         self.play(
             frame.animate.reorient(-11, -5, 0, (0.55, -2.21, 0.18), 7.05).set_anim_args(run_time=4),
             FadeOut(n_vects),
-            ShowCreation(neurons, run_time=2),
+            Create(neurons, run_time=2),
             FadeIn(neuron_ellipses, time_span=(1, 2)),
         )
         self.add(neuron_ellipses)
@@ -1755,7 +1755,7 @@ class BasicMLPWalkThrough(InteractiveScene):
         return VGroup(matrix.get_brackets().copy(), col_labels)
 
 
-class NonlinearityOfLanguage(InteractiveScene):
+class NonlinearityOfLanguage(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up axes and M + J
         unit_size = 2.5
@@ -1921,7 +1921,7 @@ class NonlinearityOfLanguage(InteractiveScene):
         self.wait()
 
 
-class Superposition(InteractiveScene):
+class Superposition(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add undulating bubble to encompass N-dimensional space
         frame = self.frame
@@ -2001,10 +2001,10 @@ class Superposition(InteractiveScene):
             FadeIn(task1),
             LaggedStartMap(GrowArrow, perp_vectors[:2], lag_ratio=0.5)
         )
-        self.play(ShowCreation(elbows[0]))
+        self.play(Create(elbows[0]))
         self.play(
             GrowArrow(perp_vectors[2]),
-            LaggedStartMap(ShowCreation, elbows[1:3], lag_ratio=0.5),
+            LaggedStartMap(Create, elbows[1:3], lag_ratio=0.5),
         )
         self.play(
             Rotate(perp_group, -50 * DEGREES, axis=perp_vectors[1].get_vector(), run_time=15),
@@ -2024,7 +2024,7 @@ class Superposition(InteractiveScene):
 
         self.play(
             FadeOut(maximum1),
-            ShowCreation(cross),
+            Create(cross),
         )
         self.play(
             crossed_part.animate.shift(0.5 * DOWN).set_fill(opacity=0.5),
@@ -2133,7 +2133,7 @@ class Superposition(InteractiveScene):
         return bubble
 
 
-class StackOfVectors(InteractiveScene):
+class StackOfVectors(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up the big matrix
         rows = VGroup(
@@ -2180,7 +2180,7 @@ class StackOfVectors(InteractiveScene):
         self.wait(4)
 
 
-class ShowAngleRange(InteractiveScene):
+class ShowAngleRange(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         angle_tracker = ValueTracker(10)
@@ -2199,7 +2199,7 @@ class ShowAngleRange(InteractiveScene):
         self.wait()
 
 
-class MLPFeatures(InteractiveScene):
+class MLPFeatures(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add neurons
         radius = 0.15
@@ -2442,7 +2442,7 @@ class BreakDownThreeSteps(BasicMLPWalkThrough):
             )
 
 
-class SuperpositionVectorBundle(InteractiveScene):
+class SuperpositionVectorBundle(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Setup
         frame = self.frame
@@ -2512,7 +2512,7 @@ class SuperpositionVectorBundle(InteractiveScene):
 # Some old stubs
 
 
-class ClassicNeuralNetworksPicture(InteractiveScene):
+class ClassicNeuralNetworksPicture(Scene)  # Changed from InteractiveScene:
     def construct(self):
         pass
 
@@ -2622,6 +2622,6 @@ class ShowBiasBakedIntoWeightMatrix(LastTwoChapters):
         return line
 
 
-class AlmostOrthogonal(InteractiveScene):
+class AlmostOrthogonal(Scene)  # Changed from InteractiveScene:
     def construct(self):
         pass

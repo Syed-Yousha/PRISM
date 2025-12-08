@@ -18,7 +18,7 @@ def get_intensity_colors(values, cmap_name='viridis'):
     return cmap(values)[:, :3]  # Only return RGB, exclude alpha
 
 
-class TexScratchPad(InteractiveScene):
+class TexScratchPad(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # ODE
         tex = Tex(R"""
@@ -281,7 +281,7 @@ def get_vector_field_and_stream_lines(
     return vector_field, animated_lines
 
 
-class VectorFieldSolution(InteractiveScene):
+class VectorFieldSolution(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add axes
         mat = np.array([[1, 2], [3, 1]])
@@ -314,11 +314,11 @@ class VectorFieldSolution(InteractiveScene):
         vector_field.set_stroke(opacity=1)
         self.play(vector_field.animate.set_stroke(opacity=0.5))
         self.wait(10)
-        self.play(ShowCreation(eigenlines))
+        self.play(Create(eigenlines))
         self.wait(10)
 
 
-class Transformation(InteractiveScene):
+class Transformation(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Apply matrix
         mat = np.array([[1, 2], [3, 1]])

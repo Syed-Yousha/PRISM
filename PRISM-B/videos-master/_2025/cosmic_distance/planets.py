@@ -97,7 +97,7 @@ def get_planet_symbols(text, font_size=48):
     )
 
 
-class PerspectivesOnEarth(InteractiveScene):
+class PerspectivesOnEarth(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Ask about size
         light = self.camera.light_source
@@ -132,7 +132,7 @@ class PerspectivesOnEarth(InteractiveScene):
         self.play(
             GrowFromCenter(brace),
             Write(label),
-            *map(ShowCreation, dashed_lines),
+            *map(Create, dashed_lines),
         )
         self.wait(4)
         self.play(LaggedStartMap(FadeOut, VGroup(label, brace, *dashed_lines), shift=IN))
@@ -202,7 +202,7 @@ class PerspectivesOnEarth(InteractiveScene):
         self.wait(4)
 
 
-class SphericalEarthVsFlat(InteractiveScene):
+class SphericalEarthVsFlat(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add earth
         light = self.camera.light_source
@@ -241,7 +241,7 @@ class SphericalEarthVsFlat(InteractiveScene):
         circle = Circle(radius=3)
         circle.set_stroke(TEAL, 3)
         self.play(frame.animate.reorient(10, 80, 0), run_time=2)
-        self.play(ShowCreation(circle))
+        self.play(Create(circle))
         self.wait()
 
     def look_from_various_angles(self, run_time=1.5):
@@ -257,7 +257,7 @@ class SphericalEarthVsFlat(InteractiveScene):
             self.wait()
 
 
-class SizeOfEarthRenewed(InteractiveScene):
+class SizeOfEarthRenewed(Scene)  # Changed from InteractiveScene:
     radius = 3.0
 
     def construct(self):
@@ -363,7 +363,7 @@ class SizeOfEarthRenewed(InteractiveScene):
             run_time=2
         )
         self.play(
-            ShowCreation(h_line, rate_func=rush_into, run_time=2),
+            Create(h_line, rate_func=rush_into, run_time=2),
             FadeOut(rays, run_time=2),
             frame.animate.reorient(-205, -11, 0, (3.0, -0.0, 0.0), 6.50).set_anim_args(run_time=10),
         )
@@ -424,7 +424,7 @@ class SizeOfEarthRenewed(InteractiveScene):
 
         self.play(
             Rotate(earth_group, TAU, axis=earth_axis),
-            ShowCreation(tropic_of_cancer),
+            Create(tropic_of_cancer),
             axis_line.animate.set_stroke(opacity=0.5).set_anim_args(time_span=(0, 1)),
             run_time=12,
         )
@@ -448,7 +448,7 @@ class SizeOfEarthRenewed(InteractiveScene):
 
         # Show line through Alexandria
         self.play(
-            ShowCreation(d_line),
+            Create(d_line),
             frame.animate.reorient(-189, 6, 0, (3.05, -0.01, -0.01), 6.69),
             run_time=3,
         )
@@ -476,7 +476,7 @@ class SizeOfEarthRenewed(InteractiveScene):
 
         self.play(
             FadeIn(upper_ray),
-            ShowCreation(arc),
+            Create(arc),
             FadeIn(arc_label),
         )
         self.wait()
@@ -494,7 +494,7 @@ class SizeOfEarthRenewed(InteractiveScene):
         # Show full circumference
         self.play(
             frame.animate.reorient(-173, 0, 0, (2.91, 0.1, -0.01), 7.20),
-            ShowCreation(circle),
+            Create(circle),
             run_time=4,
         )
 
@@ -521,8 +521,8 @@ class SizeOfEarthRenewed(InteractiveScene):
             Rotate(axis_line, -EARTH_TILT_ANGLE, axis=OUT),
             Rotate(d_line, -EARTH_TILT_ANGLE, axis=OUT),
             FadeIn(v_line),
-            VFadeIn(d_line),
-            ShowCreation(arc),
+            FadeIn(d_line),
+            Create(arc),
             Write(arc_label),
             run_time=2
         )
@@ -535,7 +535,7 @@ class SizeOfEarthRenewed(InteractiveScene):
         )
 
 
-class AlBiruniEarthMeasurement(InteractiveScene):
+class AlBiruniEarthMeasurement(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add earth and mountain
         radius = 2
@@ -578,12 +578,12 @@ class AlBiruniEarthMeasurement(InteractiveScene):
         theta_label = Tex(R"\theta", font_size=24)
         theta_label.next_to(arc, RIGHT, SMALL_BUFF)
 
-        self.play(ShowCreation(line_of_sight))
+        self.play(Create(line_of_sight))
         self.wait()
-        self.play(ShowCreation(horizontal))
+        self.play(Create(horizontal))
         self.play(
             Rotate(horizontal_copy, -theta, about_point=mountain_tip),
-            ShowCreation(arc),
+            Create(arc),
             Write(theta_label)
         )
         self.play(FadeOut(horizontal_copy))
@@ -599,7 +599,7 @@ class AlBiruniEarthMeasurement(InteractiveScene):
         self.play(
             earth_pattern.animate.set_fill(opacity=0.5),
             earth.animate.set_fill(opacity=0.2),
-            ShowCreation(radius_line),
+            Create(radius_line),
             Write(R_label),
         )
         self.wait()
@@ -613,8 +613,8 @@ class AlBiruniEarthMeasurement(InteractiveScene):
         hyp_label = hyp_brace.get_tex("R + h", font_size=36)
 
         self.play(
-            ShowCreation(elbow),
-            ShowCreation(hyp),
+            Create(elbow),
+            Create(hyp),
         )
         self.wait()
         self.play(
@@ -671,7 +671,7 @@ class AlBiruniEarthMeasurement(InteractiveScene):
         self.wait()
 
 
-class LuarEclipse(InteractiveScene):
+class LuarEclipse(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Setup earth and moon
         light = self.camera.light_source
@@ -838,7 +838,7 @@ class LuarEclipse(InteractiveScene):
             frame.animate.move_to(MOON_ORBIT_RADIUS * conversion_factor * LEFT).set_height(1.35 * orbit.get_height()).set_anim_args(run_time=4),
             orbit_rate.animate.set_value(15).set_anim_args(run_time=4),
             time_label.animate.set_height(large_text_height, about_point=brace_copy.get_right()).set_anim_args(run_time=4),
-            ShowCreation(month_arrow, time_span=(1, 5)),
+            Create(month_arrow, time_span=(1, 5)),
             Write(month_label, time_span=(2, 3)),
         )
         self.wait(32)
@@ -865,7 +865,7 @@ class LuarEclipse(InteractiveScene):
         return red_moon
 
 
-class PenumbraAndUmbra(InteractiveScene):
+class PenumbraAndUmbra(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add earth and sun
         frame = self.frame
@@ -961,7 +961,7 @@ class PenumbraAndUmbra(InteractiveScene):
         return VGroup(umbra, penumbra, umbral_lines, penumbral_lines)
 
 
-class LineOfSight(InteractiveScene):
+class LineOfSight(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add earth
         light = self.camera.light_source
@@ -1004,7 +1004,7 @@ class LineOfSight(InteractiveScene):
 
         self.play(
             frame.animate.set_height(MOON_ORBIT_RADIUS * conversion_factor * 2.25),
-            ShowCreation(line),
+            Create(line),
             FadeIn(words, lag_ratio=0.1, time_span=(2, 4)),
             run_time=5
         )
@@ -1037,8 +1037,8 @@ class LineOfSight(InteractiveScene):
         units.fix_in_frame()
         units.set_stroke(width=0).set_fill(border_width=0)
         self.play(
-            VFadeIn(timer, time_span=(0, 1)),
-            VFadeIn(units, time_span=(0, 1)),
+            FadeIn(timer, time_span=(0, 1)),
+            FadeIn(units, time_span=(0, 1)),
             ChangeDecimalToValue(timer, 24),
             Rotate(earth, -TAU, about_point=ORIGIN),
             Rotate(line, -TAU, about_point=ORIGIN),
@@ -1121,7 +1121,7 @@ class LineOfSight(InteractiveScene):
         )
 
 
-class DistanceToSun(InteractiveScene):
+class DistanceToSun(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Show sun and the earth
         frame = self.frame
@@ -1163,7 +1163,7 @@ class DistanceToSun(InteractiveScene):
         )
         self.wait()
         self.play(
-            ShowCreation(dist_line),
+            Create(dist_line),
             Write(dist_label),
         )
         self.wait()
@@ -1225,7 +1225,7 @@ class DistanceToSun(InteractiveScene):
             TransformFromCopy(moon_ratio["R_M"][0], moon_radius_label),
         )
         self.play(
-            ShowCreation(moon_dist_line),
+            Create(moon_dist_line),
             TransformFromCopy(moon_ratio["D_M"][0], moon_dist_label),
         )
         self.wait()
@@ -1380,7 +1380,7 @@ class DistanceToSun(InteractiveScene):
         self.play(
             FadeIn(words2, lag_ratio=0.1),
             Write(arrow2),
-            ShowCreation(our_half)
+            Create(our_half)
         )
         self.wait()
         self.play(FadeIn(sub_words, 0.03 * DOWN))
@@ -1441,7 +1441,7 @@ class DistanceToSun(InteractiveScene):
 
         self.play(
             Rotate(orbit_group, 3 * TAU / 8, about_point=earth.get_center(), run_time=8),
-            VFadeIn(question, time_span=(1, 3))
+            FadeIn(question, time_span=(1, 3))
         )
         self.play(Rotate(orbit_group, -TAU / 8, about_point=earth.get_center(), run_time=8))
         self.wait()
@@ -1571,7 +1571,7 @@ class DistanceToSun(InteractiveScene):
         theta_label.add_updater(lambda m: m.next_to(arc.pfp(0.6), UP, SMALL_BUFF))
 
         self.play(
-            ShowCreation(v_line),
+            Create(v_line),
             FadeIn(arc),
             FadeIn(theta_label),
         )
@@ -1593,7 +1593,7 @@ class DistanceToSun(InteractiveScene):
 
         self.play(
             frame.animate.reorient(0, 0, 0, (4.7, 0.17, 0.0), 14.93),
-            ShowCreation(dist_line, time_span=(3, 5)),
+            Create(dist_line, time_span=(3, 5)),
             FadeIn(dist_label, RIGHT, time_span=(3, 5)),
             FadeIn(dist_eq, time_span=(3, 5)),
             run_time=5
@@ -1629,7 +1629,7 @@ class DistanceToSun(InteractiveScene):
         self.play(
             FadeIn(question),
             FadeIn(arrow),
-            ShowCreation(disc_arc)
+            Create(disc_arc)
         )
         self.wait()
         self.play(
@@ -1702,7 +1702,7 @@ class DistanceToSun(InteractiveScene):
         self.wait()
 
 
-class PhasesOfTheMoon(InteractiveScene):
+class PhasesOfTheMoon(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Position ourselves
         moon = get_moon(radius=2)
@@ -1739,7 +1739,7 @@ class PhasesOfTheMoon(InteractiveScene):
         )
 
 
-class HowManyEarthsInsideSun(InteractiveScene):
+class HowManyEarthsInsideSun(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add earth and sun
         frame = self.frame
@@ -1763,7 +1763,7 @@ class HowManyEarthsInsideSun(InteractiveScene):
         stack = circle.get_grid(7, 1, buff=0)
         stack.move_to(sun)
 
-        self.play(ShowCreation(circle))
+        self.play(Create(circle))
         self.play(LaggedStart(
             (TransformFromCopy(circle, circle2)
             for circle2 in stack),
@@ -1789,7 +1789,7 @@ class HowManyEarthsInsideSun(InteractiveScene):
         )
 
 
-class EarthAroundSun(InteractiveScene):
+class EarthAroundSun(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add earth and sun
         frame = self.frame
@@ -1813,7 +1813,7 @@ class EarthAroundSun(InteractiveScene):
         self.wait(2)
         self.play(
             Rotate(sun, TAU, about_point=earth.get_center()),
-            # ShowCreation(sun_orbit),
+            # Create(sun_orbit),
             frame.animate.move_to(earth).set_height(16).set_anim_args(time_span=(0, 4)),
             run_time=10
         )
@@ -1829,7 +1829,7 @@ class EarthAroundSun(InteractiveScene):
         self.wait()
 
 
-class NearestPlanets(InteractiveScene):
+class NearestPlanets(Scene)  # Changed from InteractiveScene:
     random_seed = 2
     highlighted_orbit = None
     linger = False
@@ -2211,7 +2211,7 @@ class HighlightJupiterOrbit(NearestPlanets):
     highlighted_orbit = 4
 
 
-class KeplersMethod(InteractiveScene):
+class KeplersMethod(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add earth, mars
         frame = self.frame
@@ -2268,7 +2268,7 @@ class KeplersMethod(InteractiveScene):
 
         self.play(
             frame.animate.to_default_state().set_anim_args(time_span=(1.5, 6)),
-            ShowCreation(line_to_mars, suspend_mobject_updating=True),
+            Create(line_to_mars, suspend_mobject_updating=True),
             mars.animate.scale(5),
             mars_glow.animate.scale(3),
             earth.animate.scale(5).set_anim_args(time_span=(4, 6)),
@@ -2296,7 +2296,7 @@ class KeplersMethod(InteractiveScene):
         line_to_sun.set_stroke(width=1)
 
         self.play(
-            ShowCreation(line_to_sun, suspend_mobject_updating=True, run_time=2),
+            Create(line_to_sun, suspend_mobject_updating=True, run_time=2),
             line_to_mars.animate.set_stroke(width=1)
         )
         self.wait()
@@ -2501,7 +2501,7 @@ class KeplersMethod(InteractiveScene):
             FadeIn(earth),
             FadeIn(earth_glow),
             FadeIn(earth_symbol),
-            ShowCreation(earth_orbit),
+            Create(earth_orbit),
         )
 
         # Show the deduction of Mars' orbit
@@ -2521,7 +2521,7 @@ class KeplersMethod(InteractiveScene):
             mars_line.suspend_updating()
 
             self.play(
-                ShowCreation(mars_line),
+                Create(mars_line),
                 FadeIn(earth_copy)
             )
             mars_lines.add(mars_line)
@@ -2624,7 +2624,7 @@ class KeplersMethod(InteractiveScene):
         )
         lines.clear_updaters()
         lines.set_stroke(width=1)
-        self.play(ShowCreation(lines, lag_ratio=0))
+        self.play(Create(lines, lag_ratio=0))
         return lines
 
     def bind_ghost_lines_to_mars(self, ghost_lines, ghost_earths, mars):
@@ -2765,12 +2765,12 @@ class ShowCreationOfAllOrbits(KeplersMethod):
 
         self.play(
             FadeIn(earth_dots),
-            ShowCreation(lines, lag_ratio=0.1, suspend_mobject_updating=True),
+            Create(lines, lag_ratio=0.1, suspend_mobject_updating=True),
             FadeIn(orbit.dot),
             FadeIn(orbit.symbol),
         )
         self.play(
-            ShowCreation(orbit),
+            Create(orbit),
             UpdateFromFunc(orbit.dot, lambda m: m.move_to(orbit.get_end())),
             earth_year_tracker.animate.set_value(period / EARTH_ORBIT_PERIOD),
             *added_anims,
@@ -2785,7 +2785,7 @@ class ShowCreationOfAllOrbits(KeplersMethod):
         )
 
 
-class LightFromEarthToMoon(InteractiveScene):
+class LightFromEarthToMoon(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Earth and moon
         self.camera.light_source.move_to(20 * LEFT)
@@ -2978,7 +2978,7 @@ class LightAcrossEarthsOrbit(LightFromEarthToMoon):
         return pulse
 
 
-class EarthAndVenus(InteractiveScene):
+class EarthAndVenus(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add sun, stars, and orbits (copied from below)
         frame = self.frame
@@ -3020,7 +3020,7 @@ class EarthAndVenus(InteractiveScene):
 
         self.play(
             *(Rotate(orbit, angle) for orbit, angle in zip(orbits, angles)),
-            VFadeIn(line_of_sight, time_span=(8, 10)),
+            FadeIn(line_of_sight, time_span=(8, 10)),
             run_time=20,
             # rate_func=lambda t: 0.999 * bezier([0, 1, 1])(t),
             rate_func=lambda t: 0.999 * t,

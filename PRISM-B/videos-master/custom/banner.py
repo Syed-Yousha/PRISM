@@ -1,19 +1,18 @@
 from __future__ import annotations
 
-from manimlib.constants import *
-from manimlib.mobject.coordinate_systems import NumberPlane
-from manimlib.mobject.svg.tex_mobject import TexText
-from manimlib.mobject.svg.text_mobject import Text
-from manimlib.mobject.types.vectorized_mobject import VGroup
-from manimlib.mobject.frame import FullScreenFadeRectangle
-from manimlib.scene.scene import Scene
+from manim import *
+from manim.mobject.coordinate_systems import NumberPlane
+from manim.mobject.svg.text_mobject import Text
+from manim.mobject.types.vectorized_mobject import VGroup
+from manim.mobject.frame import FullScreenFadeRectangle
+from manim.scene.scene import Scene
 
 from custom.characters.pi_creature import Mortimer
 from custom.characters.pi_creature import Randolph
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from manimlib.typing import Vect3
+    from manim import Vect3
 
 
 class Banner(Scene):

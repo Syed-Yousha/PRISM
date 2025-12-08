@@ -135,7 +135,7 @@ class SrpingMassSystem(VGroup):
         return -self.k * self.get_x() - self.mu * self.velocity
 
 
-class BasicSpringScene(InteractiveScene):
+class BasicSpringScene(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add spring, give some initial oscillation
         spring = SrpingMassSystem(
@@ -175,10 +175,10 @@ class BasicSpringScene(InteractiveScene):
         # Ambient playing, fade in labels
         self.wait(2)
         self.play(
-            VFadeIn(number_line),
-            VFadeIn(dashed_line),
-            VFadeIn(arrow_tip),
-            VFadeIn(x_label),
+            FadeIn(number_line),
+            FadeIn(dashed_line),
+            FadeIn(arrow_tip),
+            FadeIn(x_label),
         )
         self.wait(7)
 
@@ -188,7 +188,7 @@ class BasicSpringScene(InteractiveScene):
             x_label_arrow.set_fill(YELLOW)
             x_label_arrow.always.move_to(arrow_tip, DL).shift(2 * RIGHT + 0.75 * UP)
             self.play(
-                VFadeIn(x_label_arrow, time_span=(1, 2)),
+                FadeIn(x_label_arrow, time_span=(1, 2)),
                 x_label.animate.scale(2),
                 run_time=2
             )
@@ -200,9 +200,9 @@ class BasicSpringScene(InteractiveScene):
         a_vect = spring.get_force_vector(color=a_color, scale_factor=0.25)
         a_vect.add_updater(lambda m: m.shift(v_vect.get_end() - m.get_start()))
 
-        self.play(VFadeIn(v_vect))
+        self.play(FadeIn(v_vect))
         self.wait(5)
-        self.play(VFadeIn(a_vect))
+        self.play(FadeIn(a_vect))
         self.wait(8)
         self.wait_until(lambda: spring.velocity <= 0)
 
@@ -279,7 +279,7 @@ class BasicSpringScene(InteractiveScene):
         self.wait(20)
 
 
-class DampingForceDemo(InteractiveScene):
+class DampingForceDemo(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Create spring-mass system with invisible spring and damping only
         spring_system = SrpingMassSystem(
@@ -318,7 +318,7 @@ class DampingForceDemo(InteractiveScene):
         self.wait(15)
 
 
-class SolveDampedSpringEquation(InteractiveScene):
+class SolveDampedSpringEquation(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Show x and its derivatives
         pos, vel, acc = funcs = VGroup(
@@ -458,7 +458,7 @@ class SolveDampedSpringEquation(InteractiveScene):
         )
 
         for rect, arrow, pair in zip(rects, arrows, matched_parts):
-            self.play(ShowCreation(rect))
+            self.play(Create(rect))
             self.play(
                 GrowArrow(arrow),
                 FadeTransform(pair[0].copy(), pair[1]),
@@ -507,7 +507,7 @@ class SolveDampedSpringEquation(InteractiveScene):
             )
         )
         self.wait(0.5)
-        self.play(ShowCreation(exp_rect))
+        self.play(Create(exp_rect))
         self.wait()
         self.play(Write(ne_0))
         self.wait()
@@ -577,7 +577,7 @@ class SolveDampedSpringEquation(InteractiveScene):
         s_copy = simple_answer[0].copy()
         s_rect = SurroundingRectangle(s_copy)
 
-        self.play(ShowCreation(s_rect))
+        self.play(Create(s_rect))
         self.wait()
         self.play(
             s_rect.animate.surround(hyp_tex["e^{st}"]).set_anim_args(path_arc=-60 * DEG),
@@ -635,7 +635,7 @@ class SolveDampedSpringEquation(InteractiveScene):
         self.wait()
         self.remove(naked_equation)
         self.add(equation6)
-        self.play(ShowCreation(qf_rect))
+        self.play(Create(qf_rect))
         self.wait()
 
     def old_material(self):
@@ -753,7 +753,7 @@ class SolveDampedSpringEquation(InteractiveScene):
             self.wait()
 
 
-class DampedSpringSolutionsOnSPlane(InteractiveScene):
+class DampedSpringSolutionsOnSPlane(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add the plane
         plane = ComplexPlane((-3, 2), (-2, 2))
@@ -818,7 +818,7 @@ class DampedSpringSolutionsOnSPlane(InteractiveScene):
         self.add(root_dots)
 
         # Play with k
-        self.play(ShowCreation(lines, lag_ratio=0, suspend_mobject_updating=True))
+        self.play(Create(lines, lag_ratio=0, suspend_mobject_updating=True))
         self.play(k_tracker.animate.set_value(1), run_time=2)
         self.play(m_tracker.animate.set_value(4), run_time=2)
         self.wait()
@@ -830,13 +830,13 @@ class DampedSpringSolutionsOnSPlane(InteractiveScene):
         self.play(
             s_rhs_point.animate.move_to(rect_edge_point),
             VFadeOut(lines),
-            VFadeIn(sliders[1])
+            FadeIn(sliders[1])
         )
         self.wait()
         self.play(mu_tracker.animate.set_value(3), run_time=5)
         self.wait()
         self.play(mu_tracker.animate.set_value(0.5), run_time=3)
-        self.play(ShowCreation(lines, lag_ratio=0, suspend_mobject_updating=True))
+        self.play(Create(lines, lag_ratio=0, suspend_mobject_updating=True))
 
         # Background
         self.add_background_image()
@@ -861,7 +861,7 @@ class DampedSpringSolutionsOnSPlane(InteractiveScene):
         self.play(
             frame.animate.set_height(12, about_point=4 * UP + 2 * LEFT),
             FadeIn(axes, time_span=(1.5, 3)),
-            ShowCreation(graph, suspend_mobject_updating=True, time_span=(1.5, 3)),
+            Create(graph, suspend_mobject_updating=True, time_span=(1.5, 3)),
             Write(graph_label),
             run_time=3
         )
@@ -871,7 +871,7 @@ class DampedSpringSolutionsOnSPlane(InteractiveScene):
         exp_graph = axes.get_graph(lambda t: np.exp(get_roots()[0].real * t))
         exp_graph.set_stroke(WHITE, 1)
 
-        self.play(ShowCreation(exp_graph))
+        self.play(Create(exp_graph))
         self.wait()
 
         # More play
@@ -923,7 +923,7 @@ class DampedSpringSolutionsOnSPlane(InteractiveScene):
         return slider
 
 
-class RotatingExponentials(InteractiveScene):
+class RotatingExponentials(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Create time tracker
         t_tracker = ValueTracker(0)
@@ -1005,7 +1005,7 @@ class RotatingExponentials(InteractiveScene):
         v_line.set_stroke(BLUE_A, 2)
         v_line.f_always.put_start_and_end_on(spring.mass.get_top, left_vector.get_end)
 
-        self.play(VFadeIn(spring), VFadeIn(v_line))
+        self.play(FadeIn(spring), FadeIn(v_line))
         self.wait(20)
         self.play(
             VFadeOut(spring),
@@ -1053,7 +1053,7 @@ class RotatingExponentials(InteractiveScene):
         v_line.set_stroke(BLUE_A, 2)
         v_line.f_always.put_start_and_end_on(spring.mass.get_top, result_dot.get_center)
 
-        self.play(VFadeIn(spring), VFadeIn(v_line))
+        self.play(FadeIn(spring), FadeIn(v_line))
         self.wait(2)
 
         # Right hand side
@@ -1078,7 +1078,7 @@ class RotatingExponentials(InteractiveScene):
         return vector
 
 
-class SimpleSolutionSummary(InteractiveScene):
+class SimpleSolutionSummary(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Summary of the "strategy" up top
         t2c = {"m": RED, "k": TEAL, "{s}": YELLOW, R"\omega": PINK}
@@ -1153,7 +1153,7 @@ class ShowFamilyOfComplexSolutions(RotatingExponentials):
             FadeIn(left_planes),
             FadeTransform(strategy_words[1][R"e^{{s}t}"].copy(), left_plane_labels[0]),
             FadeTransform(strategy_words[1][R"e^{{s}t}"].copy(), left_plane_labels[1]),
-            VFadeIn(rot_vects),
+            FadeIn(rot_vects),
         )
         self.wait(3)
 
@@ -1295,7 +1295,7 @@ class ShowFamilyOfComplexSolutions(RotatingExponentials):
         highlight_rect = SurroundingRectangle(initial_conditions[0])
         highlight_rect.set_stroke(YELLOW, 2)
 
-        self.play(ShowCreation(highlight_rect))
+        self.play(Create(highlight_rect))
         self.wait()
         self.play(highlight_rect.animate.surround(initial_conditions[1]))
         self.wait(2)
@@ -1370,7 +1370,7 @@ class ShowFamilyOfComplexSolutions(RotatingExponentials):
             pass
 
 
-class GuessSine(InteractiveScene):
+class GuessSine(Scene)  # Changed from InteractiveScene:
     func_name = R"\sin"
 
     def construct(self):
@@ -1432,7 +1432,7 @@ class GuessCosine(GuessSine):
     func_name = R"\cos"
 
 
-class ShowFamilyOfRealSolutions(InteractiveScene):
+class ShowFamilyOfRealSolutions(Scene)  # Changed from InteractiveScene:
     t2c = {R"\omega": PINK}
     omega = PI
     x_max = 10
@@ -1524,9 +1524,9 @@ class ShowFamilyOfRealSolutions(InteractiveScene):
 
         self.play(
             graph.animate.set_stroke(opacity=0.2),
-            ShowCreation(graph_copy, rate_func=linear, run_time=self.x_max),
-            VFadeIn(spring, run_time=1),
-            VFadeIn(h_line, run_time=1),
+            Create(graph_copy, rate_func=linear, run_time=self.x_max),
+            FadeIn(spring, run_time=1),
+            FadeIn(h_line, run_time=1),
         )
         self.play(FadeOut(spring), FadeOut(h_line))
         self.wait()
@@ -1535,7 +1535,7 @@ class ShowFamilyOfRealSolutions(InteractiveScene):
         graph.set_stroke(opacity=1)
 
 
-class SetOfInitialConditions(InteractiveScene):
+class SetOfInitialConditions(Scene)  # Changed from InteractiveScene:
     graph_time = 8
 
     def construct(self):
@@ -1595,7 +1595,7 @@ class SetOfInitialConditions(InteractiveScene):
         self.play(
             frame.animate.reorient(0, 0, 0, (6.7, -0.61, 0.0), 6.16).set_anim_args(run_time=2),
             FadeIn(last_solution[0]),
-            ShowCreation(last_solution[1], rate_func=linear, run_time=self.graph_time)
+            Create(last_solution[1], rate_func=linear, run_time=self.graph_time)
         )
         last_spring.pause()
 
@@ -1619,7 +1619,7 @@ class SetOfInitialConditions(InteractiveScene):
             spring.x0 = spring.get_x()
         self.add(faint_graphs)
         self.play(
-            ShowCreation(graphs, lag_ratio=0, run_time=self.graph_time, rate_func=linear),
+            Create(graphs, lag_ratio=0, run_time=self.graph_time, rate_func=linear),
         )
         self.wait()
         self.remove(faint_graphs)
@@ -1672,7 +1672,7 @@ class SetOfInitialConditions(InteractiveScene):
 
         self.remove(*(box.spring for row in box_grid for box in row))
         self.add(all_axes)
-        self.play(ShowCreation(all_graphs, lag_ratio=1e-1, run_time=3))
+        self.play(Create(all_graphs, lag_ratio=1e-1, run_time=3))
         self.wait()
 
         # Highlight one

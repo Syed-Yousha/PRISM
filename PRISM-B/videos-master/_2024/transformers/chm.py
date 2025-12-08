@@ -248,14 +248,14 @@ class EvenMoreTextIntoMachine(LotsOfTextIntoTheMachine):
         return result
 
 
-class WriteTransformer(InteractiveScene):
+class WriteTransformer(Scene)  # Changed from InteractiveScene:
     def construct(self):
         text = Text("Transformer", font_size=120)
         self.play(Write(text))
         self.wait()
 
 
-class LabelVector(InteractiveScene):
+class LabelVector(Scene)  # Changed from InteractiveScene:
     def construct(self):
         brace = Brace(Line(UP, DOWN).set_height(4), RIGHT)
         name = Text("Vector", font_size=72)
@@ -269,7 +269,7 @@ class LabelVector(InteractiveScene):
         self.wait()
 
 
-class AdjustingTheMachine(InteractiveScene):
+class AdjustingTheMachine(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add a machine and repeatedly tweak it
         frame = self.frame
@@ -300,7 +300,7 @@ class AdjustingTheMachine(InteractiveScene):
             self.play(machine.random_change_animation(lag_factor=0.1))
 
 
-class FirthQuote(InteractiveScene):
+class FirthQuote(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Show Quote
         quote = TexText(R"``You shall know a word\\by the company it keeps!''", font_size=60)
@@ -442,7 +442,7 @@ class FirthQuote(InteractiveScene):
         self.wait(2)
 
 
-class DownByTheRiverHeader(InteractiveScene):
+class DownByTheRiverHeader(Scene)  # Changed from InteractiveScene:
     def construct(self):
         words = Text("Down by the river bank ...")
         rect = SurroundingRectangle(words["bank"])
@@ -483,7 +483,7 @@ class RiverBankProbParts(SimpleAutogregression):
         self.wait()
 
 
-class FourStepsWithParameters(InteractiveScene):
+class FourStepsWithParameters(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add rectangles and titles
         self.add(FullScreenRectangle(fill_color=GREY_E))
@@ -546,7 +546,7 @@ class FourStepsWithParameters(InteractiveScene):
             )
 
 
-class ChatbotFeedback(InteractiveScene):
+class ChatbotFeedback(Scene)  # Changed from InteractiveScene:
     random_seed = 404
 
     def construct(self):
@@ -619,7 +619,7 @@ class ChatbotFeedback(InteractiveScene):
         return answer, stop
 
 
-class ContrastWithEarlierFrame(InteractiveScene):
+class ContrastWithEarlierFrame(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         vline = Line(UP, DOWN)
@@ -647,7 +647,7 @@ class ContrastWithEarlierFrame(InteractiveScene):
         self.add(titles)
 
 
-class SequentialProcessing(InteractiveScene):
+class SequentialProcessing(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add text
         text = Text("Down by the river bank, where I used to go fishing ...")
@@ -942,7 +942,7 @@ class ShowMachineWithDials(PredictTheNextWord):
 
         self.play(
             LaggedStart(
-                ShowCreation(rect_lines, lag_ratio=0),
+                Create(rect_lines, lag_ratio=0),
                 TransformFromCopy(small_rect, big_rect),
                 TransformFromCopy(last_dials[0], big_dial),
                 FadeIn(in_text),
@@ -1217,7 +1217,7 @@ class ShowSingleTrainingExample(ShowMachineWithDials):
         )
 
 
-class ParameterWeight(InteractiveScene):
+class ParameterWeight(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         text = Text("Parameter / Weight", font_size=72)
@@ -1236,7 +1236,7 @@ class ParameterWeight(InteractiveScene):
         self.wait()
 
 
-class LargeInLargeLanguageModel(InteractiveScene):
+class LargeInLargeLanguageModel(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         text = Text("Large Language Model", font_size=72)
@@ -1254,7 +1254,7 @@ class LargeInLargeLanguageModel(InteractiveScene):
         self.wait()
 
 
-class ThousandsOfWords(InteractiveScene):
+class ThousandsOfWords(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Find passage
         file = Path("/Users/grant/3Blue1Brown Dropbox/3Blue1Brown/videos/2024/transformers/data/tale_of_two_cities.txt")
@@ -1347,7 +1347,7 @@ class EnormousAmountOfTrainingText(PremiseOfMLWithText):
         return in_data, out_data
 
 
-class BadChatBot(InteractiveScene):
+class BadChatBot(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add bot
         bot = self.get_bot()
@@ -1411,7 +1411,7 @@ class BadChatBot(InteractiveScene):
         )
 
 
-class WriteRLHF(InteractiveScene):
+class WriteRLHF(Scene)  # Changed from InteractiveScene:
     def construct(self):
         text = Text("Step 2: RLHF")
         full_text = Text("Reinforcement Learning\nwith Human Feedback")
@@ -1430,7 +1430,7 @@ class WriteRLHF(InteractiveScene):
         self.wait()
 
 
-class RLHFWorker(InteractiveScene):
+class RLHFWorker(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         self.add(FullScreenRectangle().set_fill(GREY_E, 1))
@@ -1479,7 +1479,7 @@ class RLHFWorkers(ShowMachineWithDials):
             self.wait()
 
 
-class SerialProcessing(InteractiveScene):
+class SerialProcessing(Scene)  # Changed from InteractiveScene:
     phrase = "It was the best of times it was the worst of times"
     phrase_center = 2 * UP
 
@@ -1567,14 +1567,14 @@ class ParallelProcessing(SerialProcessing):
                 square.set_opacity(0)
 
         self.play(
-            LaggedStartMap(ShowCreation, lines, lag_ratio=0.01),
+            LaggedStartMap(Create, lines, lag_ratio=0.01),
             LaggedStartMap(Restore, vectors, lag_ratio=0)
         )
         self.play(lines.animate.set_stroke(opacity=0.25))
         self.wait()
 
 
-class ManyComputationsPerUnitTimeV2(InteractiveScene):
+class ManyComputationsPerUnitTimeV2(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add computations
         box = Rectangle(5, 5)
@@ -1607,7 +1607,7 @@ class ManyComputationsPerUnitTimeV2(InteractiveScene):
         sec_label = Text("Second", font_size=30).next_to(sec_brace, DOWN, SMALL_BUFF)
 
         self.play(
-            ShowCreation(minute_line, lag_ratio=0.01),
+            Create(minute_line, lag_ratio=0.01),
             box.animate.match_width(first_ticks).move_to(first_ticks.get_center(), DOWN).set_stroke(width=1),
             TransformFromCopy(label["Second"][0], sec_label),
             GrowFromCenter(sec_brace),
@@ -1666,7 +1666,7 @@ class ManyComputationsPerUnitTimeV2(InteractiveScene):
         lag_ratio = 1.5
         self.play(
             LaggedStart(
-                *(AnimationGroup(*(ShowCreation(sl) for sl in pair)) for pair in scale_lines),
+                *(AnimationGroup(*(Create(sl) for sl in pair)) for pair in scale_lines),
                 lag_ratio=lag_ratio,
             ),
             LaggedStart(
@@ -1807,7 +1807,7 @@ class ManyComputationsPerUnitTimeV2(InteractiveScene):
         self.wait()
 
 
-class VectorLabel(InteractiveScene):
+class VectorLabel(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         brace = Brace(Line(4 * UP, ORIGIN), LEFT)
@@ -1827,7 +1827,7 @@ class VectorLabel(InteractiveScene):
         self.wait()
 
 
-class ParameterToVectorAnnotation(InteractiveScene):
+class ParameterToVectorAnnotation(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         dials = VGroup(Dial(value_range=(-10, 10, 1)) for _ in range(10))
@@ -1852,7 +1852,7 @@ class ParameterToVectorAnnotation(InteractiveScene):
         self.wait()
 
 
-class ThreeWordsToOne(InteractiveScene):
+class ThreeWordsToOne(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         image = ImageMobject("CHMTopText")
@@ -1884,7 +1884,7 @@ class ThreeWordsToOne(InteractiveScene):
 
         self.play(Transform(words, og_words))
         self.play(
-            ShowCreation(rect),
+            Create(rect),
             FadeIn(chm_image, DOWN)
         )
         self.wait()
@@ -1918,7 +1918,7 @@ class ThreeWordsToOne(InteractiveScene):
         self.wait()
 
 
-class ExamplePhraseHeader(InteractiveScene):
+class ExamplePhraseHeader(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         phrase = Text("The Computer History Museum\nis located in ?????")
@@ -1935,7 +1935,7 @@ class ExamplePhraseHeader(InteractiveScene):
         self.add(phrase)
 
 
-class TrainingDataCHM(InteractiveScene):
+class TrainingDataCHM(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         passages = [
@@ -1967,7 +1967,7 @@ class TrainingDataCHM(InteractiveScene):
 
         self.play(
             FadeIn(title),
-            ShowCreation(underline),
+            Create(underline),
             LaggedStartMap(FadeIn, items, shift=DOWN, lag_ratio=0.15)
         )
         self.wait()
@@ -2104,7 +2104,7 @@ class DivyUpParameters(ShowMachineWithDials):
 # End clips
 
 
-class ShowPreviousVideos(InteractiveScene):
+class ShowPreviousVideos(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Backdrop
         background = FullScreenRectangle()
@@ -2147,7 +2147,7 @@ class ShowPreviousVideos(InteractiveScene):
         self.play(
             series_name.animate.set_x(left_x),
             thumbnails.animate.arrange_in_grid(n_cols=2, buff=0.25).set_height(6).set_x(left_x).to_edge(DOWN),
-            ShowCreation(line, time_span=(1, 2)),
+            Create(line, time_span=(1, 2)),
             run_time=2,
         )
         self.wait()

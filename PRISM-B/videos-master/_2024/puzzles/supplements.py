@@ -1,7 +1,7 @@
 from manim_imports_ext import *
 
 
-class TableOfContents(InteractiveScene):
+class TableOfContents(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         p_titles = VGroup(Text(f"Puzzle #{n}") for n in range(1, 6))
@@ -54,8 +54,8 @@ class TableOfContents(InteractiveScene):
 
         self.play(
             randy.change("tease"),
-            VFadeIn(randy),
-            ShowCreation(rect),
+            FadeIn(randy),
+            Create(rect),
             titles[3:].animate.set_opacity(0.5)
         )
         self.play(Blink(randy))
@@ -72,7 +72,7 @@ class TableOfContents(InteractiveScene):
         self.wait()
 
 
-class AskHexagonQuestion(InteractiveScene):
+class AskHexagonQuestion(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         question = Text("Can any tiling\n turn into any other?", font_size=60)
@@ -114,7 +114,7 @@ class AskHexagonQuestion(InteractiveScene):
         self.wait()
 
 
-class CounterTo64(InteractiveScene):
+class CounterTo64(Scene)  # Changed from InteractiveScene:
     def construct(self):
         value = Integer(64)
         value.scale(2)
@@ -122,7 +122,7 @@ class CounterTo64(InteractiveScene):
         self.wait()
 
 
-class NewNCubedArrow(InteractiveScene):
+class NewNCubedArrow(Scene)  # Changed from InteractiveScene:
     def construct(self):
         arrow = Vector(1.5 * DOWN)
         label = Tex(R"N^3", font_size=72)
@@ -133,7 +133,7 @@ class NewNCubedArrow(InteractiveScene):
         self.wait()
 
 
-class SquintingPi(InteractiveScene):
+class SquintingPi(Scene)  # Changed from InteractiveScene:
     def construct(self):
         randy = Randolph(mode='pondering')
         randy.to_corner(LEFT)
@@ -148,7 +148,7 @@ class SquintingPi(InteractiveScene):
         self.wait()
 
 
-class TwoDToThreeDInsight(InteractiveScene):
+class TwoDToThreeDInsight(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # 2D -> 3D
         self.add(FullScreenRectangle())
@@ -191,7 +191,7 @@ class TwoDToThreeDInsight(InteractiveScene):
         self.wait()
 
 
-class CanYouDoBetterThanTwo(InteractiveScene):
+class CanYouDoBetterThanTwo(Scene)  # Changed from InteractiveScene:
     def construct(self):
         morty = Mortimer().flip()
         morty.to_edge(LEFT)
@@ -226,7 +226,7 @@ class AreWeSupposedToKnowThat(TeacherStudentsScene):
         self.wait(3)
 
 
-class AddAreas(InteractiveScene):
+class AddAreas(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         parts = [
@@ -243,7 +243,7 @@ class AddAreas(InteractiveScene):
             self.wait()
 
 
-class CylinderAreaAnnotation(InteractiveScene):
+class CylinderAreaAnnotation(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         expr = Tex(R"\text{Area} = 2 \pi R \cdot d")
@@ -265,7 +265,7 @@ class CylinderAreaAnnotation(InteractiveScene):
             FadeIn(circum_label, lag_ratio=0.1),
         )
         self.play(
-            ShowCreation(thickness_rect),
+            Create(thickness_rect),
             FadeIn(thickness_label, lag_ratio=0.1),
         )
         self.wait()
@@ -326,7 +326,7 @@ class SolicitMore(TeacherStudentsScene):
         self.wait(5)
 
 
-class SlovokiaTeam(InteractiveScene):
+class SlovokiaTeam(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         talker = PiCreature(color=RED_E)
@@ -370,7 +370,7 @@ class HowIsThatHelpful(TeacherStudentsScene):
         self.wait(3)
 
 
-class AskTetrahedronQuestion(InteractiveScene):
+class AskTetrahedronQuestion(Scene)  # Changed from InteractiveScene:
     def construct(self):
         question = Text("What is the volume\nof this solid?")
         # question = TexText(R"""
@@ -418,7 +418,7 @@ class WillNotAnswer(TeacherStudentsScene):
         self.wait(4)
 
 
-class SpoilerAlert(InteractiveScene):
+class SpoilerAlert(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         tri = RegularPolygon(3)
@@ -440,7 +440,7 @@ class SpoilerAlert(InteractiveScene):
         self.wait()
 
 
-class SolveThisExplainThat(InteractiveScene):
+class SolveThisExplainThat(Scene)  # Changed from InteractiveScene:
     def construct(self):
         self.add(FullScreenRectangle())
         screens = Rectangle(4, 3).replicate(2)
@@ -464,7 +464,7 @@ class SolveThisExplainThat(InteractiveScene):
         self.wait()
 
 
-class DeterminantFormula(InteractiveScene):
+class DeterminantFormula(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         det_expr = Tex(R"""
@@ -518,7 +518,7 @@ class DeterminantFormula(InteractiveScene):
         self.play(FadeOut(last_highlight), cols.animate.set_opacity(1))
 
 
-class Seeking4DAnalog(InteractiveScene):
+class Seeking4DAnalog(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         self.add(FullScreenRectangle())
@@ -564,7 +564,7 @@ class ShowConfusion(TeacherStudentsScene):
         self.wait(5)
 
 
-class ReversePuzzleAndInsight(InteractiveScene):
+class ReversePuzzleAndInsight(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add
         bulb = SVGMobject("light_bulb").set_color(YELLOW)
@@ -604,7 +604,7 @@ class ReversePuzzleAndInsight(InteractiveScene):
         self.wait()
 
 
-class ProjectionFormula4D(InteractiveScene):
+class ProjectionFormula4D(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         t2c = {R"\hat{\textbf{d}}": BLUE_D, R"\vec{\textbf{v}}": YELLOW}
@@ -655,7 +655,7 @@ class ConfusionThenAnswer(TeacherStudentsScene):
         self.wait(5)
 
 
-class IMOTitles(InteractiveScene):
+class IMOTitles(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         logo = ImageMobject("IMO_logo")
@@ -685,7 +685,7 @@ class IMOTitles(InteractiveScene):
         self.wait()
 
 
-class DimensionsPointingToEachOther(InteractiveScene):
+class DimensionsPointingToEachOther(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Show shapes
         shapes = VGroup(
@@ -764,7 +764,7 @@ class SingleHypercube(DimensionsPointingToEachOther):
         self.add(fuzz)
 
 
-class SpherePacking(InteractiveScene):
+class SpherePacking(Scene)  # Changed from InteractiveScene:
     samples = 4
 
     def construct(self):
@@ -797,7 +797,7 @@ class SpherePacking(InteractiveScene):
         self.wait()
 
 
-class Shruggie(InteractiveScene):
+class Shruggie(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         morty = Mortimer(mode="shruggie").flip()
@@ -811,7 +811,7 @@ class Shruggie(InteractiveScene):
                 self.wait()
 
 
-class GolayCode(InteractiveScene):
+class GolayCode(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up dots
         dots = Dot().get_grid(23, 12)
@@ -846,7 +846,7 @@ class GolayCode(InteractiveScene):
         self.wait()
 
 
-class AskAboutTilingBijection(InteractiveScene):
+class AskAboutTilingBijection(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         arrows = VGroup(
@@ -866,7 +866,7 @@ class AskAboutTilingBijection(InteractiveScene):
         self.wait()
 
 
-class AnalysisIntuitionFraming(InteractiveScene):
+class AnalysisIntuitionFraming(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         self.add(FullScreenRectangle())
@@ -888,7 +888,7 @@ class AnalysisIntuitionFraming(InteractiveScene):
         self.wait()
 
 
-class LightBulb(InteractiveScene):
+class LightBulb(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add bulb
         bulb = SVGMobject("light_bulb")
@@ -912,7 +912,7 @@ class LightBulb(InteractiveScene):
         self.play(LaggedStartMap(VFadeInThenOut, radiation, lag_ratio=1.0 / N, run_time=5))
 
 
-class PileOfEquations(InteractiveScene):
+class PileOfEquations(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         equations = VGroup(
@@ -930,7 +930,7 @@ class PileOfEquations(InteractiveScene):
         self.wait()
 
 
-class Obvious(InteractiveScene):
+class Obvious(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         randy = Randolph()
@@ -939,7 +939,7 @@ class Obvious(InteractiveScene):
         self.wait(5)
 
 
-class BonusVideo(InteractiveScene):
+class BonusVideo(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         morty = Mortimer(mode="tease", height=4)
@@ -950,7 +950,7 @@ class BonusVideo(InteractiveScene):
         self.wait(2)
 
 
-class BonusVideoMention(InteractiveScene):
+class BonusVideoMention(Scene)  # Changed from InteractiveScene:
     def construct(self):
         pass
 

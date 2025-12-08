@@ -59,7 +59,7 @@ def get_complex_graph(
     return Group(graph, mesh)
 
 
-class IntegrateConstant(InteractiveScene):
+class IntegrateConstant(Scene):  # Changed from InteractiveScene
     def construct(self):
         # Axes and graph
         axes = Axes((0, 100), (0, 2, 0.25), width=100, height=3)
@@ -117,7 +117,7 @@ class IntegrateConstant(InteractiveScene):
         )
 
 
-class IntegrateRealExponential(InteractiveScene):
+class IntegrateRealExponential(Scene):  # Changed from InteractiveScene
     def construct(self):
         # Add integral expression
         t2c = {R"{s}": YELLOW}
@@ -150,7 +150,7 @@ class IntegrateRealExponential(InteractiveScene):
         self.play(
             FadeIn(axes),
             TransformFromCopy(integral[R"e^{\minus {s}t}"], graph_label),
-            ShowCreation(graph, suspend_mobject_updating=True, run_time=3),
+            Create(graph, suspend_mobject_updating=True, run_time=3),
             Restore(integral),
         )
 
@@ -160,7 +160,7 @@ class IntegrateRealExponential(InteractiveScene):
         s_slider.to_edge(UP, buff=MED_LARGE_BUFF)
         s_slider.align_to(axes.c2p(0, 0), LEFT)
 
-        self.play(VFadeIn(s_slider))
+        self.play(FadeIn(s_slider))
         for value in [5, 0.25, 1]:
             self.play(
                 s_tracker.animate.set_value(value),
@@ -190,7 +190,7 @@ class IntegrateRealExponential(InteractiveScene):
                 UpdateFromFunc(area, update_area),
                 lag_ratio=0.25
             ),
-            ShowCreation(graph, suspend_mobject_updating=True, run_time=3),
+            Create(graph, suspend_mobject_updating=True, run_time=3),
         )
         self.wait()
 
@@ -284,7 +284,7 @@ class IntegrateRealExponential(InteractiveScene):
         self.play(FadeIn(tail_area))
         self.wait()
         self.play(
-            ShowCreation(square),
+            Create(square),
             FadeIn(corner_area),
             area_one_label.animate.move_to(square),
         )
@@ -349,7 +349,7 @@ class IntegrateRealExponential(InteractiveScene):
         dec_rhs.always.next_to(rhs, RIGHT)
 
         self.play(
-            VFadeIn(dec_rhs),
+            FadeIn(dec_rhs),
             s_tracker.animate.set_value(0.01).set_anim_args(run_time=12, rate_func=bezier([0, 1, 1, 1])),
             self.frame.animate.reorient(0, 0, 0, (15.36, 0, 0.0), 30).set_anim_args(time_span=(6, 11)),
         )
@@ -387,7 +387,7 @@ class IntegrateRealExponential(InteractiveScene):
         area.clear_updaters()
         self.play(
             *map(FadeOut, [area_word, rhs, graph_label, s_slider]),
-            *map(ShowCreation, v_lines),
+            *map(Create, v_lines),
             TransformMatchingTex(integral.copy(), unit_int),
             FadeOut(area),
             FadeIn(unit_int_area, time_span=(0.5, 1), suspend_mobject_updating=True),
@@ -421,7 +421,7 @@ class IntegrateRealExponential(InteractiveScene):
 
         self.play(LaggedStart(
             GrowFromCenter(brace),
-            ShowCreation(unit_line),
+            Create(unit_line),
             FadeIn(unit_label, 0.25 * DOWN),
             frame.animate.set_y(-1.5),
             run_time=1.5
@@ -445,7 +445,7 @@ class IntegrateRealExponential(InteractiveScene):
         self.play(
             FadeIn(fade_rect),
             FadeIn(area_eq_height),
-            ShowCreation(height_line),
+            Create(height_line),
         )
         self.wait()
         self.play(
@@ -456,7 +456,7 @@ class IntegrateRealExponential(InteractiveScene):
         self.play(FlashAround(unit_int, run_time=2, time_width=1.5))
         self.wait()
 
-        self.play(ShowCreation(sample_dots))
+        self.play(Create(sample_dots))
         self.play(sample_dots.animate.stretch(0, 1).match_y(axes.c2p(0, avg_value)), rate_func=lambda t: slosh_rate_func(t, 2), run_time=3)
         self.play(FadeOut(sample_dots), FadeOut(height_line), FadeOut(area_eq_height))
 
@@ -634,7 +634,7 @@ class IntegrateComplexExponential(SPlane):
         path = always_redraw(lambda: self.get_output_path(exp_plane, exp_func, 0, 20))
 
         self.play(
-            ShowCreation(path, suspend_mobject_updating=True),
+            Create(path, suspend_mobject_updating=True),
             t_tracker.animate.set_value(path.t_range[1]),
             rate_func=linear,
             run_time=10,
@@ -673,12 +673,12 @@ class IntegrateComplexExponential(SPlane):
         self.play(FadeIn(int_tex0, 0.25 * UP))
         self.play(
             t_tracker.animate.set_value(1),
-            ShowCreation(subpath_0),
+            Create(subpath_0),
             rate_func=linear,
             run_time=2
         )
         self.wait()
-        self.play(ShowCreation(many_points))
+        self.play(Create(many_points))
         self.wait()
         self.play(ReplacementTransform(many_points, avg_dot0))
         self.wait()
@@ -757,9 +757,9 @@ class IntegrateComplexExponential(SPlane):
 
             self.play(
                 t_tracker.animate.set_value(n + 1),
-                ShowCreation(subpath_n),
+                Create(subpath_n),
                 output_label_added_shift.animate.move_to(shifts[n - 1]),
-                ShowCreation(sample_points),
+                Create(sample_points),
                 run_time=2,
                 rate_func=linear,
             )
@@ -789,7 +789,7 @@ class IntegrateComplexExponential(SPlane):
             lower_avg_vect.put_start_on(lower_avg_vects[-1].get_end())
 
             anims = [
-                ShowCreation(subpath, rate_func=linear),
+                Create(subpath, rate_func=linear),
                 t_tracker.animate.set_value(n + 1).set_anim_args(rate_func=linear),
                 FadeIn(avg_vect),
             ]
@@ -822,7 +822,7 @@ class IntegrateComplexExponential(SPlane):
             ),
             *map(FadeOut, [output_label, output_dot, avg_vects]),
         )
-        self.play(ShowCreation(int_rect))
+        self.play(Create(int_rect))
         self.wait()
         self.play(
             int_rect.animate.surround(int_dot[0], buff=0),
@@ -849,7 +849,7 @@ class IntegrateComplexExponential(SPlane):
         self.wait()
         self.play(s_tracker.animate.set_value(1), run_time=4)
         s_rect.surround(Group(s_label))
-        self.play(ShowCreation(s_rect))
+        self.play(Create(s_rect))
         self.play(s_rect.animate.surround(int_dot[0], buff=0))
         self.play(FadeOut(s_rect))
         self.wait()
@@ -879,7 +879,7 @@ class IntegrateComplexExponential(SPlane):
         rect.set_stroke(YELLOW, 2)
         int_vect_outline = int_vect.copy().set_fill(opacity=0).set_stroke(WHITE, 1)
 
-        self.play(ShowCreation(rect))
+        self.play(Create(rect))
         self.wait()
         self.play(
             rect.animate.surround(int_dot[0], buff=0),
@@ -958,7 +958,7 @@ class IntegrateComplexExponential(SPlane):
             FadeIn(new_exp_plane_label, time_span=(1, 2)),
             FadeOut(int_plane_label, time_span=(1, 2)),
             FadeIn(new_int_plane_label, time_span=(1, 2)),
-            VFadeIn(v_line, time_span=(2, 3)),
+            FadeIn(v_line, time_span=(2, 3)),
             run_time=3,
         )
         self.play(
@@ -1013,8 +1013,8 @@ class IntegrateComplexExponential(SPlane):
                 mesh.remove(line)
 
         self.play(
-            ShowCreation(graph),
-            ShowCreation(mesh, lag_ratio=1e-2, time_span=(1, 4)),
+            Create(graph),
+            Create(mesh, lag_ratio=1e-2, time_span=(1, 4)),
             VFadeOut(traced_graph),
             frame.animate.reorient(34, 74, 0, (2.02, 1.44, 1.88), 9.87),
             out_dot.animate.set_color(WHITE),
@@ -1051,7 +1051,7 @@ class IntegrateComplexExponential(SPlane):
         self.wait()
         self.play(FadeOut(brace))
 
-        self.play(ShowCreation(hue_circle, run_time=2))
+        self.play(Create(hue_circle, run_time=2))
         self.wait()
         self.play(
             Restore(graph, time_span=(0, 1)),
@@ -1096,7 +1096,7 @@ class IntegrateComplexExponential(SPlane):
             ),
         )
         self.play(
-            ShowCreation(staggered_path, suspend_mobject_updating=True),
+            Create(staggered_path, suspend_mobject_updating=True),
             ShowIncreasingSubsets(int_pieces, suspend_mobject_updating=True),
             run_time=4
         )
@@ -1129,12 +1129,12 @@ class IntegrateComplexExponential(SPlane):
         output_label.add_updater(lambda m: m.fix_in_frame().set_z_index(2))
         self.play(
             FadeIn(output_dot),
-            VFadeIn(output_label),
+            FadeIn(output_label),
             left_plane.animate.set_fill(opacity=0.2),
         )
         max_n = 25
         self.play(
-            ShowCreation(staggered_path[:max_n].set_z_index(2)),
+            Create(staggered_path[:max_n].set_z_index(2)),
             ShowIncreasingSubsets(int_pieces[:max_n].set_z_index(2), int_func=np.floor),
             t_tracker.animate.set_value(max_n).set_anim_args(time_span=(max_n / (max_n + 1), max_n)),
             rate_func=linear,
@@ -1154,12 +1154,12 @@ class IntegrateComplexExponential(SPlane):
         self.play(
             s_tracker.animate.set_value(0.1 + 1j),
             int_pieces.animate.set_fill(opacity=0.75),
-            VFadeIn(int_vect),
+            FadeIn(int_vect),
             FadeOut(left_plane),
             run_time=2
         )
         rect = SurroundingRectangle(int_vect).set_z_index(2)
-        self.play(ShowCreation(rect))
+        self.play(Create(rect))
         self.play(FadeOut(rect))
         self.wait()
         self.play(
@@ -1257,7 +1257,7 @@ class IntegrateComplexExponential(SPlane):
             run_time=3
         )
         self.wait()
-        self.play(ShowCreation(equation_rect))
+        self.play(Create(equation_rect))
         self.wait()
         self.play(equation_rect.animate.surround(int_equation[R"\frac{1}{s}"], buff=SMALL_BUFF))
         self.wait()
@@ -1424,7 +1424,7 @@ class BreakDownLaplaceTransform(IntegrateComplexExponential):
         self.play(
             frame.animate.reorient(20, 68, 0, (-0.45, 0.24, 0.17), 6.28),
             s_tracker.animate.set_value(1.6 - 1j),
-            ShowCreation(int_rect, time_span=(4, 5)),
+            Create(int_rect, time_span=(4, 5)),
             run_time=8
         )
         self.play(int_rect.animate.surround(exp_plane.label))
@@ -1594,7 +1594,7 @@ class BreakDownLaplaceTransform(IntegrateComplexExponential):
 
         self.add(tracing_vect)
         self.play(
-            ShowCreation(path_copy),
+            Create(path_copy),
             ShowIncreasingSubsets(self.vect_sum[:n_pieces], int_func=np.ceil),
             run_time=draw_time,
             rate_func=linear
@@ -1659,7 +1659,7 @@ class LaplaceTransformOfCos(BreakDownLaplaceTransform):
         int_rect.set_stroke(YELLOW, 2)
         int_rect.fix_in_frame()
 
-        self.play(ShowCreation(int_rect))
+        self.play(Create(int_rect))
         self.wait()
         self.play(int_rect.animate.surround(exp_plane.label, buff=SMALL_BUFF))
         self.wait()
@@ -1745,7 +1745,7 @@ class LaplaceTransformOfCos(BreakDownLaplaceTransform):
         self.play(
             int_rect.animate.surround(exp_plane.label, SMALL_BUFF),
             exp_vect.animate.set_fill(opacity=0.25),
-            VFadeIn(full_vect),
+            FadeIn(full_vect),
         )
         self.wait(12)
         self.add(growing_vect_sum)
@@ -1766,8 +1766,8 @@ class LaplaceTransformOfCos(BreakDownLaplaceTransform):
             VFadeOut(exp_vect),
             VFadeOut(full_vect),
             VFadeOut(int_rect),
-            VFadeIn(output_path),
-            VFadeIn(vect_sum),
+            FadeIn(output_path),
+            FadeIn(vect_sum),
             FadeIn(int_vect)
         )
 

@@ -182,7 +182,7 @@ class LightIntensity(LightWaveSlice):
 # Scenes
 
 
-class LightFieldAroundScene(InteractiveScene):
+class LightFieldAroundScene(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add scene
         frame = self.frame
@@ -321,12 +321,12 @@ class LightFieldAroundScene(InteractiveScene):
             FadeIn(right_rect),
             FadeIn(film_rect),
         )
-        self.play(ShowCreation(laser_light, lag_ratio=0.001))
+        self.play(Create(laser_light, lag_ratio=0.001))
         self.wait(12)
         self.wait(2)  # Just in case
 
 
-class DiffractionGratingScene(InteractiveScene):
+class DiffractionGratingScene(Scene)  # Changed from InteractiveScene:
     light_position = 10 * DOWN + 5 * OUT + 3 * LEFT
 
     def setup(self):
@@ -486,7 +486,7 @@ class LightExposingFilm(DiffractionGratingScene):
         )
         self.play(
             Rotate(phase_vect, -TAU, axis=LEFT, about_point=phase_vect.get_start()),
-            ShowCreation(phase_line),
+            Create(phase_line),
             phase_arrow.animate.put_start_and_end_on(phase_arrow.get_start(), phase_line.get_end()),
             run_time=3
         )
@@ -794,7 +794,7 @@ class TwoInterferingWaves(DiffractionGratingScene):
 
             self.play(
                 FadeIn(full_rect),
-                ShowCreation(circle),
+                Create(circle),
             )
             self.wait(8)
 
@@ -973,12 +973,12 @@ class ExplainWaveVisualization(DiffractionGratingScene):
         self.play(
             frame.animate.reorient(71, 77, 0, (-0.62, 0.7, 0.19), 3.11),
             wave.animate.set_uniform(time_rate=0.5).set_anim_args(suspend_mobject_updating=False),
-            VFadeIn(full_field, time_span=(0, 2)),
+            FadeIn(full_field, time_span=(0, 2)),
             run_time=6
         )
         self.wait(2)
         self.play(
-            VFadeIn(linear_field),
+            FadeIn(linear_field),
             VFadeOut(full_field),
         )
         self.wait(5)
@@ -1041,7 +1041,7 @@ class ExplainWaveVisualization(DiffractionGratingScene):
         )
 
         self.play(
-            # VFadeIn(full_field),
+            # FadeIn(full_field),
             VFadeOut(linear_field),
             FadeIn(added_waves, suspend_mobject_updating=False),
             frame.animate.reorient(48, 79, 0, (-0.42, 1.07, 0.35), 4.18).set_anim_args(run_time=8)
@@ -1074,9 +1074,9 @@ class ExplainWaveVisualization(DiffractionGratingScene):
 
         self.add(line, graph)
         self.play(
-            ShowCreation(line, time_span=(0, 3)),
-            ShowCreation(graph, time_span=(0, 3)),
-            VFadeIn(linear_field, time_span=(0, 3), suspend_mobject_updating=False),
+            Create(line, time_span=(0, 3)),
+            Create(graph, time_span=(0, 3)),
+            FadeIn(linear_field, time_span=(0, 3), suspend_mobject_updating=False),
             frame.animate.reorient(0, 73, 0, (-0.03, 1.7, 0.2), 4.65),
             run_time=10
         )
@@ -1302,15 +1302,15 @@ class CreateZonePlate(DiffractionGratingScene):
 
         self.add(obj_wave, ref_wave)
         self.play(
-            ShowCreation(obj_line),
-            ShowCreation(obj_graph),
+            Create(obj_line),
+            Create(obj_graph),
             FadeIn(obj_label, lag_ratio=0.1),
             run_time=2
         )
         self.wait(3)
         self.play(
-            ShowCreation(ref_line),
-            ShowCreation(ref_graph),
+            Create(ref_line),
+            Create(ref_graph),
             FadeIn(ref_label, lag_ratio=0.1),
         )
         self.wait(4)
@@ -1410,7 +1410,7 @@ class CreateZonePlate(DiffractionGratingScene):
         round_exposure.set_width(0.25)
         self.play(
             frame.animate.reorient(41, -15, 0, (-0.54, -0.17, -1.78), 4.65),
-            ShowCreation(circle),
+            Create(circle),
             UpdateFromFunc(trg_point, lambda m, c=circle: m.move_to(c.get_end())),
             round_exposure.animate.set_width(3),
             FadeOut(exposure, time_span=(0, 1)),
@@ -1485,8 +1485,8 @@ class CreateZonePlate(DiffractionGratingScene):
         dist_label = always_redraw(get_dist_label)
 
         self.play(
-            ShowCreation(mid_line, suspend_mobject_updating=True),
-            VFadeIn(dist_label),
+            Create(mid_line, suspend_mobject_updating=True),
+            FadeIn(dist_label),
         )
 
         for vect in [2 * IN, 4 * OUT, 2 * IN]:
@@ -1573,7 +1573,7 @@ class CreateZonePlate(DiffractionGratingScene):
         return waves
 
 
-class ShowEffectOfChangedReferenceAngle(InteractiveScene):
+class ShowEffectOfChangedReferenceAngle(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Create object and reference wave
         frame = self.frame
@@ -1823,8 +1823,8 @@ class DoubleSlit(DiffractionGratingScene):
         line.set_stroke(TEAL, 2, 1)
         self.add(line, graph, radial_wave)
         self.play(
-            VFadeIn(graph),
-            VFadeIn(line),
+            FadeIn(graph),
+            FadeIn(line),
             FadeIn(exposure_glow),
             frame.animate.reorient(-46, 65, 0, (-1.12, 3.76, 0.49), 6.83),
             run_time=3
@@ -1934,9 +1934,9 @@ class DoubleSlit(DiffractionGratingScene):
         )
         wave1.set_uniform(time=out_wave.uniforms["time"])
         wave2.set_uniform(time=out_wave.uniforms["time"])
-        self.play(ShowCreation(lines, lag_ratio=0, suspend_mobject_updating=True))
+        self.play(Create(lines, lag_ratio=0, suspend_mobject_updating=True))
         self.wait()
-        self.play(ShowCreation(graphs, lag_ratio=0, run_time=3, suspend_mobject_updating=True))
+        self.play(Create(graphs, lag_ratio=0, run_time=3, suspend_mobject_updating=True))
 
         # Show combination from a side angle
         self.play(frame.animate.reorient(-80, 83, 0, (-0.09, 4.1, -0.16), 7.52), run_time=3)
@@ -2179,8 +2179,8 @@ class FullDiffractionGrating(DiffractionGratingScene):
         self.add(lines, graphs, out_wave)
         self.add(waves)
         self.play(
-            ShowCreation(lines, lag_ratio=0.01, time_span=(0, 2)),
-            ShowCreation(graphs, lag_ratio=0.01, suspend_mobject_updating=False, time_span=(0, 2)),
+            Create(lines, lag_ratio=0.01, time_span=(0, 2)),
+            Create(graphs, lag_ratio=0.01, suspend_mobject_updating=False, time_span=(0, 2)),
             frame.animate.reorient(1, 57, 0, (-0.17, 5.75, 0.32), 14.54),
             run_time=5
         )
@@ -2221,7 +2221,7 @@ class FullDiffractionGrating(DiffractionGratingScene):
 
         theta = math.asin(1.0 / wave_number / slit_dist)  # Diffraction equation!
 
-        self.play(ShowCreation(beam_outlines, lag_ratio=0))
+        self.play(Create(beam_outlines, lag_ratio=0))
         self.wait(3)
         self.play(
             Rotate(beam_point, -theta, about_point=ORIGIN),
@@ -2252,7 +2252,7 @@ class FullDiffractionGrating(DiffractionGratingScene):
         )
         self.play(
             TransformFromCopy(d_line, v_line),
-            ShowCreation(arc),
+            Create(arc),
             Write(theta_sym),
         )
         self.wait(3)
@@ -2291,14 +2291,14 @@ class FullDiffractionGrating(DiffractionGratingScene):
             out_wave.animate.set_opacity(0.5).set_anim_args(suspend_mobject_updating=False)
         )
         self.play(
-            ShowCreation(L_line),
-            VFadeIn(L_label),
+            Create(L_line),
+            FadeIn(L_label),
             FadeOut(beam_outlines),
         )
         self.wait()
         self.play(
             TransformFromCopy(L_line, hyp),
-            ShowCreation(x_line),
+            Create(x_line),
             TransformMatchingStrings(L_label.copy(), hyp_label),
             FadeIn(x_label, shift=3 * LEFT),
         )
@@ -2329,18 +2329,18 @@ class FullDiffractionGrating(DiffractionGratingScene):
 
         self.play(
             Rotate(point_tracker, -new_angle, about_point=ORIGIN),
-            VFadeIn(question),
+            FadeIn(question),
             run_time=3
         )
-        self.play(ShowCreation(d_line))
+        self.play(Create(d_line))
         self.play(
             TransformFromCopy(d_line, v_line),
-            ShowCreation(arc),
+            Create(arc),
             Write(theta_sym)
         )
         self.wait(2)
         self.play(
-            ShowCreation(lines, lag_ratio=0.01, run_time=2, suspend_mobject_updating=True),
+            Create(lines, lag_ratio=0.01, run_time=2, suspend_mobject_updating=True),
             FadeOut(VGroup(v_line, d_line, arc, theta_sym))
         )
         self.wait(4)
@@ -2381,12 +2381,12 @@ class FullDiffractionGrating(DiffractionGratingScene):
 
         self.play(
             MoveToTarget(lines),
-            ShowCreation(line1, time_span=(0.5, 1.5)),
+            Create(line1, time_span=(0.5, 1.5)),
             FadeIn(long_label, time_span=(0.5, 1.5))
         )
         self.wait()
         self.play(
-            ShowCreation(line2),
+            Create(line2),
             TransformMatchingStrings(long_label.copy(), short_label),
         )
         self.wait()
@@ -2458,12 +2458,12 @@ class FullDiffractionGrating(DiffractionGratingScene):
         triangle, elbow, altitude, arc, small_theta_sym, diff_segment, brace, d_label = diff_label_group
 
         self.play(
-            ShowCreation(altitude),
+            Create(altitude),
             FadeOut(VGroup(long_label, short_label)),
             frame.animate.reorient(0, 0, 0, (0.5, 0.88, 0.0), 3.8),
             sources.animate.set_radius(0.2),
         )
-        self.play(ShowCreation(elbow))
+        self.play(Create(elbow))
         self.wait()
 
         # Compare lengths
@@ -2486,7 +2486,7 @@ class FullDiffractionGrating(DiffractionGratingScene):
 
         self.play(
             Write(label1, stroke_width=1),
-            ShowCreation(line2),
+            Create(line2),
             run_time=1,
         )
         self.wait()
@@ -2523,7 +2523,7 @@ class FullDiffractionGrating(DiffractionGratingScene):
         self.wait()
         self.play(
             TransformFromCopy(d_sine_theta[R"\theta"][0], small_theta_sym),
-            ShowCreation(arc),
+            Create(arc),
         )
         self.wait()
 
@@ -2556,7 +2556,7 @@ class FullDiffractionGrating(DiffractionGratingScene):
             diff_segment.animate.set_stroke(width=2),
             frame.animate.reorient(0, 0, 0, (0.14, 0.48, 0.0), 3.17).set_anim_args(run_time=2),
         )
-        self.play(ShowCreation(sine, rate_func=linear))
+        self.play(Create(sine, rate_func=linear))
         self.wait()
         self.play(
             FadeIn(lock_label),
@@ -2570,7 +2570,7 @@ class FullDiffractionGrating(DiffractionGratingScene):
         other_sines = VGroup(sine.copy().shift(x * shift_value) for x in range(-2, 4) if x != 0)
         other_sines.clear_updaters()
 
-        self.play(ShowCreation(other_sines, lag_ratio=0.25, run_time=4))
+        self.play(Create(other_sines, lag_ratio=0.25, run_time=4))
         self.wait()
         self.play(FadeOut(other_sines, lag_ratio=0.25, run_time=2))
 
@@ -2719,9 +2719,9 @@ class FullDiffractionGrating(DiffractionGratingScene):
         VGroup(v_line, d_line).set_stroke(WHITE, 150)
         d_line.add_updater(lambda m, pt=point_tracker: m.put_start_and_end_on(ORIGIN, 5 * pt.get_center()))
         self.play(
-            ShowCreation(v_line),
-            ShowCreation(d_line),
-            ShowCreation(arc),
+            Create(v_line),
+            Create(d_line),
+            Create(arc),
             Write(theta_sym, stroke_width=20),
             run_time=1
         )
@@ -2850,7 +2850,7 @@ class PlaneWaveThroughZonePlate(DiffractionGratingScene):
         line.set_stroke(TEAL, 3)
 
         self.play(
-            ShowCreation(line),
+            Create(line),
             frame.animate.reorient(0, 0, 0),
             FadeIn(plate_top),
             run_time=3,
@@ -2886,7 +2886,7 @@ class PlaneWaveThroughZonePlate(DiffractionGratingScene):
 
         self.play(
             TransformFromCopy(line, h_line),
-            ShowCreation(arc),
+            Create(arc),
             Write(theta_prime_sym),
         )
         self.wait()
@@ -3059,7 +3059,7 @@ class PlaneWaveThroughZonePlate(DiffractionGratingScene):
         theta_sym.next_to(upper_arc.pfp(0.4), LEFT, SMALL_BUFF)
 
         self.play(
-            ShowCreation(upper_arc),
+            Create(upper_arc),
             Write(theta_sym),
         )
         self.wait(4)
@@ -3216,7 +3216,7 @@ class PlaneWaveThroughZonePlate(DiffractionGratingScene):
         self.play(
             FadeOut(out_beams),
             FadeOut(VGroup(theta_sym, theta_prime_sym, upper_arc, arc, line)),
-            ShowCreation(lines_out, lag_ratio=0.01, run_time=4),
+            Create(lines_out, lag_ratio=0.01, run_time=4),
             frame.animate.reorient(-93, 62, 0, (-2.43, 0.5, -0.12), 9.60).set_anim_args(run_time=5)
         )
         self.play(
@@ -3226,7 +3226,7 @@ class PlaneWaveThroughZonePlate(DiffractionGratingScene):
             frame.animate.to_default_state(),
             run_time=3,
         )
-        self.play(LaggedStartMap(ShowCreation, ghost_lines, lag_ratio=0.01))
+        self.play(LaggedStartMap(Create, ghost_lines, lag_ratio=0.01))
         self.wait()
         self.play(Blink(randy))
         self.wait()
@@ -3459,7 +3459,7 @@ class PlaneWaveThroughZonePlate(DiffractionGratingScene):
         return beam
 
 
-class SuperpositionOfPoints(InteractiveScene):
+class SuperpositionOfPoints(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up pi creature dot cloud
         frame = self.frame
@@ -3609,7 +3609,7 @@ class SuperpositionOfPoints(InteractiveScene):
         beam.shuffle()
 
         self.play(
-            ShowCreation(beam, lag_ratio=1 / len(beam)),
+            Create(beam, lag_ratio=1 / len(beam)),
             FadeOut(dot_cloud),
             frame.animate.reorient(83, -27, 0, (-0.63, -0.01, -0.79), 14.36),
             run_time=2
@@ -3755,14 +3755,14 @@ class SuperpositionOfPoints(InteractiveScene):
         return dots
 
 
-class ComplexWavesBase(InteractiveScene):
+class ComplexWavesBase(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Transition from TwoInterferingWaves to just show the object wave
         # Maybe it makes more sense to do that from TwoInterferingWaves itself?
         pass
 
 
-class ComplexWaves(InteractiveScene):
+class ComplexWaves(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add Amplitude(R + O)^2
         amp_expr = Tex(R"\text{Amplitude}(R + O)^2", font_size=60)
@@ -3813,14 +3813,14 @@ class ComplexWaves(InteractiveScene):
         self.play(Write(O_func[1:], run_time=1, stroke_color=WHITE))
         O_func.set_backstroke(BLACK, 5)
         self.play(
-            ShowCreation(xyz_rect),
+            Create(xyz_rect),
             GrowArrow(xyz_arrow),
             FadeIn(space_words, lag_ratio=0.1),
         )
         self.wait()
         self.play(
             FadeTransformPieces(space_words, time_word),
-            ShowCreation(time_rect),
+            Create(time_rect),
         )
         self.wait()
 
@@ -3936,7 +3936,7 @@ class ComplexWaves(InteractiveScene):
         )
         self.wait()
         self.play(
-            ShowCreation(arc),
+            Create(arc),
             TransformFromCopy(rot_arrow, complex_arrow, path_arc=angle),
             Write(phase_label)
         )
@@ -4061,7 +4061,7 @@ class ComplexWaves(InteractiveScene):
         return result
 
 
-class StateOnA2DScreen(InteractiveScene):
+class StateOnA2DScreen(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add screen
         frame = self.frame
@@ -4132,7 +4132,7 @@ class StateOnA2DScreen(InteractiveScene):
 
 ## Old ##
 
-class PointSourceDiffractionPattern(InteractiveScene):
+class PointSourceDiffractionPattern(Scene)  # Changed from InteractiveScene:
     # default_frame_orientation = (-35, -10)
     include_axes = True
     axes_config = dict(

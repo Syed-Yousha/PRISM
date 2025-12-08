@@ -41,7 +41,7 @@ class AskWhoCares(TeacherStudentsScene):
         self.wait()
 
 
-class PurePuzzleToApplication(InteractiveScene):
+class PurePuzzleToApplication(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Set up pieces
         frame = self.frame
@@ -89,7 +89,7 @@ class PurePuzzleToApplication(InteractiveScene):
         self.wait()
 
 
-class WhatIsTopology(InteractiveScene):
+class WhatIsTopology(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Ask question
         question = Text("What is Topology?", font_size=72)
@@ -108,7 +108,7 @@ class WhatIsTopology(InteractiveScene):
         self.add(morty)
         self.play(
             Transform(morty, conf_morty),
-            ShowCreation(underline)
+            Create(underline)
         )
         self.play(Blink(morty))
         self.wait(2)
@@ -142,7 +142,7 @@ class WhatIsTopology(InteractiveScene):
         crosses = VGroup(Cross(a) for a in answers)
         crosses.set_stroke(RED, (0, 5, 5, 5, 0))
 
-        self.play(ShowCreation(crosses, lag_ratio=0.25))
+        self.play(Create(crosses, lag_ratio=0.25))
         self.wait()
 
         # How is this math?
@@ -167,7 +167,7 @@ class WhatIsTopology(InteractiveScene):
         self.wait()
 
 
-class ThreeShapes(InteractiveScene):
+class ThreeShapes(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         v_lines = Line(DOWN, UP).replicate(2)
@@ -189,7 +189,7 @@ class ThreeShapes(InteractiveScene):
         self.add(titles)
 
 
-class ThisIsTheSame(InteractiveScene):
+class ThisIsTheSame(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         morty = Mortimer().flip()
@@ -199,7 +199,7 @@ class ThisIsTheSame(InteractiveScene):
         self.wait()
 
 
-class LabelMapping(InteractiveScene):
+class LabelMapping(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         title = Text("Mapping", font_size=72)
@@ -216,7 +216,7 @@ class LabelMapping(InteractiveScene):
         body.arrange(RIGHT)
         body.next_to(title, DOWN, buff=0.5)
 
-        self.play(FadeIn(title, 0.25 * UP), ShowCreation(underline))
+        self.play(FadeIn(title, 0.25 * UP), Create(underline))
         self.wait()
         self.play(FadeIn(body[0]))
         self.play(
@@ -275,7 +275,7 @@ class AskAboutACircle(TeacherStudentsScene):
         self.wait(4)
 
 
-class AskAboutProvingCollision(InteractiveScene):
+class AskAboutProvingCollision(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         randy = Randolph()
@@ -286,7 +286,7 @@ class AskAboutProvingCollision(InteractiveScene):
         self.wait()
 
 
-class GraphOfBellCurve(InteractiveScene):
+class GraphOfBellCurve(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         axes = ThreeDAxes((-3, 3), (-3, 3), (0, 1))
@@ -304,7 +304,7 @@ class GraphOfBellCurve(InteractiveScene):
         self.wait(30)
 
 
-class GraphLabel(InteractiveScene):
+class GraphLabel(Scene)  # Changed from InteractiveScene:
     def construct(self):
         group = VGroup(
             Text("Graph of"),
@@ -316,7 +316,7 @@ class GraphLabel(InteractiveScene):
         self.wait()
 
 
-class ChekhovsGun(InteractiveScene):
+class ChekhovsGun(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add image
         image = ImageMobject("AntonChekhovPortrait")
@@ -347,7 +347,7 @@ class ChekhovsGun(InteractiveScene):
         self.wait()
 
 
-class XXLabel(InteractiveScene):
+class XXLabel(Scene)  # Changed from InteractiveScene:
     def construct(self):
         tex = TexText(R"``Pairs'' of the form (X, X)", font_size=60)
         tex["X"].set_color(YELLOW)
@@ -355,7 +355,7 @@ class XXLabel(InteractiveScene):
         self.play(Write(tex))
 
 
-class CommutativeDiagram(InteractiveScene):
+class CommutativeDiagram(Scene)  # Changed from InteractiveScene:
     samples = 4
 
     def construct(self):
@@ -395,7 +395,7 @@ class CommutativeDiagram(InteractiveScene):
         self.wait()
 
 
-class ContinuousAssociation(InteractiveScene):
+class ContinuousAssociation(Scene)  # Changed from InteractiveScene:
     def construct(self):
         words = Text("Continuous\nAssociation", font_size=60)
         words.to_corner(UR)
@@ -421,7 +421,7 @@ class ThinkLikeATopologist(TeacherStudentsScene):
         self.wait(5)
 
 
-class RandyPuzzling(InteractiveScene):
+class RandyPuzzling(Scene)  # Changed from InteractiveScene:
     def construct(self):
         randy = Randolph()
         randy.to_edge(LEFT)
@@ -437,28 +437,28 @@ class RandyPuzzling(InteractiveScene):
         self.wait()
 
 
-class UnorderedPair(InteractiveScene):
+class UnorderedPair(Scene)  # Changed from InteractiveScene:
     def construct(self):
         tex = TexText(R"Unordered pairs: $\{A, B\} = \{B, A\}$", font_size=60)
         tex.to_edge(UP)
         self.add(tex)
 
 
-class XYtoYX(InteractiveScene):
+class XYtoYX(Scene)  # Changed from InteractiveScene:
     def construct(self):
         tex = Tex(R"(x, y) \leftrightarrow (y, x)")
         tex.to_edge(UP)
         self.add(tex)
 
 
-class XXOnEdge(InteractiveScene):
+class XXOnEdge(Scene)  # Changed from InteractiveScene:
     def construct(self):
         tex = TexText(R"``Pairs'' of the form $(X, X)$\\live on the edge")
         tex.to_corner(UL)
         self.add(tex)
 
 
-class StripClaim(InteractiveScene):
+class StripClaim(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Add title
         title = Text("Desired Claim", font_size=72)
@@ -481,7 +481,7 @@ class StripClaim(InteractiveScene):
         morty = Mortimer()
         morty.to_corner(DR)
         self.play(
-            VFadeIn(morty),
+            FadeIn(morty),
             morty.says("False!", mode="surprised"),
         )
         self.play(
@@ -546,14 +546,14 @@ class StripClaim(InteractiveScene):
         morty = Mortimer(height=1.5).to_corner(DR)
 
         self.play(
-            VFadeIn(morty),
+            FadeIn(morty),
             morty.says("This one\nis true", mode="tease")
         )
         self.play(Blink(morty))
         self.wait()
 
 
-class MobiusStripTextReflection(InteractiveScene):
+class MobiusStripTextReflection(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Text
         text = Text("Möbius Strip", font_size=72)
@@ -567,7 +567,7 @@ class MobiusStripTextReflection(InteractiveScene):
         self.wait()
 
 
-class AskAboutUnsolved(InteractiveScene):
+class AskAboutUnsolved(Scene)  # Changed from InteractiveScene:
     def construct(self):
         randy = Randolph()
         randy.to_corner(DL)
@@ -608,7 +608,7 @@ class AskAbout4DEmbeddings(TeacherStudentsScene):
             stds[0].change("pondering", strip),
             stds[1].change("pondering", strip),
             randy.change("raise_right_hand", strip),
-            ShowCreation(strip)
+            Create(strip)
         )
         self.play(
             GrowArrow(arrow),
@@ -624,7 +624,7 @@ class AskAbout4DEmbeddings(TeacherStudentsScene):
         self.wait(5)
 
 
-class GreeneAndLobb(InteractiveScene):
+class GreeneAndLobb(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         names = VGroup(
@@ -647,7 +647,7 @@ class GreeneAndLobb(InteractiveScene):
         self.wait()
 
 
-class GreeneLobbTheorem(InteractiveScene):
+class GreeneLobbTheorem(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Text
         text = Text("""
@@ -667,14 +667,14 @@ class GreeneLobbTheorem(InteractiveScene):
 
         self.play(
             FadeIn(title),
-            ShowCreation(underline)
+            Create(underline)
         )
         self.wait()
         self.play(Write(body, lag_ratio=0.05, run_time=3))
         self.wait()
 
 
-class SmoothImplication(InteractiveScene):
+class SmoothImplication(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         smooth = Text("Smooth", font_size=72)
@@ -694,7 +694,7 @@ class SmoothImplication(InteractiveScene):
         self.wait()
 
 
-class ProblemSolvingToRecreation(InteractiveScene):
+class ProblemSolvingToRecreation(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         words = VGroup(
@@ -745,7 +745,7 @@ class ProblemSolvingToRecreation(InteractiveScene):
         self.wait()
 
 
-class WriteTopologicalSpace(InteractiveScene):
+class WriteTopologicalSpace(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         text = Text("Topological Space", font_size=72)
@@ -777,7 +777,7 @@ class AskAboutTopology(TeacherStudentsScene):
         self.wait(4)
 
 
-class PlaylistMention(InteractiveScene):
+class PlaylistMention(Scene)  # Changed from InteractiveScene:
     def construct(self):
         # Test
         rects = ScreenRectangle().replicate(8)
@@ -808,7 +808,7 @@ class PlaylistMention(InteractiveScene):
         self.play(FadeOut(words), FadeOut(arrow))
 
 
-class AskWhat(InteractiveScene):
+class AskWhat(Scene)  # Changed from InteractiveScene:
     def construct(self):
         randy = Randolph()
         randy.to_edge(DOWN)
