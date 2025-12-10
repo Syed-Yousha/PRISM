@@ -1,0 +1,6 @@
+1. Stablize the video alignment, Every video generated should be clean and readable
+and perfectly aligned
+
+2. Adding voice to video 
+
+3.making longer video in less time (2-5 mins)

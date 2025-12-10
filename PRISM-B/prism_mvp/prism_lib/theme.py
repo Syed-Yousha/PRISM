@@ -1,0 +1,12 @@
+from manim import *
+
+# PRISM BRANDING COLORS
+BACKGROUND_COLOR = "#1e1e1e"  # Dark Grey
+PRIMARY_COLOR = "#7C3AED"     # Purple (from your SDS)
+ACCENT_COLOR = "#F59E0B"      # Amber/Gold
+TEXT_COLOR = WHITE
+CODE_BG_COLOR = "#2d2d2d"
+
+# STANDARD FONTS
+TITLE_SIZE = 48
+BODY_SIZE = 28
