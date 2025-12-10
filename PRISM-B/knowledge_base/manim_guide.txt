@@ -1,0 +1,193 @@
+MANIM COMMUNITY EDITION - QUICK REFERENCE GUIDE
+================================================
+
+This guide contains working code patterns for Manim CE.
+Use these exact patterns to avoid common errors.
+
+=== IMPORTS ===
+from manim import *
+
+=== BASIC SCENE STRUCTURE ===
+class GenScene(Scene):
+    def construct(self):
+        # Your code here
+        self.wait(1)
+
+=== TEXT & LABELS ===
+# Simple text
+title = Text("Hello World", font_size=48)
+self.play(Write(title))
+
+# Colored text
+label = Text("Important", color=YELLOW, font_size=36)
+
+# Position text
+title.to_edge(UP)
+label.next_to(title, DOWN)
+
+=== MATH EQUATIONS ===
+# Simple equation
+eq = MathTex(r"E = mc^2")
+self.play(Write(eq))
+
+# Fraction (use double backslash!)
+fraction = MathTex(r"\frac{a}{b}")
+
+# Complex equation
+quadratic = MathTex(r"x = \frac{-b \pm \sqrt{b^2-4ac}}{2a}")
+
+# Align equations
+equations = VGroup(
+    MathTex(r"a^2 + b^2 = c^2"),
+    MathTex(r"c = \sqrt{a^2 + b^2}")
+).arrange(DOWN)
+
+=== SHAPES ===
+# Circle
+circle = Circle(radius=1, color=BLUE)
+self.play(Create(circle))
+
+# Square
+square = Square(side_length=2, color=RED, fill_opacity=0.5)
+
+# Rectangle
+rect = Rectangle(width=4, height=2, color=GREEN)
+
+# Line
+line = Line(LEFT * 2, RIGHT * 2, color=WHITE)
+
+# Arrow
+arrow = Arrow(start=LEFT, end=RIGHT, color=YELLOW)
+
+# Dot
+dot = Dot(point=ORIGIN, color=RED)
+
+=== POSITIONING ===
+# Center
+obj.move_to(ORIGIN)
+
+# Edges
+obj.to_edge(UP)      # Top
+obj.to_edge(DOWN)    # Bottom
+obj.to_edge(LEFT)    # Left
+obj.to_edge(RIGHT)   # Right
+
+# Corners
+obj.to_corner(UL)    # Upper Left
+obj.to_corner(DR)    # Down Right
+
+# Relative positioning
+obj2.next_to(obj1, DOWN, buff=0.5)
+obj2.next_to(obj1, RIGHT)
+
+# Shift
+obj.shift(UP * 2)
+obj.shift(LEFT * 3 + DOWN * 1)
+
+=== ANIMATIONS ===
+# Create shapes
+self.play(Create(circle))
+
+# Write text
+self.play(Write(text))
+
+# Fade in/out
+self.play(FadeIn(obj))
+self.play(FadeOut(obj))
+
+# Transform
+self.play(Transform(obj1, obj2))
+self.play(ReplacementTransform(old, new))
+
+# Move
+self.play(obj.animate.shift(RIGHT * 2))
+self.play(obj.animate.move_to(UP * 2))
+
+# Scale
+self.play(obj.animate.scale(2))
+
+# Rotate
+self.play(Rotate(obj, angle=PI/2))
+
+# Multiple animations together
+self.play(Create(circle), Write(text))
+
+# Animation with run_time
+self.play(Create(circle), run_time=2)
+
+# Wait between animations
+self.wait(1)
+self.wait(2)
+
+=== GRAPHS & AXES ===
+# Basic axes
+axes = Axes(
+    x_range=[-3, 3, 1],
+    y_range=[-2, 2, 1],
+    axis_config={"include_numbers": True}
+)
+self.play(Create(axes))
+
+# Plot a function
+graph = axes.plot(lambda x: x**2, color=BLUE)
+self.play(Create(graph))
+
+# Add labels
+x_label = axes.get_x_axis_label("x")
+y_label = axes.get_y_axis_label("y")
+
+# Number plane
+plane = NumberPlane()
+self.play(Create(plane))
+
+=== GROUPS ===
+# Group objects
+group = VGroup(circle, square, text)
+group.arrange(RIGHT, buff=1)
+self.play(Create(group))
+
+# Apply to all in group
+group.set_color(YELLOW)
+self.play(group.animate.shift(UP))
+
+=== COLORS ===
+Available: RED, BLUE, GREEN, YELLOW, ORANGE, PURPLE, PINK, WHITE, GRAY, BLACK
+Shades: BLUE_A, BLUE_B, BLUE_C, BLUE_D, BLUE_E (light to dark)
+
+=== COMMON PATTERNS ===
+
+# Pattern 1: Title then content
+title = Text("My Topic", font_size=48).to_edge(UP)
+self.play(Write(title))
+self.wait(0.5)
+content = Circle(radius=1.5, color=BLUE)
+self.play(Create(content))
+self.wait(2)
+
+# Pattern 2: Step by step explanation
+step1 = Text("Step 1: Draw a circle", font_size=32).to_edge(UP)
+circle = Circle(radius=1, color=BLUE)
+self.play(Write(step1))
+self.play(Create(circle))
+self.wait(1)
+
+# Pattern 3: Before and After
+before = Square(color=RED).shift(LEFT * 2)
+after = Circle(color=GREEN).shift(RIGHT * 2)
+arrow = Arrow(before.get_right(), after.get_left())
+self.play(Create(before))
+self.play(GrowArrow(arrow))
+self.play(Create(after))
+
+# Pattern 4: Equation with visual
+eq = MathTex(r"A = \pi r^2").to_edge(UP)
+circle = Circle(radius=1.5, color=BLUE, fill_opacity=0.3)
+radius = Line(ORIGIN, RIGHT * 1.5, color=YELLOW)
+r_label = MathTex("r").next_to(radius, DOWN)
+self.play(Write(eq))
+self.play(Create(circle), Create(radius), Write(r_label))
+
+=== DEPRECATED - DO NOT USE ===
+ShowCreation() → Use Create() instead
+TextMobject() → Use Text() instead
+TexMobject() → Use Tex() or MathTex() instead
