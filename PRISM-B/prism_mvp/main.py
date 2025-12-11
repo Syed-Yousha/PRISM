@@ -1,14 +1,15 @@
 """
 PRISM - Personalized AI Study Mentor
-God Mode: Generalist Code Generation Pipeline
+God Mode: Generic Video Generator for ANY Topic
 
-Flow: Topic → Groq (LLaMA) → Fresh Manim Code → Video
+Flow: Topic → Groq API → Fresh Manim Code → Render → Play
 """
 
 import os
 import subprocess
 import sys
 import re
+import time
 
 from langchain_groq import ChatGroq
 
@@ -21,104 +22,145 @@ GENERATED_SCRIPT_PATH = os.path.join(SCRIPT_DIR, "generated_scene.py")
 KNOWLEDGE_PATH = os.path.join(BASE_DIR, "knowledge_base")
 
 
-def load_manim_knowledge() -> str:
-    """Load Manim syntax guide from file (simple & reliable)."""
+def load_knowledge_base() -> str:
+    """Load knowledge base for RAG context."""
+    knowledge = []
     
-    guide_path = os.path.join(KNOWLEDGE_PATH, "manim_guide.txt")
-    if os.path.exists(guide_path):
-        try:
-            with open(guide_path, "r", encoding="utf-8") as f:
-                print("   📖 Loaded Manim guide")
-                return f.read()
-        except Exception as e:
-            print(f"   ⚠️ Could not load guide: {e}")
+    for filename in ["manim_guide.txt", "prism_manual.txt"]:
+        filepath = os.path.join(KNOWLEDGE_PATH, filename)
+        if os.path.exists(filepath):
+            with open(filepath, "r", encoding="utf-8") as f:
+                content = f.read()[:2000]
+                knowledge.append(content)
     
+    if knowledge:
+        print(f"   📚 Loaded knowledge base")
+        return "\n\n".join(knowledge)
     return ""
 
 
 def generate_manim_code(topic: str) -> str:
-    """Generate complete Manim code using Groq's fast LLaMA models."""
+    """Generate FRESH Manim code for ANY topic."""
     
-    print(f"\n🧠 Generating visualization for: {topic}")
+    print(f"\n🧠 PRISM Processing: {topic}")
     
-    manim_reference = load_manim_knowledge()
+    rag_context = load_knowledge_base()
     
-    # Groq models - fast and free
     models = ["llama-3.3-70b-versatile", "llama3-70b-8192", "mixtral-8x7b-32768"]
     
-    system_prompt = """You are an expert Manim Community Edition developer.
-Write a COMPLETE, RUNNABLE Python script to visualize the given topic.
+    # Master prompt - generates PURE Manim code (no prism_lib imports)
+    system_prompt = """You are PRISM, an expert Manim CE developer.
+Generate a COMPLETE educational animation for the given topic.
 
-STRICT REQUIREMENTS:
-1. Start with: from manim import *
-2. Class name MUST be: GenScene(Scene)
-3. Use ONLY these proven patterns:
-   - Text("string") for labels (NOT TextMobject)
-   - MathTex(r"\\frac{a}{b}") for math
-   - Axes() for graphs
-   - Create() for shapes (NOT ShowCreation)
-   - FadeIn(), FadeOut(), Write() for text
-   - self.play(...) for animations
-   - self.wait(1) between steps
+CRITICAL RULES:
+1. Start with EXACTLY: from manim import *
+2. Class name MUST be EXACTLY: GenScene(Scene)
+3. DO NOT import anything else - only 'from manim import *'
+4. DO NOT use prism_lib, prism_theme, or any custom imports
 
-4. Keep it SIMPLE - max 25 lines in construct()
-5. Use basic shapes: Circle, Square, Line, Arrow, Dot, Rectangle
-6. Always center important objects with .move_to(ORIGIN)
+COLORS TO USE (define as strings):
+- Background: "#1e1e1e"
+- Titles: WHITE or "#ffffff"  
+- Accents: "#2496ED" or BLUE
+- Body text: "#ece6e2"
 
-COMMON MISTAKES TO AVOID:
-- ShowCreation → Use Create instead
-- TextMobject → Use Text instead  
-- TexMobject → Use Tex or MathTex instead
-- Don't use external imports besides manim
-- Don't forget self.wait() between animations
+VIDEO STRUCTURE:
+1. PRISM Branding (2 sec):
+   - Show "PRISM" text, then "AI Generated", FadeOut
 
-OUTPUT: Return ONLY valid Python code. No markdown code blocks, no explanations, no comments about the code."""
+2. Title (2 sec):
+   - Show topic title at center/top
 
-    user_prompt = f"""MANIM REFERENCE:
-{manim_reference[:2000] if manim_reference else "Use standard Manim CE syntax."}
+3. Content (15-20 sec):
+   - VISUAL explanations with shapes/diagrams
+   - Not just text - use Circle, Square, Arrow, Line
+   - Animate step by step
 
-TOPIC TO VISUALIZE: {topic}
+4. Summary (2 sec):
+   - Key takeaway, FadeOut all
 
-Write the complete Python code now:"""
+TOPIC-SPECIFIC VISUALS:
+- NETWORKS: nodes (Dot/Circle) + connections (Line/Arrow)
+- PHYSICS: forces (Arrow), motion (shift animations)
+- MATH: MathTex equations, geometric shapes
+- BIOLOGY: labeled diagrams with circles/rectangles
+- CS/PROGRAMMING: flowcharts with boxes and arrows
+- GENERAL: bullet points, simple icons
+
+MANIM PATTERNS:
+- Text("text", font_size=48) - for titles
+- Text("text", font_size=28) - for body
+- MathTex(r"x^2") - for equations
+- Circle(radius=1, color=BLUE)
+- Square(side_length=2)
+- Arrow(start=LEFT, end=RIGHT)
+- Line(start, end)
+- self.play(Create(shape)) - for shapes
+- self.play(Write(text)) - for text
+- self.play(FadeIn(obj)), FadeOut(obj)
+- self.wait(1) - pause between animations
+- obj.next_to(other, DOWN)
+- obj.to_edge(UP)
+- obj.shift(LEFT * 2)
+
+Keep code under 60 lines. Make it VISUAL and EDUCATIONAL.
+
+OUTPUT: ONLY Python code. No markdown. No explanations. No ```python blocks."""
+
+    user_prompt = f"""Generate Manim animation for: {topic}
+
+The video MUST be specifically about "{topic}".
+Include relevant diagrams and visuals.
+Start with 'from manim import *' and use class GenScene(Scene).
+
+RAG Context:
+{rag_context[:1500]}
+
+Write the code:"""
 
     for model in models:
         try:
-            print(f"   🚀 Using: {model}")
-            llm = ChatGroq(model=model, temperature=0.2, max_tokens=2000)
+            print(f"   🚀 Model: {model}")
+            llm = ChatGroq(model=model, temperature=0.5, max_tokens=2500)
             
             response = llm.invoke([
                 ("system", system_prompt),
                 ("human", user_prompt)
             ])
-            code = response.content
             
-            # Clean markdown artifacts
+            code = response.content.strip()
+            
+            # Clean markdown
             code = re.sub(r"```python\s*", "", code)
             code = re.sub(r"```\s*", "", code)
+            code = re.sub(r"^```\s*", "", code)
             code = code.strip()
             
-            # Ensure import exists
-            if "from manim import" not in code:
+            # Remove any prism_lib imports (bug fix!)
+            code = re.sub(r"from prism_lib.*\n", "", code)
+            code = re.sub(r"import prism_lib.*\n", "", code)
+            
+            # Ensure proper import
+            if not code.startswith("from manim import"):
                 code = "from manim import *\n\n" + code
             
-            print(f"   ✅ Code generated successfully!")
+            # Verify GenScene exists
+            if "class GenScene" not in code:
+                print(f"   ⚠️ Invalid code structure, retrying...")
+                continue
+            
+            print(f"   ✅ Code generated for: {topic}")
             return code
             
         except Exception as e:
-            error_msg = str(e)
-            if "rate_limit" in error_msg.lower() or "429" in error_msg:
-                print(f"   ⚠️ {model}: Rate limited, trying next...")
-                continue
-            else:
-                print(f"   ⚠️ {model}: {e}")
-                continue
+            print(f"   ⚠️ {model} error: {str(e)[:100]}")
+            continue
     
-    print("   ❌ All models failed.")
     return ""
 
 
-def validate_and_fix_code(code: str) -> str:
-    """Apply common fixes to generated code."""
+def validate_code(code: str) -> str:
+    """Fix common Manim issues."""
     fixes = [
         (r"ShowCreation\(", "Create("),
         (r"TextMobject\(", "Text("),
@@ -130,83 +172,108 @@ def validate_and_fix_code(code: str) -> str:
 
 
 def render_video(topic: str) -> bool:
-    """Render the generated scene with Manim."""
+    """Render and play the video."""
     
-    print("🎬 Rendering with Manim...")
+    print("🎬 Rendering...")
     
-    safe_name = re.sub(r"[^\w\s-]", "", topic).replace(" ", "_")[:30]
-    output_name = f"PRISM_{safe_name}"
+    # Clean filename
+    safe_name = re.sub(r"[^\w\s-]", "", topic).replace(" ", "_")[:25]
+    timestamp = int(time.time())  # Unique timestamp to avoid cache
+    output_name = f"PRISM_{safe_name}_{timestamp}"
     
     env = os.environ.copy()
-    env["PYTHONPATH"] = BASE_DIR
+    env["PYTHONPATH"] = SCRIPT_DIR  # Point to prism_mvp so imports work if needed
     
     cmd = [
         sys.executable, "-m", "manim",
-        "-pql",
+        "-ql",
+        "--disable_caching",  # Completely disable caching
         GENERATED_SCRIPT_PATH,
         "GenScene",
         "-o", output_name
     ]
     
     try:
-        result = subprocess.run(cmd, check=True, env=env, capture_output=True, text=True)
+        result = subprocess.run(
+            cmd, 
+            check=True, 
+            env=env, 
+            capture_output=True, 
+            text=True,
+            cwd=SCRIPT_DIR  # Run from prism_mvp directory
+        )
         print("   ✅ Render complete!")
         
+        # Find the exact video we just created
         video_dir = os.path.join(SCRIPT_DIR, "media", "videos", "generated_scene", "480p15")
+        
+        # Also check base dir
+        if not os.path.exists(video_dir):
+            video_dir = os.path.join(BASE_DIR, "media", "videos", "generated_scene", "480p15")
+        
         video_path = os.path.join(video_dir, f"{output_name}.mp4")
         
         if os.path.exists(video_path):
-            print(f"   🎥 Video: {video_path}")
+            print(f"   🎥 Playing: {output_name}.mp4")
             if sys.platform == "win32":
                 os.startfile(video_path)
             return True
-        elif os.path.exists(video_dir):
-            videos = [f for f in os.listdir(video_dir) if f.endswith('.mp4')]
-            if videos:
-                latest = max(videos, key=lambda x: os.path.getmtime(os.path.join(video_dir, x)))
-                print(f"   🎥 Found: {latest}")
-                if sys.platform == "win32":
-                    os.startfile(os.path.join(video_dir, latest))
-                return True
-        return True
+        else:
+            # List what's there for debugging
+            if os.path.exists(video_dir):
+                files = [f for f in os.listdir(video_dir) if f.endswith('.mp4') and safe_name in f]
+                if files:
+                    # Get the newest one with our topic name
+                    newest = max(files, key=lambda x: os.path.getmtime(os.path.join(video_dir, x)))
+                    video_path = os.path.join(video_dir, newest)
+                    print(f"   🎥 Playing: {newest}")
+                    if sys.platform == "win32":
+                        os.startfile(video_path)
+                    return True
+            
+            print(f"   ⚠️ Video not found. Check: {video_dir}")
+            return False
         
     except subprocess.CalledProcessError as e:
         print(f"\n❌ Manim Error!")
         if e.stderr:
-            print(f"   {e.stderr[:500]}")
+            # Show actual error
+            print(f"   {e.stderr[-800:]}")
         return False
 
 
 def main():
     print("\n" + "="*50)
-    print("   🔮 PRISM - AI Video Generator (God Mode)")
+    print("   🔮 PRISM - AI Video Generator")
     print("="*50)
     
-    topic = input("\n📝 Enter topic (e.g., 'Pythagorean Theorem'): ").strip()
+    topic = input("\n📝 Enter ANY topic: ").strip()
     if not topic:
-        topic = "Introduction to Circles"
-        print(f"   Using default: {topic}")
-    
-    # Generate
-    code = generate_manim_code(topic)
-    if not code:
-        print("❌ Failed to generate code. Check API key.")
+        print("   No topic entered. Exiting.")
         return
     
-    # Fix & Save
-    code = validate_and_fix_code(code)
+    # Step 1: Generate fresh code
+    code = generate_manim_code(topic)
+    if not code:
+        print("❌ Code generation failed.")
+        return
+    
+    # Step 2: Validate and save
+    code = validate_code(code)
     with open(GENERATED_SCRIPT_PATH, "w", encoding="utf-8") as f:
         f.write(code)
-    print(f"   💾 Saved to: generated_scene.py")
+    print(f"   💾 Saved: generated_scene.py")
     
-    # Preview
-    print("\n--- Code Preview ---")
-    for line in code.split("\n")[:12]:
+    # Step 3: Show preview
+    print("\n--- Generated Code ---")
+    lines = code.split("\n")
+    for line in lines[:15]:
         print(f"   {line}")
-    print("   ..." if len(code.split("\n")) > 12 else "")
+    if len(lines) > 15:
+        print(f"   ... ({len(lines)} total lines)")
     print("---\n")
     
-    # Render
+    # Step 4: Render and play
     if render_video(topic):
         print("\n🎉 SUCCESS!")
     else:
