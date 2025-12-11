@@ -1,8 +1,8 @@
 """
 PRISM - Personalized AI Study Mentor
-God Mode: Generic Video Generator for ANY Topic
+God Mode: Generic Video Generator for ANY Topic + Voice
 
-Flow: Topic → Groq API → Fresh Manim Code → Render → Play
+Flow: Topic → Groq API → Fresh Manim Code → Render → Voice → Merge → Play
 """
 
 import os
@@ -12,6 +12,8 @@ import re
 import time
 
 from langchain_groq import ChatGroq
+from gtts import gTTS
+from moviepy import VideoFileClip, AudioFileClip, CompositeAudioClip
 
 # ============== CONFIGURATION ==============
 os.environ["GROQ_API_KEY"] = os.getenv("GROQ_API_KEY", "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")
@@ -242,10 +244,154 @@ def validate_code(code: str) -> str:
     return code
 
 
-def render_video(topic: str) -> bool:
-    """Render and play the video."""
+def generate_narration(topic: str) -> str:
+    """Generate a narration script synced to the video structure."""
     
-    print("🎬 Rendering...")
+    print("🎙️ Generating narration script...")
+    
+    system_prompt = """You are PRISM's voice narrator. Generate a SPOKEN NARRATION script for an educational video.
+
+RULES:
+1. Write EXACTLY what should be spoken - no stage directions
+2. Match the 7-section video structure
+3. Use natural, conversational language
+4. Pace: About 120-150 words per minute
+5. Total narration: ~700-900 words for 60-second video
+
+STRUCTURE TO FOLLOW:
+[Section 1: Intro - 5 seconds, ~10 words]
+Welcome to PRISM. Let's explore [topic] together.
+
+[Section 2: Topic Introduction - 5 seconds, ~15 words]
+Today we'll learn about [topic]. This is a fascinating subject that...
+
+[Section 3: First Concept - 12 seconds, ~30 words]
+Let's start with the basics. [Explain first key concept clearly]...
+
+[Section 4: Second Concept - 12 seconds, ~30 words]  
+Now let's look at [next concept]. [Explain with simple examples]...
+
+[Section 5: Third Concept - 12 seconds, ~30 words]
+Another important aspect is [concept]. [Explain clearly]...
+
+[Section 6: Example/Formula - 10 seconds, ~25 words]
+Here's a practical example. [Walk through the example]...
+
+[Section 7: Summary - 8 seconds, ~20 words]
+To summarize: [key points]. Thanks for learning with PRISM!
+
+OUTPUT: Only the narration text. No section labels or timing notes. Just flowing spoken words with natural pauses (use ... for slight pauses)."""
+
+    user_prompt = f"""Generate a spoken narration for a 60-second educational video about: {topic}
+
+Write natural, engaging narration that explains {topic} clearly. The narration should flow smoothly from introduction to conclusion.
+
+Topic: "{topic}"
+
+Write the complete narration script:"""
+
+    try:
+        llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0.7, max_tokens=1500)
+        
+        response = llm.invoke([
+            ("system", system_prompt),
+            ("human", user_prompt)
+        ])
+        
+        narration = response.content.strip()
+        
+        # Clean any markdown or labels
+        narration = re.sub(r"\[.*?\]", "", narration)
+        narration = re.sub(r"\*\*.*?\*\*", "", narration)
+        narration = re.sub(r"Section \d+:?", "", narration)
+        narration = narration.strip()
+        
+        print(f"   ✅ Narration generated ({len(narration.split())} words)")
+        return narration
+        
+    except Exception as e:
+        print(f"   ⚠️ Narration error: {str(e)[:100]}")
+        # Fallback narration
+        return f"Welcome to PRISM. Today we're learning about {topic}. This is an important concept that has many applications. Let's explore the key ideas together. Thank you for watching."
+
+
+def generate_voice(narration: str, output_path: str) -> bool:
+    """Convert narration text to speech using gTTS."""
+    
+    print("🔊 Generating voice...")
+    
+    try:
+        # Ensure output directory exists
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        
+        # Generate speech with gTTS
+        tts = gTTS(text=narration, lang='en', slow=False)
+        tts.save(output_path)
+        
+        print(f"   ✅ Voice saved: {os.path.basename(output_path)}")
+        return True
+        
+    except Exception as e:
+        print(f"   ❌ Voice generation error: {str(e)}")
+        return False
+
+
+def attach_voice_to_video(video_path: str, audio_path: str, output_path: str) -> str:
+    """Merge audio narration with video using MoviePy."""
+    
+    print("🎬 Merging voice with video...")
+    
+    try:
+        # Load video and audio
+        video = VideoFileClip(video_path)
+        audio = AudioFileClip(audio_path)
+        
+        # Get durations
+        video_duration = video.duration
+        audio_duration = audio.duration
+        
+        print(f"   📹 Video: {video_duration:.1f}s | 🔊 Audio: {audio_duration:.1f}s")
+        
+        # If audio is longer than video, trim it
+        if audio_duration > video_duration:
+            audio = audio.with_duration(video_duration)
+            print(f"   ✂️ Audio trimmed to match video")
+        
+        # If audio is shorter, it will just end early (that's fine)
+        
+        # Set the audio to the video
+        final_video = video.with_audio(audio)
+        
+        # Ensure output directory exists
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        
+        # Write the final video
+        final_video.write_videofile(
+            output_path,
+            codec='libx264',
+            audio_codec='aac',
+            temp_audiofile='temp-audio.m4a',
+            remove_temp=True,
+            logger=None  # Suppress verbose output
+        )
+        
+        # Clean up
+        video.close()
+        audio.close()
+        final_video.close()
+        
+        print(f"   ✅ Final video: {os.path.basename(output_path)}")
+        return output_path
+        
+    except Exception as e:
+        print(f"   ❌ Merge error: {str(e)}")
+        return video_path  # Return original video if merge fails
+
+
+def render_video(topic: str) -> str:
+    """Render the video and return its path."""
+    
+    print("🎬 Rendering video...")
     
     # Clean filename
     safe_name = re.sub(r"[^\w\s-]", "", topic).replace(" ", "_")[:25]
@@ -285,10 +431,7 @@ def render_video(topic: str) -> bool:
         video_path = os.path.join(video_dir, f"{output_name}.mp4")
         
         if os.path.exists(video_path):
-            print(f"   🎥 Playing: {output_name}.mp4")
-            if sys.platform == "win32":
-                os.startfile(video_path)
-            return True
+            return video_path
         else:
             # List what's there for debugging
             if os.path.exists(video_dir):
@@ -297,25 +440,22 @@ def render_video(topic: str) -> bool:
                     # Get the newest one with our topic name
                     newest = max(files, key=lambda x: os.path.getmtime(os.path.join(video_dir, x)))
                     video_path = os.path.join(video_dir, newest)
-                    print(f"   🎥 Playing: {newest}")
-                    if sys.platform == "win32":
-                        os.startfile(video_path)
-                    return True
+                    return video_path
             
             print(f"   ⚠️ Video not found. Check: {video_dir}")
-            return False
+            return ""
         
     except subprocess.CalledProcessError as e:
         print(f"\n❌ Manim Error!")
         if e.stderr:
             # Show actual error
             print(f"   {e.stderr[-800:]}")
-        return False
+        return ""
 
 
 def main():
     print("\n" + "="*50)
-    print("   🔮 PRISM - AI Video Generator")
+    print("   🔮 PRISM - AI Video Generator + Voice")
     print("="*50)
     
     topic = input("\n📝 Enter ANY topic: ").strip()
@@ -344,11 +484,41 @@ def main():
         print(f"   ... ({len(lines)} total lines)")
     print("---\n")
     
-    # Step 4: Render and play
-    if render_video(topic):
-        print("\n🎉 SUCCESS!")
-    else:
+    # Step 4: Render video (silent)
+    video_path = render_video(topic)
+    if not video_path:
         print("\n💡 Check generated_scene.py for errors.")
+        return
+    
+    # Step 5: Generate narration script
+    narration = generate_narration(topic)
+    
+    # Step 6: Convert narration to speech
+    audio_dir = os.path.join(SCRIPT_DIR, "media", "audio")
+    safe_name = re.sub(r"[^\w\s-]", "", topic).replace(" ", "_")[:25]
+    timestamp = int(time.time())
+    audio_path = os.path.join(audio_dir, f"voice_{safe_name}_{timestamp}.mp3")
+    
+    if not generate_voice(narration, audio_path):
+        print("   ⚠️ Voice generation failed, playing silent video...")
+        if sys.platform == "win32":
+            os.startfile(video_path)
+        return
+    
+    # Step 7: Merge voice with video
+    output_dir = os.path.dirname(video_path)
+    final_path = os.path.join(output_dir, f"PRISM_{safe_name}_voiced_{timestamp}.mp4")
+    
+    final_video = attach_voice_to_video(video_path, audio_path, final_path)
+    
+    # Step 8: Play the final video
+    print(f"\n🎥 Playing: {os.path.basename(final_video)}")
+    if sys.platform == "win32":
+        os.startfile(final_video)
+    
+    print("\n🎉 SUCCESS! Video with voice narration complete!")
+    print(f"   📁 Video: {final_video}")
+    print(f"   🔊 Audio: {audio_path}")
 
 
 if __name__ == "__main__":
