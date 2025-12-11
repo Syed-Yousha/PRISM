@@ -2,44 +2,78 @@ from manim import *
 
 class GenScene(Scene):
     def construct(self):
-        # PRISM Branding
-        branding = Text("PRISM", font_size=48, color=WHITE)
-        ai_gen = Text("AI Generated", font_size=28, color=WHITE)
-        branding.to_edge(UP)
-        ai_gen.next_to(branding, DOWN)
-        self.play(Write(branding), Write(ai_gen))
-        self.wait(2)
-        self.play(FadeOut(branding), FadeOut(ai_gen))
-
-        # Title
-        title = Text("Binary Language", font_size=48, color=WHITE)
-        title.to_edge(UP)
+        # PRISM INTRO (5 sec)
+        self.camera.background_color = "#1e1e1e"
+        title = Text("PRISM", font_size=60, color=WHITE)
+        subtitle = Text("AI Generated Education", font_size=30).next_to(title, DOWN, buff=0.5)
         self.play(Write(title))
+        self.play(FadeIn(subtitle))
         self.wait(2)
+        self.play(*[FadeOut(mob) for mob in self.mobjects])
 
-        # Content
-        binary_text = Text("Binary: 0s and 1s", font_size=28, color="#ece6e2")
-        binary_text.next_to(title, DOWN)
-        self.play(Write(binary_text))
-
-        zero = Circle(radius=0.2, color=BLUE, fill_opacity=1)
-        one = Circle(radius=0.2, color=BLUE, fill_opacity=1)
-        zero.next_to(binary_text, DOWN)
-        one.next_to(zero, RIGHT)
-        self.play(Create(zero), Create(one))
-
-        arrow = Arrow(start=zero.get_center(), end=one.get_center(), color=BLUE)
-        self.play(Create(arrow))
-
-        binary_code = Text("101010", font_size=28, color="#ece6e2")
-        binary_code.next_to(arrow, DOWN)
-        self.play(Write(binary_code))
-
+        # TOPIC SLIDE (5 sec)
+        title = Text("Photosynthesis", font_size=48, color=WHITE).to_edge(UP)
+        subtitle = Text("The process by which plants make food", font_size=28).next_to(title, DOWN, buff=0.5)
+        self.play(Write(title))
+        self.play(FadeIn(subtitle))
         self.wait(2)
+        self.play(*[FadeOut(mob) for mob in self.mobjects])
 
-        # Summary
-        summary = Text("Binary Language: 0s and 1s", font_size=28, color="#ece6e2")
-        summary.to_edge(DOWN)
-        self.play(FadeIn(summary))
+        # SECTION 1 (12 sec)
+        title = Text("Introduction to Photosynthesis", font_size=40, color=WHITE).to_edge(UP)
+        content = Text("Photosynthesis is the process by which plants, algae, and some bacteria convert light energy from the sun into chemical energy in the form of glucose.", font_size=24)
+        content.scale_to_fit_width(10)
+        content.next_to(title, DOWN, buff=0.8)
+        visual = Circle(radius=1, color=BLUE).next_to(content, DOWN, buff=0.5)
+        self.play(Write(title))
+        self.play(FadeIn(content))
+        self.play(Create(visual))
+        self.wait(3)
+        self.play(*[FadeOut(mob) for mob in self.mobjects])
+
+        # SECTION 2 (12 sec)
+        title = Text("The Photosynthesis Equation", font_size=40, color=WHITE).to_edge(UP)
+        equation = MathTex(r"6CO_2 + 6H_2O + light \rightarrow C_6H_{12}O_6 + 6O_2", font_size=24)
+        equation.next_to(title, DOWN, buff=0.5)
+        visual = Rectangle(width=4, height=2, color=YELLOW).next_to(equation, DOWN, buff=0.5)
+        self.play(Write(title))
+        self.play(Write(equation))
+        self.play(Create(visual))
+        self.wait(3)
+        self.play(*[FadeOut(mob) for mob in self.mobjects])
+
+        # SECTION 3 (12 sec)
+        title = Text("The Role of Chlorophyll", font_size=40, color=WHITE).to_edge(UP)
+        content = Text("Chlorophyll is a green pigment found in plants that plays a crucial role in photosynthesis by absorbing light energy from the sun.", font_size=24)
+        content.scale_to_fit_width(10)
+        content.next_to(title, DOWN, buff=0.8)
+        visual = Circle(radius=1, color=GREEN).next_to(content, DOWN, buff=0.5)
+        self.play(Write(title))
+        self.play(FadeIn(content))
+        self.play(Create(visual))
+        self.wait(3)
+        self.play(*[FadeOut(mob) for mob in self.mobjects])
+
+        # SECTION 4 (10 sec)
+        title = Text("The Importance of Water", font_size=40, color=WHITE).to_edge(UP)
+        equation = MathTex(r"H_2O + CO_2 \rightarrow glucose + O_2", font_size=24)
+        equation.next_to(title, DOWN, buff=0.5)
+        self.play(Write(title))
+        self.play(Write(equation))
         self.wait(2)
-        self.play(FadeOut(summary), FadeOut(title), FadeOut(binary_text), FadeOut(zero), FadeOut(one), FadeOut(arrow), FadeOut(binary_code))
+        self.play(*[FadeOut(mob) for mob in self.mobjects])
+
+        # SUMMARY (8 sec)
+        title = Text("Key Takeaways", font_size=40, color=WHITE).to_edge(UP)
+        bullets = VGroup(
+            Text("• Photosynthesis is the process by which plants make food", font_size=24),
+            Text("• Chlorophyll plays a crucial role in absorbing light energy", font_size=24),
+            Text("• Water is essential for photosynthesis", font_size=24)
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.3)
+        bullets.next_to(title, DOWN, buff=0.8)
+        thanks = Text("Thanks for watching!", font_size=24).next_to(bullets, DOWN, buff=0.5)
+        self.play(Write(title))
+        self.play(FadeIn(bullets))
+        self.play(FadeIn(thanks))
+        self.wait(3)
+        self.play(*[FadeOut(mob) for mob in self.mobjects])

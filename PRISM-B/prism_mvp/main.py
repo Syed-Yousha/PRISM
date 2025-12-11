@@ -48,80 +48,151 @@ def generate_manim_code(topic: str) -> str:
     
     models = ["llama-3.3-70b-versatile", "llama3-70b-8192", "mixtral-8x7b-32768"]
     
-    # Master prompt - generates PURE Manim code (no prism_lib imports)
+    # Master prompt - generates clean, non-overlapping animations
     system_prompt = """You are PRISM, an expert Manim CE developer.
-Generate a COMPLETE educational animation for the given topic.
+Generate a CLEAN, WELL-FORMATTED educational animation (1+ MINUTE).
 
 CRITICAL RULES:
 1. Start with EXACTLY: from manim import *
 2. Class name MUST be EXACTLY: GenScene(Scene)
 3. DO NOT import anything else - only 'from manim import *'
-4. DO NOT use prism_lib, prism_theme, or any custom imports
 
-COLORS TO USE (define as strings):
-- Background: "#1e1e1e"
-- Titles: WHITE or "#ffffff"  
-- Accents: "#2496ED" or BLUE
-- Body text: "#ece6e2"
+=== MOST IMPORTANT: CLEAN ANIMATIONS ===
+EVERY SECTION MUST:
+1. CLEAR the screen before showing new content (FadeOut previous objects)
+2. Position elements with proper spacing (buff=0.5 minimum)
+3. Never overlap text or shapes
+4. Use VGroup to manage related objects together
 
-VIDEO STRUCTURE:
-1. PRISM Branding (2 sec):
-   - Show "PRISM" text, then "AI Generated", FadeOut
+PATTERN FOR EACH SECTION:
+```
+# Clear previous content
+self.play(*[FadeOut(mob) for mob in self.mobjects])
 
-2. Title (2 sec):
-   - Show topic title at center/top
+# Create new content for this section
+title = Text("Section Title", font_size=40).to_edge(UP)
+content = Text("Content here", font_size=28).next_to(title, DOWN, buff=0.8)
+visual = Circle().next_to(content, DOWN, buff=0.5)
 
-3. Content (15-20 sec):
-   - VISUAL explanations with shapes/diagrams
-   - Not just text - use Circle, Square, Arrow, Line
-   - Animate step by step
+# Animate
+self.play(Write(title))
+self.play(FadeIn(content))
+self.play(Create(visual))
+self.wait(2)
+```
 
-4. Summary (2 sec):
-   - Key takeaway, FadeOut all
+COLORS:
+- Background: "#1e1e1e" (set with self.camera.background_color)
+- Titles: WHITE
+- Accents: BLUE, YELLOW
+- Body: "#ece6e2"
 
-TOPIC-SPECIFIC VISUALS:
-- NETWORKS: nodes (Dot/Circle) + connections (Line/Arrow)
-- PHYSICS: forces (Arrow), motion (shift animations)
-- MATH: MathTex equations, geometric shapes
-- BIOLOGY: labeled diagrams with circles/rectangles
-- CS/PROGRAMMING: flowcharts with boxes and arrows
-- GENERAL: bullet points, simple icons
+=== VIDEO STRUCTURE (60+ seconds) ===
 
-MANIM PATTERNS:
-- Text("text", font_size=48) - for titles
-- Text("text", font_size=28) - for body
-- MathTex(r"x^2") - for equations
-- Circle(radius=1, color=BLUE)
-- Square(side_length=2)
-- Arrow(start=LEFT, end=RIGHT)
-- Line(start, end)
-- self.play(Create(shape)) - for shapes
-- self.play(Write(text)) - for text
-- self.play(FadeIn(obj)), FadeOut(obj)
-- self.wait(1) - pause between animations
-- obj.next_to(other, DOWN)
-- obj.to_edge(UP)
-- obj.shift(LEFT * 2)
+1. PRISM INTRO (5 sec):
+   title = Text("PRISM", font_size=60, color=WHITE)
+   subtitle = Text("AI Generated Education", font_size=30).next_to(title, DOWN, buff=0.5)
+   - Write title, FadeIn subtitle
+   - self.wait(2)
+   - FadeOut ALL
 
-Keep code under 60 lines. Make it VISUAL and EDUCATIONAL.
+2. TOPIC SLIDE (5 sec):
+   - CLEAR screen first
+   - Title at UP edge
+   - Subtitle below with buff=0.5
+   - self.wait(2)
+   - FadeOut ALL
 
-OUTPUT: ONLY Python code. No markdown. No explanations. No ```python blocks."""
+3. SECTION 1 (12 sec):
+   - CLEAR screen
+   - Section title at TOP
+   - Explanation text CENTERED, max width 10 units
+   - Simple visual BELOW text with buff=0.5
+   - self.wait(3)
+   - FadeOut ALL
 
-    user_prompt = f"""Generate Manim animation for: {topic}
+4. SECTION 2 (12 sec):
+   - CLEAR screen  
+   - New section title
+   - Different visual (diagram/shapes)
+   - Proper spacing between elements
+   - self.wait(3)
+   - FadeOut ALL
 
-The video MUST be specifically about "{topic}".
-Include relevant diagrams and visuals.
-Start with 'from manim import *' and use class GenScene(Scene).
+5. SECTION 3 (12 sec):
+   - CLEAR screen
+   - Another concept
+   - Visual demonstration
+   - self.wait(3)
+   - FadeOut ALL
+
+6. SECTION 4 (10 sec):
+   - CLEAR screen
+   - Example or formula
+   - MathTex if applicable
+   - self.wait(2)
+   - FadeOut ALL
+
+7. SUMMARY (8 sec):
+   - CLEAR screen
+   - "Key Takeaways" title
+   - 3 bullet points using VGroup().arrange(DOWN, buff=0.4)
+   - "Thanks for watching!"
+   - self.wait(3)
+   - FadeOut ALL
+
+=== FORMATTING RULES ===
+- Text width: Use .scale_to_fit_width(10) for long text
+- Spacing: Always use buff=0.5 or more between elements
+- Positioning: Use .to_edge(UP), .to_edge(DOWN), ORIGIN
+- Groups: Use VGroup() to keep related items together
+- Clear screen: self.play(*[FadeOut(mob) for mob in self.mobjects])
+
+=== MANIM PATTERNS ===
+# Title at top
+title = Text("Title", font_size=44, color=WHITE).to_edge(UP)
+
+# Centered content with max width
+content = Text("Long text here", font_size=26)
+content.scale_to_fit_width(10)
+content.next_to(title, DOWN, buff=0.8)
+
+# Visual below content
+diagram = Circle(radius=1, color=BLUE).next_to(content, DOWN, buff=0.5)
+
+# Bullet points
+bullets = VGroup(
+    Text("• Point 1", font_size=24),
+    Text("• Point 2", font_size=24),
+    Text("• Point 3", font_size=24)
+).arrange(DOWN, aligned_edge=LEFT, buff=0.3)
+bullets.next_to(title, DOWN, buff=0.8)
+
+# Clear everything
+self.play(*[FadeOut(mob) for mob in self.mobjects])
+
+OUTPUT: ONLY Python code. No markdown. No explanations."""
+
+    user_prompt = f"""Generate a CLEAN, 1-MINUTE Manim animation for: {topic}
+
+REQUIREMENTS:
+1. CLEAR screen between each section (FadeOut all mobjects)
+2. Never overlap text or shapes
+3. Use proper spacing (buff=0.5+)
+4. 7 distinct sections as specified
+5. Total duration: 60+ seconds
+
+Topic: "{topic}"
 
 RAG Context:
-{rag_context[:1500]}
+{rag_context[:1000]}
 
-Write the code:"""
+Write clean, non-overlapping code:"""
 
     for model in models:
         try:
             print(f"   🚀 Model: {model}")
-            llm = ChatGroq(model=model, temperature=0.5, max_tokens=2500)
+            llm = ChatGroq(model=model, temperature=0.5, max_tokens=4000)
             
             response = llm.invoke([
                 ("system", system_prompt),
