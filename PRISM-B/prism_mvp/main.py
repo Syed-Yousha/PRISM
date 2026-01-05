@@ -1,6 +1,6 @@
 """
 PRISM - Personalized AI Study Mentor
-God Mode: Generic Video Generator for ANY Topic + Voice
+Universal Mode: Generic Video Generator for ANY Topic + Voice
 
 Flow: Topic → Groq API → Fresh Manim Code → Render → Voice → Merge → Play
 """
