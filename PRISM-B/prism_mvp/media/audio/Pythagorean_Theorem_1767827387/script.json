@@ -1,0 +1,55 @@
+{
+  "topic": "Pythagorean Theorem",
+  "total_duration": 42.79,
+  "sections": [
+    {
+      "section_id": 1,
+      "title": "Hook/Introduction",
+      "narration_text": "Ever wondered how to find the longest side of a triangle?",
+      "visual_description": "Show a triangle with a question mark on the hypotenuse",
+      "audio_duration": 3.95
+    },
+    {
+      "section_id": 2,
+      "title": "Foundation",
+      "narration_text": "It all starts with right-angled triangles, where one angle is 90 degrees.",
+      "visual_description": "Animate a right-angled triangle forming, highlighting the 90-degree angle",
+      "audio_duration": 5.87
+    },
+    {
+      "section_id": 3,
+      "title": "Core Concept 1",
+      "narration_text": "The Pythagorean Theorem states that a squared plus b squared equals c squared.",
+      "visual_description": "Show the equation a^2 + b^2 = c^2 appearing on screen, with 'a' and 'b' labeled on the triangle's legs and 'c' on the hypotenuse",
+      "audio_duration": 6.13
+    },
+    {
+      "section_id": 4,
+      "title": "Core Concept 2",
+      "narration_text": "This relationship holds true for all right-angled triangles, no matter the size.",
+      "visual_description": "Animate different sized right-angled triangles, with the equation still holding true for each",
+      "audio_duration": 6.28
+    },
+    {
+      "section_id": 5,
+      "title": "Key Insight",
+      "narration_text": "The theorem helps us find the longest side, making it a fundamental tool in geometry.",
+      "visual_description": "Highlight the hypotenuse, with the equation solving for 'c' on screen",
+      "audio_duration": 6.47
+    },
+    {
+      "section_id": 6,
+      "title": "Example/Application",
+      "narration_text": "For example, if a is 3 and b is 4, we can calculate c using the theorem.",
+      "visual_description": "Show a triangle with 'a' as 3 and 'b' as 4, then calculate 'c' on screen using the equation, resulting in c = 5",
+      "audio_duration": 6.88
+    },
+    {
+      "section_id": 7,
+      "title": "Summary",
+      "narration_text": "The Pythagorean Theorem: a powerful tool for finding the longest side of any right-angled triangle.",
+      "visual_description": "Show the equation one last time, with a triangle and the solved example still on screen",
+      "audio_duration": 7.21
+    }
+  ]
+}

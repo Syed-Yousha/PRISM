@@ -1,0 +1,92 @@
+{
+  "topic": "Pythagorean Theorem",
+  "total_duration": 58.35,
+  "segment_count": 6,
+  "output_dir": "D:\\Code\\PRISM\\PRISM-B\\prism_mvp\\media\\audio\\Pythagorean_Theorem_1767842973",
+  "segments": [
+    {
+      "id": 1,
+      "text": "Have you ever wondered how to calculate the length of the hypotenuse of a right triangle?",
+      "visual_plan": "RIGHT side: Display a right triangle with sides a, b, and c. Use BLUE for the triangle, YELLOW for the formula, and TEAL for the sides.",
+      "narration": "Have you ever wondered how to calculate the length of the hypotenuse of a right triangle?",
+      "on_screen_notes": "LEFT side notes:\n\n$a^2 + b^2 = c^2$\n\n\u2022 Formula for Pythagorean Theorem",
+      "blackboard_notes": "LEFT side notes:\n\n$a^2 + b^2 = c^2$\n\n\u2022 Formula for Pythagorean Theorem",
+      "visual_instruction": "RIGHT side: Display a right triangle with sides a, b, and c. Use BLUE for the triangle, YELLOW for the formula, and TEAL for the sides.",
+      "visual_mode": "2D",
+      "section_type": "hook",
+      "audio_path": "D:\\Code\\PRISM\\PRISM-B\\prism_mvp\\media\\audio\\Pythagorean_Theorem_1767842973\\seg_01_Introduction_to.mp3",
+      "duration": 5.63,
+      "title": "Introduction to Pythagorean Theorem"
+    },
+    {
+      "id": 2,
+      "text": "The Pythagorean Theorem states that in a right-angled triangle, the square of the length of the hypotenuse is equal to the sum of the squares of the lengths of the other two sides.",
+      "visual_plan": "RIGHT side: Display the formula $a^2 + b^2 = c^2$ and highlight the terms. Use YELLOW for the formula and BLUE for the triangle.",
+      "narration": "The Pythagorean Theorem states that in a right-angled triangle, the square of the length of the hypotenuse is equal to the sum of the squares of the lengths of the other two sides.",
+      "on_screen_notes": "LEFT side notes:\n\n$c^2 = a^2 + b^2$\n\n\u2022 Definition of Pythagorean Theorem",
+      "blackboard_notes": "LEFT side notes:\n\n$c^2 = a^2 + b^2$\n\n\u2022 Definition of Pythagorean Theorem",
+      "visual_instruction": "RIGHT side: Display the formula $a^2 + b^2 = c^2$ and highlight the terms. Use YELLOW for the formula and BLUE for the triangle.",
+      "visual_mode": "2D",
+      "section_type": "definition",
+      "audio_path": "D:\\Code\\PRISM\\PRISM-B\\prism_mvp\\media\\audio\\Pythagorean_Theorem_1767842973\\seg_02_Definition_of_P.mp3",
+      "duration": 12.83,
+      "title": "Definition of Pythagorean Theorem"
+    },
+    {
+      "id": 3,
+      "text": "This theorem can be used to find the length of the hypotenuse of a right triangle, given the lengths of the other two sides.",
+      "visual_plan": "RIGHT side: Display a right triangle with sides a, b, and c. Use BLUE for the triangle and TEAL for the sides.",
+      "narration": "This theorem can be used to find the length of the hypotenuse of a right triangle, given the lengths of the other two sides.",
+      "on_screen_notes": "LEFT side notes:\n\n\u2022 Used for right triangles\n\n\u2022 Finds length of hypotenuse",
+      "blackboard_notes": "LEFT side notes:\n\n\u2022 Used for right triangles\n\n\u2022 Finds length of hypotenuse",
+      "visual_instruction": "RIGHT side: Display a right triangle with sides a, b, and c. Use BLUE for the triangle and TEAL for the sides.",
+      "visual_mode": "2D",
+      "section_type": "concept",
+      "audio_path": "D:\\Code\\PRISM\\PRISM-B\\prism_mvp\\media\\audio\\Pythagorean_Theorem_1767842973\\seg_03_Understanding_t.mp3",
+      "duration": 8.75,
+      "title": "Understanding the Concept"
+    },
+    {
+      "id": 4,
+      "text": "For example, if we have a right triangle with sides of length 3 and 4, we can use the Pythagorean Theorem to find the length of the hypotenuse.",
+      "visual_plan": "RIGHT side: Display the worked example and calculate the length of the hypotenuse. Use YELLOW for the calculation and BLUE for the triangle.",
+      "narration": "For example, if we have a right triangle with sides of length 3 and 4, we can use the Pythagorean Theorem to find the length of the hypotenuse.",
+      "on_screen_notes": "LEFT side notes:\n\n$3^2 + 4^2 = c^2$\n\n\u2022 Worked example",
+      "blackboard_notes": "LEFT side notes:\n\n$3^2 + 4^2 = c^2$\n\n\u2022 Worked example",
+      "visual_instruction": "RIGHT side: Display the worked example and calculate the length of the hypotenuse. Use YELLOW for the calculation and BLUE for the triangle.",
+      "visual_mode": "2D",
+      "section_type": "example",
+      "audio_path": "D:\\Code\\PRISM\\PRISM-B\\prism_mvp\\media\\audio\\Pythagorean_Theorem_1767842973\\seg_04_Worked_Example.mp3",
+      "duration": 11.58,
+      "title": "Worked Example"
+    },
+    {
+      "id": 5,
+      "text": "We can visualize the Pythagorean Theorem by displaying a right triangle and its corresponding squares.",
+      "visual_plan": "RIGHT side: Display a right triangle and its corresponding squares. Use BLUE for the triangle, TEAL for the squares, and YELLOW for the formula.",
+      "narration": "We can visualize the Pythagorean Theorem by displaying a right triangle and its corresponding squares.",
+      "on_screen_notes": "LEFT side notes:\n\n\u2022 Visual representation\n\n\u2022 Squares of sides",
+      "blackboard_notes": "LEFT side notes:\n\n\u2022 Visual representation\n\n\u2022 Squares of sides",
+      "visual_instruction": "RIGHT side: Display a right triangle and its corresponding squares. Use BLUE for the triangle, TEAL for the squares, and YELLOW for the formula.",
+      "visual_mode": "2D",
+      "section_type": "visualization",
+      "audio_path": "D:\\Code\\PRISM\\PRISM-B\\prism_mvp\\media\\audio\\Pythagorean_Theorem_1767842973\\seg_05_Visualizing_the.mp3",
+      "duration": 8.1,
+      "title": "Visualizing the Theorem"
+    },
+    {
+      "id": 6,
+      "text": "In summary, the Pythagorean Theorem is a fundamental concept in geometry that can be used to find the length of the hypotenuse of a right triangle.",
+      "visual_plan": "RIGHT side: Display the formula $a^2 + b^2 = c^2$ and highlight the terms. Use YELLOW for the formula and BLUE for the triangle.",
+      "narration": "In summary, the Pythagorean Theorem is a fundamental concept in geometry that can be used to find the length of the hypotenuse of a right triangle.",
+      "on_screen_notes": "LEFT side notes:\n\n$a^2 + b^2 = c^2$\n\n\u2022 Formula for Pythagorean Theorem",
+      "blackboard_notes": "LEFT side notes:\n\n$a^2 + b^2 = c^2$\n\n\u2022 Formula for Pythagorean Theorem",
+      "visual_instruction": "RIGHT side: Display the formula $a^2 + b^2 = c^2$ and highlight the terms. Use YELLOW for the formula and BLUE for the triangle.",
+      "visual_mode": "2D",
+      "section_type": "summary",
+      "audio_path": "D:\\Code\\PRISM\\PRISM-B\\prism_mvp\\media\\audio\\Pythagorean_Theorem_1767842973\\seg_06_Summary_of_Pyth.mp3",
+      "duration": 11.46,
+      "title": "Summary of Pythagorean Theorem"
+    }
+  ]
+}
