@@ -1,0 +1,64 @@
+{
+  "topic": "Quadratic equations",
+  "total_duration": 36.86,
+  "segment_count": 4,
+  "output_dir": "D:\\Code\\PRISM\\PRISM-B\\prism_mvp\\media\\audio\\Quadratic_equations_1768050365",
+  "segments": [
+    {
+      "id": 1,
+      "text": "Welcome! Today we're going to explore Quadratic equations. This is a fascinating subject that has many practical applications.",
+      "visual_plan": "Display the topic title with a subtle animation",
+      "narration": "Welcome! Today we're going to explore Quadratic equations. This is a fascinating subject that has many practical applications.",
+      "on_screen_notes": "Topic: Quadratic equations",
+      "blackboard_notes": "Topic: Quadratic equations",
+      "visual_instruction": "Display the topic title with a subtle animation",
+      "visual_mode": "2D",
+      "section_type": "hook",
+      "audio_path": "D:\\Code\\PRISM\\PRISM-B\\prism_mvp\\media\\audio\\Quadratic_equations_1768050365\\seg_01_Introduction.mp3",
+      "duration": 10.26,
+      "title": "Introduction"
+    },
+    {
+      "id": 2,
+      "text": "The fundamental idea behind Quadratic equations is both elegant and powerful. Let's break it down step by step.",
+      "visual_plan": "Show a diagram illustrating the main concept",
+      "narration": "The fundamental idea behind Quadratic equations is both elegant and powerful. Let's break it down step by step.",
+      "on_screen_notes": "Key Concept:\\n- Quadratic equations",
+      "blackboard_notes": "Key Concept:\\n- Quadratic equations",
+      "visual_instruction": "Show a diagram illustrating the main concept",
+      "visual_mode": "2D",
+      "section_type": "concept",
+      "audio_path": "D:\\Code\\PRISM\\PRISM-B\\prism_mvp\\media\\audio\\Quadratic_equations_1768050365\\seg_02_Core_Concept.mp3",
+      "duration": 8.77,
+      "title": "Core Concept"
+    },
+    {
+      "id": 3,
+      "text": "Here's a practical example of Quadratic equations in action. Watch how the elements interact.",
+      "visual_plan": "Animate a worked example with step-by-step visualization",
+      "narration": "Here's a practical example of Quadratic equations in action. Watch how the elements interact.",
+      "on_screen_notes": "Example",
+      "blackboard_notes": "Example",
+      "visual_instruction": "Animate a worked example with step-by-step visualization",
+      "visual_mode": "2D",
+      "section_type": "example",
+      "audio_path": "D:\\Code\\PRISM\\PRISM-B\\prism_mvp\\media\\audio\\Quadratic_equations_1768050365\\seg_03_Example.mp3",
+      "duration": 7.33,
+      "title": "Example"
+    },
+    {
+      "id": 4,
+      "text": "To summarize, Quadratic equations is an important concept that connects theory to practice. Remember the key points we covered today.",
+      "visual_plan": "Display summary points with concluding animation",
+      "narration": "To summarize, Quadratic equations is an important concept that connects theory to practice. Remember the key points we covered today.",
+      "on_screen_notes": "Key Takeaways:\\n- Understanding Quadratic equations\\n- Practical applications",
+      "blackboard_notes": "Key Takeaways:\\n- Understanding Quadratic equations\\n- Practical applications",
+      "visual_instruction": "Display summary points with concluding animation",
+      "visual_mode": "2D",
+      "section_type": "summary",
+      "audio_path": "D:\\Code\\PRISM\\PRISM-B\\prism_mvp\\media\\audio\\Quadratic_equations_1768050365\\seg_04_Summary.mp3",
+      "duration": 10.5,
+      "title": "Summary"
+    }
+  ]
+}
