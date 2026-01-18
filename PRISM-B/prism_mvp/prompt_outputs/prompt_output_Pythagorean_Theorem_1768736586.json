@@ -1,0 +1,173 @@
+{
+  "topic": "Pythagorean Theorem",
+  "total_duration_estimate": 60,
+  "sections": [
+    {
+      "id": 1,
+      "type": "hook",
+      "title": "Unlocking Right Triangles",
+      "narration": "What's the secret to solving right triangles?",
+      "duration_estimate": 8,
+      "visual_mode": "2D",
+      "blackboard_notes": [
+        "a",
+        "b",
+        "c"
+      ],
+      "animation_plan": {
+        "main_elements": [
+          "Title text in YELLOW at TOP",
+          "Right triangle at CENTER"
+        ],
+        "animations": [
+          "Clear screen first",
+          "Write(title)",
+          "Create(triangle)"
+        ],
+        "layout": "Title at TOP (buff=0.5), triangle at CENTER, notes at BOTTOM",
+        "color_scheme": {
+          "title": "YELLOW",
+          "main": "BLUE",
+          "notes": "TEAL"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "type": "formula",
+      "title": "The Pythagorean Theorem",
+      "narration": "It's a^2 plus b^2 equals c^2",
+      "duration_estimate": 8,
+      "visual_mode": "2D",
+      "blackboard_notes": [
+        "a^2",
+        "b^2",
+        "c^2"
+      ],
+      "animation_plan": {
+        "main_elements": [
+          "Formula text at CENTER"
+        ],
+        "animations": [
+          "Clear screen",
+          "Write(formula)"
+        ],
+        "layout": "Formula at CENTER, notes at BOTTOM (buff=0.5)",
+        "color_scheme": {
+          "formula": "WHITE",
+          "notes": "TEAL"
+        }
+      }
+    },
+    {
+      "id": 3,
+      "type": "breakdown",
+      "title": "What do a, b, and c represent?",
+      "narration": "a and b are the legs, c is the hypotenuse",
+      "duration_estimate": 8,
+      "visual_mode": "2D",
+      "blackboard_notes": [
+        "legs",
+        "hypotenuse"
+      ],
+      "animation_plan": {
+        "main_elements": [
+          "Right triangle with labeled sides at CENTER"
+        ],
+        "animations": [
+          "Clear screen",
+          "Create(triangle with labels)"
+        ],
+        "layout": "Triangle at CENTER, notes at BOTTOM",
+        "color_scheme": {
+          "triangle": "BLUE",
+          "labels": "WHITE",
+          "notes": "TEAL"
+        }
+      }
+    },
+    {
+      "id": 4,
+      "type": "example",
+      "title": "Solving a Right Triangle",
+      "narration": "If a is 3 and b is 4, what's c?",
+      "duration_estimate": 10,
+      "visual_mode": "2D",
+      "blackboard_notes": [
+        "3",
+        "4",
+        "5"
+      ],
+      "animation_plan": {
+        "main_elements": [
+          "Right triangle with given sides at CENTER",
+          "Calculation at BOTTOM"
+        ],
+        "animations": [
+          "Clear screen",
+          "Create(triangle with given sides)",
+          "Write(calculation)"
+        ],
+        "layout": "Triangle at CENTER, calculation at BOTTOM (buff=0.5)",
+        "color_scheme": {
+          "triangle": "BLUE",
+          "calculation": "WHITE",
+          "notes": "TEAL"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "type": "visualization",
+      "title": "Visualizing the Theorem",
+      "narration": "See how it works with different triangles",
+      "duration_estimate": 12,
+      "visual_mode": "2D",
+      "blackboard_notes": [
+        "visual",
+        "proof"
+      ],
+      "animation_plan": {
+        "main_elements": [
+          "Multiple right triangles at CENTER"
+        ],
+        "animations": [
+          "Clear screen",
+          "Create(multiple triangles)"
+        ],
+        "layout": "Triangles at CENTER, notes at BOTTOM",
+        "color_scheme": {
+          "triangles": "BLUE",
+          "notes": "TEAL"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "type": "summary",
+      "title": "The Pythagorean Theorem in a Nutshell",
+      "narration": "a^2 plus b^2 equals c^2, simple and powerful",
+      "duration_estimate": 8,
+      "visual_mode": "2D",
+      "blackboard_notes": [
+        "a^2",
+        "b^2",
+        "c^2"
+      ],
+      "animation_plan": {
+        "main_elements": [
+          "Formula text at CENTER"
+        ],
+        "animations": [
+          "Clear screen",
+          "Write(formula)"
+        ],
+        "layout": "Formula at CENTER, notes at BOTTOM (buff=0.5)",
+        "color_scheme": {
+          "formula": "WHITE",
+          "notes": "TEAL"
+        }
+      }
+    }
+  ]
+}

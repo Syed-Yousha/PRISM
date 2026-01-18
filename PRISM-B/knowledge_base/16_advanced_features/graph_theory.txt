@@ -1,0 +1,339 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# GRAPH THEORY - Networks, Vertices, Edges
+# Graph data structures and network visualization
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## BASIC GRAPH
+```python
+# Simple undirected graph
+from manim import *
+
+# Define vertices and edges
+vertices = [1, 2, 3, 4, 5]
+edges = [(1, 2), (1, 3), (2, 3), (2, 4), (3, 5), (4, 5)]
+
+graph = Graph(
+    vertices,
+    edges,
+    layout="circular",
+    labels=True,
+    vertex_config={"radius": 0.3, "fill_color": BLUE},
+    edge_config={"stroke_width": 3}
+)
+
+self.play(Create(graph), run_time=2)
+self.wait()
+```
+
+## GRAPH LAYOUTS
+```python
+# Different layout algorithms
+from manim import *
+
+vertices = ["A", "B", "C", "D", "E"]
+edges = [("A", "B"), ("A", "C"), ("B", "D"), ("C", "D"), ("D", "E")]
+
+# Circular layout
+g1 = Graph(vertices, edges, layout="circular", labels=True)
+g1.shift(LEFT * 4)
+
+# Spring layout (force-directed)
+g2 = Graph(vertices, edges, layout="spring", labels=True)
+
+# Kamada-Kawai layout
+g3 = Graph(vertices, edges, layout="kamada_kawai", labels=True)
+g3.shift(RIGHT * 4)
+
+label1 = Text("Circular", font_size=24).next_to(g1, DOWN)
+label2 = Text("Spring", font_size=24).next_to(g2, DOWN)
+label3 = Text("Kamada-Kawai", font_size=24).next_to(g3, DOWN)
+
+self.play(Create(g1), Create(g2), Create(g3))
+self.play(Write(label1), Write(label2), Write(label3))
+self.wait()
+```
+
+## CUSTOM VERTEX POSITIONS
+```python
+# Manually specify vertex positions
+from manim import *
+
+vertices = [1, 2, 3, 4]
+edges = [(1, 2), (2, 3), (3, 4), (4, 1), (1, 3)]
+
+# Define custom layout
+layout = {
+    1: LEFT * 2 + UP,
+    2: RIGHT * 2 + UP,
+    3: RIGHT * 2 + DOWN,
+    4: LEFT * 2 + DOWN
+}
+
+graph = Graph(
+    vertices,
+    edges,
+    layout=layout,
+    labels=True,
+    vertex_config={"radius": 0.4, "fill_color": GREEN},
+    edge_config={"stroke_color": WHITE}
+)
+
+title = Text("Square Graph", font_size=36, color=YELLOW).to_edge(UP)
+
+self.play(Write(title))
+self.play(Create(graph))
+self.wait()
+```
+
+## DIRECTED GRAPH (DIGRAPH)
+```python
+# Graph with directed edges (arrows)
+from manim import *
+
+vertices = ["A", "B", "C", "D"]
+edges = [("A", "B"), ("B", "C"), ("C", "D"), ("D", "A"), ("A", "C")]
+
+digraph = DiGraph(
+    vertices,
+    edges,
+    layout="circular",
+    labels=True,
+    vertex_config={"fill_color": ORANGE, "radius": 0.35},
+    edge_config={"stroke_width": 2, "tip_config": {"tip_length": 0.2}}
+)
+
+title = Text("Directed Graph", font_size=36, color=YELLOW).to_edge(UP)
+
+self.play(Write(title))
+self.play(Create(digraph), run_time=2)
+self.wait()
+```
+
+## TREE STRUCTURE
+```python
+# Hierarchical tree graph
+from manim import *
+
+vertices = ["Root", "A", "B", "C", "D", "E", "F"]
+edges = [("Root", "A"), ("Root", "B"), ("Root", "C"), 
+         ("A", "D"), ("A", "E"), ("B", "F")]
+
+tree = Graph(
+    vertices,
+    edges,
+    layout="tree",
+    root_vertex="Root",
+    labels=True,
+    vertex_config={"fill_color": TEAL, "radius": 0.3}
+)
+
+title = Text("Tree Structure", font_size=36, color=YELLOW).to_edge(UP)
+
+self.play(Write(title))
+self.play(Create(tree), run_time=2)
+self.wait()
+```
+
+## BINARY TREE
+```python
+# Binary tree with numbered nodes
+from manim import *
+
+# Binary tree: 1 -> (2, 3), 2 -> (4, 5), 3 -> (6, 7)
+vertices = [1, 2, 3, 4, 5, 6, 7]
+edges = [(1, 2), (1, 3), (2, 4), (2, 5), (3, 6), (3, 7)]
+
+tree = Graph(
+    vertices,
+    edges,
+    layout="tree",
+    root_vertex=1,
+    labels=True,
+    vertex_config={"fill_color": PURPLE, "radius": 0.35}
+)
+
+title = Text("Binary Tree", font_size=36, color=YELLOW).to_edge(UP)
+
+# Label levels
+level0 = Text("Level 0", font_size=20, color=GRAY).next_to(tree[1], LEFT, buff=1)
+level1 = Text("Level 1", font_size=20, color=GRAY).next_to(tree[2], LEFT, buff=1)
+level2 = Text("Level 2", font_size=20, color=GRAY).next_to(tree[4], LEFT, buff=1)
+
+self.play(Write(title))
+self.play(Create(tree), run_time=2)
+self.play(Write(level0), Write(level1), Write(level2))
+self.wait()
+```
+
+## HIGHLIGHTING PATHS
+```python
+# Highlight a path through the graph
+from manim import *
+
+vertices = [1, 2, 3, 4, 5]
+edges = [(1, 2), (1, 3), (2, 3), (2, 4), (3, 4), (3, 5), (4, 5)]
+
+graph = Graph(
+    vertices,
+    edges,
+    layout="spring",
+    labels=True,
+    vertex_config={"radius": 0.3}
+)
+
+self.play(Create(graph))
+self.wait()
+
+# Highlight path 1 -> 2 -> 4 -> 5
+path_vertices = [1, 2, 4, 5]
+path_edges = [(1, 2), (2, 4), (4, 5)]
+
+# Highlight vertices
+for v in path_vertices:
+    self.play(graph[v].animate.set_fill(RED), run_time=0.3)
+
+# Highlight edges
+for edge in path_edges:
+    edge_mob = graph.edges[edge]
+    self.play(edge_mob.animate.set_color(RED).set_stroke(width=5), run_time=0.3)
+
+self.wait()
+```
+
+## ADDING/REMOVING VERTICES AND EDGES
+```python
+# Dynamic graph modification
+from manim import *
+
+vertices = [1, 2, 3]
+edges = [(1, 2), (2, 3)]
+
+graph = Graph(vertices, edges, layout="circular", labels=True)
+
+self.play(Create(graph))
+self.wait()
+
+# Add a new vertex
+graph.add_vertices(4, positions={4: RIGHT * 2})
+self.play(graph.animate)
+self.wait()
+
+# Add edges to new vertex
+graph.add_edges((1, 4), (3, 4))
+self.play(graph.animate)
+self.wait()
+
+# Remove an edge
+graph.remove_edges((1, 2))
+self.play(graph.animate)
+self.wait()
+```
+
+## WEIGHTED GRAPH
+```python
+# Graph with edge weights (labels on edges)
+from manim import *
+
+vertices = ["A", "B", "C", "D"]
+edges = [("A", "B"), ("A", "C"), ("B", "C"), ("B", "D"), ("C", "D")]
+weights = {"A-B": 4, "A-C": 2, "B-C": 1, "B-D": 5, "C-D": 3}
+
+layout = {
+    "A": LEFT * 2 + UP,
+    "B": RIGHT * 2 + UP,
+    "C": LEFT * 2 + DOWN,
+    "D": RIGHT * 2 + DOWN
+}
+
+graph = Graph(vertices, edges, layout=layout, labels=True)
+
+self.play(Create(graph))
+
+# Add weight labels to edges
+edge_labels = VGroup()
+edge_positions = [
+    (("A", "B"), "4", UP * 0.3),
+    (("A", "C"), "2", LEFT * 0.3),
+    (("B", "C"), "1", ORIGIN),
+    (("B", "D"), "5", RIGHT * 0.3),
+    (("C", "D"), "3", DOWN * 0.3)
+]
+
+for (e1, e2), weight, offset in edge_positions:
+    edge = graph.edges[(e1, e2)]
+    label = Text(weight, font_size=24, color=YELLOW)
+    label.move_to(edge.get_center() + offset)
+    edge_labels.add(label)
+
+self.play(Write(edge_labels))
+self.wait()
+```
+
+## COMPLETE GRAPH
+```python
+# K_n complete graph (all vertices connected)
+from manim import *
+
+n = 6
+vertices = list(range(1, n + 1))
+# All pairs of vertices
+edges = [(i, j) for i in vertices for j in vertices if i < j]
+
+complete_graph = Graph(
+    vertices,
+    edges,
+    layout="circular",
+    labels=True,
+    vertex_config={"fill_color": GOLD, "radius": 0.25},
+    edge_config={"stroke_width": 1.5, "stroke_color": BLUE_C}
+)
+
+title = MathTex(r"K_6", font_size=48, color=YELLOW).to_edge(UP)
+subtitle = Text("Complete Graph with 6 vertices", font_size=24).next_to(title, DOWN)
+
+self.play(Write(title), Write(subtitle))
+self.play(Create(complete_graph), run_time=3)
+self.wait()
+```
+
+## BIPARTITE GRAPH
+```python
+# Two-part graph visualization
+from manim import *
+
+# Two sets of vertices
+set_a = ["A1", "A2", "A3"]
+set_b = ["B1", "B2", "B3", "B4"]
+vertices = set_a + set_b
+
+# Edges only between sets
+edges = [("A1", "B1"), ("A1", "B2"), ("A2", "B2"), ("A2", "B3"), 
+         ("A3", "B3"), ("A3", "B4")]
+
+# Custom layout: two columns
+layout = {}
+for i, v in enumerate(set_a):
+    layout[v] = LEFT * 2 + UP * (1 - i)
+for i, v in enumerate(set_b):
+    layout[v] = RIGHT * 2 + UP * (1.5 - i)
+
+graph = Graph(
+    vertices, 
+    edges, 
+    layout=layout,
+    labels=True,
+    vertex_config={"radius": 0.3}
+)
+
+# Color the two sets differently
+for v in set_a:
+    graph[v].set_fill(RED)
+for v in set_b:
+    graph[v].set_fill(BLUE)
+
+title = Text("Bipartite Graph", font_size=36, color=YELLOW).to_edge(UP)
+
+self.play(Write(title))
+self.play(Create(graph), run_time=2)
+self.wait()
+```

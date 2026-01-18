@@ -1,0 +1,377 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# SIMULTANEOUS EQUATIONS - Elimination, Substitution, Graphical
+# IGCSE/O-Level Algebra Topic
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## INTRODUCTION TO SIMULTANEOUS EQUATIONS
+```python
+# Two equations, two unknowns
+title = Text("Simultaneous Equations", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Definition
+definition = VGroup(
+    Text("Two equations with two unknowns", font_size=24, color=WHITE),
+    Text("Find values that satisfy BOTH equations", font_size=24, color=WHITE)
+).arrange(DOWN, buff=0.2)
+definition.shift(UP * 1.2)
+
+# System
+system = VGroup(
+    MathTex("2x + y = 7", font_size=44, color=BLUE),
+    MathTex("x - y = 2", font_size=44, color=GREEN)
+).arrange(DOWN, buff=0.3)
+system.shift(DOWN * 0.2)
+
+# Brace
+brace = Brace(system, LEFT, color=WHITE)
+
+# Solution
+solution = VGroup(
+    Text("Solution:", font_size=22, color=ORANGE),
+    MathTex("x = 3, \\quad y = 1", font_size=36, color=ORANGE)
+).arrange(RIGHT, buff=0.5)
+solution.shift(DOWN * 1.5)
+
+# Check
+check = VGroup(
+    MathTex("\\text{Check: } 2(3) + 1 = 7 \\checkmark", font_size=24, color=GRAY),
+    MathTex("3 - 1 = 2 \\checkmark", font_size=24, color=GRAY)
+).arrange(DOWN, buff=0.1)
+check.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(definition), run_time=1.0)
+self.play(Write(system), Create(brace), run_time=1.5)
+self.play(Write(solution), run_time=1.0)
+self.play(Write(check), run_time=1.0)
+```
+
+## ELIMINATION METHOD - ADDITION
+```python
+# When coefficients have opposite signs
+title = Text("Elimination: Addition", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# System
+system = VGroup(
+    MathTex("2x + y = 7 \\quad \\text{...(1)}", font_size=36, color=BLUE),
+    MathTex("x - y = 2 \\quad \\text{...(2)}", font_size=36, color=GREEN)
+).arrange(DOWN, buff=0.3)
+system.shift(UP * 1.3)
+
+# Notice
+notice = Text("Notice: +y and -y will cancel if we ADD", font_size=22, color=GRAY)
+notice.shift(UP * 0.4)
+
+# Add equations
+add = VGroup(
+    Text("Add (1) + (2):", font_size=22, color=ORANGE),
+    MathTex("2x + y + x - y = 7 + 2", font_size=32),
+    MathTex("3x = 9", font_size=36),
+    MathTex("x = 3", font_size=40, color=GREEN)
+).arrange(DOWN, buff=0.2)
+add.shift(DOWN * 0.5)
+
+# Substitute back
+sub = VGroup(
+    Text("Substitute x = 3 into (1):", font_size=22, color=BLUE),
+    MathTex("2(3) + y = 7", font_size=32),
+    MathTex("6 + y = 7", font_size=32),
+    MathTex("y = 1", font_size=40, color=GREEN)
+).arrange(DOWN, buff=0.15)
+sub.shift(DOWN * 2.5)
+
+# Answer
+answer = MathTex("x = 3, \\quad y = 1", font_size=44, color=GREEN)
+answer.to_edge(DOWN, buff=0.5)
+answer_box = SurroundingRectangle(answer, color=GREEN, buff=0.2)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(system), run_time=1.0)
+self.play(Write(notice), run_time=0.8)
+self.play(Write(add), run_time=2.0)
+self.play(Write(sub), run_time=2.0)
+self.play(Write(answer), Create(answer_box), run_time=1.0)
+```
+
+## ELIMINATION METHOD - SUBTRACTION
+```python
+# When coefficients have same sign
+title = Text("Elimination: Subtraction", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# System
+system = VGroup(
+    MathTex("3x + 2y = 12 \\quad \\text{...(1)}", font_size=34, color=BLUE),
+    MathTex("x + 2y = 8 \\quad \\text{...(2)}", font_size=34, color=GREEN)
+).arrange(DOWN, buff=0.3)
+system.shift(UP * 1.4)
+
+# Notice
+notice = Text("Notice: Both have +2y, so SUBTRACT", font_size=22, color=GRAY)
+notice.shift(UP * 0.6)
+
+# Subtract equations
+subtract = VGroup(
+    Text("(1) - (2):", font_size=22, color=ORANGE),
+    MathTex("3x + 2y - (x + 2y) = 12 - 8", font_size=30),
+    MathTex("3x - x + 2y - 2y = 4", font_size=30),
+    MathTex("2x = 4", font_size=36),
+    MathTex("x = 2", font_size=40, color=GREEN)
+).arrange(DOWN, buff=0.15)
+subtract.shift(DOWN * 0.3)
+
+# Substitute
+sub = VGroup(
+    Text("Substitute into (2): ", font_size=20, color=BLUE),
+    MathTex("2 + 2y = 8 \\Rightarrow y = 3", font_size=32, color=GREEN)
+).arrange(RIGHT, buff=0.3)
+sub.to_edge(DOWN, buff=1)
+
+# Answer
+answer = MathTex("x = 2, \\quad y = 3", font_size=40, color=GREEN)
+answer.to_edge(DOWN, buff=0.4)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(system), run_time=1.0)
+self.play(Write(notice), run_time=0.8)
+self.play(Write(subtract), run_time=2.5)
+self.play(Write(sub), run_time=1.0)
+self.play(Write(answer), run_time=1.0)
+```
+
+## ELIMINATION - SCALING FIRST
+```python
+# When coefficients need to be made equal
+title = Text("Elimination: Scaling First", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# System
+system = VGroup(
+    MathTex("2x + 3y = 13 \\quad \\text{...(1)}", font_size=34, color=BLUE),
+    MathTex("5x + 2y = 16 \\quad \\text{...(2)}", font_size=34, color=GREEN)
+).arrange(DOWN, buff=0.3)
+system.shift(UP * 1.5)
+
+# Scale to match coefficients
+scale = VGroup(
+    Text("Multiply (1) by 2, (2) by 3 to match y-coefficients:", font_size=20, color=GRAY),
+    MathTex("4x + 6y = 26 \\quad \\text{...(3)}", font_size=32, color=BLUE),
+    MathTex("15x + 6y = 48 \\quad \\text{...(4)}", font_size=32, color=GREEN)
+).arrange(DOWN, buff=0.2)
+scale.shift(UP * 0.4)
+
+# Subtract
+subtract = VGroup(
+    Text("(4) - (3):", font_size=20, color=ORANGE),
+    MathTex("15x - 4x = 48 - 26", font_size=32),
+    MathTex("11x = 22", font_size=36),
+    MathTex("x = 2", font_size=40, color=GREEN)
+).arrange(DOWN, buff=0.15)
+subtract.shift(DOWN * 1)
+
+# Find y
+find_y = MathTex("\\text{Sub into (1): } 2(2) + 3y = 13 \\Rightarrow y = 3", font_size=28, color=GREEN)
+find_y.to_edge(DOWN, buff=0.8)
+
+# Answer
+answer = MathTex("x = 2, \\quad y = 3", font_size=36, color=GREEN)
+answer.to_edge(DOWN, buff=0.4)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(system), run_time=1.0)
+self.play(Write(scale), run_time=2.0)
+self.play(Write(subtract), run_time=2.0)
+self.play(Write(find_y), run_time=1.0)
+self.play(Write(answer), run_time=0.8)
+```
+
+## SUBSTITUTION METHOD
+```python
+# When one equation easily gives one variable
+title = Text("Substitution Method", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# System
+system = VGroup(
+    MathTex("y = 2x - 1 \\quad \\text{...(1)}", font_size=36, color=BLUE),
+    MathTex("3x + 2y = 12 \\quad \\text{...(2)}", font_size=36, color=GREEN)
+).arrange(DOWN, buff=0.3)
+system.shift(UP * 1.4)
+
+# Notice
+notice = Text("Equation (1) gives y directly - substitute into (2)", font_size=22, color=GRAY)
+notice.shift(UP * 0.6)
+
+# Substitute
+sub = VGroup(
+    Text("Substitute y = 2x - 1 into (2):", font_size=20, color=ORANGE),
+    MathTex("3x + 2(2x - 1) = 12", font_size=32),
+    MathTex("3x + 4x - 2 = 12", font_size=32),
+    MathTex("7x = 14", font_size=36),
+    MathTex("x = 2", font_size=40, color=GREEN)
+).arrange(DOWN, buff=0.15)
+sub.shift(DOWN * 0.3)
+
+# Find y
+find_y = VGroup(
+    Text("Substitute x = 2 into (1):", font_size=20, color=BLUE),
+    MathTex("y = 2(2) - 1 = 3", font_size=36, color=GREEN)
+).arrange(DOWN, buff=0.15)
+find_y.to_edge(DOWN, buff=1)
+
+# Answer
+answer = MathTex("x = 2, \\quad y = 3", font_size=40, color=GREEN)
+answer.to_edge(DOWN, buff=0.4)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(system), run_time=1.0)
+self.play(Write(notice), run_time=0.8)
+self.play(Write(sub), run_time=2.5)
+self.play(Write(find_y), run_time=1.0)
+self.play(Write(answer), run_time=0.8)
+```
+
+## GRAPHICAL METHOD
+```python
+# Solving by drawing graphs
+title = Text("Graphical Method", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Axes
+axes = Axes(
+    x_range=[-1, 5, 1],
+    y_range=[-1, 5, 1],
+    x_length=6,
+    y_length=5,
+    axis_config={"include_tip": True, "include_numbers": True}
+).shift(LEFT * 2 + DOWN * 0.3)
+
+# Line 1: x + y = 4 → y = 4 - x
+line1 = axes.plot(lambda x: 4 - x, x_range=[0, 4], color=BLUE)
+label1 = MathTex("x + y = 4", font_size=24, color=BLUE)
+label1.next_to(line1, UP + RIGHT, buff=0.1)
+
+# Line 2: y = 2x - 2
+line2 = axes.plot(lambda x: 2*x - 2, x_range=[0, 3.5], color=GREEN)
+label2 = MathTex("y = 2x - 2", font_size=24, color=GREEN)
+label2.next_to(line2, DOWN + RIGHT, buff=0.1)
+
+# Intersection point
+intersection = Dot(axes.c2p(2, 2), color=RED, radius=0.12)
+int_label = MathTex("(2, 2)", font_size=28, color=RED)
+int_label.next_to(intersection, UP + RIGHT, buff=0.1)
+
+# Explanation
+explain = VGroup(
+    Text("Intersection point", font_size=22, color=RED),
+    Text("= Solution!", font_size=22, color=RED),
+    MathTex("x = 2, \\quad y = 2", font_size=32, color=GREEN)
+).arrange(DOWN, buff=0.2)
+explain.shift(RIGHT * 3.5 + DOWN * 0.5)
+
+# Method summary
+summary = VGroup(
+    Text("Method:", font_size=20, color=GRAY),
+    Text("1. Rearrange to y = mx + c", font_size=18),
+    Text("2. Plot both lines", font_size=18),
+    Text("3. Read off intersection", font_size=18)
+).arrange(DOWN, buff=0.1, aligned_edge=LEFT)
+summary.shift(RIGHT * 3.5 + DOWN * 2.3)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(axes), run_time=1.0)
+self.play(Create(line1), Write(label1), run_time=1.0)
+self.play(Create(line2), Write(label2), run_time=1.0)
+self.play(Create(intersection), Write(int_label), run_time=1.0)
+self.play(Write(explain), run_time=1.5)
+self.play(Write(summary), run_time=1.5)
+```
+
+## LINEAR AND QUADRATIC
+```python
+# One linear, one quadratic
+title = Text("Linear + Quadratic", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# System
+system = VGroup(
+    MathTex("y = x + 2 \\quad \\text{...(1)}", font_size=34, color=BLUE),
+    MathTex("y = x^2 \\quad \\text{...(2)}", font_size=34, color=GREEN)
+).arrange(DOWN, buff=0.3)
+system.shift(UP * 1.5)
+
+# Substitute
+sub = VGroup(
+    Text("Since both = y, set them equal:", font_size=20, color=GRAY),
+    MathTex("x + 2 = x^2", font_size=36, color=ORANGE)
+).arrange(DOWN, buff=0.15)
+sub.shift(UP * 0.5)
+
+# Rearrange to quadratic = 0
+rearr = VGroup(
+    MathTex("x^2 - x - 2 = 0", font_size=36),
+    MathTex("(x - 2)(x + 1) = 0", font_size=36),
+    MathTex("x = 2 \\text{ or } x = -1", font_size=36, color=GREEN)
+).arrange(DOWN, buff=0.2)
+rearr.shift(DOWN * 0.5)
+
+# Find y values
+find_y = VGroup(
+    MathTex("x = 2: y = 2 + 2 = 4", font_size=28, color=GREEN),
+    MathTex("x = -1: y = -1 + 2 = 1", font_size=28, color=GREEN)
+).arrange(DOWN, buff=0.15)
+find_y.shift(DOWN * 1.8)
+
+# Answer
+answer = MathTex("(2, 4) \\text{ and } (-1, 1)", font_size=36, color=GREEN)
+answer.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(system), run_time=1.0)
+self.play(Write(sub), run_time=1.0)
+self.play(Write(rearr), run_time=2.0)
+self.play(Write(find_y), run_time=1.5)
+self.play(Write(answer), run_time=1.0)
+```
+
+## METHOD COMPARISON
+```python
+# When to use each method
+title = Text("Choosing a Method", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Table
+table = VGroup(
+    # Header
+    VGroup(
+        Text("Method", font_size=22, color=WHITE),
+        Text("Best When...", font_size=22, color=WHITE)
+    ).arrange(RIGHT, buff=3),
+    
+    # Elimination
+    VGroup(
+        Text("Elimination", font_size=20, color=BLUE),
+        Text("Coefficients already match or easy to match", font_size=18)
+    ).arrange(RIGHT, buff=1),
+    
+    # Substitution
+    VGroup(
+        Text("Substitution", font_size=20, color=GREEN),
+        Text("One equation is already y = ... or x = ...", font_size=18)
+    ).arrange(RIGHT, buff=1.2),
+    
+    # Graphical
+    VGroup(
+        Text("Graphical", font_size=20, color=ORANGE),
+        Text("Need to estimate, or checking answers", font_size=18)
+    ).arrange(RIGHT, buff=1.7)
+).arrange(DOWN, buff=0.5, aligned_edge=LEFT)
+table.move_to(ORIGIN + UP * 0.5)
+
+# Key tips
+tips = VGroup(
+    Text("Key Tips:", font_size=24, color=YELLOW),
+    Text("• Always check your answer in BOTH equations", font_size=20),
+    Text("• If one method gets messy, try another", font_size=20),
+    Text("• For linear + quadratic: substitute to get quadratic = 0", font_size=20)
+).arrange(DOWN, buff=0.15, aligned_edge=LEFT)
+tips.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(table), run_time=2.5)
+self.play(Write(tips), run_time=2.0)
+```

@@ -1,0 +1,449 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# TRIGONOMETRY - Basic Ratios, Sine/Cosine Rules, Bearings
+# IGCSE/O-Level Trigonometry Topic
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## LABELING RIGHT TRIANGLES
+```python
+# Opposite, Adjacent, Hypotenuse
+title = Text("Labeling a Right Triangle", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Triangle - right angle at bottom-left vertex (LEFT * 2, DOWN * 1.5)
+# Vertices: A = bottom-left, B = bottom-right, C = top-left
+triangle = Polygon(
+    LEFT * 2 + DOWN * 1.5,   # A - right angle here
+    RIGHT * 2 + DOWN * 1.5,  # B - bottom right
+    LEFT * 2 + UP * 1.5,     # C - top left (where theta is)
+    color=WHITE, fill_opacity=0.1
+)
+
+# Right angle marker - positioned at vertex A with proper alignment
+right_marker = Square(side_length=0.3, color=WHITE, fill_opacity=0)
+right_marker.move_to(LEFT * 2 + DOWN * 1.5, aligned_edge=DL)  # FIXED: Align to corner
+
+# Angle theta at vertex C (top-left) - calculate actual angle
+# The angle at C is between line CA (going down) and line CB (going down-right)
+import numpy as np
+angle_at_C = np.arctan(4/3)  # arctan(horizontal/vertical) for this triangle
+arc = Arc(radius=0.5, start_angle=-PI/2, angle=-angle_at_C, color=GREEN)  # FIXED: Correct arc
+arc.shift(LEFT * 2 + UP * 1.5)
+theta = MathTex("\\theta", font_size=32, color=GREEN)
+theta.shift(LEFT * 1.3 + UP * 1)
+
+# Labels
+hyp = Text("Hypotenuse", font_size=22, color=RED)
+hyp.shift(RIGHT * 0.5 + UP * 0.3)
+hyp_note = Text("(longest side, opposite right angle)", font_size=14, color=GRAY)
+hyp_note.next_to(hyp, DOWN, buff=0.1)
+
+opp = Text("Opposite", font_size=22, color=BLUE)
+opp.shift(LEFT * 3.2 + DOWN * 0)
+opp_note = Text("(opposite to θ)", font_size=14, color=GRAY)
+opp_note.next_to(opp, DOWN, buff=0.1)
+
+adj = Text("Adjacent", font_size=22, color=ORANGE)
+adj.shift(DOWN * 2)
+adj_note = Text("(next to θ)", font_size=14, color=GRAY)
+adj_note.next_to(adj, DOWN, buff=0.1)
+
+# Arrows pointing to the sides
+arr_hyp = Arrow(hyp.get_left() + LEFT * 0.2, RIGHT * 0 + DOWN * 0.2, color=RED, buff=0)
+arr_opp = Arrow(opp.get_right() + RIGHT * 0.1, LEFT * 2 + DOWN * 0, color=BLUE, buff=0)
+arr_adj = Arrow(adj.get_top(), LEFT * 0 + DOWN * 1.5, color=ORANGE, buff=0)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(triangle), Create(right_marker), run_time=1.0)
+self.play(Create(arc), Write(theta), run_time=1.0)
+self.play(Write(hyp), Write(hyp_note), Create(arr_hyp), run_time=1.0)
+self.play(Write(opp), Write(opp_note), Create(arr_opp), run_time=1.0)
+self.play(Write(adj), Write(adj_note), Create(arr_adj), run_time=1.0)
+```
+
+## SOH CAH TOA
+```python
+# The three ratios
+title = Text("SOH CAH TOA", font_size=44, color=YELLOW).to_edge(UP, buff=0.5)
+
+# SOH
+soh = VGroup(
+    Rectangle(width=4, height=1.5, color=BLUE, fill_opacity=0.2),
+    MathTex("\\sin \\theta = \\frac{\\text{Opposite}}{\\text{Hypotenuse}}", font_size=32, color=BLUE),
+    Text("SOH", font_size=36, color=BLUE)
+)
+soh[1].move_to(soh[0].get_center() + DOWN * 0.2)
+soh[2].move_to(soh[0].get_top() + DOWN * 0.25)
+soh.shift(LEFT * 4 + UP * 0.3)
+
+# CAH
+cah = VGroup(
+    Rectangle(width=4, height=1.5, color=GREEN, fill_opacity=0.2),
+    MathTex("\\cos \\theta = \\frac{\\text{Adjacent}}{\\text{Hypotenuse}}", font_size=32, color=GREEN),
+    Text("CAH", font_size=36, color=GREEN)
+)
+cah[1].move_to(cah[0].get_center() + DOWN * 0.2)
+cah[2].move_to(cah[0].get_top() + DOWN * 0.25)
+cah.shift(UP * 0.3)
+
+# TOA
+toa = VGroup(
+    Rectangle(width=4, height=1.5, color=RED, fill_opacity=0.2),
+    MathTex("\\tan \\theta = \\frac{\\text{Opposite}}{\\text{Adjacent}}", font_size=32, color=RED),
+    Text("TOA", font_size=36, color=RED)
+)
+toa[1].move_to(toa[0].get_center() + DOWN * 0.2)
+toa[2].move_to(toa[0].get_top() + DOWN * 0.25)
+toa.shift(RIGHT * 4 + UP * 0.3)
+
+# Memory tip
+tip = VGroup(
+    Rectangle(width=10, height=0.8, color=YELLOW, fill_opacity=0.2),
+    Text("Memory: Some Old Horse Caught A Horse Taking Oats Away!", font_size=20, color=YELLOW)
+)
+tip[1].move_to(tip[0])
+tip.shift(DOWN * 1.5)
+
+# Formulas summary
+formulas = VGroup(
+    MathTex("\\sin = \\frac{O}{H}", font_size=36, color=BLUE),
+    MathTex("\\cos = \\frac{A}{H}", font_size=36, color=GREEN),
+    MathTex("\\tan = \\frac{O}{A}", font_size=36, color=RED)
+).arrange(RIGHT, buff=2)
+formulas.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(soh), run_time=1.2)
+self.play(Create(cah), run_time=1.2)
+self.play(Create(toa), run_time=1.2)
+self.play(Create(tip), run_time=1.0)
+self.play(Write(formulas), run_time=1.5)
+```
+
+## FINDING A SIDE
+```python
+# Using trigonometry to find a side
+title = Text("Finding a Side", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Triangle with values
+triangle = Polygon(
+    LEFT * 2 + DOWN * 1.5, RIGHT * 2 + DOWN * 1.5, LEFT * 2 + UP * 1,
+    color=WHITE, fill_opacity=0.1
+)
+
+# Right angle marker
+right_marker = Square(side_length=0.3, color=WHITE).shift(LEFT * 2 + DOWN * 1.2)
+
+# Labels
+angle = MathTex("35°", font_size=28, color=GREEN).shift(LEFT * 1.1 + UP * 0.3)
+hyp = MathTex("10\\text{ cm}", font_size=24, color=WHITE).shift(UP * 0 + RIGHT * 0.2)
+opp = MathTex("x", font_size=28, color=BLUE).shift(LEFT * 2.5 + DOWN * 0.2)
+
+# Working
+working = VGroup(
+    Text("Want: Opposite (x)", font_size=22, color=BLUE),
+    Text("Have: Hypotenuse (10), Angle (35°)", font_size=22),
+    Text("Use: SOH (sin)", font_size=22, color=GREEN)
+).arrange(DOWN, buff=0.15, aligned_edge=LEFT)
+working.shift(RIGHT * 3.5 + UP * 1)
+
+# Calculation
+calc = VGroup(
+    MathTex("\\sin 35° = \\frac{x}{10}", font_size=32),
+    MathTex("x = 10 \\times \\sin 35°", font_size=32),
+    MathTex("x = 10 \\times 0.574", font_size=32),
+    MathTex("x = 5.74 \\text{ cm}", font_size=36, color=GREEN)
+).arrange(DOWN, buff=0.2)
+calc.shift(RIGHT * 3.5 + DOWN * 1)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(triangle), Create(right_marker), run_time=1.0)
+self.play(Write(angle), Write(hyp), Write(opp), run_time=1.0)
+self.play(Write(working), run_time=1.5)
+self.play(Write(calc), run_time=2.5)
+```
+
+## FINDING AN ANGLE
+```python
+# Using inverse trig functions
+title = Text("Finding an Angle", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Triangle
+triangle = Polygon(
+    LEFT * 2 + DOWN * 1.5, RIGHT * 2 + DOWN * 1.5, LEFT * 2 + UP * 1.5,
+    color=WHITE, fill_opacity=0.1
+)
+
+# Right angle marker
+right_marker = Square(side_length=0.3, color=WHITE).shift(LEFT * 2 + DOWN * 1.2)
+
+# Labels
+angle = MathTex("\\theta", font_size=28, color=GREEN).shift(LEFT * 1.3 + UP * 0.9)
+opp = MathTex("8\\text{ cm}", font_size=24, color=WHITE).shift(LEFT * 2.8 + DOWN * 0)
+adj = MathTex("6\\text{ cm}", font_size=24, color=WHITE).shift(DOWN * 1.9)
+
+# Working
+working = VGroup(
+    Text("Have: Opposite (8), Adjacent (6)", font_size=22),
+    Text("Use: TOA (tan)", font_size=22, color=RED)
+).arrange(DOWN, buff=0.15, aligned_edge=LEFT)
+working.shift(RIGHT * 3.5 + UP * 1.5)
+
+# Calculation
+calc = VGroup(
+    MathTex("\\tan \\theta = \\frac{8}{6} = 1.333...", font_size=32),
+    MathTex("\\theta = \\tan^{-1}(1.333)", font_size=32, color=BLUE),
+    MathTex("\\theta = 53.1°", font_size=40, color=GREEN)
+).arrange(DOWN, buff=0.25)
+calc.shift(RIGHT * 3 + DOWN * 0.5)
+
+# Note
+note = VGroup(
+    Text("Use SHIFT + tan on calculator", font_size=20, color=ORANGE),
+    Text("to get inverse tan (tan⁻¹)", font_size=20, color=ORANGE)
+).arrange(DOWN, buff=0.1)
+note.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(triangle), Create(right_marker), run_time=1.0)
+self.play(Write(angle), Write(opp), Write(adj), run_time=1.0)
+self.play(Write(working), run_time=1.0)
+self.play(Write(calc), run_time=2.0)
+self.play(Write(note), run_time=1.0)
+```
+
+## EXACT TRIG VALUES
+```python
+# Special angles: 0°, 30°, 45°, 60°, 90°
+title = Text("Exact Trigonometric Values", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Table
+headers = VGroup(
+    MathTex("\\theta", font_size=28),
+    MathTex("\\sin \\theta", font_size=28, color=BLUE),
+    MathTex("\\cos \\theta", font_size=28, color=GREEN),
+    MathTex("\\tan \\theta", font_size=28, color=RED)
+).arrange(RIGHT, buff=1.2)
+headers.shift(UP * 1.5)
+
+# Values
+row0 = VGroup(
+    MathTex("0°", font_size=24), MathTex("0", font_size=24, color=BLUE),
+    MathTex("1", font_size=24, color=GREEN), MathTex("0", font_size=24, color=RED)
+).arrange(RIGHT, buff=1.5)
+row0.shift(UP * 0.9)
+
+row30 = VGroup(
+    MathTex("30°", font_size=24), MathTex("\\frac{1}{2}", font_size=24, color=BLUE),
+    MathTex("\\frac{\\sqrt{3}}{2}", font_size=24, color=GREEN), MathTex("\\frac{1}{\\sqrt{3}}", font_size=24, color=RED)
+).arrange(RIGHT, buff=1.2)
+row30.shift(UP * 0.3)
+
+row45 = VGroup(
+    MathTex("45°", font_size=24), MathTex("\\frac{1}{\\sqrt{2}}", font_size=24, color=BLUE),
+    MathTex("\\frac{1}{\\sqrt{2}}", font_size=24, color=GREEN), MathTex("1", font_size=24, color=RED)
+).arrange(RIGHT, buff=1.2)
+row45.shift(DOWN * 0.3)
+
+row60 = VGroup(
+    MathTex("60°", font_size=24), MathTex("\\frac{\\sqrt{3}}{2}", font_size=24, color=BLUE),
+    MathTex("\\frac{1}{2}", font_size=24, color=GREEN), MathTex("\\sqrt{3}", font_size=24, color=RED)
+).arrange(RIGHT, buff=1.2)
+row60.shift(DOWN * 0.9)
+
+row90 = VGroup(
+    MathTex("90°", font_size=24), MathTex("1", font_size=24, color=BLUE),
+    MathTex("0", font_size=24, color=GREEN), MathTex("\\text{undefined}", font_size=20, color=RED)
+).arrange(RIGHT, buff=1)
+row90.shift(DOWN * 1.5)
+
+# Lines
+hline = Line(LEFT * 4 + UP * 1.2, RIGHT * 4 + UP * 1.2, color=WHITE)
+
+# Tip
+tip = Text("MEMORIZE these for non-calculator papers!", font_size=22, color=ORANGE)
+tip.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(headers), Create(hline), run_time=1.0)
+self.play(Write(row0), run_time=0.8)
+self.play(Write(row30), run_time=0.8)
+self.play(Write(row45), run_time=0.8)
+self.play(Write(row60), run_time=0.8)
+self.play(Write(row90), run_time=0.8)
+self.play(Write(tip), run_time=1.0)
+```
+
+## SINE RULE
+```python
+# For any triangle
+title = Text("The Sine Rule", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Triangle (non-right angled)
+triangle = Polygon(
+    LEFT * 2.5 + DOWN * 1, RIGHT * 2 + DOWN * 1, UP * 1.2,
+    color=WHITE, fill_opacity=0.1
+)
+
+# Labels
+label_a = MathTex("a", font_size=28, color=BLUE).shift(RIGHT * 1 + UP * 0.5)
+label_b = MathTex("b", font_size=28, color=GREEN).shift(LEFT * 1.5 + UP * 0.5)
+label_c = MathTex("c", font_size=28, color=RED).shift(DOWN * 1.5)
+
+label_A = MathTex("A", font_size=28, color=BLUE).shift(LEFT * 2.5 + DOWN * 0.5)
+label_B = MathTex("B", font_size=28, color=GREEN).shift(RIGHT * 2 + DOWN * 0.5)
+label_C = MathTex("C", font_size=28, color=RED).shift(UP * 1.6)
+
+# Formula
+formula = MathTex("\\frac{a}{\\sin A} = \\frac{b}{\\sin B} = \\frac{c}{\\sin C}", font_size=44, color=WHITE)
+formula.shift(DOWN * 2)
+formula_box = SurroundingRectangle(formula, color=YELLOW, buff=0.3)
+
+# Alternative form
+alt = MathTex("\\text{or } \\frac{\\sin A}{a} = \\frac{\\sin B}{b} = \\frac{\\sin C}{c}", font_size=32, color=GRAY)
+alt.to_edge(DOWN, buff=0.5)
+
+# Usage note
+note = VGroup(
+    Text("Use for finding sides", font_size=18, color=GRAY),
+    Text("Use for finding angles", font_size=18, color=GRAY)
+).arrange(DOWN, buff=0.1)
+note.shift(RIGHT * 4 + DOWN * 2.2)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(triangle), run_time=1.0)
+self.play(Write(label_a), Write(label_b), Write(label_c), run_time=1.0)
+self.play(Write(label_A), Write(label_B), Write(label_C), run_time=1.0)
+self.play(Write(formula), Create(formula_box), run_time=1.5)
+self.play(Write(alt), run_time=1.0)
+```
+
+## COSINE RULE
+```python
+# For any triangle
+title = Text("The Cosine Rule", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Triangle
+triangle = Polygon(
+    LEFT * 2.5 + DOWN * 1, RIGHT * 2 + DOWN * 1, UP * 1,
+    color=WHITE, fill_opacity=0.1
+)
+
+# Labels
+label_a = MathTex("a", font_size=28, color=BLUE).shift(RIGHT * 0.8 + UP * 0.3)
+label_b = MathTex("b", font_size=28, color=GREEN).shift(LEFT * 1.5 + UP * 0.3)
+label_c = MathTex("c", font_size=28, color=RED).shift(DOWN * 1.5)
+
+label_A = MathTex("A", font_size=28, color=BLUE).shift(LEFT * 2.5 + DOWN * 0.5)
+label_C = MathTex("C", font_size=28, color=RED).shift(UP * 1.4)
+
+# Formula for finding side
+formula_side = VGroup(
+    Text("Finding a side:", font_size=22, color=GREEN),
+    MathTex("a^2 = b^2 + c^2 - 2bc \\cos A", font_size=36, color=WHITE)
+).arrange(DOWN, buff=0.2)
+formula_side.shift(DOWN * 1.5 + LEFT * 2.5)
+
+# Formula for finding angle
+formula_angle = VGroup(
+    Text("Finding an angle:", font_size=22, color=BLUE),
+    MathTex("\\cos A = \\frac{b^2 + c^2 - a^2}{2bc}", font_size=36, color=WHITE)
+).arrange(DOWN, buff=0.2)
+formula_angle.shift(DOWN * 1.5 + RIGHT * 2.5)
+
+# When to use
+when = VGroup(
+    Text("Use when:", font_size=20, color=ORANGE),
+    Text("• Finding side: 2 sides + included angle (SAS)", font_size=18),
+    Text("• Finding angle: all 3 sides known (SSS)", font_size=18)
+).arrange(DOWN, buff=0.1, aligned_edge=LEFT)
+when.to_edge(DOWN, buff=0.4)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(triangle), run_time=1.0)
+self.play(Write(label_a), Write(label_b), Write(label_c), run_time=1.0)
+self.play(Write(label_A), Write(label_C), run_time=0.8)
+self.play(Write(formula_side), run_time=1.5)
+self.play(Write(formula_angle), run_time=1.5)
+self.play(Write(when), run_time=1.5)
+```
+
+## BEARINGS
+```python
+# Three-figure bearings
+title = Text("Bearings", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Compass
+compass = Circle(radius=2, color=WHITE).shift(LEFT * 2.5)
+
+# Directions
+north = Line(LEFT * 2.5, LEFT * 2.5 + UP * 2.5, color=BLUE)
+n_label = Text("N", font_size=24, color=BLUE).shift(LEFT * 2.5 + UP * 2.8)
+
+# Bearing example
+bearing_line = Line(LEFT * 2.5, LEFT * 0.5 + UP * 1.5, color=RED)
+arc = Arc(radius=0.6, start_angle=PI/2, angle=-PI/4, color=GREEN).shift(LEFT * 2.5)
+bearing = MathTex("045°", font_size=28, color=GREEN).shift(LEFT * 1.8 + UP * 1)
+
+# Rules
+rules = VGroup(
+    Text("Rules for Bearings:", font_size=24, color=YELLOW),
+    Text("1. Always measured from NORTH", font_size=20),
+    Text("2. Always measured CLOCKWISE", font_size=20),
+    Text("3. Always written as 3 digits", font_size=20),
+    Text("   (e.g., 045° not 45°)", font_size=18, color=GRAY)
+).arrange(DOWN, buff=0.2, aligned_edge=LEFT)
+rules.shift(RIGHT * 3 + UP * 0.5)
+
+# Examples
+examples = VGroup(
+    MathTex("\\text{East} = 090°", font_size=24),
+    MathTex("\\text{South} = 180°", font_size=24),
+    MathTex("\\text{West} = 270°", font_size=24)
+).arrange(DOWN, buff=0.2, aligned_edge=LEFT)
+examples.shift(RIGHT * 3 + DOWN * 1.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(compass), run_time=1.0)
+self.play(Create(north), Write(n_label), run_time=0.8)
+self.play(Create(bearing_line), Create(arc), Write(bearing), run_time=1.5)
+self.play(Write(rules), run_time=2.0)
+self.play(Write(examples), run_time=1.5)
+```
+
+## AREA OF TRIANGLE (TRIG)
+```python
+# Area = ½ab sin C
+title = Text("Area of a Triangle (Trig)", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Triangle
+triangle = Polygon(
+    LEFT * 2.5 + DOWN * 1, RIGHT * 2 + DOWN * 1, LEFT * 1 + UP * 1.5,
+    color=WHITE, fill_opacity=0.1
+)
+
+# Labels
+label_a = MathTex("a", font_size=28, color=BLUE).shift(LEFT * 2 + UP * 0.5)
+label_b = MathTex("b", font_size=28, color=GREEN).shift(DOWN * 1.5)
+label_C = MathTex("C", font_size=28, color=RED).shift(LEFT * 2.5 + DOWN * 0.5)
+
+# Arc for angle
+arc = Arc(radius=0.4, start_angle=0, angle=1.2, color=RED).shift(LEFT * 2.5 + DOWN * 1)
+
+# Formula
+formula = MathTex("\\text{Area} = \\frac{1}{2} ab \\sin C", font_size=56, color=WHITE)
+formula.shift(DOWN * 2)
+formula_box = SurroundingRectangle(formula, color=YELLOW, buff=0.3)
+
+# Explanation
+explain = VGroup(
+    Text("Use when you know:", font_size=22, color=GRAY),
+    Text("Two sides and the included angle (SAS)", font_size=20, color=ORANGE)
+).arrange(DOWN, buff=0.15)
+explain.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(triangle), run_time=1.0)
+self.play(Write(label_a), Write(label_b), run_time=0.8)
+self.play(Write(label_C), Create(arc), run_time=0.8)
+self.play(Write(formula), Create(formula_box), run_time=1.5)
+self.play(Write(explain), run_time=1.0)
+```

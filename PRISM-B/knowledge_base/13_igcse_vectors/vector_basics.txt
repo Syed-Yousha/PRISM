@@ -1,0 +1,708 @@
+================================================================================
+IGCSE/O-LEVEL: VECTORS
+================================================================================
+
+## 1. Vector Basics - Notation and Representation
+
+```python
+from manim import *
+import numpy as np
+
+class VectorBasics(Scene):
+    def construct(self):
+        title = Text("Vector Notation", font_size=40, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Different notations
+        notations = VGroup(
+            VGroup(
+                Text("Column vector:", font_size=20),
+                MathTex(r"\vec{a} = \begin{pmatrix} 3 \\ 4 \end{pmatrix}", font_size=28)
+            ).arrange(RIGHT, buff=0.5),
+            VGroup(
+                Text("Directed line segment:", font_size=20),
+                MathTex(r"\overrightarrow{AB}", font_size=28)
+            ).arrange(RIGHT, buff=0.5),
+            VGroup(
+                Text("Bold letter:", font_size=20),
+                MathTex(r"\mathbf{a}", font_size=28)
+            ).arrange(RIGHT, buff=0.5),
+            VGroup(
+                Text("Underlined (handwritten):", font_size=20),
+                MathTex(r"\underline{a}", font_size=28)
+            ).arrange(RIGHT, buff=0.5),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.3)
+        notations.shift(LEFT * 1.5)
+        
+        for n in notations:
+            self.play(Write(n), run_time=0.5)
+        
+        # Visual representation
+        axes = Axes(
+            x_range=[-1, 5, 1],
+            y_range=[-1, 5, 1],
+            x_length=3,
+            y_length=3,
+            axis_config={"include_tip": True}
+        )
+        axes.shift(RIGHT * 3.5 + DOWN * 0.5)
+        
+        vector = Arrow(axes.c2p(0, 0), axes.c2p(3, 4), color=YELLOW, buff=0)
+        vec_label = MathTex(r"\begin{pmatrix} 3 \\ 4 \end{pmatrix}", font_size=22, color=YELLOW)
+        vec_label.next_to(vector.get_center(), RIGHT, buff=0.2)
+        
+        self.play(Create(axes))
+        self.play(Create(vector), Write(vec_label))
+        
+        # Components
+        x_comp = MathTex(r"x = 3", font_size=18, color=RED)
+        x_comp.next_to(axes.c2p(1.5, 0), DOWN, buff=0.2)
+        
+        y_comp = MathTex(r"y = 4", font_size=18, color=GREEN)
+        y_comp.next_to(axes.c2p(3, 2), RIGHT, buff=0.2)
+        
+        self.play(Write(x_comp), Write(y_comp))
+        
+        self.wait(2)
+```
+
+## 2. Vector Addition
+
+```python
+from manim import *
+import numpy as np
+
+class VectorAddition(Scene):
+    def construct(self):
+        title = Text("Vector Addition", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Algebraic method
+        formula = MathTex(
+            r"\begin{pmatrix} a \\ b \end{pmatrix} + \begin{pmatrix} c \\ d \end{pmatrix}"
+            r"= \begin{pmatrix} a+c \\ b+d \end{pmatrix}",
+            font_size=28
+        )
+        formula.next_to(title, DOWN, buff=0.3)
+        
+        self.play(Write(formula))
+        
+        # Example
+        example = MathTex(
+            r"\begin{pmatrix} 3 \\ 2 \end{pmatrix} + \begin{pmatrix} 1 \\ 4 \end{pmatrix}"
+            r"= \begin{pmatrix} 4 \\ 6 \end{pmatrix}",
+            font_size=26, color=GREEN
+        )
+        example.next_to(formula, DOWN, buff=0.2)
+        
+        self.play(Write(example))
+        
+        # Visual - Triangle Rule
+        axes = Axes(
+            x_range=[-1, 6, 1],
+            y_range=[-1, 7, 1],
+            x_length=4,
+            y_length=4,
+            axis_config={"include_tip": True}
+        )
+        axes.shift(DOWN * 0.8)
+        
+        self.play(Create(axes))
+        
+        # Vector a
+        vec_a = Arrow(axes.c2p(0, 0), axes.c2p(3, 2), color=RED, buff=0)
+        a_label = MathTex(r"\vec{a}", font_size=20, color=RED)
+        a_label.next_to(vec_a.get_center(), DOWN + LEFT, buff=0.1)
+        
+        self.play(Create(vec_a), Write(a_label))
+        
+        # Vector b (starting from end of a)
+        vec_b = Arrow(axes.c2p(3, 2), axes.c2p(4, 6), color=BLUE, buff=0)
+        b_label = MathTex(r"\vec{b}", font_size=20, color=BLUE)
+        b_label.next_to(vec_b.get_center(), RIGHT, buff=0.1)
+        
+        self.play(Create(vec_b), Write(b_label))
+        
+        # Resultant
+        resultant = Arrow(axes.c2p(0, 0), axes.c2p(4, 6), color=YELLOW, buff=0)
+        r_label = MathTex(r"\vec{a} + \vec{b}", font_size=20, color=YELLOW)
+        r_label.next_to(resultant.get_center(), LEFT, buff=0.2)
+        
+        self.play(Create(resultant), Write(r_label))
+        
+        # Triangle rule label
+        rule = Text("Triangle Rule", font_size=18, color=WHITE)
+        rule.to_edge(DOWN, buff=0.3)
+        
+        self.play(Write(rule))
+        
+        self.wait(2)
+```
+
+## 3. Vector Subtraction
+
+```python
+from manim import *
+import numpy as np
+
+class VectorSubtraction(Scene):
+    def construct(self):
+        title = Text("Vector Subtraction", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Formula
+        formula = MathTex(
+            r"\begin{pmatrix} a \\ b \end{pmatrix} - \begin{pmatrix} c \\ d \end{pmatrix}"
+            r"= \begin{pmatrix} a-c \\ b-d \end{pmatrix}",
+            font_size=28
+        )
+        formula.next_to(title, DOWN, buff=0.2)
+        
+        self.play(Write(formula))
+        
+        # Example
+        example = MathTex(
+            r"\begin{pmatrix} 5 \\ 7 \end{pmatrix} - \begin{pmatrix} 2 \\ 3 \end{pmatrix}"
+            r"= \begin{pmatrix} 3 \\ 4 \end{pmatrix}",
+            font_size=26, color=GREEN
+        )
+        example.next_to(formula, DOWN, buff=0.2)
+        
+        self.play(Write(example))
+        
+        # Alternative view
+        alt = MathTex(r"\vec{a} - \vec{b} = \vec{a} + (-\vec{b})", font_size=24, color=YELLOW)
+        alt.next_to(example, DOWN, buff=0.3)
+        
+        self.play(Write(alt))
+        
+        # Visual
+        axes = Axes(
+            x_range=[-3, 6, 1],
+            y_range=[-4, 8, 1],
+            x_length=4,
+            y_length=4,
+            axis_config={"include_tip": True}
+        )
+        axes.shift(DOWN * 0.5)
+        
+        self.play(Create(axes))
+        
+        # Vector a
+        vec_a = Arrow(axes.c2p(0, 0), axes.c2p(5, 7), color=RED, buff=0)
+        a_label = MathTex(r"\vec{a}", font_size=18, color=RED)
+        a_label.next_to(vec_a.get_center(), LEFT, buff=0.1)
+        
+        # Vector b
+        vec_b = Arrow(axes.c2p(0, 0), axes.c2p(2, 3), color=BLUE, buff=0)
+        b_label = MathTex(r"\vec{b}", font_size=18, color=BLUE)
+        b_label.next_to(vec_b.get_center(), RIGHT, buff=0.1)
+        
+        self.play(Create(vec_a), Write(a_label), Create(vec_b), Write(b_label))
+        
+        # a - b (from b to a)
+        diff = Arrow(axes.c2p(2, 3), axes.c2p(5, 7), color=GREEN, buff=0)
+        diff_label = MathTex(r"\vec{a} - \vec{b}", font_size=18, color=GREEN)
+        diff_label.next_to(diff.get_center(), RIGHT, buff=0.1)
+        
+        self.play(Create(diff), Write(diff_label))
+        
+        self.wait(2)
+```
+
+## 4. Scalar Multiplication of Vectors
+
+```python
+from manim import *
+import numpy as np
+
+class ScalarVectorMultiplication(Scene):
+    def construct(self):
+        title = Text("Scalar Multiplication", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Formula
+        formula = MathTex(
+            r"k \begin{pmatrix} a \\ b \end{pmatrix} = \begin{pmatrix} ka \\ kb \end{pmatrix}",
+            font_size=30
+        )
+        formula.next_to(title, DOWN, buff=0.3)
+        
+        self.play(Write(formula))
+        
+        # Examples
+        examples = VGroup(
+            MathTex(r"2 \begin{pmatrix} 3 \\ 4 \end{pmatrix} = \begin{pmatrix} 6 \\ 8 \end{pmatrix}", font_size=24),
+            MathTex(r"-1 \begin{pmatrix} 3 \\ 4 \end{pmatrix} = \begin{pmatrix} -3 \\ -4 \end{pmatrix}", font_size=24),
+            MathTex(r"\frac{1}{2} \begin{pmatrix} 6 \\ 4 \end{pmatrix} = \begin{pmatrix} 3 \\ 2 \end{pmatrix}", font_size=24),
+        ).arrange(DOWN, buff=0.2)
+        examples.shift(LEFT * 3 + DOWN * 0.5)
+        
+        self.play(Write(examples))
+        
+        # Visual
+        axes = Axes(
+            x_range=[-4, 7, 1],
+            y_range=[-5, 9, 1],
+            x_length=4,
+            y_length=4,
+            axis_config={"include_tip": True}
+        )
+        axes.shift(RIGHT * 2.5 + DOWN * 0.5)
+        
+        self.play(Create(axes))
+        
+        # Original vector
+        vec = Arrow(axes.c2p(0, 0), axes.c2p(3, 4), color=WHITE, buff=0)
+        vec_label = MathTex(r"\vec{a}", font_size=18)
+        vec_label.next_to(vec.get_center(), LEFT, buff=0.1)
+        
+        self.play(Create(vec), Write(vec_label))
+        
+        # 2a
+        vec_2a = Arrow(axes.c2p(0, 0), axes.c2p(6, 8), color=GREEN, buff=0)
+        label_2a = MathTex(r"2\vec{a}", font_size=18, color=GREEN)
+        label_2a.next_to(vec_2a.get_center(), RIGHT, buff=0.1)
+        
+        self.play(Create(vec_2a), Write(label_2a))
+        
+        # -a
+        vec_neg = Arrow(axes.c2p(0, 0), axes.c2p(-3, -4), color=RED, buff=0)
+        label_neg = MathTex(r"-\vec{a}", font_size=18, color=RED)
+        label_neg.next_to(vec_neg.get_center(), LEFT, buff=0.1)
+        
+        self.play(Create(vec_neg), Write(label_neg))
+        
+        # Note
+        note = Text("k > 1: longer, k < 1: shorter, k < 0: opposite direction", font_size=16, color=GRAY)
+        note.to_edge(DOWN, buff=0.3)
+        
+        self.play(Write(note))
+        
+        self.wait(2)
+```
+
+## 5. Position Vectors
+
+```python
+from manim import *
+import numpy as np
+
+class PositionVectors(Scene):
+    def construct(self):
+        title = Text("Position Vectors", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        definition = Text("Position vector = vector from Origin to a point", font_size=22, color=YELLOW)
+        definition.next_to(title, DOWN, buff=0.2)
+        
+        self.play(Write(definition))
+        
+        # Axes
+        axes = Axes(
+            x_range=[-1, 6, 1],
+            y_range=[-1, 5, 1],
+            x_length=5,
+            y_length=4,
+            axis_config={"include_tip": True, "include_numbers": True}
+        )
+        axes.shift(DOWN * 0.5)
+        
+        self.play(Create(axes))
+        
+        # Point A
+        A = Dot(axes.c2p(4, 3), color=YELLOW)
+        A_label = MathTex("A(4, 3)", font_size=20, color=YELLOW)
+        A_label.next_to(A, UR, buff=0.1)
+        
+        self.play(Create(A), Write(A_label))
+        
+        # Position vector OA
+        OA = Arrow(axes.c2p(0, 0), axes.c2p(4, 3), color=GREEN, buff=0)
+        OA_label = MathTex(r"\overrightarrow{OA} = \begin{pmatrix} 4 \\ 3 \end{pmatrix}", font_size=22, color=GREEN)
+        OA_label.next_to(OA.get_center(), DOWN + LEFT, buff=0.2)
+        
+        self.play(Create(OA), Write(OA_label))
+        
+        # Point B
+        B = Dot(axes.c2p(2, 1), color=ORANGE)
+        B_label = MathTex("B(2, 1)", font_size=20, color=ORANGE)
+        B_label.next_to(B, DOWN, buff=0.1)
+        
+        OB = Arrow(axes.c2p(0, 0), axes.c2p(2, 1), color=ORANGE, buff=0)
+        
+        self.play(Create(B), Write(B_label), Create(OB))
+        
+        # Vector AB
+        AB = Arrow(axes.c2p(2, 1), axes.c2p(4, 3), color=RED, buff=0)
+        AB_label = MathTex(r"\overrightarrow{AB}", font_size=18, color=RED)
+        AB_label.next_to(AB.get_center(), RIGHT, buff=0.1)
+        
+        self.play(Create(AB), Write(AB_label))
+        
+        # Formula
+        formula = MathTex(r"\overrightarrow{AB} = \overrightarrow{OB} - \overrightarrow{OA} = \vec{b} - \vec{a}", font_size=24)
+        formula.to_edge(DOWN, buff=0.5)
+        
+        box = SurroundingRectangle(formula, color=BLUE)
+        
+        self.play(Write(formula), Create(box))
+        
+        self.wait(2)
+```
+
+## 6. Magnitude of a Vector
+
+```python
+from manim import *
+import numpy as np
+
+class VectorMagnitude(Scene):
+    def construct(self):
+        title = Text("Magnitude of a Vector", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Formula
+        formula = MathTex(
+            r"|\vec{a}| = \left| \begin{pmatrix} x \\ y \end{pmatrix} \right| = \sqrt{x^2 + y^2}",
+            font_size=30
+        )
+        formula.next_to(title, DOWN, buff=0.3)
+        
+        box = SurroundingRectangle(formula, color=YELLOW)
+        
+        self.play(Write(formula), Create(box))
+        
+        # Example
+        example_label = Text("Example:", font_size=22)
+        example_label.shift(UP * 0.5 + LEFT * 4)
+        
+        example = VGroup(
+            MathTex(r"\vec{a} = \begin{pmatrix} 3 \\ 4 \end{pmatrix}", font_size=24),
+            MathTex(r"|\vec{a}| = \sqrt{3^2 + 4^2}", font_size=24),
+            MathTex(r"= \sqrt{9 + 16}", font_size=24),
+            MathTex(r"= \sqrt{25} = 5", font_size=26, color=GREEN),
+        ).arrange(DOWN, buff=0.15)
+        example.next_to(example_label, DOWN, buff=0.2, aligned_edge=LEFT)
+        
+        self.play(Write(example_label), Write(example))
+        
+        # Visual with Pythagoras
+        axes = Axes(
+            x_range=[-1, 5, 1],
+            y_range=[-1, 5, 1],
+            x_length=3,
+            y_length=3,
+            axis_config={"include_tip": True}
+        )
+        axes.shift(RIGHT * 2.5 + DOWN * 0.8)
+        
+        self.play(Create(axes))
+        
+        # Vector
+        vec = Arrow(axes.c2p(0, 0), axes.c2p(3, 4), color=YELLOW, buff=0)
+        
+        # Right triangle
+        horiz = Line(axes.c2p(0, 0), axes.c2p(3, 0), color=RED)
+        vert = Line(axes.c2p(3, 0), axes.c2p(3, 4), color=BLUE)
+        
+        self.play(Create(horiz), Create(vert), Create(vec))
+        
+        # Labels
+        x_label = MathTex("3", font_size=18, color=RED)
+        x_label.next_to(horiz, DOWN, buff=0.1)
+        
+        y_label = MathTex("4", font_size=18, color=BLUE)
+        y_label.next_to(vert, RIGHT, buff=0.1)
+        
+        mag_label = MathTex("5", font_size=18, color=YELLOW)
+        mag_label.next_to(vec.get_center(), UP + LEFT, buff=0.1)
+        
+        self.play(Write(x_label), Write(y_label), Write(mag_label))
+        
+        # Note
+        note = Text("Uses Pythagoras' Theorem!", font_size=18, color=GRAY)
+        note.to_edge(DOWN, buff=0.3)
+        
+        self.play(Write(note))
+        
+        self.wait(2)
+```
+
+## 7. Unit Vectors
+
+```python
+from manim import *
+import numpy as np
+
+class UnitVectors(Scene):
+    def construct(self):
+        title = Text("Unit Vectors", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        definition = Text("A unit vector has magnitude 1", font_size=24, color=YELLOW)
+        definition.next_to(title, DOWN, buff=0.2)
+        
+        self.play(Write(definition))
+        
+        # Formula to find unit vector
+        formula = MathTex(
+            r"\hat{a} = \frac{\vec{a}}{|\vec{a}|}",
+            font_size=30
+        )
+        formula.next_to(definition, DOWN, buff=0.3)
+        
+        self.play(Write(formula))
+        
+        # Example
+        example = VGroup(
+            MathTex(r"\text{Find unit vector in direction of } \begin{pmatrix} 6 \\ 8 \end{pmatrix}", font_size=22),
+            MathTex(r"|\vec{a}| = \sqrt{6^2 + 8^2} = \sqrt{100} = 10", font_size=22),
+            MathTex(r"\hat{a} = \frac{1}{10} \begin{pmatrix} 6 \\ 8 \end{pmatrix} = \begin{pmatrix} 0.6 \\ 0.8 \end{pmatrix}", font_size=22, color=GREEN),
+        ).arrange(DOWN, buff=0.2)
+        example.shift(DOWN * 1)
+        
+        for e in example:
+            self.play(Write(e), run_time=0.6)
+        
+        # Check: verify magnitude is 1
+        check = MathTex(r"\text{Check: } \sqrt{0.6^2 + 0.8^2} = \sqrt{0.36 + 0.64} = \sqrt{1} = 1 \checkmark", 
+                       font_size=20, color=GREEN)
+        check.to_edge(DOWN, buff=0.4)
+        
+        self.play(Write(check))
+        
+        self.wait(2)
+```
+
+## 8. Parallel Vectors
+
+```python
+from manim import *
+import numpy as np
+
+class ParallelVectors(Scene):
+    def construct(self):
+        title = Text("Parallel Vectors", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Definition
+        definition = VGroup(
+            Text("Vectors are parallel if one is a", font_size=22),
+            Text("scalar multiple of the other", font_size=22),
+        ).arrange(DOWN, buff=0.1)
+        definition.next_to(title, DOWN, buff=0.2)
+        
+        self.play(Write(definition))
+        
+        # Formula
+        formula = MathTex(r"\vec{b} = k\vec{a} \text{ for some scalar } k", font_size=26, color=YELLOW)
+        formula.next_to(definition, DOWN, buff=0.3)
+        
+        self.play(Write(formula))
+        
+        # Example
+        example = VGroup(
+            MathTex(r"\vec{a} = \begin{pmatrix} 2 \\ 3 \end{pmatrix}, \quad \vec{b} = \begin{pmatrix} 6 \\ 9 \end{pmatrix}", font_size=24),
+            MathTex(r"\vec{b} = 3\vec{a} \quad \therefore \text{ parallel}", font_size=24, color=GREEN),
+        ).arrange(DOWN, buff=0.2)
+        example.shift(DOWN * 0.5)
+        
+        self.play(Write(example))
+        
+        # Visual
+        axes = Axes(
+            x_range=[-1, 8, 1],
+            y_range=[-1, 10, 1],
+            x_length=3.5,
+            y_length=3.5,
+            axis_config={"include_tip": True}
+        )
+        axes.shift(RIGHT * 3 + DOWN * 0.5)
+        
+        self.play(Create(axes))
+        
+        # Vectors
+        vec_a = Arrow(axes.c2p(0, 0), axes.c2p(2, 3), color=RED, buff=0)
+        a_label = MathTex(r"\vec{a}", font_size=16, color=RED)
+        a_label.next_to(vec_a.get_center(), LEFT, buff=0.1)
+        
+        vec_b = Arrow(axes.c2p(0, 0), axes.c2p(6, 9), color=BLUE, buff=0)
+        b_label = MathTex(r"\vec{b}", font_size=16, color=BLUE)
+        b_label.next_to(vec_b.get_center(), RIGHT, buff=0.1)
+        
+        self.play(Create(vec_a), Write(a_label))
+        self.play(Create(vec_b), Write(b_label))
+        
+        # Note
+        note = Text("Same direction = same line when extended", font_size=16, color=GRAY)
+        note.to_edge(DOWN, buff=0.3)
+        
+        self.play(Write(note))
+        
+        self.wait(2)
+```
+
+## 9. Vector Geometry - Midpoint
+
+```python
+from manim import *
+import numpy as np
+
+class VectorMidpoint(Scene):
+    def construct(self):
+        title = Text("Finding Midpoint Using Vectors", font_size=32, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Formula
+        formula = MathTex(
+            r"\text{Midpoint M: } \overrightarrow{OM} = \frac{1}{2}(\overrightarrow{OA} + \overrightarrow{OB})",
+            font_size=24
+        )
+        formula.next_to(title, DOWN, buff=0.2)
+        
+        self.play(Write(formula))
+        
+        # Example
+        problem = Text("Find midpoint of A(2, 6) and B(8, 4)", font_size=20)
+        problem.next_to(formula, DOWN, buff=0.2)
+        
+        self.play(Write(problem))
+        
+        solution = VGroup(
+            MathTex(r"\overrightarrow{OM} = \frac{1}{2}\left(\begin{pmatrix} 2 \\ 6 \end{pmatrix} + \begin{pmatrix} 8 \\ 4 \end{pmatrix}\right)", font_size=22),
+            MathTex(r"= \frac{1}{2}\begin{pmatrix} 10 \\ 10 \end{pmatrix} = \begin{pmatrix} 5 \\ 5 \end{pmatrix}", font_size=22, color=GREEN),
+        ).arrange(DOWN, buff=0.15)
+        solution.shift(LEFT * 3 + DOWN * 1)
+        
+        self.play(Write(solution))
+        
+        # Visual
+        axes = Axes(
+            x_range=[-1, 10, 1],
+            y_range=[-1, 8, 1],
+            x_length=4,
+            y_length=3,
+            axis_config={"include_tip": True}
+        )
+        axes.shift(RIGHT * 2.5 + DOWN * 0.8)
+        
+        self.play(Create(axes))
+        
+        # Points
+        A = Dot(axes.c2p(2, 6), color=RED)
+        A_label = MathTex("A", font_size=18, color=RED).next_to(A, UP)
+        
+        B = Dot(axes.c2p(8, 4), color=BLUE)
+        B_label = MathTex("B", font_size=18, color=BLUE).next_to(B, UP)
+        
+        M = Dot(axes.c2p(5, 5), color=GREEN)
+        M_label = MathTex("M(5,5)", font_size=16, color=GREEN).next_to(M, DOWN)
+        
+        self.play(Create(A), Write(A_label), Create(B), Write(B_label))
+        
+        # Line AB
+        line_AB = Line(axes.c2p(2, 6), axes.c2p(8, 4), color=WHITE)
+        self.play(Create(line_AB))
+        
+        self.play(Create(M), Write(M_label))
+        
+        self.wait(2)
+```
+
+## 10. Vector Geometry - Proving Collinearity
+
+```python
+from manim import *
+import numpy as np
+
+class CollinearityProof(Scene):
+    def construct(self):
+        title = Text("Proving Points are Collinear", font_size=32, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        definition = Text("Collinear = points lie on the same straight line", font_size=20, color=YELLOW)
+        definition.next_to(title, DOWN, buff=0.15)
+        
+        self.play(Write(definition))
+        
+        method = VGroup(
+            Text("To prove A, B, C are collinear:", font_size=18),
+            Text("1. Show AB is parallel to AC (scalar multiple)", font_size=16),
+            Text("2. They share point A", font_size=16),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.1)
+        method.next_to(definition, DOWN, buff=0.2)
+        
+        self.play(Write(method))
+        
+        # Example
+        example = VGroup(
+            MathTex(r"\vec{a} = \begin{pmatrix} 1 \\ 2 \end{pmatrix}, \vec{b} = \begin{pmatrix} 4 \\ 5 \end{pmatrix}, \vec{c} = \begin{pmatrix} 7 \\ 8 \end{pmatrix}", font_size=20),
+            MathTex(r"\overrightarrow{AB} = \vec{b} - \vec{a} = \begin{pmatrix} 3 \\ 3 \end{pmatrix}", font_size=20),
+            MathTex(r"\overrightarrow{AC} = \vec{c} - \vec{a} = \begin{pmatrix} 6 \\ 6 \end{pmatrix} = 2\overrightarrow{AB}", font_size=20),
+            MathTex(r"\therefore \text{ A, B, C are collinear}", font_size=22, color=GREEN),
+        ).arrange(DOWN, buff=0.15)
+        example.shift(DOWN * 1.3)
+        
+        for e in example:
+            self.play(Write(e), run_time=0.5)
+        
+        self.wait(2)
+```
+
+## 11. Vector Geometry - Ratio Problems
+
+```python
+from manim import *
+import numpy as np
+
+class VectorRatioProblems(Scene):
+    def construct(self):
+        title = Text("Dividing Line in a Ratio", font_size=32, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Problem
+        problem = Text("P divides AB in ratio 2:3. Find position vector of P.", font_size=18)
+        problem.next_to(title, DOWN, buff=0.2)
+        
+        self.play(Write(problem))
+        
+        # Given
+        given = MathTex(r"\vec{a} = \begin{pmatrix} 1 \\ 4 \end{pmatrix}, \quad \vec{b} = \begin{pmatrix} 6 \\ 9 \end{pmatrix}", font_size=22)
+        given.next_to(problem, DOWN, buff=0.2)
+        
+        self.play(Write(given))
+        
+        # Solution
+        solution = VGroup(
+            MathTex(r"\overrightarrow{AP} = \frac{2}{5}\overrightarrow{AB}", font_size=22),
+            MathTex(r"\overrightarrow{AB} = \vec{b} - \vec{a} = \begin{pmatrix} 5 \\ 5 \end{pmatrix}", font_size=22),
+            MathTex(r"\overrightarrow{AP} = \frac{2}{5}\begin{pmatrix} 5 \\ 5 \end{pmatrix} = \begin{pmatrix} 2 \\ 2 \end{pmatrix}", font_size=22),
+            MathTex(r"\vec{p} = \vec{a} + \overrightarrow{AP} = \begin{pmatrix} 1 \\ 4 \end{pmatrix} + \begin{pmatrix} 2 \\ 2 \end{pmatrix} = \begin{pmatrix} 3 \\ 6 \end{pmatrix}", font_size=22, color=GREEN),
+        ).arrange(DOWN, buff=0.15)
+        solution.shift(DOWN * 1)
+        
+        for s in solution:
+            self.play(Write(s), run_time=0.6)
+        
+        # Formula box
+        formula = MathTex(r"\text{Ratio } m:n \Rightarrow \vec{p} = \frac{n\vec{a} + m\vec{b}}{m+n}", font_size=22, color=ORANGE)
+        formula.to_edge(DOWN, buff=0.3)
+        
+        box = SurroundingRectangle(formula, color=ORANGE)
+        
+        self.play(Write(formula), Create(box))
+        
+        self.wait(2)
+```

@@ -1,0 +1,743 @@
+================================================================================
+IGCSE/O-LEVEL: CIRCLES - THEOREMS, ARCS, AND SECTORS
+================================================================================
+
+## 1. Parts of a Circle
+
+```python
+from manim import *
+import numpy as np
+
+class PartsOfCircle(Scene):
+    def construct(self):
+        title = Text("Parts of a Circle", font_size=40, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Draw circle
+        circle = Circle(radius=2, color=WHITE)
+        circle.shift(LEFT * 1)
+        center = Dot(LEFT * 1, color=YELLOW)
+        center_label = MathTex("O", font_size=24, color=YELLOW)
+        center_label.next_to(center, DOWN + LEFT, buff=0.1)
+        
+        self.play(Create(circle), Create(center), Write(center_label))
+        
+        # Radius
+        radius_end = LEFT * 1 + RIGHT * 2  # Point on circle
+        radius = Line(LEFT * 1, radius_end, color=RED, stroke_width=4)
+        radius_label = Text("Radius", font_size=18, color=RED)
+        radius_label.next_to(radius, UP, buff=0.1)
+        
+        self.play(Create(radius), Write(radius_label))
+        self.wait(0.5)
+        
+        # Diameter
+        diam_start = LEFT * 1 + LEFT * 2
+        diam_end = LEFT * 1 + RIGHT * 2
+        diameter = Line(diam_start, diam_end, color=GREEN, stroke_width=4)
+        diameter.shift(DOWN * 0.5)
+        diam_label = Text("Diameter = 2r", font_size=18, color=GREEN)
+        diam_label.next_to(diameter, DOWN, buff=0.1)
+        
+        self.play(Create(diameter), Write(diam_label))
+        self.wait(0.5)
+        
+        # Chord
+        chord_start = LEFT * 1 + np.array([-1.5, 1.32, 0])
+        chord_end = LEFT * 1 + np.array([1.5, 1.32, 0])
+        chord = Line(chord_start, chord_end, color=YELLOW, stroke_width=4)
+        chord_label = Text("Chord", font_size=18, color=YELLOW)
+        chord_label.next_to(chord, UP, buff=0.1)
+        
+        self.play(Create(chord), Write(chord_label))
+        
+        # Definitions list
+        definitions = VGroup(
+            Text("• Radius: center to edge", font_size=18, color=RED),
+            Text("• Diameter: across through center", font_size=18, color=GREEN),
+            Text("• Chord: line joining two points", font_size=18, color=YELLOW),
+            Text("• Circumference: perimeter", font_size=18, color=ORANGE),
+            Text("• Arc: part of circumference", font_size=18, color=PURPLE),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.2)
+        definitions.shift(RIGHT * 3.5)
+        
+        self.play(Write(definitions))
+        
+        self.wait(2)
+```
+
+## 2. Arc Length Formula
+
+```python
+from manim import *
+import numpy as np
+
+class ArcLengthFormula(Scene):
+    def construct(self):
+        title = Text("Arc Length", font_size=40, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Circle with arc
+        circle = Circle(radius=2, color=WHITE, stroke_opacity=0.5)
+        circle.shift(LEFT * 2)
+        
+        # Highlight arc
+        arc = Arc(radius=2, start_angle=0, angle=PI/3, arc_center=LEFT * 2, color=RED, stroke_width=6)
+        
+        self.play(Create(circle))
+        self.play(Create(arc))
+        
+        # Label angle
+        angle_arc = Arc(radius=0.5, start_angle=0, angle=PI/3, arc_center=LEFT * 2, color=YELLOW)
+        angle_label = MathTex(r"60°", font_size=24, color=YELLOW)
+        angle_label.next_to(LEFT * 2 + RIGHT * 0.8 + UP * 0.3, RIGHT, buff=0.1)
+        
+        self.play(Create(angle_arc), Write(angle_label))
+        
+        # Radii
+        r1 = Line(LEFT * 2, LEFT * 2 + RIGHT * 2, color=GREEN)
+        r2 = Line(LEFT * 2, LEFT * 2 + RIGHT * 2 * np.cos(PI/3) + UP * 2 * np.sin(PI/3), color=GREEN)
+        r_label = MathTex("r = 6", font_size=24, color=GREEN)
+        r_label.next_to(r1, DOWN, buff=0.1)
+        
+        self.play(Create(r1), Create(r2), Write(r_label))
+        
+        # Formula
+        formula_box = VGroup(
+            Text("Arc Length Formula:", font_size=24, color=YELLOW),
+            MathTex(r"\text{Arc length} = \frac{\theta}{360°} \times 2\pi r", font_size=28),
+        ).arrange(DOWN, buff=0.3)
+        formula_box.shift(RIGHT * 2.5 + UP * 1)
+        
+        self.play(Write(formula_box))
+        
+        # Calculation
+        calc = VGroup(
+            MathTex(r"\text{Arc} = \frac{60°}{360°} \times 2\pi \times 6", font_size=24),
+            MathTex(r"= \frac{1}{6} \times 12\pi", font_size=24),
+            MathTex(r"= 2\pi \text{ cm}", font_size=28, color=RED),
+            MathTex(r"\approx 6.28 \text{ cm}", font_size=24, color=GRAY),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.2)
+        calc.shift(RIGHT * 2.5 + DOWN * 1.5)
+        
+        for line in calc:
+            self.play(Write(line), run_time=0.6)
+        
+        # Arc label
+        arc_label = MathTex(r"2\pi", font_size=24, color=RED)
+        arc_label.next_to(arc, RIGHT + UP, buff=0.2)
+        self.play(Write(arc_label))
+        
+        self.wait(2)
+```
+
+## 3. Sector Area Formula
+
+```python
+from manim import *
+import numpy as np
+
+class SectorAreaFormula(Scene):
+    def construct(self):
+        title = Text("Area of a Sector", font_size=40, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Sector
+        sector = Sector(
+            outer_radius=2,
+            inner_radius=0,
+            angle=PI/2,
+            start_angle=0,
+            fill_color=YELLOW,
+            fill_opacity=0.5,
+            stroke_color=YELLOW
+        )
+        sector.shift(LEFT * 2)
+        
+        # Full circle for reference
+        circle = Circle(radius=2, color=WHITE, stroke_opacity=0.3)
+        circle.shift(LEFT * 2)
+        
+        self.play(Create(circle))
+        self.play(Create(sector))
+        
+        # Labels
+        angle_arc = Arc(radius=0.6, start_angle=0, angle=PI/2, arc_center=LEFT * 2, color=RED)
+        angle_label = MathTex(r"90°", font_size=24, color=RED)
+        angle_label.next_to(LEFT * 2 + RIGHT * 0.8 + UP * 0.3, RIGHT, buff=0.1)
+        
+        radius_label = MathTex(r"r = 8", font_size=24, color=WHITE)
+        radius_label.next_to(LEFT * 2 + RIGHT * 1, DOWN, buff=0.1)
+        
+        self.play(Create(angle_arc), Write(angle_label), Write(radius_label))
+        
+        # Formula
+        formula_box = VGroup(
+            Text("Sector Area Formula:", font_size=24, color=YELLOW),
+            MathTex(r"\text{Area} = \frac{\theta}{360°} \times \pi r^2", font_size=28),
+        ).arrange(DOWN, buff=0.3)
+        formula_box.shift(RIGHT * 2.5 + UP * 1)
+        
+        self.play(Write(formula_box))
+        
+        # Calculation
+        calc = VGroup(
+            MathTex(r"\text{Area} = \frac{90°}{360°} \times \pi \times 8^2", font_size=24),
+            MathTex(r"= \frac{1}{4} \times 64\pi", font_size=24),
+            MathTex(r"= 16\pi \text{ cm}^2", font_size=28, color=YELLOW),
+            MathTex(r"\approx 50.27 \text{ cm}^2", font_size=24, color=GRAY),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.2)
+        calc.shift(RIGHT * 2.5 + DOWN * 1.5)
+        
+        for line in calc:
+            self.play(Write(line), run_time=0.6)
+        
+        # Note: fraction of circle
+        note = Text("A 90° sector is 1/4 of the circle", font_size=20, color=ORANGE)
+        note.to_edge(DOWN, buff=0.5)
+        self.play(Write(note))
+        
+        self.wait(2)
+```
+
+## 4. Circle Theorem: Angle at Center
+
+```python
+from manim import *
+import numpy as np
+
+class AngleAtCenterTheorem(Scene):
+    def construct(self):
+        title = Text("Circle Theorem: Angle at Center", font_size=32, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Circle
+        circle = Circle(radius=2, color=WHITE)
+        center = Dot(ORIGIN, color=YELLOW)
+        O_label = MathTex("O", font_size=24, color=YELLOW).next_to(center, DOWN + LEFT, buff=0.1)
+        
+        self.play(Create(circle), Create(center), Write(O_label))
+        
+        # Points on circle
+        A = np.array([2 * np.cos(PI/6), 2 * np.sin(PI/6), 0])  # 30°
+        B = np.array([2 * np.cos(5*PI/6), 2 * np.sin(5*PI/6), 0])  # 150°
+        P = np.array([2 * np.cos(-PI/2), 2 * np.sin(-PI/2), 0])  # Bottom
+        
+        A_dot = Dot(A, color=RED)
+        B_dot = Dot(B, color=RED)
+        P_dot = Dot(P, color=GREEN)
+        
+        A_label = MathTex("A", font_size=24, color=RED).next_to(A, RIGHT + UP, buff=0.1)
+        B_label = MathTex("B", font_size=24, color=RED).next_to(B, LEFT + UP, buff=0.1)
+        P_label = MathTex("P", font_size=24, color=GREEN).next_to(P, DOWN, buff=0.1)
+        
+        self.play(
+            Create(A_dot), Create(B_dot), Create(P_dot),
+            Write(A_label), Write(B_label), Write(P_label)
+        )
+        
+        # Angle at center (AOB)
+        OA = Line(ORIGIN, A, color=BLUE)
+        OB = Line(ORIGIN, B, color=BLUE)
+        center_angle_arc = Arc(radius=0.4, start_angle=PI/6, angle=2*PI/3, color=BLUE)
+        center_angle_label = MathTex(r"120°", font_size=20, color=BLUE)
+        center_angle_label.shift(UP * 0.6)
+        
+        self.play(Create(OA), Create(OB))
+        self.play(Create(center_angle_arc), Write(center_angle_label))
+        
+        # Angle at circumference (APB)
+        PA = Line(P, A, color=GREEN)
+        PB = Line(P, B, color=GREEN)
+        circum_angle_arc = Arc(radius=0.3, start_angle=PI/6 + PI, angle=PI/3, arc_center=P, color=GREEN)
+        circum_angle_label = MathTex(r"60°", font_size=20, color=GREEN)
+        circum_angle_label.next_to(P, UP, buff=0.4)
+        
+        self.play(Create(PA), Create(PB))
+        self.play(Create(circum_angle_arc), Write(circum_angle_label))
+        
+        # Theorem statement
+        theorem = VGroup(
+            Text("Angle at center = 2 × Angle at circumference", font_size=22, color=YELLOW),
+            MathTex(r"120° = 2 \times 60°", font_size=28, color=WHITE)
+        ).arrange(DOWN, buff=0.3)
+        theorem.to_edge(DOWN, buff=0.5)
+        box = SurroundingRectangle(theorem, color=YELLOW)
+        
+        self.play(Write(theorem), Create(box))
+        
+        self.wait(2)
+```
+
+## 5. Circle Theorem: Angle in Semicircle
+
+```python
+from manim import *
+import numpy as np
+
+class AngleInSemicircle(Scene):
+    def construct(self):
+        title = Text("Angle in a Semicircle = 90°", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Circle
+        circle = Circle(radius=2, color=WHITE)
+        center = Dot(ORIGIN, color=YELLOW)
+        
+        self.play(Create(circle), Create(center))
+        
+        # Diameter AB
+        A = LEFT * 2
+        B = RIGHT * 2
+        diameter = Line(A, B, color=GREEN, stroke_width=4)
+        
+        A_dot = Dot(A, color=GREEN)
+        B_dot = Dot(B, color=GREEN)
+        A_label = MathTex("A", font_size=24, color=GREEN).next_to(A, LEFT, buff=0.1)
+        B_label = MathTex("B", font_size=24, color=GREEN).next_to(B, RIGHT, buff=0.1)
+        
+        self.play(Create(diameter), Create(A_dot), Create(B_dot), Write(A_label), Write(B_label))
+        
+        # Point C on circle
+        C = np.array([2 * np.cos(2*PI/3), 2 * np.sin(2*PI/3), 0])
+        C_dot = Dot(C, color=RED)
+        C_label = MathTex("C", font_size=24, color=RED).next_to(C, UP + LEFT, buff=0.1)
+        
+        self.play(Create(C_dot), Write(C_label))
+        
+        # Lines AC and BC
+        AC = Line(A, C, color=RED)
+        BC = Line(B, C, color=RED)
+        
+        self.play(Create(AC), Create(BC))
+        
+        # Right angle symbol at C
+        right_angle = RightAngle(
+            Line(C, A), Line(C, B),
+            length=0.25, color=YELLOW
+        )
+        
+        self.play(Create(right_angle))
+        
+        # Angle label
+        angle_label = MathTex(r"90°", font_size=24, color=YELLOW)
+        angle_label.next_to(C, DOWN + RIGHT, buff=0.3)
+        self.play(Write(angle_label))
+        
+        # Theorem box
+        theorem = Text("Angle in a semicircle is always 90°", font_size=24, color=YELLOW)
+        theorem.to_edge(DOWN, buff=0.8)
+        box = SurroundingRectangle(theorem, color=YELLOW)
+        
+        self.play(Write(theorem), Create(box))
+        
+        # Show it works for other positions
+        self.wait(1)
+        
+        # Move C to different positions
+        for new_angle in [PI/4, 3*PI/4]:
+            new_C = np.array([2 * np.cos(new_angle), 2 * np.sin(new_angle), 0])
+            new_AC = Line(A, new_C, color=RED)
+            new_BC = Line(B, new_C, color=RED)
+            
+            self.play(
+                Transform(C_dot, Dot(new_C, color=RED)),
+                Transform(AC, new_AC),
+                Transform(BC, new_BC),
+                C_label.animate.next_to(new_C, UP, buff=0.1),
+                angle_label.animate.next_to(new_C, DOWN, buff=0.2),
+                run_time=0.8
+            )
+            self.wait(0.5)
+        
+        self.wait(1)
+```
+
+## 6. Circle Theorem: Angles in Same Segment
+
+```python
+from manim import *
+import numpy as np
+
+class AnglesInSameSegment(Scene):
+    def construct(self):
+        title = Text("Angles in Same Segment are Equal", font_size=32, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Circle
+        circle = Circle(radius=2, color=WHITE)
+        self.play(Create(circle))
+        
+        # Chord AB
+        A = np.array([2 * np.cos(PI/6), 2 * np.sin(PI/6), 0])
+        B = np.array([2 * np.cos(5*PI/6), 2 * np.sin(5*PI/6), 0])
+        
+        chord = Line(A, B, color=GREEN, stroke_width=4)
+        A_dot = Dot(A, color=GREEN)
+        B_dot = Dot(B, color=GREEN)
+        A_label = MathTex("A", font_size=24, color=GREEN).next_to(A, RIGHT, buff=0.1)
+        B_label = MathTex("B", font_size=24, color=GREEN).next_to(B, LEFT, buff=0.1)
+        
+        self.play(Create(chord), Create(A_dot), Create(B_dot), Write(A_label), Write(B_label))
+        
+        # First point P in same segment
+        P = np.array([2 * np.cos(-PI/3), 2 * np.sin(-PI/3), 0])
+        P_dot = Dot(P, color=RED)
+        P_label = MathTex("P", font_size=24, color=RED).next_to(P, DOWN + RIGHT, buff=0.1)
+        
+        PA = Line(P, A, color=RED)
+        PB = Line(P, B, color=RED)
+        
+        self.play(Create(P_dot), Write(P_label), Create(PA), Create(PB))
+        
+        # Angle at P
+        P_angle = Arc(radius=0.3, start_angle=np.arctan2(A[1]-P[1], A[0]-P[0]), 
+                     angle=np.arctan2(B[1]-P[1], B[0]-P[0]) - np.arctan2(A[1]-P[1], A[0]-P[0]),
+                     arc_center=P, color=RED)
+        angle_P_label = MathTex(r"x", font_size=24, color=RED)
+        angle_P_label.next_to(P, UP + LEFT, buff=0.3)
+        
+        self.play(Create(P_angle), Write(angle_P_label))
+        
+        # Second point Q in same segment
+        Q = np.array([2 * np.cos(-2*PI/3), 2 * np.sin(-2*PI/3), 0])
+        Q_dot = Dot(Q, color=YELLOW)
+        Q_label = MathTex("Q", font_size=24, color=YELLOW).next_to(Q, DOWN + LEFT, buff=0.1)
+        
+        QA = Line(Q, A, color=YELLOW)
+        QB = Line(Q, B, color=YELLOW)
+        
+        self.play(Create(Q_dot), Write(Q_label), Create(QA), Create(QB))
+        
+        # Angle at Q
+        angle_Q_label = MathTex(r"x", font_size=24, color=YELLOW)
+        angle_Q_label.next_to(Q, UP + RIGHT, buff=0.3)
+        
+        self.play(Write(angle_Q_label))
+        
+        # Theorem statement
+        theorem = VGroup(
+            MathTex(r"\angle APB = \angle AQB", font_size=28, color=WHITE),
+            Text("Both angles subtend the same arc", font_size=20, color=GRAY)
+        ).arrange(DOWN, buff=0.2)
+        theorem.to_edge(DOWN, buff=0.5)
+        box = SurroundingRectangle(theorem, color=YELLOW)
+        
+        self.play(Write(theorem), Create(box))
+        
+        self.wait(2)
+```
+
+## 7. Circle Theorem: Cyclic Quadrilateral
+
+```python
+from manim import *
+import numpy as np
+
+class CyclicQuadrilateral(Scene):
+    def construct(self):
+        title = Text("Cyclic Quadrilateral", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Circle
+        circle = Circle(radius=2, color=WHITE)
+        self.play(Create(circle))
+        
+        # Four points on circle
+        A = np.array([2 * np.cos(PI/4), 2 * np.sin(PI/4), 0])
+        B = np.array([2 * np.cos(3*PI/4), 2 * np.sin(3*PI/4), 0])
+        C = np.array([2 * np.cos(5*PI/4), 2 * np.sin(5*PI/4), 0])
+        D = np.array([2 * np.cos(7*PI/4), 2 * np.sin(7*PI/4), 0])
+        
+        # Quadrilateral
+        quad = Polygon(A, B, C, D, color=YELLOW, fill_opacity=0.3)
+        
+        self.play(Create(quad))
+        
+        # Labels
+        labels = VGroup(
+            MathTex("A", font_size=24).next_to(A, UP + RIGHT, buff=0.1),
+            MathTex("B", font_size=24).next_to(B, UP + LEFT, buff=0.1),
+            MathTex("C", font_size=24).next_to(C, DOWN + LEFT, buff=0.1),
+            MathTex("D", font_size=24).next_to(D, DOWN + RIGHT, buff=0.1),
+        )
+        
+        self.play(Write(labels))
+        
+        # Angle labels
+        angle_A = MathTex(r"a", font_size=20, color=RED)
+        angle_A.move_to(A + DOWN * 0.4 + LEFT * 0.2)
+        
+        angle_C = MathTex(r"c", font_size=20, color=GREEN)
+        angle_C.move_to(C + UP * 0.4 + RIGHT * 0.2)
+        
+        self.play(Write(angle_A), Write(angle_C))
+        
+        # Opposite angles theorem
+        theorem1 = MathTex(r"a + c = 180°", font_size=28, color=ORANGE)
+        theorem1.shift(RIGHT * 3.5 + UP * 0.5)
+        
+        self.play(Write(theorem1))
+        
+        # Other pair
+        angle_B = MathTex(r"b", font_size=20, color=BLUE)
+        angle_B.move_to(B + DOWN * 0.4 + RIGHT * 0.2)
+        
+        angle_D = MathTex(r"d", font_size=20, color=PURPLE)
+        angle_D.move_to(D + UP * 0.4 + LEFT * 0.2)
+        
+        self.play(Write(angle_B), Write(angle_D))
+        
+        theorem2 = MathTex(r"b + d = 180°", font_size=28, color=ORANGE)
+        theorem2.next_to(theorem1, DOWN, buff=0.5)
+        
+        self.play(Write(theorem2))
+        
+        # Main theorem box
+        theorem_box = VGroup(
+            Text("Opposite angles in a", font_size=22, color=YELLOW),
+            Text("cyclic quadrilateral", font_size=22, color=YELLOW),
+            Text("sum to 180°", font_size=22, color=YELLOW)
+        ).arrange(DOWN, buff=0.1)
+        theorem_box.to_edge(DOWN, buff=0.5)
+        box = SurroundingRectangle(theorem_box, color=YELLOW)
+        
+        self.play(Write(theorem_box), Create(box))
+        
+        self.wait(2)
+```
+
+## 8. Circle Theorem: Tangent Perpendicular to Radius
+
+```python
+from manim import *
+import numpy as np
+
+class TangentPerpendicularRadius(Scene):
+    def construct(self):
+        title = Text("Tangent ⊥ Radius", font_size=40, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Circle
+        circle = Circle(radius=2, color=WHITE)
+        center = Dot(ORIGIN, color=YELLOW)
+        O_label = MathTex("O", font_size=24, color=YELLOW).next_to(center, UP + LEFT, buff=0.1)
+        
+        self.play(Create(circle), Create(center), Write(O_label))
+        
+        # Point of tangency
+        P = RIGHT * 2
+        P_dot = Dot(P, color=RED)
+        P_label = MathTex("P", font_size=24, color=RED).next_to(P, RIGHT, buff=0.1)
+        
+        self.play(Create(P_dot), Write(P_label))
+        
+        # Radius OP
+        radius = Line(ORIGIN, P, color=GREEN, stroke_width=4)
+        radius_label = Text("radius", font_size=18, color=GREEN)
+        radius_label.next_to(radius, DOWN, buff=0.1)
+        
+        self.play(Create(radius), Write(radius_label))
+        
+        # Tangent line
+        tangent = Line(P + UP * 2.5, P + DOWN * 2.5, color=RED, stroke_width=4)
+        tangent_label = Text("tangent", font_size=18, color=RED)
+        tangent_label.next_to(tangent, RIGHT, buff=0.1)
+        
+        self.play(Create(tangent), Write(tangent_label))
+        
+        # Right angle symbol
+        right_angle = RightAngle(
+            Line(P, ORIGIN), Line(P, P + UP),
+            length=0.3, color=YELLOW
+        )
+        
+        self.play(Create(right_angle))
+        
+        # 90° label
+        angle_label = MathTex(r"90°", font_size=24, color=YELLOW)
+        angle_label.next_to(right_angle, UP + LEFT, buff=0.1)
+        self.play(Write(angle_label))
+        
+        # Theorem statement
+        theorem = Text("A tangent is perpendicular to the radius at the point of contact",
+                      font_size=20, color=ORANGE)
+        theorem.to_edge(DOWN, buff=0.5)
+        box = SurroundingRectangle(theorem, color=ORANGE)
+        
+        self.play(Write(theorem), Create(box))
+        
+        self.wait(2)
+```
+
+## 9. Circle Theorem: Two Tangents from External Point
+
+```python
+from manim import *
+import numpy as np
+
+class TwoTangentsFromPoint(Scene):
+    def construct(self):
+        title = Text("Two Tangents from External Point", font_size=32, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Circle
+        circle = Circle(radius=1.5, color=WHITE)
+        center = Dot(ORIGIN, color=YELLOW)
+        O_label = MathTex("O", font_size=24, color=YELLOW).next_to(center, LEFT, buff=0.1)
+        
+        self.play(Create(circle), Create(center), Write(O_label))
+        
+        # External point P
+        P = RIGHT * 4
+        P_dot = Dot(P, color=GREEN)
+        P_label = MathTex("P", font_size=24, color=GREEN).next_to(P, RIGHT, buff=0.1)
+        
+        self.play(Create(P_dot), Write(P_label))
+        
+        # Calculate tangent points
+        # Using geometry: angle = arccos(r/d) where d is distance from center to P
+        d = 4
+        r = 1.5
+        angle = np.arccos(r/d)
+        
+        A = np.array([r * np.cos(angle), r * np.sin(angle), 0])
+        B = np.array([r * np.cos(-angle), r * np.sin(-angle), 0])
+        
+        A_dot = Dot(A, color=RED)
+        B_dot = Dot(B, color=RED)
+        A_label = MathTex("A", font_size=24, color=RED).next_to(A, UP + LEFT, buff=0.1)
+        B_label = MathTex("B", font_size=24, color=RED).next_to(B, DOWN + LEFT, buff=0.1)
+        
+        self.play(Create(A_dot), Create(B_dot), Write(A_label), Write(B_label))
+        
+        # Tangent lines
+        PA = Line(P, A, color=RED, stroke_width=4)
+        PB = Line(P, B, color=RED, stroke_width=4)
+        
+        self.play(Create(PA), Create(PB))
+        
+        # Equal length marks
+        PA_mid = (P + A) / 2
+        PB_mid = (P + B) / 2
+        
+        tick1 = Line(PA_mid + UP * 0.1 + LEFT * 0.05, PA_mid + DOWN * 0.1 + RIGHT * 0.05, color=YELLOW)
+        tick2 = Line(PB_mid + UP * 0.1 + LEFT * 0.05, PB_mid + DOWN * 0.1 + RIGHT * 0.05, color=YELLOW)
+        
+        self.play(Create(tick1), Create(tick2))
+        
+        # Length labels
+        PA_length = np.linalg.norm(P - A)
+        length_label = MathTex(f"PA = PB", font_size=28, color=YELLOW)
+        length_label.shift(RIGHT * 2 + DOWN * 2)
+        
+        self.play(Write(length_label))
+        
+        # Theorem
+        theorem = VGroup(
+            Text("Tangents from an external point", font_size=22, color=ORANGE),
+            Text("are equal in length", font_size=22, color=ORANGE)
+        ).arrange(DOWN, buff=0.1)
+        theorem.to_edge(DOWN, buff=0.4)
+        box = SurroundingRectangle(theorem, color=ORANGE)
+        
+        self.play(Write(theorem), Create(box))
+        
+        self.wait(2)
+```
+
+## 10. Calculating Chord Length
+
+```python
+from manim import *
+import numpy as np
+
+class ChordLengthCalculation(Scene):
+    def construct(self):
+        title = Text("Finding Chord Length", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Circle
+        circle = Circle(radius=2, color=WHITE)
+        center = Dot(ORIGIN, color=YELLOW)
+        O_label = MathTex("O", font_size=24, color=YELLOW).next_to(center, DOWN, buff=0.1)
+        
+        self.play(Create(circle), Create(center), Write(O_label))
+        
+        # Chord AB
+        A = np.array([-1.5, np.sqrt(4 - 1.5**2), 0])
+        B = np.array([1.5, np.sqrt(4 - 1.5**2), 0])
+        
+        chord = Line(A, B, color=GREEN, stroke_width=4)
+        A_dot = Dot(A, color=GREEN)
+        B_dot = Dot(B, color=GREEN)
+        A_label = MathTex("A", font_size=24, color=GREEN).next_to(A, LEFT, buff=0.1)
+        B_label = MathTex("B", font_size=24, color=GREEN).next_to(B, RIGHT, buff=0.1)
+        
+        self.play(Create(chord), Create(A_dot), Create(B_dot), Write(A_label), Write(B_label))
+        
+        # Perpendicular from center (M is midpoint)
+        M = (A + B) / 2
+        M_dot = Dot(M, color=RED)
+        M_label = MathTex("M", font_size=24, color=RED).next_to(M, UP, buff=0.1)
+        
+        perp = DashedLine(ORIGIN, M, color=RED)
+        
+        self.play(Create(perp), Create(M_dot), Write(M_label))
+        
+        # Right angle
+        right_angle = RightAngle(
+            Line(M, ORIGIN), Line(M, A),
+            length=0.2, color=YELLOW
+        )
+        self.play(Create(right_angle))
+        
+        # Radius OA
+        radius = Line(ORIGIN, A, color=BLUE)
+        radius_label = MathTex("r = 5", font_size=20, color=BLUE).next_to(radius, LEFT, buff=0.1)
+        
+        self.play(Create(radius), Write(radius_label))
+        
+        # Distance OM
+        OM_label = MathTex("OM = 3", font_size=20, color=RED).next_to(perp, RIGHT, buff=0.1)
+        self.play(Write(OM_label))
+        
+        # Calculation using Pythagoras
+        calc_title = Text("Using Pythagoras:", font_size=22, color=WHITE)
+        calc_title.shift(RIGHT * 3 + UP * 1)
+        
+        calc = VGroup(
+            MathTex(r"OA^2 = OM^2 + AM^2", font_size=22),
+            MathTex(r"5^2 = 3^2 + AM^2", font_size=22),
+            MathTex(r"25 = 9 + AM^2", font_size=22),
+            MathTex(r"AM^2 = 16", font_size=22),
+            MathTex(r"AM = 4", font_size=22, color=YELLOW),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        calc.next_to(calc_title, DOWN, aligned_edge=LEFT, buff=0.3)
+        
+        self.play(Write(calc_title))
+        for line in calc:
+            self.play(Write(line), run_time=0.5)
+        
+        # Final answer
+        answer = VGroup(
+            MathTex(r"AB = 2 \times AM", font_size=24),
+            MathTex(r"AB = 2 \times 4 = 8", font_size=28, color=GREEN)
+        ).arrange(DOWN, buff=0.2)
+        answer.to_edge(DOWN, buff=0.5)
+        box = SurroundingRectangle(answer, color=GREEN)
+        
+        self.play(Write(answer), Create(box))
+        
+        self.wait(2)
+```

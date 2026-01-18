@@ -1,0 +1,627 @@
+================================================================================
+IGCSE/O-LEVEL: FUNCTIONS - NOTATION AND BASICS
+================================================================================
+
+## 1. Function Notation Introduction
+
+```python
+from manim import *
+import numpy as np
+
+class FunctionNotation(Scene):
+    def construct(self):
+        title = Text("Function Notation", font_size=40, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Different notations
+        notations = VGroup(
+            VGroup(
+                MathTex(r"f(x) = 2x + 3", font_size=28),
+                Text("'f of x equals 2x plus 3'", font_size=18, color=GRAY),
+            ).arrange(DOWN, buff=0.1),
+            VGroup(
+                MathTex(r"f: x \mapsto 2x + 3", font_size=28),
+                Text("'f maps x to 2x plus 3'", font_size=18, color=GRAY),
+            ).arrange(DOWN, buff=0.1),
+        ).arrange(DOWN, buff=0.4)
+        notations.shift(UP * 0.5)
+        
+        for n in notations:
+            self.play(Write(n), run_time=0.8)
+        
+        # Evaluation example
+        eval_title = Text("Evaluating functions:", font_size=22, color=YELLOW)
+        eval_title.shift(DOWN * 0.8)
+        
+        evaluation = VGroup(
+            MathTex(r"f(x) = 2x + 3", font_size=24),
+            MathTex(r"f(4) = 2(4) + 3 = 8 + 3 = 11", font_size=24),
+            MathTex(r"f(-2) = 2(-2) + 3 = -4 + 3 = -1", font_size=24),
+        ).arrange(DOWN, buff=0.15)
+        evaluation.next_to(eval_title, DOWN, buff=0.2)
+        
+        self.play(Write(eval_title))
+        for e in evaluation:
+            self.play(Write(e), run_time=0.5)
+        
+        # Box the key point
+        key = Text("Replace x with the given value", font_size=18, color=GREEN)
+        key.to_edge(DOWN, buff=0.3)
+        
+        self.play(Write(key))
+        
+        self.wait(2)
+```
+
+## 2. Domain and Range
+
+```python
+from manim import *
+import numpy as np
+
+class DomainAndRange(Scene):
+    def construct(self):
+        title = Text("Domain and Range", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Definitions
+        definitions = VGroup(
+            VGroup(
+                Text("Domain:", font_size=22, color=YELLOW),
+                Text("Set of all input values (x values)", font_size=18),
+            ).arrange(RIGHT, buff=0.3),
+            VGroup(
+                Text("Range:", font_size=22, color=GREEN),
+                Text("Set of all output values (y values)", font_size=18),
+            ).arrange(RIGHT, buff=0.3),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.3)
+        definitions.next_to(title, DOWN, buff=0.3)
+        
+        self.play(Write(definitions))
+        
+        # Visual with graph
+        axes = Axes(
+            x_range=[-1, 5, 1],
+            y_range=[-1, 10, 2],
+            x_length=4,
+            y_length=4,
+            axis_config={"include_tip": True, "include_numbers": True}
+        )
+        axes.shift(DOWN * 0.5)
+        
+        # Quadratic function
+        graph = axes.plot(lambda x: x**2, x_range=[0, 3], color=WHITE)
+        func_label = MathTex(r"f(x) = x^2", font_size=22)
+        func_label.next_to(graph, RIGHT, buff=0.2)
+        
+        self.play(Create(axes), Create(graph), Write(func_label))
+        
+        # Show domain on x-axis
+        domain_line = Line(axes.c2p(0, 0), axes.c2p(3, 0), color=YELLOW, stroke_width=6)
+        domain_label = MathTex(r"\text{Domain: } 0 \leq x \leq 3", font_size=20, color=YELLOW)
+        domain_label.shift(RIGHT * 3 + UP * 2)
+        
+        self.play(Create(domain_line), Write(domain_label))
+        
+        # Show range on y-axis
+        range_line = Line(axes.c2p(0, 0), axes.c2p(0, 9), color=GREEN, stroke_width=6)
+        range_label = MathTex(r"\text{Range: } 0 \leq f(x) \leq 9", font_size=20, color=GREEN)
+        range_label.shift(RIGHT * 3 + UP * 1)
+        
+        self.play(Create(range_line), Write(range_label))
+        
+        self.wait(2)
+```
+
+## 3. Function Mapping Diagrams
+
+```python
+from manim import *
+import numpy as np
+
+class FunctionMapping(Scene):
+    def construct(self):
+        title = Text("Function Mapping Diagram", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        function = MathTex(r"f(x) = 2x + 1", font_size=28)
+        function.next_to(title, DOWN, buff=0.2)
+        
+        self.play(Write(function))
+        
+        # Domain ellipse
+        domain_ellipse = Ellipse(width=2, height=4, color=YELLOW)
+        domain_ellipse.shift(LEFT * 3)
+        domain_label = Text("Domain", font_size=18, color=YELLOW)
+        domain_label.next_to(domain_ellipse, DOWN)
+        
+        # Range ellipse
+        range_ellipse = Ellipse(width=2, height=4, color=GREEN)
+        range_ellipse.shift(RIGHT * 3)
+        range_label = Text("Range", font_size=18, color=GREEN)
+        range_label.next_to(range_ellipse, DOWN)
+        
+        self.play(Create(domain_ellipse), Write(domain_label))
+        self.play(Create(range_ellipse), Write(range_label))
+        
+        # Domain values
+        domain_vals = VGroup(*[
+            MathTex(str(i), font_size=22, color=YELLOW).move_to(LEFT * 3 + UP * (1.2 - i * 0.6))
+            for i in range(1, 5)
+        ])
+        
+        self.play(Write(domain_vals))
+        
+        # Range values and arrows
+        for i, val in enumerate([1, 2, 3, 4]):
+            result = 2 * val + 1
+            range_val = MathTex(str(result), font_size=22, color=GREEN)
+            range_val.move_to(RIGHT * 3 + UP * (1.2 - i * 0.6))
+            
+            arrow = Arrow(
+                LEFT * 2.3 + UP * (1.2 - i * 0.6),
+                RIGHT * 2.3 + UP * (1.2 - i * 0.6),
+                color=WHITE,
+                buff=0.1
+            )
+            
+            self.play(Create(arrow), Write(range_val), run_time=0.4)
+        
+        # Formula under arrow
+        f_label = MathTex(r"f", font_size=24)
+        f_label.move_to(ORIGIN + UP * 1.5)
+        
+        self.play(Write(f_label))
+        
+        self.wait(2)
+```
+
+## 4. Finding Input from Output
+
+```python
+from manim import *
+import numpy as np
+
+class FindingInput(Scene):
+    def construct(self):
+        title = Text("Finding Input from Output", font_size=34, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Problem
+        problem = VGroup(
+            MathTex(r"f(x) = 3x - 5", font_size=26),
+            Text("Find x when f(x) = 13", font_size=22, color=YELLOW),
+        ).arrange(DOWN, buff=0.2)
+        problem.next_to(title, DOWN, buff=0.3)
+        
+        self.play(Write(problem))
+        
+        # Solution
+        solution = VGroup(
+            MathTex(r"3x - 5 = 13", font_size=26),
+            MathTex(r"3x = 13 + 5", font_size=26),
+            MathTex(r"3x = 18", font_size=26),
+            MathTex(r"x = 6", font_size=28, color=GREEN),
+        ).arrange(DOWN, buff=0.2)
+        solution.shift(DOWN * 0.8)
+        
+        for s in solution:
+            self.play(Write(s), run_time=0.5)
+        
+        # Verify
+        verify = MathTex(r"\text{Check: } f(6) = 3(6) - 5 = 18 - 5 = 13 \checkmark", font_size=22, color=GREEN)
+        verify.to_edge(DOWN, buff=0.5)
+        
+        self.play(Write(verify))
+        
+        self.wait(2)
+```
+
+## 5. Composite Functions
+
+```python
+from manim import *
+import numpy as np
+
+class CompositeFunctions(Scene):
+    def construct(self):
+        title = Text("Composite Functions", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Definition
+        definition = MathTex(r"fg(x) = f(g(x))", font_size=30, color=YELLOW)
+        subtitle = Text("Apply g first, then f", font_size=20, color=GRAY)
+        VGroup(definition, subtitle).arrange(DOWN, buff=0.1).next_to(title, DOWN, buff=0.2)
+        
+        self.play(Write(definition), Write(subtitle))
+        
+        # Example functions
+        functions = VGroup(
+            MathTex(r"f(x) = 2x + 1", font_size=24),
+            MathTex(r"g(x) = x^2", font_size=24),
+        ).arrange(DOWN, buff=0.1)
+        functions.shift(UP * 0.5)
+        
+        self.play(Write(functions))
+        
+        # Find fg(3)
+        example1_title = Text("Find fg(3):", font_size=20, color=GREEN)
+        example1_title.shift(LEFT * 3.5 + DOWN * 0.5)
+        
+        example1 = VGroup(
+            MathTex(r"g(3) = 3^2 = 9", font_size=22),
+            MathTex(r"f(9) = 2(9) + 1 = 19", font_size=22),
+            MathTex(r"\therefore fg(3) = 19", font_size=22, color=GREEN),
+        ).arrange(DOWN, buff=0.1)
+        example1.next_to(example1_title, DOWN, buff=0.1, aligned_edge=LEFT)
+        
+        self.play(Write(example1_title))
+        self.play(Write(example1))
+        
+        # Find gf(3)
+        example2_title = Text("Find gf(3):", font_size=20, color=ORANGE)
+        example2_title.shift(RIGHT * 2 + DOWN * 0.5)
+        
+        example2 = VGroup(
+            MathTex(r"f(3) = 2(3) + 1 = 7", font_size=22),
+            MathTex(r"g(7) = 7^2 = 49", font_size=22),
+            MathTex(r"\therefore gf(3) = 49", font_size=22, color=ORANGE),
+        ).arrange(DOWN, buff=0.1)
+        example2.next_to(example2_title, DOWN, buff=0.1, aligned_edge=LEFT)
+        
+        self.play(Write(example2_title))
+        self.play(Write(example2))
+        
+        # Note
+        note = MathTex(r"fg(x) \neq gf(x) \text{ in general!}", font_size=22, color=RED)
+        note.to_edge(DOWN, buff=0.3)
+        box = SurroundingRectangle(note, color=RED)
+        
+        self.play(Write(note), Create(box))
+        
+        self.wait(2)
+```
+
+## 6. Composite Function Formula
+
+```python
+from manim import *
+import numpy as np
+
+class CompositeFormula(Scene):
+    def construct(self):
+        title = Text("Finding Composite Function Formula", font_size=32, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Functions
+        functions = VGroup(
+            MathTex(r"f(x) = 2x + 3", font_size=26),
+            MathTex(r"g(x) = x - 1", font_size=26),
+        ).arrange(RIGHT, buff=1)
+        functions.next_to(title, DOWN, buff=0.3)
+        
+        self.play(Write(functions))
+        
+        # Find fg(x)
+        fg_title = Text("Find fg(x):", font_size=20, color=YELLOW)
+        fg_title.shift(LEFT * 3 + UP * 0.3)
+        
+        fg_calc = VGroup(
+            MathTex(r"fg(x) = f(g(x))", font_size=22),
+            MathTex(r"= f(x - 1)", font_size=22),
+            MathTex(r"= 2(x - 1) + 3", font_size=22),
+            MathTex(r"= 2x - 2 + 3", font_size=22),
+            MathTex(r"= 2x + 1", font_size=24, color=GREEN),
+        ).arrange(DOWN, buff=0.1)
+        fg_calc.next_to(fg_title, DOWN, buff=0.1, aligned_edge=LEFT)
+        
+        self.play(Write(fg_title))
+        for line in fg_calc:
+            self.play(Write(line), run_time=0.4)
+        
+        # Find gf(x)
+        gf_title = Text("Find gf(x):", font_size=20, color=ORANGE)
+        gf_title.shift(RIGHT * 2 + UP * 0.3)
+        
+        gf_calc = VGroup(
+            MathTex(r"gf(x) = g(f(x))", font_size=22),
+            MathTex(r"= g(2x + 3)", font_size=22),
+            MathTex(r"= (2x + 3) - 1", font_size=22),
+            MathTex(r"= 2x + 2", font_size=24, color=ORANGE),
+        ).arrange(DOWN, buff=0.1)
+        gf_calc.next_to(gf_title, DOWN, buff=0.1, aligned_edge=LEFT)
+        
+        self.play(Write(gf_title))
+        for line in gf_calc:
+            self.play(Write(line), run_time=0.4)
+        
+        self.wait(2)
+```
+
+## 7. Inverse Functions Introduction
+
+```python
+from manim import *
+import numpy as np
+
+class InverseFunctions(Scene):
+    def construct(self):
+        title = Text("Inverse Functions", font_size=40, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Concept
+        concept = VGroup(
+            MathTex(r"f^{-1}(x) \text{ undoes } f(x)", font_size=28, color=YELLOW),
+            MathTex(r"f^{-1}(f(x)) = x", font_size=26),
+            MathTex(r"f(f^{-1}(x)) = x", font_size=26),
+        ).arrange(DOWN, buff=0.2)
+        concept.next_to(title, DOWN, buff=0.3)
+        
+        self.play(Write(concept))
+        
+        # Visual: mapping and reverse mapping
+        # Forward mapping
+        forward = VGroup(
+            MathTex("x", font_size=24),
+            Arrow(RIGHT * 0.5, RIGHT * 1.5, color=GREEN),
+            MathTex("f(x)", font_size=24, color=GREEN),
+        ).arrange(RIGHT, buff=0.1)
+        forward.shift(DOWN * 0.5 + LEFT * 2)
+        
+        f_label = MathTex("f", font_size=20, color=GREEN)
+        f_label.next_to(forward[1], UP, buff=0.05)
+        
+        self.play(Write(forward), Write(f_label))
+        
+        # Reverse mapping
+        reverse = VGroup(
+            MathTex("f(x)", font_size=24, color=GREEN),
+            Arrow(RIGHT * 0.5, RIGHT * 1.5, color=RED),
+            MathTex("x", font_size=24),
+        ).arrange(RIGHT, buff=0.1)
+        reverse.shift(DOWN * 1.3 + LEFT * 2)
+        
+        finv_label = MathTex("f^{-1}", font_size=20, color=RED)
+        finv_label.next_to(reverse[1], UP, buff=0.05)
+        
+        self.play(Write(reverse), Write(finv_label))
+        
+        # Example
+        example = VGroup(
+            MathTex(r"\text{If } f(x) = x + 5", font_size=24),
+            MathTex(r"\text{then } f^{-1}(x) = x - 5", font_size=24, color=RED),
+            MathTex(r"\text{Check: } f^{-1}(f(3)) = f^{-1}(8) = 3 \checkmark", font_size=22, color=GREEN),
+        ).arrange(DOWN, buff=0.15)
+        example.shift(RIGHT * 2 + DOWN * 0.8)
+        
+        for e in example:
+            self.play(Write(e), run_time=0.5)
+        
+        self.wait(2)
+```
+
+## 8. Finding Inverse Functions
+
+```python
+from manim import *
+import numpy as np
+
+class FindingInverse(Scene):
+    def construct(self):
+        title = Text("Finding Inverse Functions", font_size=34, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Method
+        method = VGroup(
+            Text("Step 1: Write y = f(x)", font_size=18),
+            Text("Step 2: Swap x and y", font_size=18),
+            Text("Step 3: Rearrange for y", font_size=18),
+            Text("Step 4: Write as f⁻¹(x) = ...", font_size=18),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.1)
+        method.next_to(title, DOWN, buff=0.2)
+        method.shift(LEFT * 3)
+        
+        self.play(Write(method))
+        
+        # Example
+        example_title = MathTex(r"\text{Find } f^{-1}(x) \text{ if } f(x) = 3x - 7", font_size=22, color=YELLOW)
+        example_title.shift(RIGHT * 1.5 + UP * 1)
+        
+        self.play(Write(example_title))
+        
+        steps = VGroup(
+            MathTex(r"y = 3x - 7", font_size=22),
+            MathTex(r"x = 3y - 7", font_size=22, color=GRAY),
+            MathTex(r"x + 7 = 3y", font_size=22),
+            MathTex(r"y = \frac{x + 7}{3}", font_size=22),
+            MathTex(r"f^{-1}(x) = \frac{x + 7}{3}", font_size=24, color=GREEN),
+        ).arrange(DOWN, buff=0.15)
+        steps.next_to(example_title, DOWN, buff=0.2)
+        
+        step_labels = ["Step 1", "Step 2", "Step 3", "", "Step 4"]
+        
+        for i, step in enumerate(steps):
+            if step_labels[i]:
+                label = Text(step_labels[i], font_size=14, color=BLUE)
+                label.next_to(step, LEFT, buff=0.3)
+                self.play(Write(step), Write(label), run_time=0.5)
+            else:
+                self.play(Write(step), run_time=0.5)
+        
+        # Box the answer
+        box = SurroundingRectangle(steps[-1], color=GREEN)
+        self.play(Create(box))
+        
+        self.wait(2)
+```
+
+## 9. Inverse of More Complex Functions
+
+```python
+from manim import *
+import numpy as np
+
+class ComplexInverse(Scene):
+    def construct(self):
+        title = Text("Inverse of Complex Functions", font_size=32, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Example with fraction
+        problem = MathTex(r"f(x) = \frac{2x + 1}{x - 3}, \quad x \neq 3", font_size=24)
+        problem.next_to(title, DOWN, buff=0.2)
+        
+        self.play(Write(problem))
+        
+        # Solution
+        solution = VGroup(
+            MathTex(r"y = \frac{2x + 1}{x - 3}", font_size=22),
+            MathTex(r"x = \frac{2y + 1}{y - 3}", font_size=22, color=GRAY),
+            MathTex(r"x(y - 3) = 2y + 1", font_size=22),
+            MathTex(r"xy - 3x = 2y + 1", font_size=22),
+            MathTex(r"xy - 2y = 3x + 1", font_size=22),
+            MathTex(r"y(x - 2) = 3x + 1", font_size=22),
+            MathTex(r"y = \frac{3x + 1}{x - 2}", font_size=22),
+        ).arrange(DOWN, buff=0.12)
+        solution.shift(DOWN * 0.8)
+        
+        for s in solution:
+            self.play(Write(s), run_time=0.4)
+        
+        # Answer
+        answer = MathTex(r"f^{-1}(x) = \frac{3x + 1}{x - 2}, \quad x \neq 2", font_size=26, color=GREEN)
+        answer.to_edge(DOWN, buff=0.3)
+        
+        box = SurroundingRectangle(answer, color=GREEN)
+        
+        self.play(Write(answer), Create(box))
+        
+        self.wait(2)
+```
+
+## 10. Graphs of Functions and Inverses
+
+```python
+from manim import *
+import numpy as np
+
+class GraphInverse(Scene):
+    def construct(self):
+        title = Text("Graphs of f and f⁻¹", font_size=34, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Key fact
+        fact = Text("f⁻¹ is a reflection of f in the line y = x", font_size=20, color=YELLOW)
+        fact.next_to(title, DOWN, buff=0.2)
+        
+        self.play(Write(fact))
+        
+        # Axes
+        axes = Axes(
+            x_range=[-1, 5, 1],
+            y_range=[-1, 5, 1],
+            x_length=5,
+            y_length=5,
+            axis_config={"include_tip": True, "include_numbers": True}
+        )
+        axes.shift(DOWN * 0.3)
+        
+        self.play(Create(axes))
+        
+        # Line y = x
+        y_eq_x = axes.plot(lambda x: x, x_range=[-0.5, 4.5], color=GRAY)
+        y_eq_x_label = MathTex("y = x", font_size=18, color=GRAY)
+        y_eq_x_label.next_to(axes.c2p(3.5, 3.5), UR, buff=0.1)
+        
+        self.play(Create(y_eq_x), Write(y_eq_x_label))
+        
+        # Function f(x) = 2x
+        f_graph = axes.plot(lambda x: 2*x, x_range=[0, 2], color=GREEN)
+        f_label = MathTex("f(x) = 2x", font_size=18, color=GREEN)
+        f_label.next_to(axes.c2p(2, 4), RIGHT, buff=0.1)
+        
+        self.play(Create(f_graph), Write(f_label))
+        
+        # Inverse f⁻¹(x) = x/2
+        finv_graph = axes.plot(lambda x: x/2, x_range=[0, 4], color=RED)
+        finv_label = MathTex(r"f^{-1}(x) = \frac{x}{2}", font_size=18, color=RED)
+        finv_label.next_to(axes.c2p(4, 2), DR, buff=0.1)
+        
+        self.play(Create(finv_graph), Write(finv_label))
+        
+        # Show a point and its reflection
+        point_f = Dot(axes.c2p(1, 2), color=GREEN)
+        point_finv = Dot(axes.c2p(2, 1), color=RED)
+        
+        coord_f = MathTex("(1, 2)", font_size=16, color=GREEN)
+        coord_f.next_to(point_f, UP)
+        
+        coord_finv = MathTex("(2, 1)", font_size=16, color=RED)
+        coord_finv.next_to(point_finv, DOWN)
+        
+        self.play(Create(point_f), Write(coord_f))
+        self.play(Create(point_finv), Write(coord_finv))
+        
+        # Dashed line between them
+        mirror = DashedLine(axes.c2p(1, 2), axes.c2p(2, 1), color=WHITE)
+        self.play(Create(mirror))
+        
+        self.wait(2)
+```
+
+## 11. Self-Inverse Functions
+
+```python
+from manim import *
+import numpy as np
+
+class SelfInverse(Scene):
+    def construct(self):
+        title = Text("Self-Inverse Functions", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Definition
+        definition = MathTex(r"f^{-1}(x) = f(x)", font_size=28, color=YELLOW)
+        subtitle = Text("Applying the function twice returns x", font_size=20, color=GRAY)
+        VGroup(definition, subtitle).arrange(DOWN, buff=0.1).next_to(title, DOWN, buff=0.3)
+        
+        self.play(Write(definition), Write(subtitle))
+        
+        # Examples
+        examples_title = Text("Examples:", font_size=22)
+        examples_title.shift(UP * 0.5 + LEFT * 3)
+        
+        examples = VGroup(
+            MathTex(r"f(x) = -x", font_size=24),
+            MathTex(r"f(x) = \frac{1}{x}", font_size=24),
+            MathTex(r"f(x) = \frac{k}{x} \text{ for any constant } k", font_size=24),
+            MathTex(r"f(x) = a - x \text{ for any constant } a", font_size=24),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.2)
+        examples.next_to(examples_title, DOWN, buff=0.2, aligned_edge=LEFT)
+        
+        self.play(Write(examples_title))
+        for e in examples:
+            self.play(Write(e), run_time=0.5)
+        
+        # Verification
+        verify = VGroup(
+            Text("Verify:", font_size=20, color=GREEN),
+            MathTex(r"f(x) = -x", font_size=22),
+            MathTex(r"f(f(x)) = f(-x) = -(-x) = x \checkmark", font_size=22, color=GREEN),
+        ).arrange(DOWN, buff=0.15)
+        verify.shift(DOWN * 1.5)
+        
+        self.play(Write(verify))
+        
+        self.wait(2)
+```

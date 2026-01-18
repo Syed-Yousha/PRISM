@@ -1,0 +1,377 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# QUADRATIC EQUATIONS - Solving by Various Methods
+# IGCSE/O-Level Algebra Topic
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## QUADRATIC EQUATION FORM
+```python
+# Standard form ax² + bx + c = 0
+title = Text("Quadratic Equations", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Standard form
+form = MathTex("ax^2 + bx + c = 0", font_size=56, color=WHITE)
+form.shift(UP * 1)
+
+# Labels
+a_label = VGroup(
+    MathTex("a", font_size=32, color=RED),
+    Text("coefficient of x²", font_size=18, color=GRAY)
+).arrange(DOWN, buff=0.1)
+a_label.shift(UP * 0 + LEFT * 3)
+
+b_label = VGroup(
+    MathTex("b", font_size=32, color=GREEN),
+    Text("coefficient of x", font_size=18, color=GRAY)
+).arrange(DOWN, buff=0.1)
+b_label.shift(UP * 0)
+
+c_label = VGroup(
+    MathTex("c", font_size=32, color=BLUE),
+    Text("constant", font_size=18, color=GRAY)
+).arrange(DOWN, buff=0.1)
+c_label.shift(UP * 0 + RIGHT * 3)
+
+# Example
+example = VGroup(
+    Text("Example:", font_size=22, color=YELLOW),
+    MathTex("2x^2 + 5x - 3 = 0", font_size=36),
+    MathTex("a = 2, \\quad b = 5, \\quad c = -3", font_size=28, color=GRAY)
+).arrange(DOWN, buff=0.2)
+example.shift(DOWN * 1.5)
+
+# Key point
+key = Text("A quadratic equation has up to 2 solutions (roots)", font_size=24, color=ORANGE)
+key.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(form), run_time=1.0)
+self.play(Write(a_label), Write(b_label), Write(c_label), run_time=1.5)
+self.play(Write(example), run_time=1.5)
+self.play(Write(key), run_time=1.0)
+```
+
+## SOLVING BY FACTORIZATION
+```python
+# x² + 5x + 6 = 0
+title = Text("Solving by Factorization", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Equation
+eq = MathTex("x^2 + 5x + 6 = 0", font_size=48).shift(UP * 1.5)
+
+# Step 1: Factor
+step1 = VGroup(
+    Text("Step 1: Factorize", font_size=22, color=BLUE),
+    MathTex("(x + 2)(x + 3) = 0", font_size=40)
+).arrange(DOWN, buff=0.15)
+step1.shift(UP * 0.3)
+
+# Step 2: Set each factor = 0
+step2 = VGroup(
+    Text("Step 2: If A × B = 0, then A = 0 or B = 0", font_size=22, color=GREEN),
+    MathTex("x + 2 = 0 \\quad \\text{or} \\quad x + 3 = 0", font_size=36)
+).arrange(DOWN, buff=0.15)
+step2.shift(DOWN * 0.7)
+
+# Step 3: Solve each
+step3 = VGroup(
+    Text("Step 3: Solve each equation", font_size=22, color=ORANGE),
+    MathTex("x = -2 \\quad \\text{or} \\quad x = -3", font_size=44, color=GREEN)
+).arrange(DOWN, buff=0.15)
+step3.shift(DOWN * 1.7)
+
+answer_box = SurroundingRectangle(step3[1], color=GREEN, buff=0.2)
+
+# Visual
+parabola = FunctionGraph(
+    lambda x: x**2 + 5*x + 6,
+    x_range=[-5, 0],
+    color=BLUE
+).scale(0.3).to_edge(RIGHT).shift(DOWN)
+
+roots = VGroup(
+    Dot([-0.6 * 0.3 - 2, 0, 0], color=GREEN, radius=0.1),
+    Dot([-0.9 * 0.3 - 2, 0, 0], color=GREEN, radius=0.1)
+)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(eq), run_time=1.0)
+self.play(Write(step1), run_time=1.5)
+self.play(Write(step2), run_time=1.5)
+self.play(Write(step3), Create(answer_box), run_time=1.5)
+```
+
+## SOLVING WITH COEFFICIENT ≠ 1
+```python
+# 2x² + 7x + 3 = 0
+title = Text("Factorization (a ≠ 1)", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Equation
+eq = MathTex("2x^2 + 7x + 3 = 0", font_size=44).shift(UP * 1.5)
+
+# Method
+method = VGroup(
+    Text("Find factors of 2 × 3 = 6 that add to 7", font_size=22, color=GRAY),
+    MathTex("6 = 1 \\times 6 \\quad \\text{and} \\quad 1 + 6 = 7 \\checkmark", font_size=28)
+).arrange(DOWN, buff=0.1)
+method.shift(UP * 0.6)
+
+# Steps
+steps = VGroup(
+    MathTex("2x^2 + 1x + 6x + 3 = 0", font_size=32, color=BLUE),
+    MathTex("x(2x + 1) + 3(2x + 1) = 0", font_size=32),
+    MathTex("(2x + 1)(x + 3) = 0", font_size=36, color=GREEN)
+).arrange(DOWN, buff=0.2)
+steps.shift(DOWN * 0.3)
+
+# Solutions
+solutions = VGroup(
+    MathTex("2x + 1 = 0 \\Rightarrow x = -\\frac{1}{2}", font_size=32),
+    MathTex("x + 3 = 0 \\Rightarrow x = -3", font_size=32)
+).arrange(DOWN, buff=0.2)
+solutions.shift(DOWN * 1.8)
+
+# Final answer
+answer = MathTex("x = -\\frac{1}{2} \\text{ or } x = -3", font_size=40, color=GREEN)
+answer.to_edge(DOWN, buff=0.5)
+answer_box = SurroundingRectangle(answer, color=GREEN, buff=0.2)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(eq), run_time=1.0)
+self.play(Write(method), run_time=1.5)
+self.play(Write(steps), run_time=2.0)
+self.play(Write(solutions), run_time=1.5)
+self.play(Write(answer), Create(answer_box), run_time=1.0)
+```
+
+## THE QUADRATIC FORMULA
+```python
+# x = (-b ± √(b²-4ac)) / 2a
+title = Text("The Quadratic Formula", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Formula
+formula = MathTex("x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}", font_size=56, color=WHITE)
+formula.shift(UP * 1)
+formula_box = SurroundingRectangle(formula, color=YELLOW, buff=0.4)
+
+# Color coding
+formula_colored = MathTex("x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}", font_size=56)
+formula_colored.shift(UP * 1)
+
+# Discriminant
+discriminant = VGroup(
+    Text("Discriminant:", font_size=22, color=ORANGE),
+    MathTex("\\Delta = b^2 - 4ac", font_size=36, color=ORANGE)
+).arrange(RIGHT, buff=0.5)
+discriminant.shift(DOWN * 0.3)
+
+# What discriminant tells us
+cases = VGroup(
+    MathTex("\\Delta > 0 \\Rightarrow \\text{2 different real roots}", font_size=28, color=GREEN),
+    MathTex("\\Delta = 0 \\Rightarrow \\text{1 repeated root}", font_size=28, color=BLUE),
+    MathTex("\\Delta < 0 \\Rightarrow \\text{no real roots}", font_size=28, color=RED)
+).arrange(DOWN, buff=0.2, aligned_edge=LEFT)
+cases.shift(DOWN * 1.5)
+
+# Tip
+tip = Text("MEMORIZE THIS FORMULA!", font_size=28, color=YELLOW)
+tip.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(formula), Create(formula_box), run_time=2.0)
+self.play(Write(discriminant), run_time=1.5)
+self.play(Write(cases), run_time=2.0)
+self.play(Write(tip), run_time=1.0)
+```
+
+## USING THE QUADRATIC FORMULA
+```python
+# Example: 2x² - 5x - 3 = 0
+title = Text("Using the Quadratic Formula", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Equation
+eq = MathTex("2x^2 - 5x - 3 = 0", font_size=44).shift(UP * 1.8)
+
+# Identify a, b, c
+identify = MathTex("a = 2, \\quad b = -5, \\quad c = -3", font_size=28, color=GRAY)
+identify.shift(UP * 1.2)
+
+# Substitute
+sub = MathTex("x = \\frac{-(-5) \\pm \\sqrt{(-5)^2 - 4(2)(-3)}}{2(2)}", font_size=32)
+sub.shift(UP * 0.5)
+
+# Simplify
+simp1 = MathTex("x = \\frac{5 \\pm \\sqrt{25 + 24}}{4}", font_size=36)
+simp1.shift(DOWN * 0.2)
+
+simp2 = MathTex("x = \\frac{5 \\pm \\sqrt{49}}{4} = \\frac{5 \\pm 7}{4}", font_size=36)
+simp2.shift(DOWN * 0.9)
+
+# Two solutions
+sol1 = MathTex("x = \\frac{5 + 7}{4} = \\frac{12}{4} = 3", font_size=32, color=GREEN)
+sol1.shift(DOWN * 1.7 + LEFT * 3)
+
+sol2 = MathTex("x = \\frac{5 - 7}{4} = \\frac{-2}{4} = -\\frac{1}{2}", font_size=32, color=GREEN)
+sol2.shift(DOWN * 1.7 + RIGHT * 2.5)
+
+# Answer
+answer = MathTex("x = 3 \\text{ or } x = -\\frac{1}{2}", font_size=40, color=GREEN)
+answer.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(eq), run_time=1.0)
+self.play(Write(identify), run_time=1.0)
+self.play(Write(sub), run_time=1.5)
+self.play(Write(simp1), run_time=1.0)
+self.play(Write(simp2), run_time=1.0)
+self.play(Write(sol1), Write(sol2), run_time=1.5)
+self.play(Write(answer), run_time=1.0)
+```
+
+## COMPLETING THE SQUARE
+```python
+# x² + 6x + 5 = 0
+title = Text("Completing the Square", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Equation
+eq = MathTex("x^2 + 6x + 5 = 0", font_size=44).shift(UP * 1.8)
+
+# Method
+method = VGroup(
+    Text("Half the coefficient of x, then square it", font_size=22, color=GRAY),
+    MathTex("\\left(\\frac{6}{2}\\right)^2 = 9", font_size=32, color=BLUE)
+).arrange(DOWN, buff=0.1)
+method.shift(UP * 0.9)
+
+# Steps
+step1 = MathTex("x^2 + 6x = -5", font_size=32)
+step1.shift(UP * 0.1)
+
+step2 = MathTex("x^2 + 6x + 9 = -5 + 9", font_size=32, color=BLUE)
+step2.shift(DOWN * 0.5)
+
+step3 = MathTex("(x + 3)^2 = 4", font_size=36, color=GREEN)
+step3.shift(DOWN * 1.1)
+
+step4 = MathTex("x + 3 = \\pm 2", font_size=36)
+step4.shift(DOWN * 1.7)
+
+# Solutions
+solutions = VGroup(
+    MathTex("x = -3 + 2 = -1", font_size=32, color=GREEN),
+    MathTex("x = -3 - 2 = -5", font_size=32, color=GREEN)
+).arrange(RIGHT, buff=1)
+solutions.to_edge(DOWN, buff=0.6)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(eq), run_time=1.0)
+self.play(Write(method), run_time=1.5)
+self.play(Write(step1), run_time=1.0)
+self.play(Write(step2), run_time=1.0)
+self.play(Write(step3), run_time=1.0)
+self.play(Write(step4), run_time=1.0)
+self.play(Write(solutions), run_time=1.5)
+```
+
+## GRAPHICAL INTERPRETATION
+```python
+# Parabola and roots
+title = Text("Graphical Interpretation", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Axes
+axes = Axes(
+    x_range=[-4, 2, 1],
+    y_range=[-3, 5, 1],
+    x_length=6,
+    y_length=5,
+    axis_config={"include_tip": True, "include_numbers": True}
+).shift(DOWN * 0.3)
+
+# Parabola y = x² + 2x - 3
+parabola = axes.plot(lambda x: x**2 + 2*x - 3, x_range=[-4, 2], color=BLUE)
+label = MathTex("y = x^2 + 2x - 3", font_size=28, color=BLUE)
+label.next_to(parabola, UP + RIGHT)
+
+# Roots (where crosses x-axis)
+root1 = Dot(axes.c2p(-3, 0), color=GREEN, radius=0.1)
+root1_label = MathTex("x = -3", font_size=24, color=GREEN).next_to(root1, DOWN)
+
+root2 = Dot(axes.c2p(1, 0), color=GREEN, radius=0.1)
+root2_label = MathTex("x = 1", font_size=24, color=GREEN).next_to(root2, DOWN)
+
+# Explanation
+explain = VGroup(
+    Text("Roots = x-intercepts", font_size=22, color=GREEN),
+    Text("(where graph crosses x-axis)", font_size=20, color=GRAY)
+).arrange(DOWN, buff=0.1)
+explain.to_edge(DOWN, buff=0.3)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(axes), run_time=1.0)
+self.play(Create(parabola), Write(label), run_time=1.5)
+self.play(Create(root1), Write(root1_label), run_time=1.0)
+self.play(Create(root2), Write(root2_label), run_time=1.0)
+self.play(Write(explain), run_time=1.0)
+```
+
+## METHODS COMPARISON
+```python
+# When to use which method
+title = Text("Choosing a Method", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Table
+methods = VGroup(
+    # Header
+    VGroup(
+        Text("Method", font_size=22),
+        Text("When to Use", font_size=22),
+        Text("Example", font_size=22)
+    ).arrange(RIGHT, buff=2.5),
+    
+    # Factorization
+    VGroup(
+        Text("Factorization", font_size=20, color=BLUE),
+        Text("Nice integer roots", font_size=18),
+        MathTex("x^2+5x+6=0", font_size=24)
+    ).arrange(RIGHT, buff=1.8),
+    
+    # Formula
+    VGroup(
+        Text("Quadratic Formula", font_size=20, color=GREEN),
+        Text("Any quadratic", font_size=18),
+        MathTex("3x^2-2x-7=0", font_size=24)
+    ).arrange(RIGHT, buff=1.4),
+    
+    # Completing square
+    VGroup(
+        Text("Completing Square", font_size=20, color=RED),
+        Text("To find turning point", font_size=18),
+        MathTex("x^2+4x+1=0", font_size=24)
+    ).arrange(RIGHT, buff=1.2),
+    
+    # Graphical
+    VGroup(
+        Text("Graphical", font_size=20, color=ORANGE),
+        Text("Estimate or check", font_size=18),
+        Text("Any", font_size=18)
+    ).arrange(RIGHT, buff=2.3)
+).arrange(DOWN, buff=0.5, aligned_edge=LEFT)
+methods.move_to(ORIGIN)
+
+# Lines
+lines = VGroup(
+    Line(LEFT * 6, RIGHT * 6, color=WHITE).shift(UP * 1.4),
+    Line(LEFT * 6, RIGHT * 6, color=WHITE).shift(UP * 0.8)
+)
+
+# Tip
+tip = VGroup(
+    Rectangle(width=9, height=0.8, color=YELLOW, fill_opacity=0.2),
+    Text("Tip: Try factorization first. If it doesn't work, use formula!", font_size=20, color=YELLOW)
+)
+tip[1].move_to(tip[0])
+tip.to_edge(DOWN, buff=0.4)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(methods), Create(lines), run_time=3.0)
+self.play(Create(tip), run_time=1.0)
+```

@@ -1,0 +1,232 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# FRACTIONS - Visual Representations
+# Pie charts, bar models, number lines for teaching fractions
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## PIE CHART FRACTIONS (Most Common!)
+```python
+# Show 1/4 of a circle (quarter)
+whole_circle = Circle(radius=1.5, color=BLUE, stroke_width=3)
+quarter = Sector(
+    outer_radius=1.5,
+    angle=PI/2,           # 90 degrees = 1/4
+    start_angle=0,
+    color=YELLOW,
+    fill_opacity=0.7
+)
+label = MathTex(r"\frac{1}{4}", font_size=36).next_to(quarter, RIGHT, buff=0.3)
+
+self.play(Create(whole_circle), run_time=1.0)
+self.play(Create(quarter), run_time=1.0)
+self.play(Write(label), run_time=0.5)
+
+# Show 1/2 of a circle (half)
+circle = Circle(radius=1.5, color=BLUE, stroke_width=3)
+half = Sector(
+    outer_radius=1.5,
+    angle=PI,             # 180 degrees = 1/2
+    start_angle=0,
+    color=GREEN,
+    fill_opacity=0.7
+)
+label = MathTex(r"\frac{1}{2}", font_size=36).next_to(half, UP, buff=0.3)
+
+# Show 3/4 of a circle
+circle = Circle(radius=1.5, color=BLUE, stroke_width=3)
+three_quarters = Sector(
+    outer_radius=1.5,
+    angle=3*PI/2,         # 270 degrees = 3/4
+    start_angle=0,
+    color=RED,
+    fill_opacity=0.7
+)
+```
+
+## COMPARING FRACTIONS WITH PIE CHARTS
+```python
+# Compare 1/2 vs 1/4 side by side
+# Left pie: 1/2
+circle1 = Circle(radius=1.2, color=BLUE, stroke_width=3).shift(LEFT * 3)
+half = Sector(outer_radius=1.2, angle=PI, color=YELLOW, fill_opacity=0.7).shift(LEFT * 3)
+label1 = MathTex(r"\frac{1}{2}", font_size=32).next_to(circle1, DOWN, buff=0.3)
+
+# Right pie: 1/4
+circle2 = Circle(radius=1.2, color=BLUE, stroke_width=3).shift(RIGHT * 3)
+quarter = Sector(outer_radius=1.2, angle=PI/2, color=GREEN, fill_opacity=0.7).shift(RIGHT * 3)
+label2 = MathTex(r"\frac{1}{4}", font_size=32).next_to(circle2, DOWN, buff=0.3)
+
+# Greater than symbol in middle
+greater = MathTex(r">", font_size=48, color=WHITE).move_to(ORIGIN)
+
+self.play(Create(circle1), Create(circle2), run_time=1.0)
+self.play(Create(half), Create(quarter), run_time=1.0)
+self.play(Write(label1), Write(label2), run_time=0.8)
+self.play(Write(greater), run_time=0.5)
+```
+
+## BAR MODEL FRACTIONS
+```python
+# Show 2/5 using a bar divided into 5 parts
+bar_width = 5
+part_width = bar_width / 5
+
+# Create 5 rectangles
+parts = VGroup()
+for i in range(5):
+    rect = Rectangle(
+        width=part_width - 0.05,
+        height=0.8,
+        color=WHITE,
+        stroke_width=2
+    )
+    if i < 2:  # Fill first 2 parts (2/5)
+        rect.set_fill(BLUE, opacity=0.7)
+    rect.shift(RIGHT * (i * part_width - bar_width/2 + part_width/2))
+    parts.add(rect)
+
+label = MathTex(r"\frac{2}{5}", font_size=40).next_to(parts, DOWN, buff=0.5)
+
+self.play(Create(parts), run_time=1.5)
+self.play(Write(label), run_time=0.8)
+
+# Highlight the numerator (filled parts)
+brace_top = Brace(VGroup(parts[0], parts[1]), UP, color=YELLOW)
+num_label = Text("2 parts shaded", font_size=24, color=YELLOW).next_to(brace_top, UP, buff=0.2)
+
+self.play(Create(brace_top), Write(num_label), run_time=1.0)
+```
+
+## NUMBER LINE FRACTIONS
+```python
+# Number line from 0 to 1 showing fractions
+line = NumberLine(
+    x_range=[0, 1, 0.25],
+    length=10,
+    include_numbers=True,
+    numbers_to_include=[0, 0.25, 0.5, 0.75, 1],
+    decimal_number_config={"num_decimal_places": 2}
+)
+
+# Add fraction labels
+labels = VGroup()
+fractions = [(0.25, r"\frac{1}{4}"), (0.5, r"\frac{1}{2}"), (0.75, r"\frac{3}{4}")]
+for pos, frac in fractions:
+    label = MathTex(frac, font_size=28, color=YELLOW)
+    label.next_to(line.n2p(pos), UP, buff=0.3)
+    labels.add(label)
+
+self.play(Create(line), run_time=1.5)
+self.play(Write(labels), run_time=1.0)
+
+# Show a point at 1/2
+dot = Dot(line.n2p(0.5), color=RED, radius=0.15)
+self.play(Create(dot), run_time=0.5)
+self.play(Indicate(dot, color=YELLOW), run_time=0.5)
+```
+
+## ADDING FRACTIONS VISUALLY
+```python
+# Show 1/4 + 1/4 = 2/4 = 1/2
+# First fraction
+circle1 = Circle(radius=1, color=BLUE, stroke_width=2).shift(LEFT * 3.5)
+q1 = Sector(outer_radius=1, angle=PI/2, color=YELLOW, fill_opacity=0.7).shift(LEFT * 3.5)
+label1 = MathTex(r"\frac{1}{4}", font_size=32).next_to(circle1, DOWN, buff=0.3)
+
+# Plus sign
+plus = MathTex(r"+", font_size=40).shift(LEFT * 1.8)
+
+# Second fraction
+circle2 = Circle(radius=1, color=BLUE, stroke_width=2).shift(LEFT * 0)
+q2 = Sector(outer_radius=1, angle=PI/2, color=YELLOW, fill_opacity=0.7).shift(LEFT * 0)
+label2 = MathTex(r"\frac{1}{4}", font_size=32).next_to(circle2, DOWN, buff=0.3)
+
+# Equals sign
+equals = MathTex(r"=", font_size=40).shift(RIGHT * 1.8)
+
+# Result
+circle3 = Circle(radius=1, color=BLUE, stroke_width=2).shift(RIGHT * 3.5)
+half = Sector(outer_radius=1, angle=PI, color=GREEN, fill_opacity=0.7).shift(RIGHT * 3.5)
+label3 = MathTex(r"\frac{1}{2}", font_size=32).next_to(circle3, DOWN, buff=0.3)
+
+# Animate step by step
+self.play(Create(circle1), Create(q1), Write(label1), run_time=1.0)
+self.play(Write(plus), run_time=0.3)
+self.play(Create(circle2), Create(q2), Write(label2), run_time=1.0)
+self.play(Write(equals), run_time=0.3)
+self.play(Create(circle3), Create(half), Write(label3), run_time=1.0)
+```
+
+## EQUIVALENT FRACTIONS
+```python
+# Show 1/2 = 2/4 = 4/8 using bars
+bar_width = 4
+
+# 1/2 bar
+bar1 = VGroup()
+for i in range(2):
+    rect = Rectangle(width=bar_width/2 - 0.02, height=0.6, stroke_width=2)
+    if i == 0:
+        rect.set_fill(BLUE, opacity=0.7)
+    bar1.add(rect)  # FIXED: Add rect to VGroup
+bar1.arrange(RIGHT, buff=0.02)
+bar1.shift(UP * 1.5)
+label1 = MathTex(r"\frac{1}{2}", font_size=32).next_to(bar1, LEFT, buff=0.5)
+
+# 2/4 bar
+bar2 = VGroup()
+for i in range(4):
+    rect = Rectangle(width=bar_width/4 - 0.02, height=0.6, stroke_width=2)
+    if i < 2:
+        rect.set_fill(BLUE, opacity=0.7)
+    bar2.add(rect)  # FIXED: Add rect to VGroup
+bar2.arrange(RIGHT, buff=0.02)
+bar2.shift(UP * 0)
+label2 = MathTex(r"\frac{2}{4}", font_size=32).next_to(bar2, LEFT, buff=0.5)
+
+# 4/8 bar
+bar3 = VGroup()
+for i in range(8):
+    rect = Rectangle(width=bar_width/8 - 0.02, height=0.6, stroke_width=2)
+    if i < 4:
+        rect.set_fill(BLUE, opacity=0.7)
+    bar3.add(rect)  # FIXED: Add rect to VGroup
+bar3.arrange(RIGHT, buff=0.02)
+bar3.shift(DOWN * 1.5)
+label3 = MathTex(r"\frac{4}{8}", font_size=32).next_to(bar3, LEFT, buff=0.5)
+
+# Equal signs
+eq1 = MathTex(r"=", font_size=36).move_to(UP * 0.75 + RIGHT * 3)
+eq2 = MathTex(r"=", font_size=36).move_to(DOWN * 0.75 + RIGHT * 3)
+
+self.play(Create(bar1), Write(label1), run_time=1.0)
+self.play(Create(bar2), Write(label2), Write(eq1), run_time=1.0)
+self.play(Create(bar3), Write(label3), Write(eq2), run_time=1.0)
+```
+
+## FRACTION OF A QUANTITY
+```python
+# Find 3/4 of 12 (show 12 objects, highlight 9)
+# Create 12 dots in a 3x4 grid
+dots = VGroup()
+for row in range(3):
+    for col in range(4):
+        dot = Circle(radius=0.25, color=BLUE, fill_opacity=0.3, stroke_width=2)
+        dot.move_to(LEFT * 1.5 + RIGHT * col + UP * 1 + DOWN * row)
+        dots.add(dot)
+
+# Label
+total_label = Text("12 objects", font_size=28, color=WHITE).next_to(dots, UP, buff=0.5)
+
+self.play(Create(dots), run_time=1.5)
+self.play(Write(total_label), run_time=0.8)
+
+# Highlight 9 of them (3/4)
+for i in range(9):
+    dots[i].set_fill(YELLOW, opacity=0.8)
+
+self.play(*[dots[i].animate.set_fill(YELLOW, opacity=0.8) for i in range(9)], run_time=1.5)
+
+# Show calculation
+calc = MathTex(r"\frac{3}{4} \times 12 = 9", font_size=36).next_to(dots, DOWN, buff=0.5)
+self.play(Write(calc), run_time=1.0)
+```

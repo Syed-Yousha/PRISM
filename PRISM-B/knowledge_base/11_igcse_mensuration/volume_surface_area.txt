@@ -1,0 +1,631 @@
+================================================================================
+IGCSE/O-LEVEL: VOLUME AND SURFACE AREA (3D SHAPES)
+================================================================================
+
+## 1. Volume and Surface Area of Cuboids
+
+```python
+from manim import *
+import numpy as np
+
+class CuboidVolumeSA(ThreeDScene):
+    def construct(self):
+        self.set_camera_orientation(phi=70 * DEGREES, theta=-45 * DEGREES)
+        
+        title = Text("Cuboid: Volume & Surface Area", font_size=32, color=BLUE)
+        title.to_edge(UP)
+        title.fix_in_frame()
+        self.add(title)
+        
+        # Cuboid
+        cuboid = Prism(dimensions=[3, 2, 1.5], fill_color=YELLOW, fill_opacity=0.5)
+        
+        self.play(Create(cuboid))
+        self.wait(0.5)
+        
+        # Labels
+        length_label = MathTex("l = 6", font_size=24, color=WHITE)
+        width_label = MathTex("w = 4", font_size=24, color=WHITE)
+        height_label = MathTex("h = 3", font_size=24, color=WHITE)
+        
+        length_label.next_to(cuboid, DOWN + RIGHT)
+        width_label.next_to(cuboid, DOWN + LEFT)
+        height_label.next_to(cuboid, UP)
+        
+        for label in [length_label, width_label, height_label]:
+            label.fix_in_frame()
+        
+        self.add(length_label, width_label, height_label)
+        
+        # Formulas (fixed to frame)
+        formulas = VGroup(
+            Text("Volume = l × w × h", font_size=22),
+            MathTex(r"= 6 \times 4 \times 3 = 72 \text{ cm}^3", font_size=22, color=GREEN),
+            Text("Surface Area = 2(lw + lh + wh)", font_size=20),
+            MathTex(r"= 2(24 + 18 + 12) = 108 \text{ cm}^2", font_size=22, color=GREEN),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.2)
+        formulas.to_edge(RIGHT)
+        formulas.shift(DOWN * 0.5)
+        formulas.fix_in_frame()
+        
+        self.add(formulas)
+        
+        # Rotate for better view
+        self.begin_ambient_camera_rotation(rate=0.2)
+        self.wait(3)
+        self.stop_ambient_camera_rotation()
+```
+
+## 2. Volume and Surface Area of Cylinders
+
+```python
+from manim import *
+import numpy as np
+
+class CylinderVolumeSA(Scene):
+    def construct(self):
+        title = Text("Cylinder: Volume & Surface Area", font_size=32, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # 2D representation of cylinder
+        # Side view (rectangle)
+        side = Rectangle(width=2.5, height=3, color=YELLOW, fill_opacity=0.3)
+        side.shift(LEFT * 2.5)
+        
+        # Top ellipse
+        top = Ellipse(width=2.5, height=0.8, color=YELLOW)
+        top.shift(LEFT * 2.5 + UP * 1.5)
+        
+        # Bottom ellipse
+        bottom = Ellipse(width=2.5, height=0.8, color=YELLOW, stroke_opacity=0.5)
+        bottom.shift(LEFT * 2.5 + DOWN * 1.5)
+        
+        self.play(Create(side), Create(top), Create(bottom))
+        
+        # Labels
+        r_label = MathTex("r = 5", font_size=22, color=RED)
+        r_label.next_to(top, RIGHT, buff=0.2)
+        
+        h_label = MathTex("h = 12", font_size=22, color=GREEN)
+        h_label.next_to(side, LEFT, buff=0.2)
+        
+        # Radius line
+        r_line = Line(LEFT * 2.5 + UP * 1.5, LEFT * 1.25 + UP * 1.5, color=RED, stroke_width=3)
+        
+        self.play(Create(r_line), Write(r_label), Write(h_label))
+        
+        # Formulas
+        formulas = VGroup(
+            Text("Volume:", font_size=22, color=YELLOW, weight=BOLD),
+            MathTex(r"V = \pi r^2 h", font_size=24),
+            MathTex(r"= \pi \times 5^2 \times 12", font_size=22),
+            MathTex(r"= 300\pi \approx 942.5 \text{ cm}^3", font_size=22, color=GREEN),
+            Text(" ", font_size=10),
+            Text("Surface Area:", font_size=22, color=YELLOW, weight=BOLD),
+            MathTex(r"SA = 2\pi r^2 + 2\pi rh", font_size=22),
+            Text("(2 circles + curved surface)", font_size=16, color=GRAY),
+            MathTex(r"= 2\pi(25) + 2\pi(5)(12)", font_size=22),
+            MathTex(r"= 50\pi + 120\pi = 170\pi", font_size=22),
+            MathTex(r"\approx 534.1 \text{ cm}^2", font_size=22, color=GREEN),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.12)
+        formulas.shift(RIGHT * 2.5 + DOWN * 0.2)
+        
+        self.play(Write(formulas), run_time=3)
+        
+        self.wait(2)
+```
+
+## 3. Volume and Surface Area of Cones
+
+```python
+from manim import *
+import numpy as np
+
+class ConeVolumeSA(Scene):
+    def construct(self):
+        title = Text("Cone: Volume & Surface Area", font_size=32, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # 2D representation of cone
+        cone_sides = Polygon(
+            LEFT * 1.5 + DOWN * 1.5,
+            UP * 1.5,
+            RIGHT * 1.5 + DOWN * 1.5,
+            color=YELLOW, fill_opacity=0.3
+        )
+        cone_sides.shift(LEFT * 3 + DOWN * 0.5)
+        
+        # Base ellipse
+        base = Ellipse(width=3, height=0.8, color=YELLOW)
+        base.shift(LEFT * 3 + DOWN * 2)
+        
+        self.play(Create(cone_sides), Create(base))
+        
+        # Labels
+        r_label = MathTex("r = 3", font_size=20, color=RED)
+        r_label.next_to(base, DOWN, buff=0.1)
+        
+        h_label = MathTex("h = 4", font_size=20, color=GREEN)
+        h_label.shift(LEFT * 2.3 + DOWN * 0.5)
+        
+        # Slant height
+        slant_line = Line(LEFT * 3 + UP * 1, LEFT * 1.5 + DOWN * 2, color=PURPLE, stroke_width=3)
+        l_label = MathTex("l = 5", font_size=20, color=PURPLE)
+        l_label.next_to(slant_line, RIGHT, buff=0.1)
+        
+        # Height line
+        h_line = DashedLine(LEFT * 3 + UP * 1, LEFT * 3 + DOWN * 2, color=GREEN)
+        
+        self.play(Create(h_line), Write(h_label), Write(r_label))
+        self.play(Create(slant_line), Write(l_label))
+        
+        # Note about slant height
+        slant_note = MathTex(r"l = \sqrt{r^2 + h^2} = \sqrt{9+16} = 5", font_size=18, color=PURPLE)
+        slant_note.shift(LEFT * 3 + DOWN * 2.8)
+        self.play(Write(slant_note))
+        
+        # Formulas
+        formulas = VGroup(
+            Text("Volume:", font_size=20, color=YELLOW, weight=BOLD),
+            MathTex(r"V = \frac{1}{3}\pi r^2 h", font_size=22),
+            MathTex(r"= \frac{1}{3}\pi \times 9 \times 4 = 12\pi", font_size=20),
+            MathTex(r"\approx 37.7 \text{ cm}^3", font_size=20, color=GREEN),
+            Text(" ", font_size=8),
+            Text("Curved Surface Area:", font_size=18, color=YELLOW),
+            MathTex(r"CSA = \pi r l = \pi \times 3 \times 5 = 15\pi", font_size=20),
+            Text("Total Surface Area:", font_size=18, color=YELLOW),
+            MathTex(r"TSA = \pi r l + \pi r^2 = 15\pi + 9\pi = 24\pi", font_size=20),
+            MathTex(r"\approx 75.4 \text{ cm}^2", font_size=20, color=GREEN),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.1)
+        formulas.shift(RIGHT * 2 + DOWN * 0.3)
+        
+        self.play(Write(formulas), run_time=3)
+        
+        self.wait(2)
+```
+
+## 4. Volume and Surface Area of Spheres
+
+```python
+from manim import *
+import numpy as np
+
+class SphereVolumeSA(Scene):
+    def construct(self):
+        title = Text("Sphere: Volume & Surface Area", font_size=32, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # 2D representation of sphere (circle with shading)
+        sphere = Circle(radius=2, color=YELLOW, fill_opacity=0.3)
+        sphere.shift(LEFT * 2.5)
+        
+        # Add some depth lines
+        equator = Ellipse(width=4, height=1, color=YELLOW, stroke_opacity=0.5)
+        equator.shift(LEFT * 2.5)
+        
+        self.play(Create(sphere), Create(equator))
+        
+        # Radius
+        center = Dot(LEFT * 2.5, color=WHITE)
+        radius_line = Line(LEFT * 2.5, LEFT * 0.5, color=RED, stroke_width=4)
+        r_label = MathTex("r = 6", font_size=24, color=RED)
+        r_label.next_to(radius_line, UP, buff=0.1)
+        
+        self.play(Create(center), Create(radius_line), Write(r_label))
+        
+        # Formulas
+        formulas = VGroup(
+            Text("Volume:", font_size=24, color=YELLOW, weight=BOLD),
+            MathTex(r"V = \frac{4}{3}\pi r^3", font_size=28),
+            MathTex(r"= \frac{4}{3}\pi \times 6^3", font_size=24),
+            MathTex(r"= \frac{4}{3}\pi \times 216 = 288\pi", font_size=24),
+            MathTex(r"\approx 904.8 \text{ cm}^3", font_size=24, color=GREEN),
+            Text(" ", font_size=10),
+            Text("Surface Area:", font_size=24, color=YELLOW, weight=BOLD),
+            MathTex(r"SA = 4\pi r^2", font_size=28),
+            MathTex(r"= 4\pi \times 36 = 144\pi", font_size=24),
+            MathTex(r"\approx 452.4 \text{ cm}^2", font_size=24, color=GREEN),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        formulas.shift(RIGHT * 2.5)
+        
+        self.play(Write(formulas), run_time=3)
+        
+        # Memory aid
+        memory = Text("Remember: 4/3 for volume, 4 for SA", font_size=18, color=ORANGE)
+        memory.to_edge(DOWN, buff=0.4)
+        self.play(Write(memory))
+        
+        self.wait(2)
+```
+
+## 5. Volume and Surface Area of Pyramids
+
+```python
+from manim import *
+import numpy as np
+
+class PyramidVolumeSA(Scene):
+    def construct(self):
+        title = Text("Pyramid: Volume & Surface Area", font_size=32, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Square-based pyramid
+        # Base
+        base = Square(side_length=3, color=YELLOW, fill_opacity=0.2)
+        base.shift(LEFT * 3 + DOWN * 1.5)
+        base.rotate(PI/6)  # Slight rotation for 3D effect
+        
+        # Apex
+        apex = LEFT * 3 + UP * 1.5
+        
+        # Edges
+        corners = base.get_vertices()
+        edges = VGroup()
+        for corner in corners:
+            edge = Line(corner, apex, color=YELLOW)
+            edges.add(edge)
+        
+        self.play(Create(base), Create(edges))
+        
+        # Labels
+        base_label = MathTex("\\text{base} = 6 \\times 6", font_size=20, color=WHITE)
+        base_label.next_to(base, DOWN, buff=0.3)
+        
+        h_label = MathTex("h = 4", font_size=20, color=GREEN)
+        h_label.shift(LEFT * 2.3)
+        
+        # Height line
+        h_line = DashedLine(apex, LEFT * 3 + DOWN * 1.5, color=GREEN)
+        self.play(Create(h_line), Write(h_label), Write(base_label))
+        
+        # Formulas
+        formulas = VGroup(
+            Text("Volume:", font_size=22, color=YELLOW, weight=BOLD),
+            MathTex(r"V = \frac{1}{3} \times \text{base area} \times h", font_size=22),
+            MathTex(r"= \frac{1}{3} \times 36 \times 4", font_size=22),
+            MathTex(r"= 48 \text{ cm}^3", font_size=24, color=GREEN),
+            Text(" ", font_size=10),
+            Text("Surface Area:", font_size=22, color=YELLOW, weight=BOLD),
+            Text("= Base + 4 triangular faces", font_size=18, color=GRAY),
+            MathTex(r"SA = l^2 + 4 \times \frac{1}{2}bl_s", font_size=22),
+            Text("(where l_s = slant height)", font_size=16, color=GRAY),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.12)
+        formulas.shift(RIGHT * 2 + DOWN * 0.3)
+        
+        self.play(Write(formulas), run_time=2.5)
+        
+        # Key formula box
+        key = MathTex(r"V_{\text{pyramid}} = \frac{1}{3} \times V_{\text{prism}}", font_size=24, color=ORANGE)
+        key.to_edge(DOWN, buff=0.4)
+        box = SurroundingRectangle(key, color=ORANGE)
+        
+        self.play(Write(key), Create(box))
+        
+        self.wait(2)
+```
+
+## 6. Hemispheres
+
+```python
+from manim import *
+import numpy as np
+
+class HemisphereVolumeSA(Scene):
+    def construct(self):
+        title = Text("Hemisphere", font_size=40, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Hemisphere (semicircle + base)
+        arc = Arc(radius=2, start_angle=0, angle=PI, color=YELLOW, fill_opacity=0.3)
+        arc.shift(LEFT * 2.5)
+        
+        base = Line(LEFT * 4.5, LEFT * 0.5, color=YELLOW, stroke_width=3)
+        
+        self.play(Create(arc), Create(base))
+        
+        # Radius
+        center = Dot(LEFT * 2.5, color=WHITE)
+        radius_line = Line(LEFT * 2.5, LEFT * 0.5, color=RED, stroke_width=3)
+        r_label = MathTex("r = 7", font_size=22, color=RED)
+        r_label.next_to(radius_line, DOWN, buff=0.1)
+        
+        self.play(Create(center), Create(radius_line), Write(r_label))
+        
+        # Formulas
+        formulas = VGroup(
+            Text("Volume:", font_size=22, color=YELLOW, weight=BOLD),
+            MathTex(r"V = \frac{1}{2} \times \frac{4}{3}\pi r^3 = \frac{2}{3}\pi r^3", font_size=22),
+            MathTex(r"= \frac{2}{3}\pi \times 343 = \frac{686\pi}{3}", font_size=22),
+            MathTex(r"\approx 718.4 \text{ cm}^3", font_size=22, color=GREEN),
+            Text(" ", font_size=10),
+            Text("Curved Surface Area:", font_size=20, color=YELLOW),
+            MathTex(r"CSA = \frac{1}{2} \times 4\pi r^2 = 2\pi r^2", font_size=22),
+            MathTex(r"= 2\pi \times 49 = 98\pi \approx 307.9 \text{ cm}^2", font_size=20, color=GREEN),
+            Text(" ", font_size=10),
+            Text("Total Surface Area:", font_size=20, color=YELLOW),
+            MathTex(r"TSA = 2\pi r^2 + \pi r^2 = 3\pi r^2", font_size=22),
+            Text("(curved + flat base)", font_size=16, color=GRAY),
+            MathTex(r"= 3\pi \times 49 = 147\pi \approx 461.8 \text{ cm}^2", font_size=20, color=GREEN),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.1)
+        formulas.shift(RIGHT * 2 + DOWN * 0.5)
+        formulas.scale(0.9)
+        
+        self.play(Write(formulas), run_time=3)
+        
+        self.wait(2)
+```
+
+## 7. Composite 3D Shapes
+
+```python
+from manim import *
+import numpy as np
+
+class Composite3DShapes(Scene):
+    def construct(self):
+        title = Text("Composite 3D Shapes", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Cylinder with hemisphere on top (like a silo)
+        # Cylinder (rectangle)
+        cylinder = Rectangle(width=2, height=3, color=YELLOW, fill_opacity=0.3)
+        cylinder.shift(LEFT * 3 + DOWN * 0.5)
+        
+        # Hemisphere on top (semicircle)
+        hemisphere = Arc(radius=1, start_angle=0, angle=PI, color=YELLOW, fill_opacity=0.3)
+        hemisphere.shift(LEFT * 3 + UP * 1)
+        
+        self.play(Create(cylinder), Create(hemisphere))
+        
+        # Labels
+        r_label = MathTex("r = 4", font_size=20, color=RED)
+        r_label.next_to(hemisphere, RIGHT, buff=0.5)
+        
+        h_label = MathTex("h = 10", font_size=20, color=GREEN)
+        h_label.next_to(cylinder, LEFT, buff=0.2)
+        
+        self.play(Write(r_label), Write(h_label))
+        
+        # Volume calculation
+        vol_calc = VGroup(
+            Text("Total Volume:", font_size=22, color=YELLOW, weight=BOLD),
+            Text("= Cylinder + Hemisphere", font_size=18, color=GRAY),
+            MathTex(r"= \pi r^2 h + \frac{2}{3}\pi r^3", font_size=22),
+            MathTex(r"= \pi(4)^2(10) + \frac{2}{3}\pi(4)^3", font_size=20),
+            MathTex(r"= 160\pi + \frac{128\pi}{3}", font_size=20),
+            MathTex(r"= \frac{608\pi}{3} \approx 636.7 \text{ cm}^3", font_size=22, color=GREEN),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.12)
+        vol_calc.shift(RIGHT * 2 + UP * 0.5)
+        
+        self.play(Write(vol_calc), run_time=2)
+        
+        # Surface area note
+        sa_note = VGroup(
+            Text("Surface Area:", font_size=20, color=ORANGE),
+            Text("Curved cylinder + hemisphere + base", font_size=16, color=WHITE),
+            MathTex(r"= 2\pi rh + 2\pi r^2 + \pi r^2", font_size=18),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.1)
+        sa_note.to_edge(DOWN, buff=0.3)
+        
+        self.play(Write(sa_note))
+        
+        self.wait(2)
+```
+
+## 8. Converting Volume Units
+
+```python
+from manim import *
+import numpy as np
+
+class VolumeUnitConversions(Scene):
+    def construct(self):
+        title = Text("Converting Volume Units", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Key principle
+        principle = Text("Volume units are cubed!", font_size=24, color=YELLOW)
+        principle.next_to(title, DOWN, buff=0.2)
+        self.play(Write(principle))
+        
+        # Visual
+        cube = Square(side_length=2, color=GREEN, fill_opacity=0.3)
+        cube.shift(LEFT * 3)
+        
+        label = MathTex("1 \\text{ m}", font_size=22)
+        label.next_to(cube, DOWN)
+        
+        self.play(Create(cube), Write(label))
+        
+        # Conversion explanation
+        expl = VGroup(
+            MathTex(r"1 \text{ m} = 100 \text{ cm}", font_size=22),
+            MathTex(r"1 \text{ m}^3 = 100 \times 100 \times 100 \text{ cm}^3", font_size=22),
+            MathTex(r"= 1000000 \text{ cm}^3", font_size=26, color=GREEN),
+        ).arrange(DOWN, buff=0.2)
+        expl.shift(RIGHT * 1 + UP * 1)
+        
+        self.play(Write(expl))
+        
+        # Conversion table
+        table = VGroup(
+            Text("Key Conversions:", font_size=22, color=ORANGE, weight=BOLD),
+            MathTex(r"1 \text{ m}^3 = 1000000 \text{ cm}^3", font_size=20),
+            MathTex(r"1 \text{ cm}^3 = 1 \text{ ml}", font_size=20),
+            MathTex(r"1000 \text{ cm}^3 = 1 \text{ litre}", font_size=20),
+            MathTex(r"1 \text{ m}^3 = 1000 \text{ litres}", font_size=20),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        table.shift(RIGHT * 1 + DOWN * 1.5)
+        
+        self.play(Write(table))
+        
+        # Example
+        example = VGroup(
+            Text("Example:", font_size=18, color=WHITE),
+            MathTex(r"500 \text{ cm}^3 = 500 \text{ ml} = 0.5 \text{ litres}", font_size=20, color=YELLOW),
+        ).arrange(DOWN, buff=0.1)
+        example.to_edge(DOWN, buff=0.3)
+        
+        self.play(Write(example))
+        
+        self.wait(2)
+```
+
+## 9. Density Problems
+
+```python
+from manim import *
+import numpy as np
+
+class DensityProblems(Scene):
+    def construct(self):
+        title = Text("Density = Mass ÷ Volume", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Triangle showing relationship
+        # D = M/V, M = D×V, V = M/D
+        
+        # Triangle
+        triangle = Polygon(
+            UP * 1.5, DOWN * 0.5 + LEFT * 1.5, DOWN * 0.5 + RIGHT * 1.5,
+            color=YELLOW
+        )
+        triangle.shift(LEFT * 3 + DOWN * 0.5)
+        
+        self.play(Create(triangle))
+        
+        # Labels
+        M_label = MathTex("M", font_size=32, color=RED)
+        M_label.move_to(LEFT * 3 + UP * 0.8)
+        
+        D_label = MathTex("D", font_size=32, color=GREEN)
+        D_label.move_to(LEFT * 4 + DOWN * 0.2)
+        
+        V_label = MathTex("V", font_size=32, color=PURPLE)
+        V_label.move_to(LEFT * 2 + DOWN * 0.2)
+        
+        self.play(Write(M_label), Write(D_label), Write(V_label))
+        
+        # Horizontal line
+        h_line = Line(LEFT * 4.2 + DOWN * 0.5, LEFT * 1.8 + DOWN * 0.5, color=WHITE)
+        self.play(Create(h_line))
+        
+        # Formulas
+        formulas = VGroup(
+            MathTex(r"D = \frac{M}{V}", font_size=28, color=GREEN),
+            MathTex(r"M = D \times V", font_size=28, color=RED),
+            MathTex(r"V = \frac{M}{D}", font_size=28, color=PURPLE),
+        ).arrange(DOWN, buff=0.3)
+        formulas.shift(RIGHT * 1 + UP * 0.5)
+        
+        self.play(Write(formulas))
+        
+        # Example problem
+        problem = VGroup(
+            Text("Example:", font_size=20, color=YELLOW, weight=BOLD),
+            Text("A cube has side 5 cm and mass 500 g.", font_size=18),
+            Text("Find the density.", font_size=18),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.1)
+        problem.shift(RIGHT * 1 + DOWN * 1.5)
+        
+        self.play(Write(problem))
+        
+        solution = VGroup(
+            MathTex(r"V = 5^3 = 125 \text{ cm}^3", font_size=20),
+            MathTex(r"D = \frac{500}{125} = 4 \text{ g/cm}^3", font_size=22, color=GREEN),
+        ).arrange(DOWN, buff=0.15)
+        solution.next_to(problem, DOWN, buff=0.3)
+        
+        self.play(Write(solution))
+        
+        self.wait(2)
+```
+
+## 10. Similar Solids (Volume and Surface Area Ratios)
+
+```python
+from manim import *
+import numpy as np
+
+class SimilarSolids(Scene):
+    def construct(self):
+        title = Text("Similar Solids", font_size=40, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Two similar cones
+        # Small cone
+        small_cone = Polygon(
+            LEFT * 0.5 + DOWN * 1, UP * 0.8, RIGHT * 0.5 + DOWN * 1,
+            color=RED, fill_opacity=0.3
+        )
+        small_cone.shift(LEFT * 4)
+        small_base = Ellipse(width=1, height=0.3, color=RED)
+        small_base.shift(LEFT * 4 + DOWN * 1)
+        
+        self.play(Create(small_cone), Create(small_base))
+        
+        # Large cone (scale factor k = 2)
+        large_cone = Polygon(
+            LEFT * 1 + DOWN * 2, UP * 1.6, RIGHT * 1 + DOWN * 2,
+            color=GREEN, fill_opacity=0.3
+        )
+        large_cone.shift(RIGHT * 0.5)
+        large_base = Ellipse(width=2, height=0.6, color=GREEN)
+        large_base.shift(RIGHT * 0.5 + DOWN * 2)
+        
+        self.play(Create(large_cone), Create(large_base))
+        
+        # Labels
+        small_label = MathTex("r = 3", font_size=20, color=RED)
+        small_label.next_to(small_base, DOWN, buff=0.1)
+        
+        large_label = MathTex("r = 6", font_size=20, color=GREEN)
+        large_label.next_to(large_base, DOWN, buff=0.1)
+        
+        self.play(Write(small_label), Write(large_label))
+        
+        # Scale factor
+        sf = MathTex(r"\text{Scale factor } k = \frac{6}{3} = 2", font_size=24, color=YELLOW)
+        sf.shift(RIGHT * 3.5 + UP * 2)
+        self.play(Write(sf))
+        
+        # Key relationships
+        relations = VGroup(
+            Text("If linear scale factor = k:", font_size=20, color=WHITE),
+            MathTex(r"\text{Surface Area ratio} = k^2 = 4", font_size=22, color=ORANGE),
+            MathTex(r"\text{Volume ratio} = k^3 = 8", font_size=22, color=GREEN),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.2)
+        relations.shift(RIGHT * 3 + DOWN * 0.5)
+        
+        self.play(Write(relations))
+        
+        # Example calculation
+        example = VGroup(
+            Text("If small cone volume = 30 cm³", font_size=18, color=GRAY),
+            MathTex(r"\text{Large cone volume} = 30 \times 8 = 240 \text{ cm}^3", font_size=20, color=GREEN),
+        ).arrange(DOWN, buff=0.1)
+        example.to_edge(DOWN, buff=0.4)
+        
+        self.play(Write(example))
+        
+        # Formula box
+        formula_box = VGroup(
+            MathTex(r"\frac{V_1}{V_2} = \left(\frac{l_1}{l_2}\right)^3 = k^3", font_size=24, color=YELLOW),
+            MathTex(r"\frac{SA_1}{SA_2} = \left(\frac{l_1}{l_2}\right)^2 = k^2", font_size=24, color=YELLOW),
+        ).arrange(DOWN, buff=0.2)
+        formula_box.to_edge(LEFT).shift(DOWN * 2)
+        box = SurroundingRectangle(formula_box, color=YELLOW)
+        
+        self.play(Write(formula_box), Create(box))
+        
+        self.wait(2)
+```

@@ -1,0 +1,315 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# PERCENTAGES - Increase, Decrease, Reverse, Compound Interest
+# IGCSE/O-Level Number Topic
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## PERCENTAGE OF AN AMOUNT
+```python
+# Find 35% of 240
+title = Text("Percentage of an Amount", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+problem = MathTex("\\text{Find } 35\\% \\text{ of } 240", font_size=44).shift(UP * 1.5)
+
+# Method 1: Decimal
+method1 = VGroup(
+    Text("Method 1: Convert to decimal", font_size=26, color=BLUE),
+    MathTex("35\\% = 0.35", font_size=36),
+    MathTex("0.35 \\times 240 = 84", font_size=40, color=GREEN)
+).arrange(DOWN, buff=0.3)
+method1.shift(LEFT * 3 + DOWN * 0.5)
+
+# Method 2: Fraction
+method2 = VGroup(
+    Text("Method 2: Use fraction", font_size=26, color=RED),
+    MathTex("35\\% = \\frac{35}{100}", font_size=36),
+    MathTex("\\frac{35}{100} \\times 240 = 84", font_size=40, color=GREEN)
+).arrange(DOWN, buff=0.3)
+method2.shift(RIGHT * 3 + DOWN * 0.5)
+
+# Dividing line
+divider = Line(UP * 0.5 + ORIGIN, DOWN * 2.5 + ORIGIN, color=GRAY)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(problem), run_time=1.0)
+self.play(Create(divider), run_time=0.5)
+self.play(Write(method1), run_time=2.0)
+self.play(Write(method2), run_time=2.0)
+```
+
+## PERCENTAGE BAR MODEL
+```python
+# Visual representation of percentage
+title = Text("Percentage as Part of Whole", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Full bar = 100%
+full_bar = Rectangle(width=10, height=1, fill_opacity=0.3, fill_color=GRAY, color=WHITE)
+full_bar.shift(UP * 1)
+full_label = MathTex("100\\%", font_size=28).next_to(full_bar, RIGHT, buff=0.3)
+
+# 75% highlighted
+partial_bar = Rectangle(width=7.5, height=1, fill_opacity=0.7, fill_color=BLUE, color=BLUE)
+partial_bar.align_to(full_bar, LEFT).shift(UP * 1)
+partial_label = MathTex("75\\%", font_size=28, color=BLUE).move_to(partial_bar)
+
+# Remaining 25%
+remaining = MathTex("25\\%", font_size=24, color=RED).shift(UP * 1 + RIGHT * 4)
+
+# Percentage markers
+markers = VGroup()
+for i in range(0, 101, 25):
+    x_pos = -5 + (i/100) * 10
+    tick = Line(UP * 0.3, DOWN * 0.3, color=WHITE).shift(RIGHT * x_pos + DOWN * 0.2)
+    label = MathTex(f"{i}\\%", font_size=20).next_to(tick, DOWN, buff=0.2)
+    markers.add(VGroup(tick, label))
+
+# Equation
+equation = MathTex("75\\% + 25\\% = 100\\%", font_size=36, color=WHITE).shift(DOWN * 1.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(full_bar), Write(full_label), run_time=1.0)
+self.play(Create(partial_bar), Write(partial_label), run_time=1.0)
+self.play(Write(remaining), run_time=0.5)
+self.play(Create(markers), run_time=1.5)
+self.play(Write(equation), run_time=1.0)
+```
+
+## PERCENTAGE INCREASE
+```python
+# Increase 80 by 15%
+title = Text("Percentage Increase", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+problem = Text("Increase 80 by 15%", font_size=32, color=WHITE).shift(UP * 2)
+
+# Method 1: Find increase then add
+method1 = VGroup(
+    Text("Method 1: Calculate increase", font_size=24, color=BLUE),
+    MathTex("15\\% \\text{ of } 80 = 0.15 \\times 80 = 12", font_size=32),
+    MathTex("80 + 12 = 92", font_size=36, color=GREEN)
+).arrange(DOWN, buff=0.3)
+method1.shift(LEFT * 3 + UP * 0.3)
+
+# Method 2: Multiplier
+method2 = VGroup(
+    Text("Method 2: Use multiplier", font_size=24, color=RED),
+    MathTex("100\\% + 15\\% = 115\\% = 1.15", font_size=32),
+    MathTex("80 \\times 1.15 = 92", font_size=36, color=GREEN)
+).arrange(DOWN, buff=0.3)
+method2.shift(RIGHT * 3 + UP * 0.3)
+
+# Multiplier box
+multiplier_rule = VGroup(
+    Rectangle(width=8, height=1.2, color=YELLOW, fill_opacity=0.1),
+    Text("Multiplier for increase: 1 + (percentage/100)", font_size=22, color=YELLOW)
+)
+multiplier_rule[1].move_to(multiplier_rule[0])
+multiplier_rule.shift(DOWN * 2)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(problem), run_time=1.0)
+self.play(Write(method1), run_time=2.0)
+self.play(Write(method2), run_time=2.0)
+self.play(Create(multiplier_rule), run_time=1.0)
+```
+
+## PERCENTAGE DECREASE
+```python
+# Decrease 120 by 20%
+title = Text("Percentage Decrease", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+problem = Text("Decrease 120 by 20%", font_size=32, color=WHITE).shift(UP * 2)
+
+# Visual bar showing decrease
+original_bar = Rectangle(width=8, height=0.8, fill_opacity=0.5, fill_color=BLUE, color=BLUE)
+original_bar.shift(UP * 0.5)
+original_label = MathTex("120", font_size=28).next_to(original_bar, LEFT, buff=0.3)
+
+# Decreased portion
+decrease_bar = Rectangle(width=1.6, height=0.8, fill_opacity=0.7, fill_color=RED, color=RED)
+decrease_bar.align_to(original_bar, RIGHT).shift(UP * 0.5)
+decrease_label = MathTex("-20\\%", font_size=24, color=RED).move_to(decrease_bar)
+
+# Result bar
+result_bar = Rectangle(width=6.4, height=0.8, fill_opacity=0.7, fill_color=GREEN, color=GREEN)
+result_bar.align_to(original_bar, LEFT).shift(DOWN * 1)
+result_label = MathTex("96", font_size=28, color=GREEN).next_to(result_bar, LEFT, buff=0.3)
+
+# Calculation
+calc = VGroup(
+    MathTex("\\text{Multiplier} = 100\\% - 20\\% = 80\\% = 0.80", font_size=32),
+    MathTex("120 \\times 0.80 = 96", font_size=36, color=GREEN)
+).arrange(DOWN, buff=0.3)
+calc.shift(DOWN * 2.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(problem), run_time=1.0)
+self.play(Create(original_bar), Write(original_label), run_time=1.0)
+self.play(Create(decrease_bar), Write(decrease_label), run_time=1.0)
+self.play(Create(result_bar), Write(result_label), run_time=1.0)
+self.play(Write(calc), run_time=1.5)
+```
+
+## REVERSE PERCENTAGE
+```python
+# After 20% increase, price is $96. Find original.
+title = Text("Reverse Percentage", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+problem = VGroup(
+    Text("After a 20% increase, the price is $96.", font_size=26),
+    Text("What was the original price?", font_size=26, color=BLUE)
+).arrange(DOWN, buff=0.2)
+problem.shift(UP * 1.8)
+
+# Visual explanation
+diagram = VGroup(
+    Rectangle(width=4, height=0.8, fill_opacity=0.5, fill_color=BLUE),
+    Text("Original = ?", font_size=20)
+)
+diagram[1].move_to(diagram[0])
+diagram.shift(LEFT * 3)
+
+arrow = Arrow(LEFT * 1, RIGHT * 1, color=YELLOW)
+arrow_label = MathTex("\\times 1.20", font_size=24, color=YELLOW).next_to(arrow, UP)
+
+result = VGroup(
+    Rectangle(width=4, height=0.8, fill_opacity=0.5, fill_color=GREEN),
+    Text("$96", font_size=20)
+)
+result[1].move_to(result[0])
+result.shift(RIGHT * 3)
+
+# Solution
+solution = VGroup(
+    MathTex("\\text{Original} \\times 1.20 = 96", font_size=32),
+    MathTex("\\text{Original} = \\frac{96}{1.20}", font_size=32),
+    MathTex("\\text{Original} = \\$80", font_size=40, color=GREEN)
+).arrange(DOWN, buff=0.4)
+solution.shift(DOWN * 1.5)
+
+# Warning box
+warning = VGroup(
+    Rectangle(width=8, height=1, color=RED, fill_opacity=0.1),
+    Text("⚠ Don't calculate 20% of 96!\nDivide by multiplier instead.", font_size=20, color=RED)
+)
+warning[1].move_to(warning[0])
+warning.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(problem), run_time=1.5)
+self.play(Create(diagram), run_time=0.8)
+self.play(Create(arrow), Write(arrow_label), run_time=0.8)
+self.play(Create(result), run_time=0.8)
+self.play(Write(solution), run_time=2.5)
+self.play(Create(warning), run_time=1.0)
+```
+
+## COMPOUND INTEREST
+```python
+# $1000 at 5% for 3 years
+title = Text("Compound Interest", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Formula
+formula = MathTex("A = P(1 + r)^n", font_size=44, color=WHITE).shift(UP * 2)
+
+# Variable explanation
+variables = VGroup(
+    MathTex("A = \\text{Final Amount}", font_size=24),
+    MathTex("P = \\text{Principal (initial)}", font_size=24),
+    MathTex("r = \\text{Rate (as decimal)}", font_size=24),
+    MathTex("n = \\text{Number of years}", font_size=24)
+).arrange(DOWN, buff=0.15, aligned_edge=LEFT)
+variables.shift(LEFT * 4 + UP * 0.5)
+
+# Example calculation
+example = VGroup(
+    Text("$1000 at 5% for 3 years", font_size=26, color=BLUE),
+    MathTex("A = 1000 \\times (1.05)^3", font_size=32),
+    MathTex("A = 1000 \\times 1.157625", font_size=32),
+    MathTex("A = \\$1157.63", font_size=36, color=GREEN)
+).arrange(DOWN, buff=0.3)
+example.shift(RIGHT * 2.5 + DOWN * 0.5)
+
+# Year by year breakdown
+breakdown = VGroup(
+    MathTex("\\text{Year 1: } 1000 \\times 1.05 = 1050", font_size=24),
+    MathTex("\\text{Year 2: } 1050 \\times 1.05 = 1102.50", font_size=24),
+    MathTex("\\text{Year 3: } 1102.50 \\times 1.05 = 1157.63", font_size=24)
+).arrange(DOWN, buff=0.2, aligned_edge=LEFT)
+breakdown.shift(DOWN * 2.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(formula), run_time=1.0)
+self.play(Write(variables), run_time=1.5)
+self.play(Write(example), run_time=2.5)
+self.play(Write(breakdown), run_time=2.0)
+```
+
+## SIMPLE VS COMPOUND INTEREST
+```python
+# Compare growth over time
+title = Text("Simple vs Compound Interest", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Axes
+axes = Axes(
+    x_range=[0, 10, 2],
+    y_range=[0, 2000, 400],
+    x_length=8,
+    y_length=5,
+    axis_config={"include_tip": True, "include_numbers": True}
+).shift(DOWN * 0.3)
+
+x_label = Text("Years", font_size=20).next_to(axes.x_axis, RIGHT)
+y_label = Text("Amount ($)", font_size=20).next_to(axes.y_axis, UP)
+
+# Simple interest: A = P(1 + rt)
+# P = 1000, r = 0.08
+simple_line = axes.plot(lambda t: 1000 * (1 + 0.08 * t), color=BLUE, x_range=[0, 10])
+simple_label = Text("Simple (8%)", font_size=20, color=BLUE).move_to(axes.c2p(8, 1600))
+
+# Compound interest: A = P(1 + r)^t
+compound_curve = axes.plot(lambda t: 1000 * (1.08 ** t), color=RED, x_range=[0, 10])
+compound_label = Text("Compound (8%)", font_size=20, color=RED).move_to(axes.c2p(7, 1900))
+
+# Final values
+final_simple = MathTex("\\text{Simple: } \\$1800", font_size=28, color=BLUE).to_corner(DR, buff=1)
+final_compound = MathTex("\\text{Compound: } \\$2159", font_size=28, color=RED).next_to(final_simple, UP)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(axes), Write(x_label), Write(y_label), run_time=1.5)
+self.play(Create(simple_line), Write(simple_label), run_time=1.5)
+self.play(Create(compound_curve), Write(compound_label), run_time=1.5)
+self.play(Write(final_simple), Write(final_compound), run_time=1.0)
+```
+
+## PERCENTAGE PROFIT/LOSS
+```python
+# Calculate profit percentage
+title = Text("Percentage Profit/Loss", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Formula
+formula = MathTex(
+    "\\text{Profit \\%} = \\frac{\\text{Profit}}{\\text{Cost Price}} \\times 100",
+    font_size=36
+).shift(UP * 1.5)
+
+# Example
+example = VGroup(
+    Text("Cost Price = $80, Selling Price = $100", font_size=26, color=BLUE),
+    MathTex("\\text{Profit} = 100 - 80 = \\$20", font_size=32),
+    MathTex("\\text{Profit \\%} = \\frac{20}{80} \\times 100", font_size=32),
+    MathTex("= 25\\%", font_size=40, color=GREEN)
+).arrange(DOWN, buff=0.4)
+example.move_to(DOWN * 0.5)
+
+# Note
+note = VGroup(
+    Rectangle(width=8, height=1, color=ORANGE, fill_opacity=0.1),
+    Text("Always use COST PRICE as the base, not selling price!", font_size=20, color=ORANGE)
+)
+note[1].move_to(note[0])
+note.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(formula), run_time=1.5)
+self.play(Write(example), run_time=2.5)
+self.play(Create(note), run_time=1.0)
+```

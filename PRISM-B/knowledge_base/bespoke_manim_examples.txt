@@ -1,0 +1,4538 @@
+
+# BESPOKE MANIM EXAMPLES DATABASE
+# ================================
+# These are VERIFIED, WORKING Manim Community Edition code examples.
+# Use these patterns as your primary reference for generating Manim code.
+
+
+## Example 1: Primality Testing Algorithms - Visualizing Primality: The Complex Dance of Miller-Rabin
+Visual Style: A clean and modern look with a dark blue complex plane as the base. Vibrant transformations using teal and orange arcs alongside crisp, reflective silver lines. Soft glows around paths indicating prim
+
+```python
+from manim import *
+
+class MillerRabinVisualization(Scene):
+    def construct(self):
+        # Create the complex plane
+        complex_plane = ComplexPlane(
+            x_range=[-5, 5, 1],
+            y_range=[-5, 5, 1],
+            background_line_style={
+                "stroke_color": "#1F3F73",  # Dark blue lines
+                "stroke_width": 1,
+                "stroke_opacity": 0.5
+            }
+        ).scale(0.8)  # Scale down a bit to fit everything
+        
+        # Title
+        title = Text("Visualizing Primality: The Miller-Rabin Test", font_size=32)
+        self.play(Write(title))
+        self.wait(1)
+        self.play(FadeOut(title))
+        
+        # Element 1: Complex plane fades in
+        self.play(FadeIn(complex_plane))
+        text = Text("The Complex Plane", font_size=24).to_edge(UP)
+        self.play(Write(text))
+        self.wait(1)
+        
+        # Element 2: Introduce a number to test
+        test_number = Dot(complex_plane.c2p(2, 1), color="#00B3A6")  # Teal dot
+        test_number_label = Text("n", font_size=24).next_to(test_number, UP, buff=0.1)
+        
+        self.play(FadeOut(text))
+        intro_text = Text("Testing number n for primality", font_size=24).to_edge(UP)
+        self.play(Write(intro_text), FadeIn(test_number), Write(test_number_label))
+        self.wait(1)
+        
+        # Element 3: Show transformations used in Miller-Rabin
+        self.play(FadeOut(intro_text))
+        transform_text = Text("Miller-Rabin transformations", font_size=24).to_edge(UP)
+        self.play(Write(transform_text))
+        
+        # First equation: n^d ≡ 1 (mod n)
+        eq1 = Text("n^d ≡ 1 (mod n)", font_size=24).to_edge(DOWN, buff=1)
+        self.play(Write(eq1))
+        
+        # Visualize this transformation as a rotation
+        rotation_arc = Arc(
+            arc_center=complex_plane.c2p(0, 0),
+            radius=np.sqrt(5),  # Distance to point (2,1)
+            start_angle=np.arctan2(1, 2),
+            angle=PI,
+            color="#FF7E39"  # Orange arc
+        )
+        
+        self.play(Create(rotation_arc))
+        self.wait(1)
+        
+        # Clean up and show second transformation
+        self.play(FadeOut(eq1), FadeOut(rotation_arc))
+        
+        # Second equation: a^(2^r·d) ≡ -1 (mod n)
+        eq2 = Text("a^(2^r·d) ≡ -1 (mod n)", font_size=24).to_edge(DOWN, buff=1)
+        self.play(Write(eq2))
+        
+        # Visualize this transformation as a reflection across the x-axis
+        reflection_line = Line(
+            complex_plane.c2p(-5, 0),
+            complex_plane.c2p(5, 0),
+            color="#C0C0C0"  # Silver line
+        )
+        
+        # Create the reflection of our point across the x-axis
+        reflected_point = Dot(complex_plane.c2p(2, -1), color="#00B3A6")
+        
+        self.play(Create(reflection_line))
+        self.play(Transform(test_number.copy(), reflected_point))
+        self.wait(1)
+        
+        # Clean up before moving to the next element
+        self.play(
+# ... (truncated)
+```
+
+---
+
+## Example 2: Primality Testing Algorithms - Exploring Primality: Navigating the Venn of Certainty and Probability
+Visual Style: Neo-classical 3D style with soft gradients and rich earth tones. The use of layered semi-transparent circles with highlighted intersections captures the overlapping nature of algorithms. Animated tran
+
+```python
+from manim import *
+
+class PrimalityTestingVenn(Scene):
+    def construct(self):
+        # Title
+        title = Text("Exploring Primality")
+        self.play(Write(title))
+        self.wait(1)
+        
+        # Move title to top (using Transform for maximum compatibility)
+        top_title = Text("Exploring Primality").to_edge(UP)
+        self.play(Transform(title, top_title))
+        
+        # Create Venn diagram circles
+        det_circle = Circle(radius=2.0, color=BLUE)
+        det_circle.shift(LEFT * 1.5)
+        
+        prob_circle = Circle(radius=2.0, color=RED)
+        prob_circle.shift(RIGHT * 1.5)
+        
+        # Display circles
+        self.play(Create(det_circle), Create(prob_circle))
+        
+        # Add labels
+        det_label = Text("Deterministic")
+        det_label.next_to(det_circle, UP)
+        
+        prob_label = Text("Probabilistic")
+        prob_label.next_to(prob_circle, UP)
+        
+        self.play(Write(det_label), Write(prob_label))
+        self.wait(1)
+        
+        # Add algorithm examples
+        aks = Text("AKS")
+        aks.move_to(det_circle.get_center())
+        
+        miller = Text("Miller-Rabin")
+        miller.move_to(prob_circle.get_center())
+        
+        self.play(Write(aks), Write(miller))
+        self.wait(1)
+        
+        # Add equations
+        det_eq = Text("P(prime) = 1")
+        det_eq.next_to(aks, DOWN)
+        
+        prob_eq = Text("P(prime) = 1 - 1/(2^k)")
+        prob_eq.next_to(miller, DOWN)
+        
+        self.play(Write(det_eq), Write(prob_eq))
+        self.wait(2)
+        
+        # Add conclusion
+        conclusion = Text("Certainty vs. Probability in Primality Testing")
+        conclusion.to_edge(DOWN)
+        
+        self.play(Write(conclusion))
+        self.wait(2)
+```
+
+---
+
+## Example 3: Primality Testing Algorithms - Primality Testing: The Ellipse of Speed and Accuracy
+Visual Style: A combination of vibrant blues and deep purples with a hint of golden lines to highlight key points in each explanation. Soft, moving gradients to give a sense of motion and elegance.
+
+```python
+from manim import *
+
+class PrimalityTestingEllipses(Scene):
+    def construct(self):
+        # Introduction with title
+        title = Text("Primality Testing: The Ellipse of Speed and Accuracy", color=BLUE)
+        title.scale(0.7)
+        title.to_edge(UP)
+        self.play(Write(title), run_time=2)
+        
+        # Create abstract city visual with rectangles
+        city = VGroup()
+        for i in range(10):
+            rect = Rectangle(
+                height=np.random.uniform(1, 3), 
+                width=np.random.uniform(0.5, 1),
+                color=PURPLE
+            )
+            rect.move_to(np.array([np.random.uniform(-5, 5), np.random.uniform(-2, 1), 0]))
+            city.add(rect)
+        
+        self.play(Create(city), run_time=2)
+        
+        # Transform city to ellipses (morphing visual)
+        ellipses = VGroup()
+        for i in range(4):
+            ellipse = Ellipse(
+                width=np.random.uniform(2, 4), 
+                height=np.random.uniform(1, 3),
+                color=BLUE
+            )
+            ellipse.move_to(np.array([np.random.uniform(-3, 3), np.random.uniform(-2, 2), 0]))
+            ellipses.add(ellipse)
+        
+        self.play(Transform(city, ellipses), run_time=2)
+        self.play(FadeOut(city), run_time=1)
+        
+        # Create coordinate axes for speed vs accuracy
+        axes = Axes(
+            x_range=[0, 10, 1],
+            y_range=[0, 10, 1],
+            axis_config={"color": WHITE},
+        )
+        axes.shift(DOWN * 0.5)  # Move axes down slightly for better positioning
+        
+        # Add axis labels
+        x_label = Text("Speed", color=GOLD).next_to(axes.x_axis, DOWN)
+        y_label = Text("Accuracy", color=GOLD).next_to(axes.y_axis, LEFT)
+        
+        self.play(Create(axes), Write(x_label), Write(y_label), run_time=2)
+        
+        # Create ellipses for different primality testing algorithms
+        # Miller-Rabin: Good speed, decent accuracy
+        miller_rabin = Ellipse(width=6, height=3, color=BLUE)
+        miller_rabin.move_to(axes.c2p(7, 5))  # Position based on speed/accuracy
+        miller_rabin_label = Text("Miller-Rabin", color=BLUE).scale(0.6).next_to(miller_rabin, UP)
+        
+        # AKS: Perfect accuracy, slower speed
+        aks = Ellipse(width=3, height=5, color=PURPLE)
+        aks.move_to(axes.c2p(3, 8))
+        aks_label = Text("AKS", color=PURPLE).scale(0.6).next_to(aks, UP)
+        
+        # Fermat: Very fast, lower accuracy
+        fermat = Ellipse(width=7, height=2, color=GREEN)
+        fermat.move_to(axes.c2p(8, 3))
+        fermat_label = Text("Fermat", color=GREEN).scale(0.6).next_to(fermat, UP)
+        
+        # Add ellipses to the scene sequentially
+        self.play(Create(miller_rabin), Write(miller_rabin_label), run_time=1)
+        self.play(Create(aks), Write(aks_label), run_time=1)
+        self.play(Create(fermat), Write(fermat_label), run_time=1)
+        
+        # Display key insight about the trade-off
+        insight_te
+# ... (truncated)
+```
+
+---
+
+## Example 4: The Sieve of Eratosthenes - Prime Patterns: Exploring the 2D Sieve of Eratosthenes
+Visual Style: Inspired by the distinct, visually engaging style of 3Blue1Brown. Use a vibrant color palette to differentiate between primes and multiples. The overall feel should be mathematical yet aesthetically h
+
+```python
+from manim import *
+
+class TwoDimensionalSieve(Scene):
+    def construct(self):
+        # Introduction
+        title = Text("Prime Patterns: Exploring the 2D Sieve of Eratosthenes")
+        self.play(Write(title))
+        self.wait(1)
+        self.play(FadeOut(title))
+        
+        # Create a 5x5 grid with numbers 1 to 25
+        grid_squares = VGroup()
+        grid_numbers = VGroup()
+        
+        # Make the grid a bit larger for better visibility
+        grid_scale = 0.8
+        
+        for i in range(5):
+            for j in range(5):
+                num = i * 5 + j + 1
+                square = Square(side_length=grid_scale)
+                square.move_to([j*grid_scale - 2*grid_scale, -i*grid_scale + 2*grid_scale, 0])
+                number = Text(str(num)).scale(0.4)
+                number.move_to(square.get_center())
+                
+                grid_squares.add(square)
+                grid_numbers.add(number)
+        
+        # Show the grid
+        self.play(Create(grid_squares), run_time=2)
+        self.play(FadeIn(grid_numbers), run_time=1)
+        self.wait(1)
+        
+        # Equation for prime numbers
+        prime_equation = MathTex(r"P(n) = n>1 \wedge \forall k (k | n \implies k = n \vee k = 1)")
+        prime_equation.scale(0.8)
+        prime_equation.to_edge(UP, buff=0.5)
+        self.play(Write(prime_equation))
+        self.wait(1)
+        
+        # Initialize the sieve (True means potentially prime, False means definitely composite)
+        sieve = [True] * 26  # Using 1-indexed for simpler logic
+        sieve[0] = sieve[1] = False  # 0 and 1 are not prime
+        
+        # Mark 1 as not a prime
+        square_copy = grid_squares[0].copy()
+        square_copy.set_fill(GRAY, opacity=0.5)
+        self.play(Transform(grid_squares[0], square_copy), run_time=0.5)
+        
+        # Sieve of Eratosthenes
+        for p in range(2, 6):  # Only need to check up to sqrt(25)
+            if sieve[p]:
+                # Highlight p as a prime number
+                square_copy = grid_squares[p-1].copy()  # Convert to 0-indexed for grid
+                square_copy.set_fill(RED, opacity=0.7)
+                self.play(Transform(grid_squares[p-1], square_copy), run_time=0.3)
+                
+                # Mark multiples of p
+                color = BLUE if p == 2 else GREEN if p == 3 else YELLOW
+                
+                for i in range(p*p, 26, p):  # Start from p² and mark every pth number
+                    if i <= 25:  # Stay within our grid
+                        sieve[i] = False
+                        square_copy = grid_squares[i-1].copy()  # Convert to 0-indexed for grid
+                        square_copy.set_fill(color, opacity=0.5)
+                        self.play(Transform(grid_squares[i-1], square_copy), run_time=0.2)
+        
+        # Highlight remaining primes
+        for num in range(6, 26):
+            if sieve[num] and num <= 25:  # Check if prime and within grid
+                square_copy = grid_sq
+# ... (truncated)
+```
+
+---
+
+## Example 5: The Sieve of Eratosthenes - Unveiling Twin Primes with the Sieve of Eratosthenes
+Visual Style: A clean, minimalist style with numerals fading into view on a cream background. Twin primes should pop with bright, distinct colors such as red or blue, set against more muted shades for non-primes. S
+
+```python
+from manim import *
+
+class TwinPrimesSieve(Scene):
+    def construct(self):
+        # Introduction
+        title = Text("Unveiling Twin Primes with the Sieve of Eratosthenes")
+        self.play(Write(title))
+        self.wait(1)
+        self.play(FadeOut(title))
+        
+        # Create a number line from 1 to 20
+        numbers = VGroup()
+        num_objects = []
+        
+        for i in range(1, 21):
+            # Create a circle with a number inside
+            circle = Circle(radius=0.3).set_stroke(WHITE, 1)
+            number = Text(str(i))
+            number_with_circle = VGroup(circle, number)
+            
+            # Position on a line
+            number_with_circle.move_to(RIGHT * (i-10.5) * 0.7)
+            
+            numbers.add(number_with_circle)
+            num_objects.append(number_with_circle)
+        
+        # Show the numbers
+        self.play(Create(numbers))
+        
+        # Title for Sieve
+        sieve_title = Text("The Sieve of Eratosthenes")
+        sieve_title.to_edge(UP)
+        self.play(FadeIn(sieve_title))
+        
+        # Mark 1 as not prime
+        self.play(num_objects[0][0].animate.set_fill(GRAY, opacity=0.5))
+        
+        # Mark 2 as prime
+        self.play(num_objects[1][0].animate.set_fill(GREEN, opacity=0.3))
+        
+        # Cross out all multiples of 2
+        multiples_of_2 = VGroup(*[num_objects[i-1][0] for i in range(4, 21, 2)])
+        self.play(multiples_of_2.animate.set_fill(GRAY, opacity=0.5))
+        
+        # Mark 3 as prime
+        self.play(num_objects[2][0].animate.set_fill(GREEN, opacity=0.3))
+        
+        # Cross out all unmarked multiples of 3
+        multiples_of_3 = VGroup(*[num_objects[i-1][0] for i in range(6, 21, 3) if (i % 2) != 0])
+        self.play(multiples_of_3.animate.set_fill(GRAY, opacity=0.5))
+        
+        # Mark 5 as prime (next unmarked number)
+        self.play(num_objects[4][0].animate.set_fill(GREEN, opacity=0.3))
+        
+        # Mark all remaining unmarked numbers as prime
+        remaining_primes = [7, 11, 13, 17, 19]
+        for p in remaining_primes:
+            self.play(num_objects[p-1][0].animate.set_fill(GREEN, opacity=0.3))
+        
+        self.wait(1)
+        
+        # Explain twin primes
+        self.play(FadeOut(sieve_title))
+        twin_title = Text("Twin Primes")
+        twin_title.to_edge(UP)
+        self.play(FadeIn(twin_title))
+        
+        # Highlight twin primes
+        twin_primes = [(3, 5), (5, 7), (11, 13), (17, 19)]
+        for p1, p2 in twin_primes:
+            self.play(
+                num_objects[p1-1][0].animate.set_fill(RED, opacity=0.5),
+                num_objects[p2-1][0].animate.set_fill(RED, opacity=0.5)
+            )
+        
+        self.wait(1)
+        
+        # Show equations
+        self.play(FadeOut(numbers), FadeOut(twin_title))
+        
+        # Equations
+        eq1 = Text("P(x) = x(ln(x)-1)")
+        eq2 = Text("T(x) = c_2 * x/(ln(x))^2")
+        
+        eq1.shift(UP)
+        eq2.shift(DOWN)
+ 
+# ... (truncated)
+```
+
+---
+
+## Example 6: The Sieve of Eratosthenes - Uncovering Prime Efficiency with the Sieve of Eratosthenes
+Visual Style: The animation style is inspired by chalkboard aesthetics, utilizing soft pastel colors like blues, greens, and pinks. Visual elements will smoothly transition, with movement mimicking a hand-drawn eff
+
+```python
+from manim import *
+
+class SieveOfEratosthenes(Scene):
+    def construct(self):
+        # Set background color for blackboard feel
+        self.camera.background_color = "#0C1020"
+        
+        # Element 1: Opening question
+        question = Text(
+            "Can we establish the efficiency of the Sieve of Eratosthenes\nusing recursive visualization methods?",
+            color=WHITE
+        ).scale(0.6)
+        
+        self.play(Write(question), run_time=2)
+        self.wait(1)
+        self.play(FadeOut(question))
+        
+        # Element 2: Display natural numbers in a grid
+        numbers = VGroup()
+        
+        # Create a 5x5 grid of numbers from 1 to 25
+        for i in range(1, 26):
+            row = (i-1) // 5
+            col = (i-1) % 5
+            num = Text(str(i), color=BLUE_C).scale(0.7)
+            num.move_to([-2 + col, 2 - row, 0])
+            numbers.add(num)
+        
+        self.play(FadeIn(numbers), run_time=1)
+        self.wait(1)
+        
+        # Element 3: Sieving process
+        # Mark 1 as not prime (special case)
+        self.play(numbers[0].animate.set_color(GRAY), run_time=0.5)
+        
+        # Highlight 2 as first prime and cross out its multiples
+        self.play(numbers[1].animate.set_color(GOLD_C), run_time=0.5)
+        
+        # Track which numbers are crossed out
+        crossed = [False] * 26
+        crossed[0] = True  # 1 is marked (not prime)
+        crossed[1] = True  # 2 is marked (as prime)
+        
+        # Cross out multiples of 2
+        for i in range(4, 26, 2):  # 4, 6, 8, ...
+            idx = i - 1
+            self.play(numbers[idx].animate.set_color(RED_C), run_time=0.2)
+            crossed[idx] = True
+        
+        # Highlight 3 as next prime and cross out its multiples
+        self.play(numbers[2].animate.set_color(GOLD_C), run_time=0.5)
+        crossed[2] = True
+        
+        # Cross out multiples of 3 that aren't already crossed out
+        for i in range(6, 26, 3):  # 6, 9, 12, ...
+            idx = i - 1
+            if not crossed[idx]:
+                self.play(numbers[idx].animate.set_color(RED_C), run_time=0.2)
+                crossed[idx] = True
+        
+        # Highlight 5 as next prime and cross out its multiples
+        self.play(numbers[4].animate.set_color(GOLD_C), run_time=0.5)
+        crossed[4] = True
+        
+        # Cross out multiples of 5 that aren't already crossed out
+        for i in range(10, 26, 5):  # 10, 15, 20, 25
+            idx = i - 1
+            if not crossed[idx]:
+                self.play(numbers[idx].animate.set_color(RED_C), run_time=0.2)
+                crossed[idx] = True
+        
+        # Highlight the remaining prime numbers
+        remaining_primes = [7, 11, 13, 17, 19, 23]
+        for p in remaining_primes:
+            idx = p - 1
+            self.play(numbers[idx].animate.set_color(GOLD_C), run_time=0.3)
+            crossed[idx] = True
+        
+        self.wait(1)
+        
+        # Element 4: Show recursive visualization
+  
+# ... (truncated)
+```
+
+---
+
+## Example 7: The Chinese Remainder Theorem - Unraveling the Chinese Remainder Theorem: A Key to Error-Correcting Codes
+Visual Style: A vibrant, animated style reminiscent of clever chalkboard sketches. The color palette includes warm hues like orange and blue for clocks, enhancing clarity, with playful doodle animations for more en
+
+```python
+from manim import *
+
+class ChineseRemainderTheoremScene(Scene):
+    def construct(self):
+        # Title
+        title = Text("Chinese Remainder Theorem", font_size=36)
+        subtitle = Text("A Key to Error-Correcting Codes", font_size=24)
+        subtitle.next_to(title, DOWN)
+        
+        self.play(Write(title))
+        self.play(Write(subtitle))
+        self.wait(1)
+        self.play(FadeOut(title), FadeOut(subtitle))
+        
+        # Element 1: Character worried about message
+        character = Circle(radius=0.5, color=BLUE)
+        message_bubble = Text("My message got corrupted!", font_size=20, color=RED)
+        message_bubble.next_to(character, UP)
+        
+        self.play(Create(character), Write(message_bubble))
+        self.wait(1)
+        self.play(FadeOut(character), FadeOut(message_bubble))
+        
+        # Element 2: Clocks representing different moduli
+        clock3 = Circle(radius=1, color=ORANGE)
+        clock5 = Circle(radius=1, color=BLUE)
+        
+        # Add labels
+        label3 = Text("mod 3", font_size=20).next_to(clock3, DOWN)
+        label5 = Text("mod 5", font_size=20).next_to(clock5, DOWN)
+        
+        # Position clocks
+        clock3.shift(LEFT*2)
+        clock5.shift(RIGHT*2)
+        
+        # Create clocks
+        self.play(Create(clock3), Create(clock5))
+        self.play(Write(label3), Write(label5))
+        self.wait(1)
+        
+        # Element 3: Simple equation for CRT
+        equation = Text("x ≡ 2 (mod 3)", font_size=28).to_edge(UP)
+        equation2 = Text("x ≡ 3 (mod 5)", font_size=28).next_to(equation, DOWN)
+        
+        self.play(Write(equation), Write(equation2))
+        self.wait(1)
+        
+        # Element 4: Error correction demonstration
+        self.play(
+            FadeOut(clock3), FadeOut(clock5),
+            FadeOut(label3), FadeOut(label5),
+            FadeOut(equation), FadeOut(equation2)
+        )
+        
+        original = Text("Original: 8", font_size=28)
+        corrupted = Text("Corrupted: ?", font_size=28, color=RED)
+        hint = Text("Clue: x ≡ 2 (mod 3) and x ≡ 3 (mod 5)", font_size=20)
+        corrected = Text("Recovered: 8", font_size=28, color=GREEN)
+        
+        hint.to_edge(DOWN)
+        
+        self.play(Write(original))
+        self.wait(1)
+        self.play(Transform(original, corrupted))
+        self.play(Write(hint))
+        self.wait(1)
+        self.play(Transform(original, corrected))
+        self.wait(1)
+        
+        # Element 5: Conclusion with happy character
+        self.play(FadeOut(original), FadeOut(hint))
+        
+        happy_character = Circle(radius=0.5, color=GREEN)
+        success_message = Text("Message received correctly!", font_size=20, color=GREEN)
+        success_message.next_to(happy_character, UP)
+        
+        conclusion = Text("CRT makes error correction possible!", font_size=28)
+        conclusion.to_edge(DOWN)
+        
+        self.play(Create(happy_character), Write(success_message))
+        self.play(Wri
+# ... (truncated)
+```
+
+---
+
+## Example 8: The Chinese Remainder Theorem - Unlocking the Magic: The Chinese Remainder Theorem with Venn Diagrams
+Visual Style: Clean, visually striking with high contrast between colors to differentiate Venn diagram areas. Utilize light pastels and a modern animation style to keep engagement high.
+
+```python
+from manim import *
+
+class ChineseRemainderTheoremScene(Scene):
+    def construct(self):
+        # Title animation
+        title = Text("The Chinese Remainder Theorem", font_size=42)
+        self.play(Write(title))
+        self.wait(1)
+        self.play(title.animate.scale(0.7).to_edge(UP))
+        
+        # Introduction text
+        intro = Text("Finding a number that satisfies multiple conditions", font_size=28)
+        intro.next_to(title, DOWN, buff=0.5)
+        self.play(Write(intro))
+        self.wait(1)
+        self.play(FadeOut(intro))
+        
+        # Create the two circles for the Venn diagram
+        # Each circle represents a congruence condition
+        circle1 = Circle(radius=1.7, color=BLUE).shift(LEFT*1.5)  # First congruence
+        circle2 = Circle(radius=1.7, color=RED).shift(RIGHT*1.5)  # Second congruence
+        
+        # Labels explaining what each circle represents
+        label1 = Text("x ≡ 2 (mod 3)", font_size=24)  # First congruence
+        label1.next_to(circle1, UP)
+        
+        label2 = Text("x ≡ 3 (mod 4)", font_size=24)  # Second congruence
+        label2.next_to(circle2, UP)
+        
+        # Show the circles and their labels
+        self.play(Create(circle1), Write(label1))
+        self.play(Create(circle2), Write(label2))
+        
+        # Fill the circles with semi-transparent color
+        circle1_fill = circle1.copy().set_fill(BLUE, opacity=0.3)
+        circle2_fill = circle2.copy().set_fill(RED, opacity=0.3)
+        
+        self.play(FadeIn(circle1_fill), FadeIn(circle2_fill))
+        self.wait(1)
+        
+        # Create the intersection area representing numbers that satisfy both conditions
+        # (This is a manual approximation of the intersection)
+        intersection = Ellipse(width=1.5, height=1.7, color=GREEN)
+        intersection.move_to([0, 0, 0])  # Position at the overlap
+        intersection.set_fill(GREEN, opacity=0.6)
+        
+        # Show the intersection and explain its significance
+        self.play(FadeIn(intersection))
+        
+        insight_text = Text("Numbers satisfying both conditions", font_size=28)
+        insight_text.next_to(title, DOWN, buff=0.5)
+        self.play(Write(insight_text))
+        self.wait(1)
+        
+        # Show the solution guaranteed by the Chinese Remainder Theorem
+        solution_text = Text("x = 11", font_size=36, color=YELLOW)
+        solution_text.move_to(intersection)
+        
+        self.play(Write(solution_text))
+        self.wait(1)
+        
+        # Verify that our solution works for both congruences
+        verify_text = Text("11 ≡ 2 (mod 3) and 11 ≡ 3 (mod 4)", font_size=24)
+        verify_text.to_edge(DOWN, buff=1)
+        
+        self.play(Write(verify_text))
+        self.wait(1)
+        
+        # Conclusion highlighting the power of the theorem
+        conclusion = Text("The Chinese Remainder Theorem guarantees a solution!", font_size=32)
+        
+        # Clean up the screen and show the conclusion
+        self.play(
+   
+# ... (truncated)
+```
+
+---
+
+## Example 9: The Chinese Remainder Theorem - Harmonizing Rhythms: The Chinese Remainder Theorem and Musical Synchronization
+Visual Style: The animation will feature a soft, harmonious color palette with flowing animations connecting musical rhythms to mathematical cycles. Notes and numbers will glide smoothly, reinforcing concepts with 
+
+```python
+from manim import *
+
+class ChineseRemainderTheoremMusic(Scene):
+    def construct(self):
+        # Set colors for a harmonious palette
+        CYAN_COLOR = "#00A0A0"  # Cyan
+        ORANGE_COLOR = "#FF7700"  # Orange
+        
+        # Introduction - Title and subtitle
+        title = Text("Harmonizing Rhythms", font_size=40)
+        subtitle = Text("The Chinese Remainder Theorem and Musical Synchronization", 
+                        font_size=24).next_to(title, DOWN)
+        
+        self.play(Write(title))
+        self.play(Write(subtitle))
+        self.wait(1)
+        self.play(FadeOut(title), FadeOut(subtitle))
+        
+        # Key concept 1: Understanding Cycles - showing two rhythmic cycles
+        text1 = Text("Understanding Cycles", font_size=32, color=CYAN_COLOR)
+        self.play(Write(text1))
+        self.wait(0.5)
+        self.play(text1.animate.to_edge(UP))
+        
+        # Create two circles representing different rhythms
+        circle1 = Circle(radius=1.5, color=CYAN_COLOR).shift(LEFT * 3)  # 3-beat rhythm
+        circle2 = Circle(radius=1.5, color=ORANGE_COLOR).shift(RIGHT * 3)  # 5-beat rhythm
+        
+        label1 = Text("3 beats", font_size=24).next_to(circle1, DOWN)
+        label2 = Text("5 beats", font_size=24).next_to(circle2, DOWN)
+        
+        self.play(Create(circle1), Create(circle2))
+        self.play(Write(label1), Write(label2))
+        
+        # Add beat markers to each circle
+        beats1 = VGroup()
+        for i in range(3):
+            angle = i * 2 * PI / 3
+            dot = Dot(circle1.point_at_angle(angle), color=WHITE)
+            beats1.add(dot)
+        
+        beats2 = VGroup()
+        for i in range(5):
+            angle = i * 2 * PI / 5
+            dot = Dot(circle2.point_at_angle(angle), color=WHITE)
+            beats2.add(dot)
+        
+        self.play(Create(beats1), Create(beats2))
+        self.wait(1)
+        
+        # Add a visual indicator for synchronization
+        sync_text = Text("Sync at 15", font_size=24, color=GREEN).to_edge(DOWN)
+        self.play(Write(sync_text))
+        self.wait(1)
+        
+        # Cleanup first section
+        self.play(
+            FadeOut(text1), FadeOut(circle1), FadeOut(circle2), 
+            FadeOut(label1), FadeOut(label2), FadeOut(beats1), 
+            FadeOut(beats2), FadeOut(sync_text)
+        )
+        
+        # Key concept 2: The Dance of Numbers - showing the mathematical relationship
+        text2 = Text("The Dance of Numbers", font_size=32, color=ORANGE_COLOR)
+        self.play(Write(text2))
+        self.wait(0.5)
+        self.play(text2.animate.to_edge(UP))
+        
+        # Create simple representations of multiples
+        multiples_text = Text("Multiples of 3: 3, 6, 9, 12, 15...", font_size=24, color=CYAN_COLOR).shift(UP * 0.5)
+        multiples_text2 = Text("Multiples of 5: 5, 10, 15...", font_size=24, color=ORANGE_COLOR).shift(DOWN * 0.5)
+        
+        self.play(Write(multiples_text))
+        self.play(Write(multiples_text2))
+
+# ... (truncated)
+```
+
+---
+
+## Example 10: Fermat's Little Theorem - Visualizing Fermat's Little Test for Primality
+Visual Style: The animation should employ a clean, minimalist design akin to chalk on a blackboard. The color palette consists of whites and greens on a dark background to resemble classic chalkboard aesthetics, ma
+
+```python
+from manim import *
+
+class FermatsLittleTheorem(Scene):
+    def construct(self):
+        # Title
+        title = Text("Visualizing Fermat's Little Test for Primality", color=WHITE)
+        self.play(Write(title))
+        self.wait(0.5)
+        self.play(title.animate.scale(0.7).to_edge(UP))
+        
+        # Introduction - Trial Division vs Fermat's Shortcut
+        trial_text = Text("Trial Division", color=WHITE).shift(LEFT * 3 + UP)
+        fermat_text = Text("Fermat's Shortcut", color=GREEN).shift(RIGHT * 3 + UP)
+        
+        # Visual representation
+        trial_dots = VGroup(*[Dot(color=WHITE) for _ in range(12)])
+        trial_dots.arrange_in_grid(3, 4).scale(0.8)
+        trial_dots.next_to(trial_text, DOWN)
+        
+        # Arrow representing shortcut
+        arrow = Arrow(LEFT * 2, RIGHT * 2, color=GREEN)
+        arrow.next_to(fermat_text, DOWN)
+        
+        self.play(Write(trial_text), Write(fermat_text))
+        self.play(Create(trial_dots), Create(arrow))
+        self.wait(0.5)
+        
+        # Clear the screen
+        self.play(
+            FadeOut(trial_text), 
+            FadeOut(fermat_text),
+            FadeOut(trial_dots), 
+            FadeOut(arrow)
+        )
+        
+        # Fermat's Little Theorem
+        theorem = MathTex(r"a^{p-1} \equiv 1 \pmod{p}")
+        theorem.scale(1.5)
+        theorem_text = Text("Fermat's Little Theorem", font_size=28)
+        theorem_text.next_to(theorem, UP)
+        
+        self.play(Write(theorem_text))
+        self.play(Write(theorem))
+        self.wait(0.5)
+        
+        # Primality testing application
+        primality = MathTex(r"a^{n-1} \not\equiv 1 \pmod{n}")
+        primality.scale(1.2)
+        primality.next_to(theorem, DOWN, buff=0.7)
+        primality_text = Text("Primality Test", font_size=28)
+        primality_text.next_to(primality, UP, buff=0.3)
+        
+        self.play(Write(primality_text))
+        self.play(Write(primality))
+        self.wait(0.5)
+        
+        # Clear for flowchart
+        self.play(
+            FadeOut(theorem_text),
+            FadeOut(theorem),
+            FadeOut(primality_text),
+            FadeOut(primality)
+        )
+        
+        # Simple flowchart
+        flow_title = Text("Fermat Primality Test Flowchart", font_size=30)
+        flow_title.next_to(title, DOWN)
+        
+        # Start node
+        start = Rectangle(height=0.8, width=2, color=WHITE)
+        start_text = Text("Number n", font_size=24)
+        start_text.move_to(start.get_center())
+        start_group = VGroup(start, start_text)
+        start_group.shift(UP * 1.5)
+        
+        # Test node
+        test = Rectangle(height=0.8, width=3.5, color=WHITE)
+        test_text = Text("a^(n-1) mod n", font_size=24)
+        test_text.move_to(test.get_center())
+        test_group = VGroup(test, test_text)
+        # Explicitly set the position
+        test_group.move_to(ORIGIN)
+        
+        # Result nodes
+        yes = Rectangle(height=0.8, width=2.2, color=GREEN)
+     
+# ... (truncated)
+```
+
+---
+
+## Example 11: Fermat's Little Theorem - Visual Exploration of Fermat's Little Theorem with Monte Carlo Simulations
+Visual Style: The overall style is a mix of abstract 3D models and vibrant colors. Gold highlights for primes with a deep blue background, giving it a cosmic feel. Numbers appear dynamic, moving fluidly like a danc
+
+```python
+from manim import *
+import random
+
+class FermatsLittleTheoremMonteCarlo(Scene):
+    def construct(self):
+        # Introduction
+        title = Text("Visual Exploration of Fermat's Little Theorem", font_size=36)
+        subtitle = Text("with Monte Carlo Simulations", font_size=24)
+        subtitle.next_to(title, DOWN)
+        
+        self.play(Write(title))
+        self.play(Write(subtitle))
+        self.wait(1)
+        self.play(FadeOut(title), FadeOut(subtitle))
+        
+        # Fermat's Little Theorem equation
+        fermat_eq = Text("a^(p-1) ≡ 1 (mod p)", font_size=36)
+        self.play(Write(fermat_eq))
+        self.wait(1)
+        self.play(fermat_eq.animate.to_edge(UP))
+        
+        # Explanation text
+        explanation = Text("If p is prime and a is not divisible by p", font_size=24)
+        explanation.next_to(fermat_eq, DOWN)
+        self.play(Write(explanation))
+        self.wait(1)
+        
+        # Set up Monte Carlo simulation
+        self.play(FadeOut(explanation))
+        simulation_title = Text("Monte Carlo Simulation", font_size=28)
+        simulation_title.next_to(fermat_eq, DOWN)
+        self.play(Write(simulation_title))
+        self.wait(1)
+        
+        # Create a grid of random numbers for testing
+        number_of_tests = 9
+        squares = []
+        numbers = []
+        
+        # Generate random numbers between 2 and 50
+        random_numbers = [random.randint(2, 50) for _ in range(number_of_tests)]
+        
+        # Create a 3x3 grid of numbers
+        for i, num in enumerate(random_numbers):
+            row = i // 3
+            col = i % 3
+            position = np.array([col - 1, row - 1, 0]) * 2
+            
+            # Create square background for number
+            square = Square(side_length=1.5, color=WHITE)
+            square.move_to(position)
+            squares.append(square)
+            
+            # Create number label
+            number = Text(str(num), font_size=36)
+            number.move_to(position)
+            numbers.append(number)
+        
+        # Display all squares and numbers
+        self.play(
+            *[Create(square) for square in squares],
+            *[Write(number) for number in numbers],
+            run_time=2
+        )
+        self.wait(1)
+        
+        # Display test equation
+        test_eq = Text("Test: 2^(n-1) ≡ 1 (mod n)", font_size=28)
+        test_eq.next_to(simulation_title, DOWN, buff=0.5)
+        self.play(Write(test_eq))
+        self.wait(1)
+        
+        # Test each number with Fermat's Little Theorem
+        for i, num in enumerate(random_numbers):
+            # Test if the number passes Fermat's test
+            a = 2
+            if num > 1 and pow(a, num-1, num) == 1:
+                new_color = GOLD  # Potentially prime
+            else:
+                new_color = BLUE  # Definitely not prime
+            
+            # Change color based on result
+            self.play(
+                squares[i].animate.set_fill(new_color, opacity=0.5),
+    
+# ... (truncated)
+```
+
+---
+
+## Example 12: Cryptographic Key Exchange - The Time-Tested Dance: RSA and Rising Computational Waves
+Visual Style: Classic 3Blue1Brown aesthetic featuring deep blues and purples with glowing lines to represent data flow and key highlights. Smooth animations illustrate complex concepts elegantly, while numbers and 
+
+```python
+from manim import *
+
+class RSAKeySecurity(Scene):
+    def construct(self):
+        # Set background to dark blue (3Blue1Brown style)
+        self.camera.background_color = "#1f2233" 
+        
+        # Title and subtitle
+        title = Text("The Time-Tested Dance:", color=WHITE, font_size=40)
+        subtitle = Text("RSA and Rising Computational Waves", color=WHITE, font_size=32)
+        subtitle.next_to(title, DOWN)
+        
+        # Display title sequence
+        self.play(Write(title))
+        self.play(Write(subtitle))
+        self.wait(1)
+        self.play(FadeOut(title, subtitle))
+        
+        # Create coordinate system for visualization
+        axes = Axes(
+            x_range=[0, 3],
+            y_range=[0, 3],
+            axis_config={"include_ticks": False},
+        )
+        
+        # Add axis labels
+        x_label = Text("RSA Key Length", color=WHITE, font_size=24)
+        x_label.next_to(axes.x_axis, DOWN)
+        
+        y_label = Text("Time", color=WHITE, font_size=24)
+        y_label.next_to(axes.y_axis, LEFT).rotate(PI/2)
+        
+        self.play(Create(axes))
+        self.play(Write(x_label), Write(y_label))
+        
+        # Create key length markers and labels
+        key_points = [
+            (1, "512-bit", RED),       # 512-bit keys (outdated)
+            (2, "1024-bit", YELLOW),   # 1024-bit keys (transitional)
+            (3, "2048-bit", GREEN)     # 2048-bit keys (current standard)
+        ]
+        
+        key_labels = VGroup()
+        key_dots = VGroup()
+        
+        for x, label_text, color in key_points:
+            label = Text(label_text, color=color, font_size=20)
+            label.move_to(axes.c2p(x, 0)).shift(DOWN * 0.5)
+            key_labels.add(label)
+            
+            dot = Dot(axes.c2p(x, 0), color=color)
+            key_dots.add(dot)
+        
+        self.play(Create(key_dots))
+        self.play(Write(key_labels))
+        
+        # Draw arrow representing computational power growth over time
+        power_curve = Arrow(
+            start=axes.c2p(0, 0),
+            end=axes.c2p(3, 3),
+            color=YELLOW,
+            buff=0
+        )
+        
+        power_label = Text("Computational Power", color=YELLOW, font_size=20)
+        power_label.next_to(power_curve.get_end(), UP)
+        
+        self.play(Create(power_curve))
+        self.play(Write(power_label))
+        
+        # Show key equation that relates crack time to key length
+        equation = MathTex(r"T_{crack} \approx 2^{\frac{L}{c}}", color=WHITE)
+        equation.to_edge(UP)
+        
+        self.play(Write(equation))
+        self.wait(1)
+        
+        # Show security lifetimes for different key lengths
+        secure_512 = Line(
+            start=axes.c2p(1, 0),
+            end=axes.c2p(1, 1),
+            color=RED
+        )
+        
+        secure_1024 = Line(
+            start=axes.c2p(2, 0),
+            end=axes.c2p(2, 2),
+            color=YELLOW
+        )
+        
+        secure_2048 = Line(
+            sta
+# ... (truncated)
+```
+
+---
+
+## Example 13: Cryptographic Key Exchange - Unlocking Secrets: Geometric Revolutions in Diffie-Hellman Key Exchange
+Visual Style: A smooth, dynamically morphing style with vibrant blues and purples depicting modular spaces, infinite rotations, and unique pathways. The use of geometry to convey abstract concepts creates artistic 
+
+```python
+from manim import *
+import random
+
+class DiffieHellmanKeyExchange(Scene):
+    def construct(self):
+        # Title
+        title = Text("Unlocking Secrets: Diffie-Hellman Key Exchange", font_size=36)
+        self.play(Write(title))
+        self.wait(1)
+        self.play(FadeOut(title))
+        
+        # Create a starry night background
+        stars = VGroup(*[Dot(point=np.array([random.uniform(-7, 7), random.uniform(-4, 4), 0]), 
+                            radius=0.02, color=WHITE) for _ in range(30)])
+        self.play(FadeIn(stars))
+        
+        # Two agents with secret keys
+        agent1 = Circle(radius=0.5, color=BLUE).move_to(LEFT*3)
+        agent2 = Circle(radius=0.5, color=GREEN).move_to(RIGHT*3)
+        
+        key1 = Text("Secret Key", font_size=20).next_to(agent1, UP)
+        key2 = Text("Secret Key", font_size=20).next_to(agent2, UP)
+        
+        self.play(Create(agent1), Create(agent2))
+        self.play(Write(key1), Write(key2))
+        self.wait(1)
+        
+        # Clear and show modular circle
+        self.play(FadeOut(agent1), FadeOut(agent2), 
+                 FadeOut(key1), FadeOut(key2),
+                 FadeOut(stars))
+        
+        # Key Concept 1: Modular Circle
+        concept1 = Text("Secret Choices on Modular Circle", font_size=28).to_edge(UP)
+        self.play(Write(concept1))
+        
+        # Modular circle with grid pattern
+        mod_circle = Circle(radius=2, color=WHITE)
+        self.play(Create(mod_circle))
+        
+        # Points on circle representing choices
+        points = VGroup(*[Dot(mod_circle.point_at_angle(i*PI/3), color=YELLOW) 
+                       for i in range(6)])
+        self.play(Create(points))
+        self.wait(1)
+        
+        # Key Concept 2: Exponentiation as Rotation
+        self.play(FadeOut(concept1), FadeOut(points))
+        
+        concept2 = Text("Exponentiation as Rotation", font_size=28).to_edge(UP)
+        self.play(Write(concept2))
+        
+        # Show equation
+        eq1 = Text("a^b mod p", font_size=32).shift(DOWN*2)
+        self.play(Write(eq1))
+        
+        # Arrow rotation to visualize exponentiation
+        arrow = Arrow(ORIGIN, RIGHT*2, color=RED)
+        self.play(Create(arrow))
+        
+        # Rotate arrow in steps
+        for i in range(1, 4):
+            rotated = Arrow(ORIGIN, RIGHT*2, color=RED).rotate(i*PI/2)
+            self.play(Transform(arrow, rotated))
+        
+        self.wait(1)
+        
+        # Key Concept 3: Exchange and Shared Secret
+        self.play(FadeOut(concept2), FadeOut(arrow), 
+                 FadeOut(eq1), FadeOut(mod_circle))
+        
+        concept3 = Text("Key Exchange and Shared Secret", font_size=28).to_edge(UP)
+        self.play(Write(concept3))
+        
+        # Alice and Bob circles
+        alice_circle = Circle(radius=1.5, color=BLUE).shift(LEFT*2)
+        bob_circle = Circle(radius=1.5, color=GREEN).shift(RIGHT*2)
+        
+        alice_label = Text("Alice", font_size=20).next_to(alice_circle, U
+# ... (truncated)
+```
+
+---
+
+## Example 14: Cryptographic Key Exchange - The Beauty Behind Cryptographic Key Efficiency
+Visual Style: The animation will feature a modern and sleek visual style, favoring a color palette of cool blues and greens for ECC elements, contrasted with bold reds and oranges for RSA components. The overall ae
+
+```python
+from manim import *
+
+class CryptoKeyEfficiencyScene(Scene):
+    def construct(self):
+        # Title of the presentation
+        title = Text("The Beauty Behind Cryptographic Key Efficiency", font_size=36)
+        self.play(Write(title))
+        self.wait(1)
+        self.play(FadeOut(title))
+        
+        # Show the question
+        question = Text("How can we visually demonstrate the efficiency of ECC compared to RSA?", 
+                        font_size=24, color=BLUE)
+        self.play(Write(question))
+        self.wait(1)
+        self.play(FadeOut(question))
+        
+        # Visualize RSA vs ECC key sizes with bars
+        rsa_bar = Rectangle(height=4, width=1.5, color=RED, fill_opacity=0.8).move_to(LEFT * 2)
+        rsa_label = Text("RSA\n2048 bits", font_size=24).next_to(rsa_bar, DOWN)
+        
+        ecc_bar = Rectangle(height=0.5, width=1.5, color=BLUE, fill_opacity=0.8).move_to(RIGHT * 2)
+        ecc_label = Text("ECC\n256 bits", font_size=24).next_to(ecc_bar, DOWN)
+        
+        self.play(Create(rsa_bar), Write(rsa_label))
+        self.wait(0.5)
+        self.play(Create(ecc_bar), Write(ecc_label))
+        self.wait(1)
+        
+        # Simple equation showing the security levels
+        rsa_equation = Text("RSA Security Level = 2048 bits", font_size=24)
+        ecc_equation = Text("ECC Security Level = 256 bits", font_size=24)
+        equations = VGroup(rsa_equation, ecc_equation).arrange(DOWN, buff=0.5)
+        
+        self.play(FadeOut(rsa_bar), FadeOut(rsa_label), FadeOut(ecc_bar), FadeOut(ecc_label))
+        self.play(Write(equations))
+        self.wait(1)
+        
+        # Conclusion
+        conclusion = Text("ECC: Doing more with less", font_size=36, color=GREEN)
+        self.play(FadeOut(equations))
+        self.play(Write(conclusion))
+        self.wait(2)
+```
+
+---
+
+## Example 15: Distribution of Prime Numbers - The Hidden Rhythm of Primes
+Visual Style: Clean animation style with a limited palette emphasizing blue for primes, golden ratio curves for elegance, and a hint of music score aesthetics to reinforce the concept of mathematical harmony.
+
+```python
+from manim import *
+import numpy as np
+
+class PrimeDistribution(Scene):
+    def construct(self):
+        # Title
+        title = Text("The Hidden Rhythm of Primes")
+        self.play(Write(title))
+        self.wait(1)
+        self.play(title.animate.to_edge(UP))
+        
+        # Prime numbers introduction
+        primes_text = Text("2, 3, 5, 7, 11, 13, 17, 19...", font_size=30)
+        primes_text.next_to(title, DOWN, buff=0.5)
+        self.play(Write(primes_text))
+        self.wait(1)
+        
+        # Prime Number Theorem formula
+        formula = MathTex(r"\pi(x) \approx \frac{x}{\log(x)}")
+        formula.next_to(primes_text, DOWN, buff=0.7)
+        self.play(Write(formula))
+        self.wait(1)
+        
+        formula_text = Text("Number of primes up to x", font_size=24)
+        formula_text.next_to(formula, DOWN, buff=0.3)
+        self.play(Write(formula_text))
+        self.wait(1)
+        
+        # Clear for graph
+        self.play(
+            FadeOut(primes_text),
+            FadeOut(formula_text),
+            formula.animate.to_corner(UL)
+        )
+        
+        # Create simple axes manually
+        h_line = Line(LEFT * 4, RIGHT * 4, color=WHITE)
+        v_line = Line(DOWN * 2.5, UP * 2.5, color=WHITE)
+        
+        axes = VGroup(h_line, v_line)
+        self.play(Create(axes))
+        
+        # Add axes labels
+        x_label = Text("x").next_to(h_line, RIGHT)
+        y_label = Text("π(x)").next_to(v_line, UP)
+        self.play(Write(x_label), Write(y_label))
+        
+        # Function to transform data coordinates to screen coordinates
+        def transform(x, y):
+            return np.array([x/100 * 8 - 4, y/30 * 5 - 2.5, 0])
+        
+        # Add prime count dots
+        dots = VGroup()
+        for x, y in [(10, 4), (20, 8), (30, 10), (40, 12), 
+                     (50, 15), (60, 17), (70, 19), (80, 22)]:
+            dot = Dot(color=BLUE)
+            dot.move_to(transform(x, y))
+            dots.add(dot)
+        
+        self.play(Create(dots))
+        
+        # Create a simple curve approximating x/log(x)
+        curve_points = []
+        for x in range(5, 101, 5):
+            y = x / np.log(x) if x > 1 else 0
+            curve_points.append(transform(x, y))
+        
+        # Create the curve from points
+        curve = VMobject()
+        curve.set_points_as_corners(curve_points)
+        curve.set_color(GOLD)
+        
+        self.play(Create(curve))
+        
+        # Add a label for the curve
+        curve_label = Text("x/log(x)", color=GOLD, font_size=24)
+        curve_label.move_to(transform(70, 20))
+        self.play(Write(curve_label))
+        self.wait(1)
+        
+        # Conclusion
+        self.play(
+            FadeOut(axes),
+            FadeOut(x_label),
+            FadeOut(y_label),
+            FadeOut(dots),
+            FadeOut(curve),
+            FadeOut(curve_label),
+            FadeOut(formula),
+            FadeOut(title)
+        )
+        
+        conclusion = Text("Mathematics reveals harmony in p
+# ... (truncated)
+```
+
+---
+
+## Example 16: Distribution of Prime Numbers - Unlocking Patterns in the Prime Number Gaps
+Visual Style: The animation should feature a calm, deep-space theme using dark blues and blacks as the primary colors, with bright yellows, whites, and red highlights for gaps and primes. Use smooth transitions and
+
+```python
+from manim import *
+
+# Set background color to dark blue (space theme)
+config.background_color = "#0A1128"
+
+class PrimeGapsScene(Scene):
+    def construct(self):
+        # Create a starry background effect
+        stars = VGroup()
+        for _ in range(50):
+            x = np.random.uniform(-7, 7)
+            y = np.random.uniform(-4, 4)
+            star = Dot(point=[x, y, 0], radius=0.02, color=WHITE)
+            stars.add(star)
+        
+        self.play(FadeIn(stars))
+        
+        # Title
+        title = Text("Unlocking Patterns in Prime Number Gaps", font_size=32, color=WHITE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        self.wait(1)
+        
+        # Create a number line
+        number_line = NumberLine(
+            x_range=[0, 30, 1],
+            length=10,
+            include_numbers=True,
+            color=WHITE
+        )
+        number_line.to_edge(DOWN, buff=2)
+        self.play(Create(number_line))
+        
+        # Highlight prime numbers on the number line
+        primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
+        prime_dots = VGroup()
+        
+        for prime in primes:
+            dot = Dot(number_line.number_to_point(prime), color=YELLOW)
+            prime_dots.add(dot)
+        
+        self.play(Create(prime_dots))
+        self.wait(1)
+        
+        # Show gaps between consecutive primes
+        gap_text = Text("Gaps between consecutive primes", font_size=24, color=WHITE)
+        gap_text.next_to(title, DOWN, buff=1)
+        self.play(Write(gap_text))
+        
+        # Highlight gaps with arrows
+        gap_arrows = VGroup()
+        for i in range(len(primes) - 1):
+            start_point = number_line.number_to_point(primes[i])
+            end_point = number_line.number_to_point(primes[i+1])
+            arrow = Arrow(start_point, end_point, buff=0, color=RED)
+            gap_arrows.add(arrow)
+        
+        self.play(Create(gap_arrows))
+        self.wait(1)
+        
+        # Show the gap formula
+        formula = MathTex(r"\text{Prime Gap } = p_{n+1} - p_{n}", color=WHITE)
+        formula.next_to(gap_text, DOWN, buff=1)
+        self.play(Write(formula))
+        self.wait(1)
+        
+        # Create axes for the graph (prepare for transition)
+        axes = Axes(
+            x_range=[0, 10, 1],
+            y_range=[0, 6, 1],
+            axis_config={"include_numbers": True, "color": WHITE},
+            x_length=8,
+            y_length=5
+        )
+        axes.center()
+        
+        # Clear for graph and show axes
+        self.play(
+            FadeOut(gap_text),
+            FadeOut(formula),
+            FadeOut(prime_dots),
+            FadeOut(gap_arrows),
+            FadeOut(number_line),
+            Create(axes)
+        )
+        
+        # Label the axes
+        x_label = Text("Prime Count", font_size=20, color=WHITE)
+        x_label.next_to(axes.x_axis, DOWN)
+        y_label = Text("Gap Size", font_size=20, color=WHITE)
+        y_label.next_to(axes.y_axis, LEFT)
+        
+        sel
+# ... (truncated)
+```
+
+---
+
+## Example 17: Distribution of Prime Numbers - Symmetries of Primes: A Modular Perspective
+Visual Style: The visual style is artistic, inspired by 3Blue1Brown's characteristic animated illustrations: clean and colorful with a focus on highlighting contrasts and symmetry, using a palette of pastel hues an
+
+```python
+from manim import *
+
+class PrimeModularSymmetry(Scene):
+    def construct(self):
+        # Title
+        title = Text("Symmetries of Primes: A Modular Perspective", font_size=36)
+        self.play(Write(title))
+        self.wait(1)
+        self.play(title.animate.to_edge(UP))
+        
+        # Create a number line with just 10 numbers
+        number_line = VGroup()
+        circles = {}
+        
+        for i in range(1, 11):
+            circle = Circle(radius=0.4)
+            circle.move_to([(i-5.5) * 1.0, 0, 0])
+            
+            num = Text(str(i), font_size=24)
+            num.move_to(circle.get_center())
+            
+            group = VGroup(circle, num)
+            number_line.add(group)
+            circles[i] = circle
+        
+        self.play(Create(number_line))
+        self.wait(1)
+        
+        # Highlight prime numbers
+        prime_text = Text("Prime Numbers", font_size=30)
+        prime_text.next_to(number_line, UP, buff=0.8)
+        
+        self.play(Write(prime_text))
+        
+        primes = [2, 3, 5, 7]
+        for p in primes:
+            highlight = circles[p].copy()
+            highlight.set_fill(YELLOW, opacity=0.5)
+            self.play(FadeIn(highlight), run_time=0.5)
+        
+        self.wait(1)
+        self.play(FadeOut(prime_text))
+        
+        # Introduce modular arithmetic
+        mod_eq = MathTex(r"a \equiv b \pmod{n}", font_size=36)
+        mod_eq.next_to(number_line, UP, buff=0.8)
+        
+        self.play(Write(mod_eq))
+        self.wait(1)
+        
+        # Color by remainder when divided by 3
+        mod3_text = Text("Coloring by remainder when divided by 3", font_size=28)
+        mod3_text.next_to(number_line, UP, buff=0.8)
+        
+        self.play(ReplacementTransform(mod_eq, mod3_text))
+        
+        # Color scheme
+        mod_colors = {0: RED, 1: GREEN, 2: BLUE}
+        
+        for i in range(1, 11):
+            mod_val = i % 3
+            color_circle = circles[i].copy()
+            color_circle.set_fill(mod_colors[mod_val], opacity=0.5)
+            self.play(FadeIn(color_circle), run_time=0.3)
+        
+        self.wait(1)
+        
+        # Show the pattern
+        pattern = Text("Primes (except 3) are never divisible by 3", font_size=28)
+        pattern.next_to(mod3_text, DOWN, buff=0.5)
+        
+        self.play(Write(pattern))
+        self.wait(1)
+        
+        # Show the equation
+        pattern_eq = MathTex(r"p_i \not\equiv 0 \pmod{3}", font_size=36)
+        pattern_eq.next_to(pattern, DOWN, buff=0.5)
+        
+        self.play(Write(pattern_eq))
+        self.wait(1)
+        
+        # Conclusion
+        final_text = Text("Modular arithmetic reveals symmetries in primes!", font_size=30)
+        final_text.to_edge(DOWN, buff=1.0)
+        
+        self.play(Write(final_text))
+        self.wait(2)
+        
+        # Final fade out
+        self.play(
+            FadeOut(number_line),
+            FadeOut(mod3_text),
+            FadeOut(pattern),
+            FadeOut(pattern_e
+# ... (truncated)
+```
+
+---
+
+## Example 18: Diophantine Equations - Journey Through Hyperbolic Worlds: The Beauty of Diophantine Equations
+Visual Style: The visual style will mimic the smooth, fluid transitions synonymous with mathematics animations, using a subtle palette of blues and greens to evoke contemplation and wonder against a vivid grid back
+
+```python
+from manim import *
+
+class DiophantineEquations(Scene):
+    def construct(self):
+        # Title and introduction
+        title = Text("Journey Through Hyperbolic Worlds")
+        subtitle = Text("The Beauty of Diophantine Equations", font_size=24)
+        title_group = VGroup(title, subtitle.next_to(title, DOWN)).scale(0.7).to_edge(UP)
+        
+        self.play(Write(title_group))
+        self.wait(1)
+        
+        # Display the Diophantine equation
+        equation = MathTex(r"x^2 - 2y^2 = 1").scale(1.2)
+        self.play(Write(equation))
+        self.wait(1)
+        
+        # Move equation to upper left
+        self.play(equation.animate.scale(0.7).to_corner(UL))
+        
+        # Create coordinate system
+        axes = Axes(
+            x_range=[-5, 5],
+            y_range=[-3, 3],
+        ).scale(0.8)
+        self.play(Create(axes))
+        
+        # Integer solutions to x^2 - 2y^2 = 1
+        solutions = [
+            (1, 0),
+            (3, 2),
+            (-1, 0),
+            (-3, 2)
+        ]
+        
+        # Create dots for solutions
+        dots = VGroup()
+        for x, y in solutions:
+            dot = Dot(axes.c2p(x, y), color=RED)
+            dots.add(dot)
+        
+        # Show dots one by one
+        for dot in dots:
+            self.play(Create(dot))
+        self.wait(1)
+        
+        # Add labels for the points
+        labels = VGroup()
+        for i, (x, y) in enumerate(solutions):
+            label = Text(f"({x}, {y})", font_size=20).next_to(dots[i], UP, buff=0.2)
+            labels.add(label)
+        
+        self.play(Write(labels))
+        self.wait(1)
+        
+        # Draw simplified hyperbola (connecting points with curves)
+        curve1 = CubicBezier(
+            start=axes.c2p(-3, 2),
+            control1=axes.c2p(-2, 1),
+            control2=axes.c2p(-1.5, 0.5),
+            end=axes.c2p(-1, 0),
+            color=GREEN
+        )
+        
+        curve2 = CubicBezier(
+            start=axes.c2p(-1, 0),
+            control1=axes.c2p(-0.5, 0),
+            control2=axes.c2p(0.5, 0),
+            end=axes.c2p(1, 0),
+            color=GREEN
+        )
+        
+        curve3 = CubicBezier(
+            start=axes.c2p(1, 0),
+            control1=axes.c2p(1.5, 0.5),
+            control2=axes.c2p(2, 1),
+            end=axes.c2p(3, 2),
+            color=GREEN
+        )
+        
+        # Animate the curves
+        self.play(Create(curve1))
+        self.play(Create(curve2))
+        self.play(Create(curve3))
+        self.wait(1)
+        
+        # Key insight
+        insight = Text("Integer solutions form hyperbolic patterns", font_size=24).to_edge(DOWN)
+        self.play(Write(insight))
+        self.wait(2)
+        
+        # Highlight the pattern
+        highlight = Text("These patterns extend to infinity", font_size=24).to_edge(DOWN)
+        self.play(ReplacementTransform(insight, highlight))
+        self.wait(1)
+        
+        # Conclusion
+        conclusion = Text("Beautiful mathematics from simple equations", 
+# ... (truncated)
+```
+
+---
+
+## Example 19: Diophantine Equations - The Mystery of x³ + y³ + z³ = k: Where Math Meets Art
+Visual Style: The visual style is sophisticated and elegant, utilizing a color palette with deep blues, golden highlights, and accents of red, green, and blue for clarity in distinguishing integer solution points. 
+
+```python
+from manim import *
+
+class DiophantineEquationsScene(Scene):
+    def construct(self):
+        # Title
+        title = Text("The Mystery of x³ + y³ + z³ = k", font_size=36)
+        subtitle = Text("Where Math Meets Art", font_size=28)
+        subtitle.next_to(title, DOWN)
+        
+        # Display title and subtitle
+        self.play(Write(title))
+        self.play(FadeIn(subtitle))
+        self.wait(1)
+        self.play(FadeOut(title), FadeOut(subtitle))
+        
+        # Introduction
+        intro_text = Text("Diophantine Equations", font_size=36)
+        equation = Text("x³ + y³ + z³ = k", font_size=40, color=BLUE)
+        equation.next_to(intro_text, DOWN, buff=0.5)
+        
+        # Display introduction and main equation
+        self.play(Write(intro_text))
+        self.wait(0.5)
+        self.play(Write(equation))
+        self.wait(1)
+        self.play(FadeOut(intro_text))
+        
+        # Move equation to top for the rest of the presentation
+        equation_top = equation.copy().to_edge(UP)
+        self.play(ReplacementTransform(equation, equation_top))
+        equation = equation_top
+        
+        # Key Concept 1: Mathematical Puzzle
+        concept1 = Text("A Perplexing Mathematical Puzzle", font_size=32)
+        concept1.next_to(equation, DOWN)
+        
+        self.play(Write(concept1))
+        self.wait(1)
+        
+        # Create a grid of dots to represent integer points
+        dots = VGroup()
+        for x in range(-2, 3):
+            for y in range(-2, 3):
+                dot = Dot([x, y, 0], color=BLUE)
+                dots.add(dot)
+        
+        self.play(FadeIn(dots))
+        self.wait(1)
+        
+        # Key Concept 2: Solutions as Points
+        concept2 = Text("Solutions as Points in Space", font_size=32)
+        concept2.next_to(equation, DOWN)
+        
+        self.play(FadeOut(concept1))
+        self.play(Write(concept2))
+        
+        # Highlight specific points as solutions
+        solution_dots = VGroup(
+            Dot([1, 1, 0], color=YELLOW, radius=0.1),
+            Dot([2, -1, 0], color=YELLOW, radius=0.1),
+            Dot([-1, -1, 0], color=YELLOW, radius=0.1)
+        )
+        
+        self.play(FadeIn(solution_dots))
+        self.wait(1)
+        
+        # Key Concept 3: Limitations and Challenges
+        concept3 = Text("Limitations and Challenges", font_size=32)
+        concept3.next_to(equation, DOWN)
+        
+        self.play(FadeOut(concept2))
+        self.play(Write(concept3))
+        
+        # Example of a k value with solutions
+        k_text = Text("k = 3: Solutions exist", font_size=28)
+        k_text.to_edge(DOWN, buff=1)
+        
+        self.play(Write(k_text))
+        self.wait(1)
+        
+        # Clean up for conclusion
+        self.play(
+            FadeOut(dots),
+            FadeOut(solution_dots),
+            FadeOut(k_text),
+            FadeOut(concept3)
+        )
+        
+        # Move equation back to center for conclusion
+        equation_center = Text("x³ + y³ + z³ = 
+# ... (truncated)
+```
+
+---
+
+## Example 20: Diophantine Equations - Decoding High-Dimensional Equations: Unveiling Diophantine Mysteries
+Visual Style: Mathematically rich, 3D animations with a smooth, fluid motion akin to waves. Use a palette blending deep blues, royal purples, and shining whites to evoke mystery and clarity.
+
+```python
+from manim import *
+
+class DiophantineEquations(Scene):
+    def construct(self):
+        # Title sequence
+        title = Text("Decoding High-Dimensional Equations", font_size=40)
+        subtitle = Text("Unveiling Diophantine Mysteries", font_size=30)
+        subtitle.next_to(title, DOWN)
+        
+        # Display title and subtitle
+        self.play(Write(title))
+        self.play(Write(subtitle))
+        self.wait(1)
+        self.play(FadeOut(title), FadeOut(subtitle))
+        
+        # Display the main Diophantine equation
+        equation = Text("x⁴ + y⁴ = z⁴", font_size=60)
+        self.play(Write(equation))
+        self.wait(1)
+        
+        # Move equation to top of screen
+        self.play(equation.animate.to_edge(UP))
+        
+        # Explain what Diophantine equations are
+        explanation = Text("A Diophantine equation requires integer solutions.", font_size=30)
+        explanation.next_to(equation, DOWN, buff=1)
+        self.play(Write(explanation))
+        self.wait(2)
+        
+        # Reference to Fermat's Last Theorem
+        fermat = Text("Fermat's Last Theorem: no solutions for x^n + y^n = z^n when n > 2", font_size=30)
+        fermat.next_to(explanation, DOWN, buff=0.5)
+        self.play(Write(fermat))
+        self.wait(2)
+        
+        # Clear explanations to prepare for visualization
+        self.play(FadeOut(explanation), FadeOut(fermat))
+        
+        # Create a grid of dots representing potential integer solutions
+        grid = VGroup()
+        for i in range(5):
+            for j in range(5):
+                dot = Dot(point=[(i-2), (j-2), 0], radius=0.1)
+                grid.add(dot)
+        
+        # Text explaining what we're searching for
+        search_text = Text("Searching for integer solutions...", font_size=30)
+        search_text.next_to(equation, DOWN, buff=1)
+        
+        self.play(FadeIn(grid), Write(search_text))
+        self.wait(1)
+        
+        # Indicate that no solutions exist by turning dots red
+        self.play(grid.animate.set_color(RED))
+        
+        no_sol = Text("No integer solutions exist!", font_size=30, color=RED)
+        no_sol.next_to(search_text, DOWN, buff=0.5)
+        self.play(Write(no_sol))
+        self.wait(1)
+        
+        # Final conclusion
+        self.play(
+            FadeOut(grid),
+            FadeOut(search_text),
+            FadeOut(no_sol),
+            FadeOut(equation)
+        )
+        
+        conclusion = Text(
+            "In mathematics, sometimes the beauty lies\nin understanding why there's nothing to find.", 
+            font_size=30
+        )
+        
+        self.play(Write(conclusion))
+        self.wait(2)
+        self.play(FadeOut(conclusion))
+```
+
+---
+
+## Example 21: Modular Arithmetic - The Mathematics of Clocks: Understanding Modular Arithmetic
+Visual Style: The visual style is clean, using a soft color palette of light blues, whites, and greys, similar to that of a modern digital clockface. Smooth transitions and animation bring clarity, while clear, pun
+
+```python
+from manim import *
+
+class ModularArithmeticScene(Scene):
+    def construct(self):
+        # Introduction
+        title = Text("The Mathematics of Clocks: Understanding Modular Arithmetic", font_size=28)
+        title.to_edge(UP)
+        self.play(Write(title))
+        self.wait(1)
+
+        # Create a basic clock face (mod 12)
+        clock_radius = 2
+        clock_circle = Circle(radius=clock_radius)
+        clock_circle.set_stroke(BLUE_C, 2)
+        
+        # Add numbers to the clock face
+        numbers = VGroup()
+        for i in range(1, 13):
+            angle = -PI/2 + (i-1) * (2*PI/12)  # Start from top (12 o'clock)
+            number = Text(str(i), font_size=24)
+            number.move_to(clock_circle.get_center() + clock_radius * 0.8 * np.array([np.cos(angle), np.sin(angle), 0]))
+            numbers.add(number)
+        
+        clock = VGroup(clock_circle, numbers)
+        clock.move_to(ORIGIN)
+        
+        self.play(Create(clock_circle), run_time=1)
+        self.play(FadeIn(numbers), run_time=1)
+        self.wait(1)
+        
+        # Key Concept 1: Cycling around the clock
+        concept1_text = Text("In mod 12, after 12 we wrap back to 1", font_size=24)
+        concept1_text.to_edge(DOWN)
+        self.play(Write(concept1_text))
+        
+        # Highlight key numbers to show wrapping
+        self.play(numbers[11].animate.set_color(YELLOW))  # Highlight 12
+        self.wait(0.5)
+        self.play(numbers[0].animate.set_color(YELLOW))   # Highlight 1
+        self.wait(0.5)
+        
+        self.play(
+            numbers[11].animate.set_color(WHITE),
+            numbers[0].animate.set_color(WHITE)
+        )
+        
+        self.wait(0.5)
+        self.play(FadeOut(concept1_text))
+        
+        # Key Concept 2: Congruence with 13 ≡ 1 (mod 12)
+        concept2_text = Text("13 is congruent to 1 mod 12", font_size=24)
+        concept2_text.to_edge(DOWN)
+        
+        equation = MathTex("13 \\equiv 1 \\pmod{12}")
+        equation.next_to(concept2_text, UP)
+        
+        self.play(Write(concept2_text))
+        self.play(Write(equation))
+        
+        # Highlight number 1 on the clock
+        self.play(numbers[0].animate.set_color(YELLOW))
+        self.wait(1)
+        
+        self.play(FadeOut(concept2_text), FadeOut(equation))
+        self.play(numbers[0].animate.set_color(WHITE))  # Reset color
+        
+        # Key Concept 3: Demonstrate mod 5
+        self.play(FadeOut(clock), FadeOut(title))
+        
+        mod5_title = Text("Modular Arithmetic with Mod 5", font_size=28)
+        mod5_title.to_edge(UP)
+        
+        mod5_clock_radius = 2
+        mod5_clock_circle = Circle(radius=mod5_clock_radius)
+        mod5_clock_circle.set_stroke(BLUE_C, 2)
+        
+        # Add numbers to the mod 5 clock face
+        mod5_numbers = VGroup()
+        for i in range(1, 6):
+            angle = -PI/2 + (i-1) * (2*PI/5)  # Start from top
+            number = Text(str(i), font_size=24)
+            number.move_to(mod5_clock_circle.get_
+# ... (truncated)
+```
+
+---
+
+## Example 22: Modular Arithmetic - The Dance of Numbers: Exploring Modular Arithmetic through a Geometric Loop
+Visual Style: The animation adopts a clean, modern style reminiscent of mathematical illustrators like 3Blue1Brown, with a palette of blues, whites, and soft gradients to evoke a sense of mathematical elegance and 
+
+```python
+from manim import *
+
+class ModularArithmeticScene(Scene):
+    def construct(self):
+        # Scene 1: Introduction
+        title = Text("The Dance of Numbers")
+        subtitle = Text("Exploring Modular Arithmetic")
+        subtitle.next_to(title, DOWN)
+        
+        self.play(Write(title))
+        self.play(Write(subtitle))
+        self.wait(1)
+        self.play(FadeOut(title), FadeOut(subtitle))
+        
+        # Scene 2: Linear vs Circular - conceptual setup
+        number_line = NumberLine(x_range=[-3, 3, 1], length=6, include_numbers=True)
+        line_label = Text("Linear Arithmetic").to_edge(UP)
+        
+        self.play(Create(number_line), Write(line_label))
+        self.wait(1)
+        
+        # Create a dot and move it along the line
+        dot = Dot(color=RED).move_to(number_line.n2p(0))
+        self.play(Create(dot))
+        self.play(dot.animate.move_to(number_line.n2p(3)))
+        self.wait(1)
+        
+        # Transition to circle
+        self.play(FadeOut(number_line), FadeOut(dot), FadeOut(line_label))
+        
+        circle = Circle(radius=2)
+        circle_label = Text("Modular Arithmetic").to_edge(UP)
+        
+        self.play(Create(circle), Write(circle_label))
+        
+        # Add numbers to the circle
+        circle_nums = VGroup()
+        for i in range(6):
+            angle = i * TAU / 6
+            pos = circle.point_at_angle(angle)
+            direction = (pos - ORIGIN).normalize() * 0.4
+            num = Text(str(i)).move_to(pos + direction)
+            circle_nums.add(num)
+        
+        self.play(Write(circle_nums))
+        self.wait(1)
+        
+        # Scene 3: Clock example - building intuition
+        self.play(FadeOut(circle), FadeOut(circle_nums), FadeOut(circle_label))
+        
+        clock_text = Text("A clock is a modular system").to_edge(UP)
+        self.play(Write(clock_text))
+        
+        # Create simple clock
+        clock = Circle(radius=2)
+        self.play(Create(clock))
+        
+        # Add hour labels to the clock
+        hour_labels = VGroup()
+        for hour in range(1, 13):
+            angle = -hour * TAU / 12 + TAU / 4  # Start from top (12 o'clock)
+            pos = clock.point_at_angle(angle)
+            direction = (pos - ORIGIN).normalize() * 0.4
+            label = Text(str(hour)).move_to(pos + direction)
+            hour_labels.add(label)
+        
+        self.play(Write(hour_labels))
+        
+        # Add a hand to the clock
+        hand = Line(ORIGIN, UP * 1.8)
+        self.play(Create(hand))
+        
+        # Rotate the hand
+        self.play(Rotate(hand, angle=TAU, about_point=ORIGIN, run_time=2))
+        self.wait(1)
+        
+        # Scene 4: Modulo 3 example - key insight
+        self.play(FadeOut(clock), FadeOut(hour_labels), FadeOut(hand), FadeOut(clock_text))
+        
+        mod3_text = Text("Example: Modulo 3").to_edge(UP)
+        self.play(Write(mod3_text))
+        
+        # Create mod 3 circle
+        mod3_circle = Circle(radius=2)
+        self.pl
+# ... (truncated)
+```
+
+---
+
+## Example 23: Modular Arithmetic - Dancing to Modular Melodies: Patterns in Arithmetic
+Visual Style: A smooth blend of 3D graphics with a pastel color palette, featuring rotating geometric structures and intersecting paths that illustrate the beauty of arithmetic. The feel should evoke a smooth dance
+
+```python
+from manim import *
+
+class ModularArithmeticPatterns(Scene):
+    def construct(self):
+        # Introduction
+        title = Text("Dancing to Modular Melodies")
+        subtitle = Text("Patterns in Arithmetic").scale(0.8).next_to(title, DOWN)
+        
+        self.play(Write(title))
+        self.play(Write(subtitle))
+        self.wait(1)
+        self.play(FadeOut(title), FadeOut(subtitle))
+        
+        # Create mod 6 clock
+        mod6_circle = Circle(radius=1.5, color=BLUE)
+        mod6_label = Text("Mod 6", color=BLUE).next_to(mod6_circle, UP)
+        
+        self.play(Create(mod6_circle))
+        self.play(Write(mod6_label))
+        
+        # Add numbers to mod 6 clock
+        mod6_numbers = []
+        for i in range(6):
+            angle = i * 2 * PI / 6
+            number = Text(str(i)).scale(0.5)
+            number.move_to(mod6_circle.point_at_angle(angle))
+            mod6_numbers.append(number)
+            self.play(Write(number), run_time=0.3)
+        
+        # Show equation
+        eq1 = Text("n mod 6", color=BLUE).to_edge(DOWN, buff=1.5)
+        self.play(Write(eq1))
+        
+        # Show movement on the clock
+        dot = Dot(color=YELLOW).move_to(mod6_circle.point_at_angle(0))
+        self.play(Create(dot))
+        
+        for i in range(1, 13):  # Two full cycles
+            angle = i * 2 * PI / 6
+            self.play(dot.animate.move_to(mod6_circle.point_at_angle(angle)), run_time=0.3)
+        
+        self.wait(1)
+        
+        # Fade out mod 6 elements
+        self.play(
+            FadeOut(mod6_circle),
+            FadeOut(mod6_label),
+            *[FadeOut(num) for num in mod6_numbers],
+            FadeOut(dot)
+        )
+        
+        # Create mod 5 clock
+        mod5_circle = Circle(radius=1.5, color=RED)
+        mod5_label = Text("Mod 5", color=RED).next_to(mod5_circle, UP)
+        
+        self.play(Create(mod5_circle))
+        self.play(Write(mod5_label))
+        
+        # Add numbers to mod 5 clock
+        mod5_numbers = []
+        for i in range(5):
+            angle = i * 2 * PI / 5
+            number = Text(str(i)).scale(0.5)
+            number.move_to(mod5_circle.point_at_angle(angle))
+            mod5_numbers.append(number)
+            self.play(Write(number), run_time=0.3)
+        
+        # Update equation
+        eq2 = Text("n mod 5", color=RED).to_edge(DOWN, buff=1.5)
+        self.play(Transform(eq1, eq2))
+        
+        # Show movement on the clock
+        dot = Dot(color=YELLOW).move_to(mod5_circle.point_at_angle(0))
+        self.play(Create(dot))
+        
+        for i in range(1, 11):  # Two full cycles
+            angle = i * 2 * PI / 5
+            self.play(dot.animate.move_to(mod5_circle.point_at_angle(angle)), run_time=0.3)
+        
+        self.wait(1)
+        
+        # Fade out mod 5 elements
+        self.play(
+            FadeOut(mod5_circle),
+            FadeOut(mod5_label),
+            *[FadeOut(num) for num in mod5_numbers],
+            FadeOut(dot),
+            FadeOut(eq1)
+   
+# ... (truncated)
+```
+
+---
+
+## Example 24: Pythagorean Triples - Mapping Pythagorean Triples onto a Lattice
+Visual Style: Using a mathematical, clean style with a cool blue and white palette reminiscent of graph paper. Dynamic animations emphasize connections between numbers and geometry, revealing symmetry and endless f
+
+```python
+from manim import *
+
+class MappingPythagoreanTriples(Scene):
+    def construct(self):
+        # Title
+        title = Text("Mapping Pythagorean Triples onto a Lattice", font_size=32)
+        title.to_edge(UP)
+        self.play(Write(title))
+        self.wait(1)
+        
+        # Basic Pythagorean equation
+        eq = Text("a² + b² = c²", font_size=30)
+        eq.to_edge(DOWN, buff=1)
+        self.play(Write(eq))
+        self.wait(1)
+        
+        # Create a grid (lattice structure)
+        grid = NumberPlane(
+            x_range=(-1, 10),
+            y_range=(-1, 10),
+            x_length=8,
+            y_length=8,
+        )
+        grid.center()
+        self.play(Create(grid))
+        self.wait(1)
+        
+        # Element 2: Classic 3-4-5 triangle
+        origin = grid.c2p(0, 0)  # Origin point (0,0)
+        point_3_0 = grid.c2p(3, 0)  # Point at (3,0)
+        point_0_4 = grid.c2p(0, 4)  # Point at (0,4)
+        
+        # Create triangle
+        triangle = Polygon(origin, point_3_0, point_0_4, color=YELLOW, fill_opacity=0.2)
+        
+        # Add right angle marker
+        right_angle = RightAngle(
+            Line(origin, point_3_0),  # Horizontal line
+            Line(origin, point_0_4),  # Vertical line
+            length=0.3,
+            color=WHITE
+        )
+        
+        # Labels for triangle sides
+        label_3 = Text("3", font_size=24).next_to((origin + point_3_0)/2, DOWN)
+        label_4 = Text("4", font_size=24).next_to((origin + point_0_4)/2, LEFT)
+        label_5 = Text("5", font_size=24).next_to((point_3_0 + point_0_4)/2, UP+RIGHT)
+        
+        # Example equation for 3-4-5 triangle
+        example_eq = Text("3² + 4² = 5²", font_size=30)
+        example_eq.next_to(eq, UP, buff=0.5)
+        
+        # Show the triangle and its properties
+        self.play(Create(triangle))
+        self.play(Create(right_angle))
+        self.play(Write(label_3), Write(label_4), Write(label_5))
+        self.play(Write(example_eq))
+        self.wait(2)
+        
+        # Clean up for next demonstration
+        elements_to_remove = VGroup(triangle, right_angle, label_3, label_4, label_5, example_eq)
+        self.play(FadeOut(elements_to_remove))
+        
+        # Element 3: Show Pythagorean triples as points on the grid
+        triples = [
+            (3, 4, 5),
+            (5, 12, 13),
+            (8, 6, 10),
+        ]
+        
+        dots = VGroup()
+        labels = VGroup()
+        
+        for a, b, c in triples:
+            # Create a dot at the point (a,b)
+            dot = Dot(grid.c2p(a, b), color=RED, radius=0.12)
+            # Label with the triple values
+            label = Text(f"({a},{b},{c})", font_size=20).next_to(dot, UP+RIGHT, buff=0.2)
+            
+            dots.add(dot)
+            labels.add(label)
+            
+            self.play(Create(dot))
+            self.play(Write(label))
+            self.wait(0.5)
+        
+        # Key insight
+        key_insight = Text("Each point represents a Pythagorean triple!", fo
+# ... (truncated)
+```
+
+---
+
+## Example 25: Pythagorean Triples - Primitive Pythagorean Triples and the Hidden Geometry of the Unit Circle
+Visual Style: The video will feature a clean, soft color palette with blues, greens, and whites. The visuals will primarily consist of animated graphics with smooth transitions and clean lines, creating a coherent 
+
+```python
+from manim import *
+
+class PythagoreanTriplesUnitCircle(Scene):
+    def construct(self):
+        # Introduction
+        title = Text("Primitive Pythagorean Triples and the Unit Circle", font_size=32)
+        self.play(Write(title))
+        self.wait(1)
+        self.play(FadeOut(title))
+        
+        # Right Triangle and Pythagorean Equation
+        triangle = Polygon(
+            ORIGIN, 
+            RIGHT * 3, 
+            RIGHT * 3 + UP * 4,
+            color=BLUE
+        )
+        a_label = Text("a = 3", font_size=24).next_to(RIGHT * 1.5, DOWN)
+        b_label = Text("b = 4", font_size=24).next_to(RIGHT * 3 + UP * 2, RIGHT)
+        c_label = Text("c = 5", font_size=24).next_to(RIGHT * 1.5 + UP * 2, UP + LEFT)
+        
+        equation = Text("a² + b² = c²", font_size=30).to_edge(UP)
+        
+        self.play(Create(triangle))
+        self.play(Write(a_label), Write(b_label), Write(c_label))
+        self.play(Write(equation))
+        self.wait(1)
+        
+        # Primitive Triple Explanation
+        primitive_text = Text("A Pythagorean triple is primitive when a, b, and c are coprime", 
+                           font_size=24).next_to(equation, DOWN)
+        
+        self.play(Write(primitive_text))
+        self.wait(1)
+        
+        # Transition to Unit Circle
+        self.play(
+            FadeOut(triangle), 
+            FadeOut(a_label), 
+            FadeOut(b_label), 
+            FadeOut(c_label),
+            FadeOut(primitive_text)
+        )
+        
+        # Unit Circle
+        circle = Circle(radius=1, color=GREEN)
+        axes = Axes(
+            x_range=[-1.5, 1.5, 0.5],
+            y_range=[-1.5, 1.5, 0.5],
+            x_length=5,
+            y_length=5,
+            axis_config={"include_tip": False}
+        )
+        
+        circle_equation = Text("x² + y² = 1", font_size=30).to_edge(UP)
+        
+        self.play(
+            Transform(equation, circle_equation),
+            Create(axes),
+            Create(circle)
+        )
+        self.wait(1)
+        
+        # Point on Unit Circle (3/5, 4/5)
+        point_3_4_5 = Dot(np.array([3/5, 4/5, 0]), color=RED)
+        point_coords = Text("(3/5, 4/5)", font_size=24).next_to(point_3_4_5, UR)
+        
+        self.play(Create(point_3_4_5), Write(point_coords))
+        
+        # Line from Origin
+        line = Line(ORIGIN, np.array([3/5, 4/5, 0]), color=YELLOW)
+        line_text = Text("Rational slope", font_size=20).next_to(line.get_center(), LEFT)
+        
+        self.play(Create(line), Write(line_text))
+        self.wait(1)
+        
+        # Conclusion
+        conclusion = Text("Each rational point on the unit circle\ncorresponds to a primitive Pythagorean triple", 
+                       font_size=24).to_edge(DOWN)
+        
+        self.play(Write(conclusion))
+        self.wait(2)
+```
+
+---
+
+## Example 26: Pythagorean Triples - Pythagorean Triples and Their 3D Geometric Magic
+Visual Style: The visual style consists of a blend of soft, glowing lines and a cool color palette, primarily using blues, purples, and whites to evoke a sense of clarity and the ethereal beauty of mathematics. The
+
+```python
+from manim import *
+
+class PythagoreanTriplesScene(Scene):
+    def construct(self):
+        # Introduction
+        title = Text("Pythagorean Triples and Their 3D Geometric Magic", font_size=30)
+        title.to_edge(UP)
+        self.play(Write(title))
+        self.wait(1)
+        
+        # Key Concept 1 - Pythagorean Triple
+        # Draw a right triangle
+        triangle = Polygon(
+            ORIGIN, RIGHT * 3, UP * 4, 
+            color=WHITE
+        )
+        triangle.scale(0.7).move_to(DOWN * 0.5)
+        
+        # Label the sides
+        label_a = Text("a = 3", font_size=24).next_to(triangle, DOWN)
+        label_b = Text("b = 4", font_size=24).next_to(triangle, RIGHT)
+        label_c = Text("c = 5", font_size=24).next_to(triangle, UP + LEFT)
+        
+        self.play(Create(triangle))
+        self.play(Write(label_a), Write(label_b), Write(label_c))
+        self.wait(1)
+        
+        # Show the Pythagorean equation
+        equation = Text("a² + b² = c²", font_size=36)
+        equation.next_to(triangle, UP * 3)
+        
+        self.play(Write(equation))
+        self.wait(1)
+        
+        # Clear screen for next concept
+        self.play(
+            FadeOut(triangle),
+            FadeOut(label_a),
+            FadeOut(label_b),
+            FadeOut(label_c),
+            FadeOut(equation)
+        )
+        
+        # Key Concept 2 - Unit Sphere
+        sphere_text = Text("Consider a unit sphere centered at the origin", font_size=24)
+        sphere_text.to_edge(UP)
+        
+        # Create a circle to represent the sphere in 2D
+        sphere = Circle(radius=2, color=BLUE)
+        
+        # Create a dot at the center of the sphere
+        center_dot = Dot(sphere.get_center(), color=RED)
+        
+        # Create a dot at the "north pole" of the sphere
+        north_pole = Dot(sphere.get_center() + UP * 2, color=GREEN)
+        north_pole_label = Text("North Pole", font_size=20).next_to(north_pole, UP)
+        
+        self.play(Write(sphere_text))
+        self.play(Create(sphere), Create(center_dot))
+        self.play(Create(north_pole), Write(north_pole_label))
+        self.wait(1)
+        
+        # Key Concept 3 - Projection
+        projection_text = Text("Lines from origin intersect the sphere", font_size=24)
+        projection_text.to_edge(UP)
+        
+        # Create a line from the center to a point on the sphere
+        line = Line(center_dot.get_center(), sphere.point_at_angle(PI/4), color=YELLOW)
+        intersection_dot = Dot(line.get_end(), color=YELLOW)
+        
+        self.play(
+            FadeOut(sphere_text),
+            FadeIn(projection_text)
+        )
+        self.play(Create(line), Create(intersection_dot))
+        self.wait(1)
+        
+        # Add a note about the triple
+        triple_note = Text("Each point corresponds to a Pythagorean triple", font_size=24)
+        triple_note.next_to(sphere, DOWN * 2)
+        
+        self.play(Write(triple_note))
+        self.wait(1)
+        
+        # Conclusion
+       
+# ... (truncated)
+```
+
+---
+
+## Example 27: Perfect Numbers - Perfect & Triangular Numbers: A Hidden Geometric Bond
+Visual Style: The animation adopts a minimalistic geometric style, employing hues of blue, green, and orange to represent numbers and triangular shapes. Clean transitions and synchronized alignments add to the expe
+
+```python
+from manim import *
+
+class PerfectTriangularNumbersScene(Scene):
+    def construct(self):
+        # Introduction
+        title = Text("Perfect & Triangular Numbers: A Hidden Geometric Bond", font_size=32)
+        self.play(Write(title))
+        self.wait(1)
+        self.play(FadeOut(title))
+        
+        # Explain perfect numbers
+        perfect_def = Text("A perfect number equals the sum of its proper divisors", font_size=28)
+        self.play(Write(perfect_def))
+        self.wait(1)
+        self.play(FadeOut(perfect_def))
+        
+        # Example: 6 as a perfect number
+        six_text = Text("6 is a perfect number", font_size=32)
+        self.play(Write(six_text))
+        self.wait(1)
+        
+        # Show divisors of 6
+        divisors_text = Text("Divisors: 1, 2, 3", font_size=28)
+        divisors_text.next_to(six_text, DOWN)
+        self.play(Write(divisors_text))
+        self.wait(1)
+        
+        # Show sum of divisors
+        sum_text = Text("1 + 2 + 3 = 6", font_size=28)
+        sum_text.next_to(divisors_text, DOWN)
+        self.play(Write(sum_text))
+        self.wait(1)
+        self.play(FadeOut(six_text), FadeOut(divisors_text), FadeOut(sum_text))
+        
+        # Triangular numbers explanation
+        tri_def = Text("Triangular Numbers: Sums of consecutive integers", font_size=28)
+        self.play(Write(tri_def))
+        self.wait(1)
+        self.play(FadeOut(tri_def))
+        
+        # Visualize triangular number 6
+        tri_6 = Text("6 as a triangular number: 1 + 2 + 3", font_size=28)
+        self.play(Write(tri_6))
+        self.wait(1)
+        self.play(FadeOut(tri_6))
+        
+        # Create triangle of dots for 6
+        dots_6 = VGroup()
+        
+        # First row - 1 dot
+        row1 = Dot(point=UP*2, color=BLUE)
+        dots_6.add(row1)
+        self.play(Create(row1))
+        
+        # Second row - 2 dots
+        row2 = VGroup(
+            Dot(point=UP + LEFT*0.5, color=BLUE),
+            Dot(point=UP + RIGHT*0.5, color=BLUE)
+        )
+        dots_6.add(row2)
+        self.play(Create(row2))
+        
+        # Third row - 3 dots
+        row3 = VGroup(
+            Dot(point=LEFT, color=BLUE),
+            Dot(point=ORIGIN, color=BLUE),
+            Dot(point=RIGHT, color=BLUE)
+        )
+        dots_6.add(row3)
+        self.play(Create(row3))
+        
+        # Show equation for triangular number 6
+        tri_6_eq = Text("6 = 1 + 2 + 3", font_size=28)
+        tri_6_eq.to_edge(DOWN)
+        self.play(Write(tri_6_eq))
+        self.wait(1)
+        
+        self.play(FadeOut(dots_6), FadeOut(tri_6_eq))
+        
+        # Example: 28 as a perfect number
+        text_28 = Text("28 is another perfect number", font_size=32)
+        self.play(Write(text_28))
+        self.wait(1)
+        
+        # Show divisors of 28
+        divisors_28 = Text("Divisors: 1, 2, 4, 7, 14", font_size=28)
+        divisors_28.next_to(text_28, DOWN)
+        self.play(Write(divisors_28))
+        self.wait(1)
+        
+        # Show sum of 
+# ... (truncated)
+```
+
+---
+
+## Example 28: Perfect Numbers - The Fractal Nature of Perfect Numbers
+Visual Style: Adopt a 3Blue1Brown style with smooth transitions, a mix of deep blues and vibrant yellows for number highlights, and white-light grayscales for the fractal lines to maintain an elegant, simple aesthe
+
+```python
+from manim import *
+
+class PerfectNumbersFractal(Scene):
+    def construct(self):
+        # Colors - using 3Blue1Brown style colors
+        BLUE_DEEP = "#0C2D48"
+        YELLOW_VIBRANT = "#FFCB47"
+        
+        # Introduction
+        title = Text("The Fractal Nature of Perfect Numbers", color=BLUE_DEEP)
+        self.play(Write(title))
+        self.wait(1)
+        self.play(title.animate.scale(0.7).to_edge(UP))
+        
+        # Perfect number 6
+        eq_6 = Text("6 = 1 + 2 + 3", color=BLUE_DEEP)
+        self.play(Write(eq_6))
+        self.wait(1)
+        
+        # Visualize divisors of 6
+        center_6 = Dot(color=YELLOW_VIBRANT)
+        label_6 = Text("6", color=WHITE).next_to(center_6, UP, buff=0.1)
+        
+        self.play(FadeOut(eq_6))
+        self.play(Create(center_6), Write(label_6))
+        
+        # Create divisors as dots around center_6
+        divisors_6 = VGroup()
+        connections_6 = VGroup()
+        
+        for i, d in enumerate([1, 2, 3]):
+            angle = i * TAU/3
+            radius = 1.5
+            
+            x = radius * np.cos(angle)
+            y = radius * np.sin(angle)
+            
+            dot = Dot(color=BLUE_DEEP).shift(RIGHT * x + UP * y)
+            label = Text(str(d), color=WHITE).scale(0.7).next_to(dot, direction=UP, buff=0.1)
+            
+            line = Line(center_6.get_center(), dot.get_center(), color=WHITE)
+            
+            divisors_6.add(VGroup(dot, label))
+            connections_6.add(line)
+        
+        self.play(Create(divisors_6), Create(connections_6))
+        self.wait(1)
+        
+        # Transition to 28
+        self.play(
+            FadeOut(center_6),
+            FadeOut(label_6),
+            FadeOut(divisors_6),
+            FadeOut(connections_6)
+        )
+        
+        # Perfect number 28
+        eq_28 = Text("28 = 1 + 2 + 4 + 7 + 14", color=BLUE_DEEP)
+        self.play(Write(eq_28))
+        self.wait(1)
+        
+        # Visualize divisors of 28
+        center_28 = Dot(color=YELLOW_VIBRANT)
+        label_28 = Text("28", color=WHITE).next_to(center_28, UP, buff=0.1)
+        
+        self.play(FadeOut(eq_28))
+        self.play(Create(center_28), Write(label_28))
+        
+        # Create divisors as dots around center_28
+        divisors_28 = VGroup()
+        connections_28 = VGroup()
+        
+        for i, d in enumerate([1, 2, 4, 7, 14]):
+            angle = i * TAU/5
+            radius = 1.8
+            
+            x = radius * np.cos(angle)
+            y = radius * np.sin(angle)
+            
+            dot = Dot(color=BLUE_DEEP).shift(RIGHT * x + UP * y)
+            label = Text(str(d), color=WHITE).scale(0.7).next_to(dot, direction=RIGHT * np.cos(angle) + UP * np.sin(angle), buff=0.1)
+            
+            line = Line(center_28.get_center(), dot.get_center(), color=WHITE)
+            
+            divisors_28.add(VGroup(dot, label))
+            connections_28.add(line)
+        
+        self.play(Create(divisors_28), Create(connections_28))
+  
+# ... (truncated)
+```
+
+---
+
+## Example 29: Perfect Numbers - The Hidden Patterns of Perfect Numbers: A Visual Journey
+Visual Style: The visual style echoes 3Blue1Brown with smooth animations and seamless transitions. A soft palette of blues and golds, enhancing elegance and clarity, while emphasizing the highlighted perfect number
+
+```python
+from manim import *
+
+class PerfectNumbersScene(Scene):
+    def construct(self):
+        # Introduction
+        title = Text("The Hidden Patterns of Perfect Numbers", font_size=36)
+        subtitle = Text("A Visual Journey", font_size=24).next_to(title, DOWN)
+        
+        self.play(Write(title))
+        self.play(FadeIn(subtitle))
+        self.wait(1)
+        self.play(FadeOut(title), FadeOut(subtitle))
+        
+        # Key Insight
+        insight = Text("Perfect numbers are rare in the world of integers", font_size=28)
+        self.play(Write(insight))
+        self.wait(1)
+        self.play(FadeOut(insight))
+        
+        # Element 1: Number line with highlighted perfect numbers
+        number_line = NumberLine(
+            x_range=[0, 30, 5],
+            length=10,
+            include_numbers=True,
+        )
+        
+        number_line_label = Text("First 30 Integers", font_size=24).next_to(number_line, UP, buff=0.5)
+        
+        self.play(Create(number_line))
+        self.play(Write(number_line_label))
+        self.wait(1)
+        
+        # Create dots for all integers
+        dots = VGroup()
+        for i in range(1, 31):
+            dot = Dot(color=BLUE_C).move_to(number_line.n2p(i))
+            dots.add(dot)
+        
+        self.play(Create(dots))
+        self.wait(1)
+        
+        # Define perfect numbers
+        definition = Text("Perfect Numbers: Sum of divisors equals twice the number", font_size=24)
+        definition.to_edge(UP)
+        
+        self.play(Write(definition))
+        self.wait(1)
+        
+        # Highlight perfect number 6
+        perfect_6 = dots[5]  # 6 is at index 5 (0-based)
+        perfect_6_label = Text("6 = 1+2+3", font_size=20, color=YELLOW).next_to(perfect_6, UP)
+        
+        self.play(
+            perfect_6.animate.set_color(YELLOW).scale(1.5),
+            Write(perfect_6_label)
+        )
+        self.wait(1)
+        
+        # Element 2: Add hexagon around perfect number 6
+        hexagon = RegularPolygon(n=6, color=BLUE).scale(0.3).move_to(perfect_6.get_center())
+        self.play(Create(hexagon))
+        self.wait(1)
+        
+        # Highlight perfect number 28
+        perfect_28 = dots[27]  # 28 is at index 27 (0-based)
+        perfect_28_label = Text("28 = 1+2+4+7+14", font_size=20, color=YELLOW).next_to(perfect_28, DOWN)
+        
+        self.play(
+            perfect_28.animate.set_color(YELLOW).scale(1.5),
+            Write(perfect_28_label)
+        )
+        self.wait(1)
+        
+        # Show equation
+        equation = MathTex(r"\sum_{d|n} d = 2n").to_edge(DOWN, buff=1)
+        
+        self.play(Write(equation))
+        self.wait(1)
+        
+        # Element 3: Show integers as beads
+        self.play(
+            *[FadeOut(mob) for mob in [dots, hexagon, number_line, number_line_label, 
+                                       perfect_6_label, perfect_28_label, definition]]
+        )
+        
+        beads_text = Text("Integers as beads on a string", font_size=24).to_edge
+# ... (truncated)
+```
+
+---
+
+## Example 30: Euclidean Algorithm - Journey to the GCD: The Euclidean Algorithm Unveiled
+Visual Style: Minimalistic design using a cool color palette of blues and greens represents clarity. Employs a grid with animated arrows or lines for movement and progression, following the style reminiscent of 3Bl
+
+```python
+from manim import *
+
+class EuclideanAlgorithmGCD(Scene):
+    def construct(self):
+        # Create a coordinate grid with a cool blue color
+        axes = Axes(
+            x_range=[0, 15, 1], 
+            y_range=[0, 15, 1],
+            axis_config={"color": BLUE}
+        )
+        
+        # Title for the animation
+        title = Text("Journey to the GCD: The Euclidean Algorithm")
+        title.to_edge(UP)
+        
+        # Display the grid and title
+        self.play(Create(axes), Write(title))
+        
+        # Starting numbers for GCD calculation
+        a, b = 12, 8
+        
+        # Show introduction text
+        intro = Text(f"Finding the GCD of {a} and {b}")
+        intro.next_to(title, DOWN)
+        self.play(Write(intro))
+        
+        # Create a dot at the starting point (a,b) - representing the first "hiker"
+        start_point = axes.coords_to_point(a, b)
+        dot = Dot(start_point, color=GREEN)
+        label = Text(f"({a}, {b})").scale(0.7)
+        label.next_to(dot, UP)
+        
+        self.play(Create(dot), Write(label))
+        
+        # Display the Euclidean Algorithm equation
+        eq = Text("a = bq + r")
+        eq.to_edge(DOWN)
+        self.play(Write(eq))
+        
+        # Track points and dots for the path
+        points = [(a, b)]
+        dots = [dot]
+        
+        # Initialize algorithm variables
+        current_a, current_b = a, b
+        current_point = start_point
+        
+        # Run the Euclidean Algorithm
+        while current_b > 0:
+            # Calculate quotient and remainder
+            q = current_a // current_b
+            r = current_a % current_b
+            
+            # Create a new point at (b,r) - the next "step" in our journey
+            new_point = axes.coords_to_point(current_b, r)
+            new_dot = Dot(new_point, color=GREEN)
+            new_label = Text(f"({current_b}, {r})").scale(0.7)
+            new_label.next_to(new_dot, UP)
+            
+            # Draw an arrow from the previous point - showing the path
+            arrow = Arrow(current_point, new_point, buff=0.1, color=BLUE)
+            
+            # Update the equation to show current calculation
+            new_eq = Text(f"{current_a} = {current_b} × {q} + {r}")
+            new_eq.to_edge(DOWN)
+            
+            # Add these elements to the scene
+            self.play(
+                Create(arrow),
+                Create(new_dot),
+                Write(new_label),
+                Transform(eq, new_eq)
+            )
+            
+            # Update variables for next iteration
+            current_a, current_b = current_b, r
+            current_point = new_point
+            dots.append(new_dot)
+            points.append((current_b, r))
+        
+        # GCD is found (it's the last non-zero remainder)
+        gcd = current_a
+        
+        # Show the final result
+        final_eq = Text(f"The GCD is {gcd}")
+        final_eq.to_edge(DOWN)
+        self.play(Transform(eq, final_eq))
+        
+        # Hig
+# ... (truncated)
+```
+
+---
+
+## Example 31: Euclidean Algorithm - "Nature's Arithmetic: The Euclidean Algorithm & Natural Spirals"
+Visual Style: Minimalistic design similar to 3Blue1Brown, using a dark palette contrasted by bright yellows and greens, reminiscent of nature's own contrasting colors – enriching the focus on spirals.
+
+```python
+from manim import *
+
+class EuclideanAlgorithmNature(Scene):
+    def construct(self):
+        # Title of the animation
+        title = Text("Nature's Arithmetic: The Euclidean Algorithm & Natural Spirals", font_size=32)
+        self.play(Write(title))
+        self.wait(1)
+        self.play(FadeOut(title))
+        
+        # Introduction - Simple visualization of nature's patterns
+        intro_text = Text("Patterns in Nature", font_size=36)
+        self.play(Write(intro_text))
+        self.wait(1)
+        self.play(FadeOut(intro_text))
+        
+        # Creating a circle to represent a sunflower
+        circle = Circle(radius=1.5, color=YELLOW).shift(LEFT*2)
+        dot = Dot(point=circle.get_center(), color=YELLOW)
+        
+        # Creating simple arcs to represent a spiral (like a snail shell)
+        arcs = VGroup()
+        for i in range(1, 6):
+            arc = Arc(radius=i*0.3, start_angle=0, angle=i*PI, color=YELLOW).shift(RIGHT*2)
+            arcs.add(arc)
+        
+        self.play(Create(circle), Create(dot))
+        self.play(Create(arcs))
+        self.wait(1)
+        self.play(FadeOut(circle), FadeOut(dot), FadeOut(arcs))
+        
+        # Key Concept 1 - Introduction to Euclidean Algorithm
+        concept1 = Text("The Euclidean Algorithm finds the GCD", font_size=32)
+        self.play(Write(concept1))
+        self.wait(1)
+        self.play(FadeOut(concept1))
+        
+        # Key Concept 2 - Example calculation
+        example = Text("Example: GCD(84, 32)", font_size=32)
+        self.play(Write(example))
+        self.wait(1)
+        self.play(FadeOut(example))
+        
+        # Show algorithm steps - calculating GCD of 84 and 32
+        eq1 = Text("84 = 32 × 2 + 20", font_size=28)
+        eq2 = Text("32 = 20 × 1 + 12", font_size=28)
+        eq3 = Text("20 = 12 × 1 + 8", font_size=28)
+        eq4 = Text("12 = 8 × 1 + 4", font_size=28)
+        eq5 = Text("8 = 4 × 2 + 0", font_size=28)
+        
+        equations = VGroup(eq1, eq2, eq3, eq4, eq5).arrange(DOWN, buff=0.3).scale(0.9)
+        
+        for eq in equations:
+            self.play(Write(eq))
+            self.wait(0.3)
+        
+        result = Text("Therefore, GCD(84, 32) = 4", color=YELLOW, font_size=28)
+        result.next_to(equations, DOWN, buff=0.5)
+        
+        self.play(Write(result))
+        self.wait(1)
+        self.play(FadeOut(equations), FadeOut(result))
+        
+        # Key Concept 3 - Visual representation
+        concept3 = Text("The algorithm creates patterns similar to spirals", font_size=32)
+        self.play(Write(concept3))
+        self.wait(1)
+        self.play(FadeOut(concept3))
+        
+        # Rectangle spiral visualization - representing the Euclidean Algorithm geometrically
+        rect1 = Rectangle(width=4, height=2, color=GREEN)
+        rect2 = Rectangle(width=2, height=1, color=YELLOW).next_to(rect1, RIGHT, buff=0)
+        rect3 = Rectangle(width=1, height=1, color=RED).next_to(rect2, DOWN, buff=0)
+        rect4 = Rectangle(width=1, heig
+# ... (truncated)
+```
+
+---
+
+## Example 32: Euclidean Algorithm - Lattice Points & The Swift Efficiency of the Euclidean Algorithm
+Visual Style: The visual style mirrors 3Blue1Brown's captivating animations. The palette should be vibrant with blues, greens, and warm accent colors to highlight pivotal moments, accompanied by soft background mus
+
+```python
+from manim import *
+
+class EuclideanAlgorithm(Scene):
+    def construct(self):
+        # Title
+        title = Text("Lattice Points & The Euclidean Algorithm", font_size=36)
+        self.play(Write(title))
+        self.wait(1)
+        self.play(title.animate.to_edge(UP))
+        
+        # Create lattice grid
+        grid = NumberPlane(
+            x_range=(-1, 13, 1),
+            y_range=(-1, 9, 1),
+            x_length=10,
+            y_length=7,
+            axis_config={"include_numbers": True},
+        )
+        
+        self.play(Create(grid))
+        self.wait(1)
+        
+        # Choose two example numbers for GCD calculation
+        a, b = 12, 8  # We'll find GCD(12, 8) which is 4
+        
+        # Display explanation
+        explanation = Text("Finding GCD(12, 8) using lattice points", font_size=24)
+        explanation.next_to(title, DOWN)
+        self.play(Write(explanation))
+        self.wait(1)
+        
+        # Show the starting point (a, b) on the lattice
+        start_point = Dot(grid.c2p(a, b), color=RED)
+        start_label = Text("(12, 8)", font_size=20).next_to(start_point, UR)
+        
+        self.play(
+            Create(start_point),
+            Write(start_label)
+        )
+        self.wait(1)
+        
+        # Show the Euclidean Algorithm formula
+        formula = Text("gcd(a, b) = gcd(b, a mod b)", font_size=24)
+        formula.next_to(explanation, DOWN)
+        
+        self.play(Write(formula))
+        self.wait(1)
+        
+        # Step 1: Apply the formula once - (12, 8) -> (8, 4)
+        # This represents gcd(12, 8) = gcd(8, 12 mod 8) = gcd(8, 4)
+        step1_point = Dot(grid.c2p(8, 4), color=BLUE)
+        step1_label = Text("(8, 4)", font_size=20).next_to(step1_point, UR)
+        arrow1 = Arrow(start_point.get_center(), step1_point.get_center(), color=YELLOW)
+        
+        self.play(
+            Create(arrow1),
+            Create(step1_point),
+            Write(step1_label)
+        )
+        self.wait(1)
+        
+        # Step 2: Apply the formula again - (8, 4) -> (4, 0)
+        # This represents gcd(8, 4) = gcd(4, 8 mod 4) = gcd(4, 0) = 4
+        step2_point = Dot(grid.c2p(4, 0), color=GREEN)
+        step2_label = Text("(4, 0)", font_size=20).next_to(step2_point, UR)
+        arrow2 = Arrow(step1_point.get_center(), step2_point.get_center(), color=YELLOW)
+        
+        self.play(
+            Create(arrow2),
+            Create(step2_point),
+            Write(step2_label)
+        )
+        self.wait(1)
+        
+        # Highlight the result: GCD = 4
+        gcd_text = Text("GCD(12, 8) = 4", font_size=32, color=YELLOW)
+        gcd_text.to_edge(DOWN)
+        
+        self.play(Write(gcd_text))
+        self.wait(1)
+        
+        # Emphasize the GCD point on the lattice
+        final_point = Dot(grid.c2p(4, 0), color=YELLOW, radius=0.2)
+        final_label = Text("GCD = 4", font_size=24, color=YELLOW).next_to(final_point, UP)
+        
+        # Create a new highlighted point rather than transforming
+   
+# ... (truncated)
+```
+
+---
+
+## Example 33: Continued Fractions - The Hidden Precision of Continued Fractions
+Visual Style: The animation should reflect 3Blue1Brown's signature style with smoothly flowing transitions and a deep blue, gold, and white color palette, emphasizing clarity and beauty.
+
+```python
+from manim import *
+
+# Run with: manim -pql your_file.py ContinuedFractionsScene -o video.mp4
+# This will render the scene and save it as video.mp4
+
+class ContinuedFractionsScene(Scene):
+    def construct(self):
+        # Title
+        title = Text("The Hidden Precision of Continued Fractions", font_size=36)
+        self.play(Write(title))
+        self.wait(1)
+        self.play(title.animate.to_edge(UP))
+        
+        # Introduction to irrational numbers
+        intro_text = Text("Some numbers like π and e defy simple fractions", font_size=24)
+        self.play(Write(intro_text))
+        self.wait(1)
+        self.play(FadeOut(intro_text))
+        
+        # Split screen with decimal vs unknown representation
+        decimal_pi = MathTex(r"\pi \approx 3.14159...")
+        decimal_e = MathTex(r"e \approx 2.71828...")
+        
+        decimal_group = VGroup(decimal_pi, decimal_e).arrange(DOWN, buff=0.5).to_edge(LEFT, buff=2)
+        
+        # Simple illustration of a continued fraction
+        cf_box = Rectangle(height=2, width=3, color=YELLOW)
+        cf_question = Text("?", font_size=36, color=YELLOW).move_to(cf_box.get_center())
+        mystery_group = VGroup(cf_box, cf_question).to_edge(RIGHT, buff=2)
+        
+        self.play(
+            Write(decimal_group),
+            Create(cf_box),
+            Write(cf_question)
+        )
+        self.wait(1)
+        self.play(FadeOut(decimal_group), FadeOut(mystery_group))
+        
+        # Step-by-step illustration of a continued fraction
+        cf_text = Text("Continued fractions provide a different view:", font_size=24)
+        self.play(Write(cf_text))
+        self.wait(0.5)
+        self.play(cf_text.animate.to_edge(UP, buff=1))
+        
+        # Showing the expansion step by step
+        cf_step1 = MathTex(r"1 + \frac{1}{1}")
+        cf_step2 = MathTex(r"1 + \frac{1}{1 + \frac{1}{2}}")
+        cf_step3 = MathTex(r"1 + \frac{1}{1 + \frac{1}{2 + \frac{1}{2}}}")
+        
+        self.play(Write(cf_step1))
+        self.wait(0.5)
+        self.play(ReplacementTransform(cf_step1, cf_step2))
+        self.wait(0.5)
+        self.play(ReplacementTransform(cf_step2, cf_step3))
+        self.wait(1)
+        
+        # Showing sqrt(2) as a continued fraction
+        sqrt2_text = Text("Continued fraction of √2:", font_size=24)
+        sqrt2_cf = MathTex(r"\sqrt{2} = 1 + \frac{1}{2 + \frac{1}{2 + \cdots}}")
+        
+        sqrt2_group = VGroup(sqrt2_text, sqrt2_cf).arrange(DOWN, buff=0.5)
+        
+        self.play(ReplacementTransform(cf_step3, sqrt2_group))
+        self.wait(1)
+        
+        # Golden ratio continued fraction
+        phi_text = Text("The golden ratio φ has a beautiful pattern:", font_size=24)
+        phi_cf = MathTex(r"\phi = 1 + \frac{1}{1 + \frac{1}{1 + \cdots}}")
+        
+        phi_group = VGroup(phi_text, phi_cf).arrange(DOWN, buff=0.5)
+        
+        self.play(ReplacementTransform(sqrt2_group, phi_group))
+        self.wait(1)
+        
+        # Key insight
+        insight_text 
+# ... (truncated)
+```
+
+---
+
+## Example 34: Continued Fractions - The Magical Dance of Continued Fractions
+Visual Style: A modern, captivating style with a blend of golden and teal hues to complement the spirals and fractals. Warm tones persist on key numeric representations, using smooth transitions and swirling animat
+
+```python
+from manim import *
+
+class ContinuedFractionsScene(Scene):
+    def construct(self):
+        # Introduction
+        title = Text("The Magical Dance of Continued Fractions", font_size=36, color=GOLD)
+        self.play(Write(title))
+        self.wait(1)
+        self.play(FadeOut(title))
+        
+        # Key concept 1: Golden ratio
+        golden_ratio_text = Text("Golden Ratio (φ)", font_size=32, color=GOLD)
+        self.play(Write(golden_ratio_text))
+        self.wait(1)
+        self.play(golden_ratio_text.animate.to_edge(UP))
+        
+        # The golden ratio equation
+        golden_ratio_eq = MathTex(r"\phi = 1 + \frac{1}{1 + \frac{1}{1 + \frac{1}{1 + ...}}}")
+        self.play(Write(golden_ratio_eq))
+        self.wait(1)
+        
+        # Simplified continued fraction representation for golden ratio
+        cont_frac_text = Text("Continued Fraction: [1; 1, 1, 1, ...]", font_size=24)
+        cont_frac_text.next_to(golden_ratio_eq, DOWN)
+        self.play(Write(cont_frac_text))
+        self.wait(1)
+        
+        # Simple golden ratio visualization - rectangle with golden ratio proportions
+        golden_rect = Rectangle(height=1, width=1.618, color=GOLD)
+        golden_rect.next_to(cont_frac_text, DOWN, buff=0.5)
+        
+        self.play(Create(golden_rect))
+        self.wait(1)
+        
+        self.play(FadeOut(golden_ratio_text, golden_ratio_eq, cont_frac_text, golden_rect))
+        
+        # Key concept 2: Square root of 2
+        sqrt2_text = Text("Square Root of 2", font_size=32, color=BLUE)
+        self.play(Write(sqrt2_text))
+        self.wait(1)
+        self.play(sqrt2_text.animate.to_edge(UP))
+        
+        # The square root of 2 equation
+        sqrt2_eq = MathTex(r"\sqrt{2} = 1 + \frac{1}{2 + \frac{1}{2 + \frac{1}{2 + ...}}}")
+        self.play(Write(sqrt2_eq))
+        self.wait(1)
+        
+        # Simplified continued fraction representation for sqrt(2)
+        sqrt2_frac_text = Text("Continued Fraction: [1; 2, 2, 2, ...]", font_size=24)
+        sqrt2_frac_text.next_to(sqrt2_eq, DOWN)
+        self.play(Write(sqrt2_frac_text))
+        self.wait(1)
+        
+        # Simple visual representation for sqrt(2) - square with diagonal
+        square = Square(side_length=1, color=BLUE)
+        diagonal = Line(square.get_corner(DL), square.get_corner(UR), color=RED)
+        sqrt2_viz = VGroup(square, diagonal)
+        sqrt2_viz.next_to(sqrt2_frac_text, DOWN, buff=0.5)
+        
+        self.play(Create(sqrt2_viz))
+        self.wait(1)
+        
+        self.play(FadeOut(sqrt2_text, sqrt2_eq, sqrt2_frac_text, sqrt2_viz))
+        
+        # Key insight
+        insight_title = Text("Key Insight", font_size=32, color=GREEN)
+        self.play(Write(insight_title))
+        self.wait(1)
+        self.play(insight_title.animate.to_edge(UP))
+        
+        insight_text = Text("Continued fractions reveal patterns and symmetries", font_size=24)
+        insight_text.next_to(insight_title, DOWN)
+        self.play(Write(insight_text))
+       
+# ... (truncated)
+```
+
+---
+
+## Example 35: Continued Fractions - Decoding Continued Fractions: A Geometrical Lens on Diophantine Equations
+Visual Style: Elegant and cohesive, maintaining the style of dynamic sketches with vibrant colors such as deep blues, purples, and golds. Aim for a blend of flat and 3D visuals for clarity and depth, capturing the 
+
+```python
+from manim import *
+
+class ContinuedFractionsScene(Scene):
+    def construct(self):
+        # Define colors
+        blue = "#3B82F6"  # Primary color
+        purple = "#9333EA"  # Secondary color
+        gold = "#F59E0B"  # Highlight color
+        
+        # Create title
+        title = Text("Decoding Continued Fractions", color=blue).scale(0.8)
+        subtitle = Text("A Geometrical Lens on Diophantine Equations", color=purple).scale(0.6)
+        subtitle.next_to(title, DOWN)
+        
+        self.play(Write(title), run_time=1)
+        self.play(FadeIn(subtitle), run_time=0.7)
+        self.wait(0.7)
+        self.play(FadeOut(title), FadeOut(subtitle))
+        
+        # Create a simple grid
+        grid = VGroup()
+        
+        # Horizontal lines
+        for y in range(-3, 4):
+            line = Line(start=[-5, y, 0], end=[5, y, 0], color=GREY_D, stroke_opacity=0.5)
+            grid.add(line)
+        
+        # Vertical lines
+        for x in range(-5, 6):
+            line = Line(start=[x, -3, 0], end=[x, 3, 0], color=GREY_D, stroke_opacity=0.5)
+            grid.add(line)
+        
+        self.play(Create(grid), run_time=0.8)
+        
+        # Introduction text
+        intro_text = Text("Are integer solutions closer than they seem?", color=gold).scale(0.6)
+        intro_text.to_edge(UP)
+        self.play(Write(intro_text), run_time=0.8)
+        self.wait(0.7)
+        
+        # Show continued fraction representation
+        self.play(FadeOut(intro_text))
+        cf_title = Text("Introducing Continued Fractions", color=blue).scale(0.7)
+        cf_title.to_edge(UP)
+        self.play(Write(cf_title), run_time=0.7)
+        
+        cf_text = Text("p/q ≈ [a₀; a₁, a₂, ...]", color=WHITE).scale(0.7)
+        self.play(Write(cf_text), run_time=0.8)
+        self.wait(0.7)
+        
+        # Show Diophantine equation
+        self.play(FadeOut(cf_text), FadeOut(cf_title))
+        eq_title = Text("Linear Diophantine Equation", color=blue).scale(0.7)
+        eq_title.to_edge(UP)
+        self.play(Write(eq_title), run_time=0.7)
+        
+        eq_text = Text("3x + 7y = 1", color=WHITE).scale(0.7)
+        self.play(Write(eq_text), run_time=0.7)
+        self.wait(0.7)
+        
+        # Draw line representing the equation
+        line = Line(
+            start=[-3, 10/7, 0],  # For x=-3, y≈1.43
+            end=[3, -8/7, 0],     # For x=3, y≈-1.14
+            color=gold
+        )
+        self.play(Create(line), run_time=0.8)
+        
+        # Highlight solution points
+        sol_point1 = Dot(point=[2, -1, 0], color=purple)
+        sol_point2 = Dot(point=[-1, 2, 0], color=purple)
+        
+        sol_text = Text("Integer Solutions", color=purple).scale(0.6)
+        sol_text.next_to(sol_point1, DOWN)
+        
+        self.play(Create(sol_point1), Create(sol_point2), Write(sol_text), run_time=0.8)
+        self.wait(0.7)
+        
+        # Key insight
+        self.play(FadeOut(sol_text), FadeOut(eq_title), FadeOut(eq_text))
+        insight_title = Text("Key In
+# ... (truncated)
+```
+
+---
+
+## Example 36: Quadratic Residues and Non-Residues - Visualizing Quadratic Reciprocity: The Dance of Residues
+Visual Style: Cinematic and engaging visual style with a calm pastel color palette, utilizing blue and orange hues for highlights and patterns, emphasizing visual clarity and focus on the symmetry and elegance inhe
+
+```python
+from manim import *
+
+class QuadraticReciprocity(Scene):
+    def construct(self):
+        # Title
+        title = Text("Visualizing Quadratic Reciprocity").scale(0.8)
+        subtitle = Text("The Dance of Residues").scale(0.6).next_to(title, DOWN)
+        
+        self.play(Write(title))
+        self.play(Write(subtitle))
+        self.wait(1)
+        self.play(FadeOut(title), FadeOut(subtitle))
+        
+        # Definition of quadratic residues
+        definition = Text("A number a is a quadratic residue mod p if:").scale(0.7)
+        equation = MathTex(r"x^2 \equiv a \pmod{p}")
+        equation.next_to(definition, DOWN)
+        
+        self.play(Write(definition))
+        self.play(Write(equation))
+        self.wait(1)
+        self.play(FadeOut(definition), FadeOut(equation))
+        
+        # Create circles for primes 7 and 11
+        circle7 = Circle(radius=1.5, color=BLUE).shift(LEFT * 2)
+        label7 = Text("Residues mod 7", color=BLUE).scale(0.6).next_to(circle7, UP)
+        
+        circle11 = Circle(radius=1.5, color=ORANGE).shift(RIGHT * 2)
+        label11 = Text("Residues mod 11", color=ORANGE).scale(0.6).next_to(circle11, UP)
+        
+        self.play(Create(circle7), Write(label7))
+        self.play(Create(circle11), Write(label11))
+        self.wait(1)
+        
+        # Quadratic residues text
+        residues7 = Text("QR: 1, 2, 4", color=BLUE).scale(0.6).next_to(circle7, DOWN)
+        residues11 = Text("QR: 1, 3, 4, 5, 9", color=ORANGE).scale(0.6).next_to(circle11, DOWN)
+        
+        self.play(Write(residues7))
+        self.play(Write(residues11))
+        self.wait(1)
+        
+        # Quadratic Reciprocity Law
+        self.play(
+            FadeOut(circle7), FadeOut(label7), FadeOut(residues7),
+            FadeOut(circle11), FadeOut(label11), FadeOut(residues11)
+        )
+        
+        reciprocity_title = Text("Quadratic Reciprocity Law").scale(0.7)
+        reciprocity_eq = MathTex(r"\left(\frac{p}{q}\right) \cdot \left(\frac{q}{p}\right) = (-1)^{\frac{(p-1)(q-1)}{4}}")
+        reciprocity_eq.next_to(reciprocity_title, DOWN)
+        
+        self.play(Write(reciprocity_title))
+        self.play(Write(reciprocity_eq))
+        self.wait(1)
+        
+        # Grid visualization
+        self.play(FadeOut(reciprocity_title), FadeOut(reciprocity_eq))
+        
+        # Create a 4x4 grid
+        grid = VGroup()
+        for i in range(4):
+            for j in range(4):
+                cell = Square(side_length=0.6, color=WHITE)
+                cell.move_to([j - 1.5, 1.5 - i, 0])
+                grid.add(cell)
+        
+        self.play(Create(grid))
+        
+        # Highlight some cells to represent residue patterns
+        pattern_cells = [(0, 0), (1, 1), (2, 2), (3, 3), (0, 3), (3, 0)]
+        for i, j in pattern_cells:
+            cell = grid[i * 4 + j]
+            self.play(cell.animate.set_fill(BLUE, opacity=0.5), run_time=0.2)
+        
+        pattern_title = Text("The dance of residues").scale(0.7).to_edge(DOWN)
+    
+# ... (truncated)
+```
+
+---
+
+## Example 37: Quadratic Residues and Non-Residues - The Secrets of Quadratic Residues Revealed
+Visual Style: The animation should employ a sleek, minimalist style, with smooth transitions. The color palette will feature earthy tones, primarily using vibrant greens for residues and rich reds for non-residues,
+
+```python
+from manim import *
+
+class QuadraticResiduesScene(Scene):
+    def construct(self):
+        # Title
+        title = Text("The Secrets of Quadratic Residues Revealed", font_size=36)
+        self.play(Write(title))
+        self.wait(1)
+        self.play(FadeOut(title))
+        
+        # Definition of quadratic residues
+        definition = Text("Quadratic Residue: a number that can be expressed as x² mod p", font_size=30)
+        self.play(Write(definition))
+        self.wait(2)
+        
+        # Show the mathematical equation
+        equation = Text("x² ≡ a (mod p)", font_size=32)
+        equation.next_to(definition, DOWN, buff=0.5)
+        self.play(Write(equation))
+        self.wait(2)
+        self.play(FadeOut(definition), FadeOut(equation))
+        
+        # Number line for p=7
+        line = Line(LEFT * 3, RIGHT * 3)
+        self.play(Create(line))
+        
+        # Add numbers from 0 to 6
+        numbers = VGroup()
+        for i in range(7):
+            # Calculate position along the line (fixed division)
+            x_pos = -3 + i * (6/6)
+            position = np.array([x_pos, 0, 0])
+            number = Text(str(i), font_size=28)
+            number.next_to(position, DOWN, buff=0.3)
+            numbers.add(number)
+        
+        self.play(Write(numbers))
+        
+        # Add title for the number line
+        mod_text = Text("Number line modulo 7", font_size=32)
+        mod_text.to_edge(UP)
+        self.play(Write(mod_text))
+        self.wait(1)
+        
+        # Quadratic residues for p=7 are 0, 1, 2, 4
+        # Create dots to mark residues and non-residues
+        dots = VGroup()
+        for i in range(7):
+            x_pos = -3 + i * (6/6)
+            position = np.array([x_pos, 0, 0])
+            # 0, 1, 2, 4 are residues (green), others are non-residues (red)
+            color = GREEN if i in [0, 1, 2, 4] else RED
+            dot = Dot(position, color=color, radius=0.2)
+            dots.add(dot)
+        
+        # Show all dots at once
+        self.play(Create(dots))
+        
+        # Add a legend
+        legend = VGroup(
+            Text("Green: Residue", color=GREEN, font_size=24),
+            Text("Red: Non-Residue", color=RED, font_size=24)
+        )
+        legend.arrange(DOWN, aligned_edge=LEFT)
+        legend.to_corner(UR)
+        
+        self.play(Write(legend))
+        self.wait(1)
+        
+        # Show the specific example mentioned in requirements
+        example = Text("x² ≡ 1 (mod 7)", font_size=32)
+        example.to_edge(DOWN)
+        self.play(Write(example))
+        self.wait(2)
+        
+        # Highlight the specific residue in the example
+        highlight = Circle(radius=0.3, color=YELLOW)
+        highlight.move_to(dots[1].get_center())  # Position 1 on number line
+        self.play(Create(highlight))
+        self.wait(1)
+        
+        # Conclusion
+        conclusion = Text("Quadratic residues reveal hidden patterns in numbers", font_size=32)
+        self.play(
+            FadeOut(mod_text),
+      
+# ... (truncated)
+```
+
+---
+
+## Example 38: Quadratic Residues and Non-Residues - A Geometric Journey Through Quadratic Residues
+Visual Style: Elegant and crisp visual style with a focus on symmetry and cyclical patterns. Use a soft blue and gold color palette to convey clarity and beauty, reminiscent of classical geometric art.
+
+```python
+from manim import *
+
+class QuadraticResiduesScene(Scene):
+    def construct(self):
+        # Color scheme
+        blue_color = "#3070B3"
+        gold_color = "#FFD700"
+        
+        # Title
+        title = Text("A Geometric Journey Through Quadratic Residues", font_size=28, color=blue_color)
+        self.play(Write(title))
+        self.wait(0.5)
+        self.play(title.animate.scale(0.6).to_edge(UP))
+        
+        # Introduction to quadratic residues
+        eq1 = Text("x² ≡ a (mod p)", font_size=28)
+        self.play(Write(eq1))
+        self.wait(1)
+        self.play(eq1.animate.scale(0.8).to_corner(UL, buff=1))
+        
+        # Euler's criterion
+        eq2 = Text("a^((p-1)/2) ≡ ±1 (mod p)", font_size=28)
+        self.play(Write(eq2))
+        self.wait(1)
+        self.play(eq2.animate.scale(0.8).to_corner(UR, buff=1))
+        
+        # Geometric visualization - Circle for modular arithmetic
+        circle = Circle(radius=2, color=blue_color)
+        self.play(Create(circle))
+        
+        # Add points on the circle for values mod p
+        p = 7  # Using a small prime for clarity
+        dots = VGroup()
+        labels = VGroup()
+        
+        for i in range(p):
+            angle = i * (2 * PI / p)
+            point = circle.point_at_angle(angle)
+            dot = Dot(point, color=gold_color)
+            label = Text(str(i), font_size=20).next_to(dot, direction=point/2, buff=0.2)
+            
+            dots.add(dot)
+            labels.add(label)
+            
+        self.play(Create(dots), Write(labels))
+        self.wait(0.5)
+        
+        # Highlight quadratic residues for p=7
+        # Quadratic residues for p=7 are 1, 2, 4 (1²≡1, 3²≡2, 2²≡4)
+        residue_indices = [1, 2, 4]
+        residue_dots = VGroup(*[dots[i] for i in residue_indices])
+        
+        self.play(residue_dots.animate.set_color(RED))
+        
+        # Text explaining quadratic residues
+        residue_text = Text("Quadratic Residues: 1, 2, 4", font_size=24)
+        residue_text.to_edge(DOWN, buff=1)
+        self.play(Write(residue_text))
+        
+        # Connect the residues to form a triangle (geometric pattern)
+        lines = VGroup()
+        for i in range(len(residue_indices)):
+            line = Line(
+                dots[residue_indices[i]].get_center(),
+                dots[residue_indices[(i+1) % len(residue_indices)]].get_center(),
+                color=gold_color
+            )
+            lines.add(line)
+        
+        self.play(Create(lines))
+        self.wait(0.5)
+        
+        # Text explaining the geometric interpretation
+        geometry_text = Text("Geometric symmetry reveals Euler's criterion", font_size=24)
+        geometry_text.next_to(residue_text, UP, buff=0.5)
+        
+        self.play(Write(geometry_text))
+        self.wait(1)
+        
+        # Final cleanup and conclusion
+        conclusion = Text("The harmony of number theory and geometry", font_size=28, color=blue_color)
+        conclusion.move_to(ORIGIN)
+        
+# ... (truncated)
+```
+
+---
+
+## Example 39: Euler's Totient Function - Unveiling Patterns: Euler's Totient Function
+Visual Style: A harmonious blend of dark blues and bright oranges, contrast creates an engaging and clear depiction, with fluid animations drawing attention to key concepts and mathematical beauty.
+
+```python
+from manim import *
+
+class EulersTotientFunction(Scene):
+    def construct(self):
+        # Set background color
+        self.camera.background_color = "#0C1445"  # Dark blue background
+        
+        # Introduction
+        title = Text("Unveiling Patterns: Euler's Totient Function", color=ORANGE).scale(0.8)
+        self.play(Write(title))
+        self.play(title.animate.to_edge(UP))
+        
+        # Definition
+        definition = Text("Euler's Totient Function φ(n) counts numbers\nless than n that are coprime to n", color=WHITE).scale(0.6)
+        definition.next_to(title, DOWN, buff=0.5)
+        self.play(Write(definition))
+        self.wait(1)
+        
+        # Example with n=12
+        self.play(FadeOut(definition))
+        example_title = Text("Example: φ(12)", color=ORANGE).scale(0.7)
+        example_title.next_to(title, DOWN, buff=0.5)
+        self.play(Write(example_title))
+        
+        # Create grid of numbers 1 to 12
+        numbers = VGroup()
+        coprimes_to_12 = [1, 5, 7, 11]  # Numbers coprime to 12
+        
+        for i in range(1, 13):
+            color = ORANGE if i in coprimes_to_12 else WHITE
+            number = Text(str(i), color=color).scale(0.6)
+            row, col = divmod(i-1, 4)
+            number.move_to((col - 1.5) * RIGHT + (row - 0.5) * DOWN)
+            numbers.add(number)
+        
+        numbers.next_to(example_title, DOWN, buff=0.5)
+        self.play(Create(numbers))
+        
+        # Show result
+        result = Text("φ(12) = 4", color=ORANGE).scale(0.7)
+        result.next_to(numbers, DOWN, buff=0.5)
+        self.play(Write(result))
+        self.wait(1)
+        
+        # Clear for formula
+        self.play(FadeOut(example_title), FadeOut(numbers), FadeOut(result))
+        
+        # Show formula
+        formula = Text("φ(12) = 12 × (1-1/2) × (1-1/3) = 4", color=ORANGE).scale(0.6)
+        formula.next_to(title, DOWN, buff=1)
+        self.play(Write(formula))
+        self.wait(1)
+        
+        # Clear for graph
+        self.play(FadeOut(formula))
+        
+        # Graph title
+        graph_title = Text("Patterns in φ(n) for n = 1 to 20", color=ORANGE).scale(0.7)
+        graph_title.next_to(title, DOWN, buff=0.5)
+        self.play(Write(graph_title))
+        
+        # Create axes
+        axes = Axes(
+            x_range=[0, 21, 5],
+            y_range=[0, 21, 5],
+            axis_config={"color": WHITE},
+        ).scale(0.7)
+        axes.next_to(graph_title, DOWN, buff=0.5)
+        
+        x_label = Text("n", color=WHITE).scale(0.5)
+        x_label.next_to(axes.x_axis.get_end(), RIGHT, buff=0.2)
+        
+        y_label = Text("φ(n)", color=WHITE).scale(0.5)
+        y_label.next_to(axes.y_axis.get_end(), UP, buff=0.2)
+        
+        self.play(Create(axes), Write(x_label), Write(y_label))
+        
+        # Pre-computed φ(n) values for n = 1 to 20
+        phi_values = [
+            1, 1, 2, 2, 4, 2, 6, 4, 6, 4, 10, 4, 12, 6, 8, 8, 16, 6, 18, 8
+        ]
+        
+        # Plot points and co
+# ... (truncated)
+```
+
+---
+
+## Example 40: Euler's Totient Function - Unlocking the Secret Cycles: Euler's Totient Function
+Visual Style: A harmonious blend of deep blues and vibrant oranges to represent cycles and continuity in mathematics, paired with dynamic vector graphics to illustrate concepts and connections.
+
+```python
+from manim import *
+
+class EulerTotientFunction(Scene):
+    def construct(self):
+        # Title of the animation
+        title = Text("Unlocking the Secret Cycles: Euler's Totient Function", font_size=32, color=BLUE_D)
+        title.to_edge(UP)
+        self.play(Write(title))
+        self.wait(1)
+        
+        # Section 1: Introduction to Euler's Totient Function
+        intro_text = Text("Euler's Totient Function φ(n):", font_size=28, color=BLUE)
+        intro_text.next_to(title, DOWN, buff=0.5)
+        
+        definition = Text("Counts numbers less than n that are coprime to n", font_size=24)
+        definition.next_to(intro_text, DOWN, buff=0.5)
+        
+        self.play(Write(intro_text))
+        self.play(FadeIn(definition))
+        self.wait(2)
+        
+        # Clear screen for next section
+        self.play(FadeOut(intro_text), FadeOut(definition))
+        
+        # Section 2: Example calculation of φ(10)
+        example_text = Text("Example: φ(10)", font_size=28, color=BLUE)
+        example_text.next_to(title, DOWN, buff=0.5)
+        
+        # Create a circle with numbers around it
+        circle = Circle(radius=2, color=WHITE)
+        circle.move_to(ORIGIN)
+        
+        # Numbers 1 through 9
+        numbers = VGroup()
+        coprimes = [1, 3, 7, 9]  # Numbers coprime to 10
+        
+        for i in range(1, 10):
+            num = Text(str(i), font_size=24)
+            angle = -PI/2 + (i-1) * (2*PI/9)  # Start from top, go clockwise
+            num.move_to(circle.point_at_angle(angle))
+            
+            # Color coprimes orange
+            if i in coprimes:
+                num.set_color(ORANGE)
+            
+            numbers.add(num)
+        
+        self.play(Write(example_text))
+        self.play(Create(circle))
+        self.play(Write(numbers))
+        
+        # Show φ(10) = 4
+        result = Text("φ(10) = 4", font_size=28, color=ORANGE)
+        result.next_to(circle, DOWN, buff=0.5)
+        self.play(Write(result))
+        self.wait(2)
+        
+        # Clear for next section
+        self.play(
+            FadeOut(example_text),
+            FadeOut(circle),
+            FadeOut(numbers),
+            FadeOut(result)
+        )
+        
+        # Section 3: Modular arithmetic visualization using a clock metaphor
+        mod_text = Text("Modular Arithmetic and Cyclic Groups", font_size=28, color=BLUE)
+        mod_text.next_to(title, DOWN, buff=0.5)
+        
+        clock_text = Text("Think of a clock with n hours", font_size=24)
+        clock_text.next_to(mod_text, DOWN, buff=0.5)
+        
+        # Create a clock for modular arithmetic
+        mod_n = 7  # Use mod 7 for simplicity
+        clock = Circle(radius=2, color=WHITE)
+        
+        # Put numbers 0 to n-1 around the clock
+        mod_numbers = VGroup()
+        
+        for i in range(mod_n):
+            num = Text(str(i), font_size=24)
+            angle = -PI/2 + i * (2*PI/mod_n)  # Start from top, go clockwise
+            num.move_to(clock.point_at_ang
+# ... (truncated)
+```
+
+---
+
+## Example 41: Euler's Totient Function - Euler's Totient Tango: A Dance of Prime Powers and Patterns
+Visual Style: Mathematical elegance with clear, minimalist aesthetics, utilizing smooth transitions, a neutral color palette with a soft gradient background to guide focus to the equations and diagrams.
+
+```python
+from manim import *
+
+class EulerTotientTango(Scene):
+    def construct(self):
+        # Title
+        title = Text("Euler's Totient Tango", font_size=40)
+        subtitle = Text("A Dance of Prime Powers", font_size=24).next_to(title, DOWN)
+        
+        self.play(Write(title))
+        self.play(FadeIn(subtitle))
+        self.wait(1)
+        self.play(FadeOut(title), FadeOut(subtitle))
+        
+        # Explanation of Euler's totient function
+        explanation = Text("Euler's totient function φ(n) counts numbers coprime to n", font_size=32)
+        self.play(Write(explanation))
+        self.wait(1)
+        
+        # Visualize coprime numbers for n=6
+        numbers = VGroup()
+        for i in range(1, 7):
+            num = Text(str(i), font_size=32).shift(RIGHT * (i - 3.5))
+            numbers.add(num)
+        
+        numbers.next_to(explanation, DOWN, buff=0.5)
+        self.play(FadeIn(numbers))
+        
+        # Highlight coprimes to 6 (1 and 5)
+        coprime_6 = VGroup(numbers[0], numbers[4])  # 1 and 5
+        self.play(coprime_6.animate.set_color(GREEN))
+        
+        phi_6 = Text("φ(6) = 2", font_size=32).next_to(numbers, DOWN)
+        self.play(Write(phi_6))
+        self.wait(1)
+        
+        self.play(FadeOut(explanation), FadeOut(numbers), FadeOut(phi_6))
+        
+        # Example with m=3, n=5
+        example = Text("Example: φ(3) = 2, φ(5) = 4", font_size=32)
+        self.play(Write(example))
+        self.wait(1)
+        self.play(FadeOut(example))
+        
+        # Simple Venn diagram-like visualization
+        circle_3 = Circle(radius=1.2, color=BLUE).shift(LEFT * 1.5)
+        circle_5 = Circle(radius=1.2, color=RED).shift(RIGHT * 1.5)
+        
+        label_3 = Text("m=3", font_size=24).next_to(circle_3, UP)
+        label_5 = Text("n=5", font_size=24).next_to(circle_5, UP)
+        
+        phi_3 = Text("φ(3)=2", font_size=24).move_to(circle_3)
+        phi_5 = Text("φ(5)=4", font_size=24).move_to(circle_5)
+        
+        self.play(
+            Create(circle_3),
+            Create(circle_5),
+            Write(label_3),
+            Write(label_5)
+        )
+        self.play(Write(phi_3), Write(phi_5))
+        self.wait(1)
+        
+        # Product
+        product = Text("φ(3) × φ(5) = 2 × 4 = 8", font_size=32).to_edge(UP)
+        self.play(Write(product))
+        
+        # Combined circle for 15
+        circle_15 = Circle(radius=1.5, color=PURPLE).shift(DOWN * 2)
+        label_15 = Text("mn=15", font_size=24).next_to(circle_15, UP)
+        phi_15 = Text("φ(15)=8", font_size=24).move_to(circle_15)
+        
+        self.play(
+            Create(circle_15),
+            Write(label_15)
+        )
+        self.play(Write(phi_15))
+        self.wait(1)
+        
+        # Highlight the pattern
+        pattern = Text("Notice: φ(3) × φ(5) = φ(15)", font_size=32).to_edge(DOWN)
+        self.play(Write(pattern))
+        self.wait(1)
+        
+        # Clear screen for formula
+        self.play(
+            FadeOut(circle_3),
+  
+# ... (truncated)
+```
+
+---
+
+## Example 42: Pell's Equation - Symmetric Patterns of Pell's Equation: A Geometric Exploration
+Visual Style: The animation embraces a classic, elegant visual style inspired by chalkboard illustrations. The color palette incorporates calming blues, warm whites, and occasional gold highlights to emphasize mome
+
+```python
+from manim import *
+
+class PellsEquationGeometric(Scene):
+    def construct(self):
+        # INTRODUCTION
+        title = Text("Symmetric Patterns of Pell's Equation", font_size=36)
+        subtitle = Text("A Geometric Exploration", font_size=28)
+        subtitle.next_to(title, DOWN)
+        
+        self.play(Write(title))
+        self.play(Write(subtitle))
+        self.wait(1)
+        
+        # Display Pell's equation with D=2
+        equation = MathTex("x^2 - 2y^2 = 1")
+        equation.move_to(ORIGIN)
+        
+        self.play(FadeOut(title), FadeOut(subtitle))
+        self.play(Write(equation))
+        self.wait(1)
+        
+        # Move equation to corner
+        self.play(equation.animate.to_corner(UR))
+        
+        # Create coordinate grid
+        grid = NumberPlane(
+            x_range=[-5, 5, 1],
+            y_range=[-5, 5, 1],
+        )
+        
+        self.play(Create(grid))
+        self.wait(1)
+        
+        # Plot solution points for D=2
+        # These solutions satisfy x^2 - 2y^2 = 1
+        solutions = [(1, 0), (3, 2)]
+        
+        # Create dots for solutions
+        dots = VGroup()
+        for x, y in solutions:
+            dot = Dot(grid.c2p(x, y), color=BLUE)
+            dots.add(dot)
+            
+            # Add symmetric solutions
+            dots.add(Dot(grid.c2p(x, -y), color=BLUE))
+            dots.add(Dot(grid.c2p(-x, y), color=BLUE))
+            dots.add(Dot(grid.c2p(-x, -y), color=BLUE))
+        
+        self.play(Create(dots))
+        self.wait(1)
+        
+        # Draw diagonal line through solutions
+        diagonal = Line(grid.c2p(-5, -3.5), grid.c2p(5, 3.5), color=YELLOW)
+        self.play(Create(diagonal))
+        self.wait(1)
+        
+        # Connect solution points
+        connections = VGroup(
+            Line(grid.c2p(1, 0), grid.c2p(3, 2), color=GREEN),
+            Line(grid.c2p(1, 0), grid.c2p(3, -2), color=GREEN),
+            Line(grid.c2p(-1, 0), grid.c2p(-3, 2), color=GREEN),
+            Line(grid.c2p(-1, 0), grid.c2p(-3, -2), color=GREEN)
+        )
+        
+        self.play(Create(connections))
+        self.wait(1)
+        
+        # Conclusion
+        conclusion = Text("Pell's Equation connects algebra and geometry", font_size=32)
+        
+        self.play(FadeOut(grid), FadeOut(equation), FadeOut(dots), 
+                  FadeOut(diagonal), FadeOut(connections))
+        self.play(Write(conclusion))
+        self.wait(2)
+        self.play(FadeOut(conclusion))
+
+# Run with: manim -pql -o video.mp4 script_name.py PellsEquationGeometric
+```
+
+---
+
+## Example 43: Pell's Equation - Cracking the Code of Pell's Equation through Continued Fractions
+Visual Style: An elegant and cohesive flow of visuals with a subtle mathematical theme. Color palette focuses on blues and greens to evoke tranquility while maintaining intellectual intrigue. Smooth transitions, dy
+
+```python
+from manim import *
+
+class PellsEquation(Scene):
+    def construct(self):
+        # Set up colors
+        blue = "#3498db"
+        green = "#2ecc71"
+        
+        # Title slide
+        title = Text("Cracking the Code of Pell's Equation", color=blue)
+        subtitle = Text("through Continued Fractions", color=blue, font_size=24)
+        subtitle.next_to(title, DOWN)
+        
+        # Element 1: Title animation
+        self.play(Write(title), Write(subtitle))
+        self.wait(1)
+        self.play(FadeOut(title), FadeOut(subtitle))
+        
+        # Element 2: Pell's Equation
+        pell_eq = Text("x² - Dy² = 1", color=green)
+        self.play(Write(pell_eq))
+        self.wait(1)
+        
+        # Focus on D=2
+        pell_eq_2 = Text("x² - 2y² = 1", color=green)
+        self.play(Transform(pell_eq, pell_eq_2))
+        self.wait(1)
+        
+        # Element 3: Continued fraction
+        cf_title = Text("Continued Fraction for √2", color=blue)
+        cf_title.to_edge(UP)
+        cf_eq = Text("√2 = 1 + 1/(2 + 1/(2 + ...))", color=green)
+        cf_eq.next_to(cf_title, DOWN, buff=0.5)
+        
+        self.play(FadeOut(pell_eq))
+        self.play(Write(cf_title), Write(cf_eq))
+        self.wait(1)
+        
+        # Element 4: Solutions pattern
+        solutions_title = Text("Solutions to x² - 2y² = 1", color=blue)
+        solutions_title.to_edge(UP)
+        solutions = Text("(1,0), (3,2), (17,12), ...", color=green)
+        solutions.next_to(solutions_title, DOWN, buff=0.5)
+        
+        self.play(Transform(cf_title, solutions_title))
+        self.play(Transform(cf_eq, solutions))
+        self.wait(1)
+        
+        # Element 5-6: Visual representation of solutions
+        self.play(FadeOut(cf_title), FadeOut(cf_eq))
+        
+        # Create simple dots for solutions
+        dots = VGroup()
+        coordinates = [(1,0), (3,2), (17,12)]
+        scale = 0.2  # Scale down to fit on screen
+        
+        for x, y in coordinates:
+            dot = Dot(point=np.array([x*scale, y*scale, 0]), color=blue)
+            dots.add(dot)
+        
+        # Create lines connecting the dots
+        lines = VGroup()
+        for i in range(len(coordinates)-1):
+            start = coordinates[i]
+            end = coordinates[i+1]
+            line = Line(
+                start=np.array([start[0]*scale, start[1]*scale, 0]),
+                end=np.array([end[0]*scale, end[1]*scale, 0]),
+                color=green
+            )
+            lines.add(line)
+        
+        # Element 7: Show the pattern
+        pattern_title = Text("Patterns in Pell's Equation", color=blue)
+        pattern_title.to_edge(UP)
+        
+        self.play(Write(pattern_title))
+        self.play(Create(dots))
+        self.play(Create(lines))
+        self.wait(1)
+        
+        # Conclusion
+        conclusion = Text("Uncovering mathematical harmony through patterns", 
+                       color=blue, font_size=24)
+        
+        self.play(FadeOut(pattern_title), FadeOut(dots)
+# ... (truncated)
+```
+
+---
+
+## Example 44: Pell's Equation - Pell's Equation: Dancing on the Hyperbola
+Visual Style: The animation employs a clean and minimalistic style, focusing on clarity with a soothing color palette of blues, whites, and light grays, reminiscent of 3Blue1Brown's signature visuals. It utilizes s
+
+```python
+from manim import *
+import numpy as np
+
+class PellsEquation(Scene):
+    def construct(self):
+        # Title and introduction
+        title = Text("Pell's Equation: Dancing on the Hyperbola", font_size=36)
+        self.play(Write(title))
+        self.wait(1)
+        self.play(title.animate.scale(0.7).to_edge(UP))
+        
+        # Initial equation
+        eq1 = MathTex("x^2 - ny^2 = 1", font_size=36)
+        self.play(Write(eq1))
+        self.wait(1)
+        
+        # Transition to specific equation
+        eq2 = MathTex("x^2 - 2y^2 = 1", font_size=36)
+        self.play(Transform(eq1, eq2))
+        self.wait(1)
+        
+        self.play(FadeOut(title), eq1.animate.to_edge(UP))
+        
+        # Create a grid
+        grid = NumberPlane(
+            x_range=(-5, 5, 1),
+            y_range=(-4, 4, 1),
+            axis_config={"color": BLUE_D},
+        )
+        self.play(Create(grid))
+        
+        # Draw the hyperbola using a simple parametric function
+        # For x^2 - 2y^2 = 1, we use the parametric form:
+        # x = sqrt(2)*cosh(t), y = sinh(t)
+        
+        def hyperbola_func(t):
+            return np.array([np.sqrt(2) * np.cosh(t), np.sinh(t), 0])
+        
+        def neg_hyperbola_func(t):
+            return np.array([-np.sqrt(2) * np.cosh(t), np.sinh(t), 0])
+        
+        right_branch = ParametricFunction(
+            hyperbola_func,
+            t_range=[-2, 2, 0.01],
+            color=YELLOW
+        )
+        
+        left_branch = ParametricFunction(
+            neg_hyperbola_func,
+            t_range=[-2, 2, 0.01],
+            color=YELLOW
+        )
+        
+        hyperbola = VGroup(right_branch, left_branch)
+        self.play(Create(hyperbola))
+        
+        # Show integer solutions
+        solutions = [(1, 0), (3, 2), (-1, 0), (-3, 2), (3, -2), (-3, -2)]
+        
+        dots = []
+        for x, y in solutions:
+            if abs(x) <= 5 and abs(y) <= 4:  # Ensure points are within grid
+                dot = Dot(grid.c2p(x, y), color=RED)
+                label = Text(f"({x},{y})", font_size=16).next_to(dot, direction=UP+RIGHT, buff=0.1)
+                dots.append(VGroup(dot, label))
+        
+        # Light up points sequentially
+        for dot_group in dots:
+            self.play(Create(dot_group), run_time=0.5)
+        
+        # Key insight
+        insight = Text("Integer solutions to Pell's Equation\nlie precisely on the hyperbola", font_size=24)
+        insight.to_edge(DOWN)
+        self.play(Write(insight))
+        self.wait(2)
+        
+        # Emphasize geometric connection
+        self.play(FadeOut(insight))
+        geometry_text = Text("A beautiful connection between algebra and geometry", font_size=24)
+        geometry_text.to_edge(DOWN)
+        self.play(Write(geometry_text))
+        
+        # Highlight the curve
+        highlighted_hyperbola = hyperbola.copy().set_color(BLUE)
+        self.play(Transform(hyperbola, highlighted_hyperbola), run_time=1.5)
+        
+        self.wait(1)
+        self.play
+# ... (truncated)
+```
+
+---
+
+## Example 45: Modular Inverse - Unlocking Cryptographic Secrets with Modular Inverses
+Visual Style: A modern, dynamic animation style with a palette of blue, teal, and white, capturing the theme of digital security with minimalism, smooth transitions, and subtle texture background.
+
+```python
+from manim import *
+
+class ModularInverseScene(Scene):
+    def construct(self):
+        # Title
+        title = Text("Unlocking Cryptographic Secrets with Modular Inverses", font_size=32)
+        title.to_edge(UP)
+        
+        # Introduction
+        self.play(Write(title))
+        self.wait(1)
+        
+        # Digital lock visualization - Element 1
+        lock = Circle(radius=1, color=BLUE).set_fill(BLUE_E, opacity=0.5)
+        keyhole = Ellipse(width=0.3, height=0.5, color=WHITE).move_to(lock.get_center())
+        lock_group = VGroup(lock, keyhole)
+        lock_group.move_to(ORIGIN)
+        
+        # Question - Element 2
+        question = Text("What is a modular inverse, and how does it keep our messages secure?", 
+                        font_size=24, color=TEAL)
+        question.next_to(title, DOWN, buff=1)
+        
+        self.play(Create(lock_group))
+        self.play(Write(question))
+        self.wait(2)
+        
+        # Clear for modular inverse explanation
+        self.play(FadeOut(lock_group), FadeOut(question))
+        
+        # Explanation of modular inverse - Element 3
+        mod_text = Text("Understanding modular inverse with modulo 5:", font_size=28)
+        mod_text.next_to(title, DOWN, buff=1)
+        
+        self.play(Write(mod_text))
+        
+        # Create circles for numbers 0-4
+        number_circles = VGroup()
+        for i in range(5):
+            circle = Circle(radius=0.5, color=WHITE)
+            circle.set_fill(BLUE, opacity=0.2)
+            number = Text(str(i), font_size=36)
+            number.move_to(circle.get_center())
+            number_group = VGroup(circle, number)
+            number_group.move_to(LEFT * 4 + RIGHT * 2 * i)
+            number_circles.add(number_group)
+        
+        number_circles.move_to(ORIGIN)
+        
+        self.play(Create(number_circles))
+        self.wait(1)
+        
+        # Show modular inverse equation
+        equation = MathTex(r"3 \times 2 \equiv 1 \pmod{5}")
+        equation.next_to(number_circles, DOWN, buff=1)
+        
+        self.play(Write(equation))
+        
+        # Highlight numbers 3 and 2
+        self.play(number_circles[3][0].animate.set_fill(YELLOW, opacity=0.8))
+        self.wait(0.5)
+        self.play(number_circles[2][0].animate.set_fill(YELLOW, opacity=0.8))
+        self.wait(2)
+        
+        # Clear for RSA explanation
+        self.play(FadeOut(mod_text), FadeOut(number_circles), FadeOut(equation))
+        
+        # RSA with prime numbers - Element 4
+        rsa_text = Text("In RSA encryption, modular inverses help create secure keys:", font_size=24)
+        rsa_text.next_to(title, DOWN, buff=1)
+        
+        self.play(Write(rsa_text))
+        
+        # Two circles for p and q
+        p_circle = Circle(radius=0.8, color=BLUE).set_fill(BLUE, opacity=0.5)
+        q_circle = Circle(radius=0.8, color=TEAL).set_fill(TEAL, opacity=0.5)
+        
+        p_label = Text("p", font_size=36).move_to(p_circle.get_center())
+        q_label = Text("q"
+# ... (truncated)
+```
+
+---
+
+## Example 46: Modular Inverse - Unveiling Symmetry: The Art of Modular Inverses
+Visual Style: Elegant and clean with a minimalist approach. Using a white background with deep blues and contrasting orange for key highlights. Utilize smooth animations transitioning seamlessly to maintain viewer 
+
+```python
+from manim import *
+
+class ModularInverseScene(Scene):
+    def construct(self):
+        # Colors
+        BLUE_COLOR = "#0C6291"
+        ORANGE_COLOR = "#FF8811"
+        
+        # Introduction
+        title = Text("Unveiling Symmetry: The Art of Modular Inverses", color=BLUE_COLOR, font_size=32)
+        self.play(Write(title))
+        self.wait(1)
+        self.play(title.animate.scale(0.6).to_edge(UP))
+        
+        # Element 1: Introduce modular arithmetic
+        intro_text = Text("In modular arithmetic, numbers loop at a certain value", 
+                         font_size=24, color=BLUE_COLOR)
+        intro_text.next_to(title, DOWN, buff=0.5)
+        
+        self.play(Write(intro_text))
+        self.wait(1)
+        
+        # Create a circular number line to represent modulo 5
+        mod_circle = Circle(radius=2, color=BLUE_COLOR)
+        
+        # Add numbers around the circle
+        mod_nums = VGroup()
+        for i in range(5):
+            angle = i * (2*PI/5) - PI/2  # Start from the top
+            number = Text(str(i), font_size=24, color=ORANGE_COLOR)
+            number.move_to(mod_circle.point_at_angle(angle))
+            mod_nums.add(number)
+        
+        self.play(Create(mod_circle), Write(mod_nums))
+        self.wait(1)
+        
+        # Element 2: Explain modular inverse
+        inverse_def = Text("Modular Inverse: a number that when multiplied by another",
+                          font_size=22, color=BLUE_COLOR)
+        inverse_def2 = Text("gives 1 after applying modulo",
+                           font_size=22, color=BLUE_COLOR)
+        
+        inverse_def.next_to(mod_circle, DOWN, buff=0.5)
+        inverse_def2.next_to(inverse_def, DOWN, buff=0.2)
+        
+        self.play(Write(inverse_def), Write(inverse_def2))
+        self.wait(1)
+        
+        # Show the equation
+        equation = Text("a × x ≡ 1 (mod m)", font_size=28, color=ORANGE_COLOR)
+        equation.next_to(inverse_def2, DOWN, buff=0.5)
+        
+        self.play(Write(equation))
+        self.wait(1)
+        
+        # Example with mod 5
+        self.play(
+            FadeOut(inverse_def),
+            FadeOut(inverse_def2),
+            equation.animate.to_edge(DOWN)
+        )
+        
+        example = Text("Example: In mod 5, what's the inverse of 3?", font_size=24, color=BLUE_COLOR)
+        example.next_to(mod_circle, DOWN, buff=0.5)
+        
+        self.play(Write(example))
+        self.wait(1)
+        
+        # Calculation
+        calc = Text("3 × 2 = 6 ≡ 1 (mod 5)", font_size=24, color=ORANGE_COLOR)
+        calc.next_to(example, DOWN, buff=0.3)
+        
+        self.play(Write(calc))
+        self.wait(1)
+        
+        # Highlight the 3 and 2 on the circle
+        highlight_3 = Circle(radius=0.3, color=YELLOW).move_to(mod_nums[3].get_center())
+        highlight_2 = Circle(radius=0.3, color=YELLOW).move_to(mod_nums[2].get_center())
+        
+        self.play(Create(highlight_3), Create(highlight_2))
+        self.wait(0.5)
+        
+        # C
+# ... (truncated)
+```
+
+---
+
+## Example 47: Modular Inverse - Visualizing Modular Inverses: Gaps, Patterns, and Connections
+Visual Style: A blend of 3D-looking grids and vibrant color palettes with clear contrasts. The style should evoke the classic elegant clarity of 3Blue1Brown with smooth transitions and overlays. Blue and yellow hig
+
+```python
+from manim import *
+import math
+
+class ModularInverseVisualization(Scene):
+    def construct(self):
+        # Title
+        title = Text("Visualizing Modular Inverses", font_size=36)
+        self.play(Write(title))
+        self.wait(1)
+        self.play(FadeOut(title))
+        
+        # Definition of modular inverse
+        definition = MathTex(r"ax \equiv 1 \pmod{m}")
+        self.play(Write(definition))
+        self.wait(1)
+        
+        # Condition for existence
+        condition = MathTex(r"\gcd(a, m) = 1")
+        condition_text = Text("Exists if and only if:", font_size=24)
+        condition_text.next_to(definition, DOWN, buff=0.5)
+        condition.next_to(condition_text, DOWN, buff=0.3)
+        
+        self.play(Write(condition_text))
+        self.play(Write(condition))
+        self.wait(1)
+        
+        # Clean up
+        self.play(FadeOut(definition), FadeOut(condition_text), FadeOut(condition))
+        
+        # Example with modulus 8
+        m = 8
+        example_title = Text(f"Modular Inverses in mod {m}", font_size=28)
+        example_title.to_edge(UP)
+        self.play(Write(example_title))
+        
+        # Create a visual representation of the modular system
+        number_circles = VGroup()
+        circle_radius = 0.5
+        
+        for i in range(m):
+            circle = Circle(radius=circle_radius, color=WHITE)
+            # Arrange in a circle
+            angle = i * TAU / m
+            circle_pos = 3 * np.array([np.cos(angle), np.sin(angle), 0])
+            circle.move_to(circle_pos)
+            
+            number = Text(str(i), font_size=24)
+            number.move_to(circle.get_center())
+            number_circles.add(VGroup(circle, number))
+        
+        self.play(Create(number_circles))
+        self.wait(0.5)
+        
+        # Check which numbers have inverses
+        explanation_text = Text("", font_size=20)
+        explanation_text.to_edge(DOWN, buff=0.5)
+        
+        # Highlight each number and check its GCD with the modulus
+        for i in range(m):
+            # Skip 0 which never has an inverse
+            if i == 0:
+                gcd_val = m
+                has_inverse = False
+            else:
+                gcd_val = math.gcd(i, m)
+                has_inverse = (gcd_val == 1)
+            
+            # Find the inverse if it exists
+            inverse = None
+            if has_inverse:
+                for j in range(1, m):
+                    if (i * j) % m == 1:
+                        inverse = j
+                        break
+            
+            # Update the explanation
+            if has_inverse:
+                new_explanation = Text(
+                    f"gcd({i}, {m}) = 1, {i} has inverse: {inverse}",
+                    font_size=20, color=GREEN
+                )
+                circle_color = GREEN
+            else:
+                new_explanation = Text(
+                    f"gcd({i}, {m}) = {gcd_val} ≠ 1, No inverse",
+                    font_size=20, color=RED
+           
+# ... (truncated)
+```
+
+---
+
+## Example 48: Goldbach's Conjecture - Prime Connections: Understanding Goldbach's Conjecture
+Visual Style: The visual style embodies a classical, clean aesthetic similar to that of 3Blue1Brown, utilizing a dark theme background with brightly colored nodes and connections for primes and sums. The color pale
+
+```python
+from manim import *
+
+class GoldbachConjecture(Scene):
+    def construct(self):
+        # Introduction
+        title = Text("Prime Connections: Understanding Goldbach's Conjecture", font_size=32)
+        self.play(Write(title))
+        self.wait(1)
+        self.play(FadeOut(title))
+        
+        # Explanation of Goldbach's Conjecture
+        explanation = Text("Goldbach's Conjecture: Every even number > 2", font_size=28).to_edge(UP)
+        explanation2 = Text("is a sum of two prime numbers", font_size=28).next_to(explanation, DOWN)
+        self.play(Write(explanation), Write(explanation2))
+        self.wait(1)
+        
+        # Create a simple number line
+        number_line = NumberLine(
+            x_range=[0, 20, 2],
+            length=10,
+            include_numbers=True
+        )
+        number_line.shift(DOWN)
+        self.play(Create(number_line))
+        self.wait(1)
+        
+        self.play(FadeOut(explanation), FadeOut(explanation2))
+        
+        # Mark even numbers
+        even_text = Text("Even Numbers: 2, 4, 6, 8...", font_size=28).to_edge(UP)
+        self.play(Write(even_text))
+        
+        even_dots = VGroup()
+        for i in range(2, 21, 2):
+            dot = Dot(number_line.number_to_point(i), color=BLUE)
+            even_dots.add(dot)
+        
+        self.play(Create(even_dots))
+        self.wait(1)
+        
+        # Mark prime numbers
+        prime_text = Text("Prime Numbers: 2, 3, 5, 7, 11, 13, 17, 19", font_size=28).to_edge(UP)
+        self.play(ReplacementTransform(even_text, prime_text))
+        
+        primes = [2, 3, 5, 7, 11, 13, 17, 19]
+        prime_dots = VGroup()
+        for prime in primes:
+            dot = Dot(number_line.number_to_point(prime), color=RED).scale(1.2)
+            prime_dots.add(dot)
+        
+        self.play(Create(prime_dots))
+        self.wait(1)
+        
+        # Focus on number 10
+        focus_text = Text("Let's examine the number 10", font_size=28).to_edge(UP)
+        self.play(ReplacementTransform(prime_text, focus_text))
+        
+        # Highlight 10
+        ten_dot = Dot(number_line.number_to_point(10), color=YELLOW).scale(1.5)
+        self.play(Create(ten_dot))
+        
+        # Show first equation: 10 = 3 + 7
+        eq1 = Text("10 = 3 + 7", font_size=28).next_to(focus_text, DOWN)
+        self.play(Write(eq1))
+        
+        # Highlight 3 and 7
+        dot3 = Dot(number_line.number_to_point(3), color=GREEN).scale(1.5)
+        dot7 = Dot(number_line.number_to_point(7), color=GREEN).scale(1.5)
+        self.play(Create(dot3), Create(dot7))
+        
+        # Connect 3 and 7
+        line1 = Line(
+            number_line.number_to_point(3),
+            number_line.number_to_point(7),
+            color=YELLOW
+        ).shift(UP*0.5)
+        self.play(Create(line1))
+        self.wait(1)
+        
+        # Show second equation: 10 = 5 + 5
+        eq2 = Text("10 = 5 + 5", font_size=28).next_to(eq1, DOWN)
+        self.play(Write(eq2))
+        
+        # Clean up previous a
+# ... (truncated)
+```
+
+---
+
+## Example 49: Goldbach's Conjecture - Unveiling Patterns: Goldbach's Conjecture Through Graphical Art
+Visual Style: Rich blues and golds dominate the scene, with primes indicated in a sparkling gold and even numbers as serene blues and whites. Smooth transitions flow between segments, echoing a celestial map with a
+
+```python
+from manim import *
+
+class GoldbachConjecture(Scene):
+    def construct(self):
+        # Set background color to a deep blue
+        self.camera.background_color = "#0A1128"
+        
+        # Introduction
+        title = Text("Unveiling Patterns: Goldbach's Conjecture", color=WHITE, font_size=36)
+        self.play(Write(title))
+        self.wait(1)
+        self.play(title.animate.to_edge(UP))
+        
+        # Key Concept 1: The Conjecture
+        concept = Text("Every even number > 2 is the sum of two primes", color=WHITE, font_size=30)
+        concept.next_to(title, DOWN)
+        self.play(Write(concept))
+        self.wait(2)
+        
+        # Show the equation
+        equation = MathTex(r"2n = p_1 + p_2 \ (\text{where } p_1, p_2 \text{ are primes})", color=GOLD)
+        equation.next_to(concept, DOWN, buff=1)
+        self.play(Write(equation))
+        self.wait(2)
+        
+        # Examples - simplified
+        examples = VGroup()
+        examples_text = [
+            "4 = 2 + 2",
+            "6 = 3 + 3",
+            "8 = 3 + 5",
+            "10 = 3 + 7 or 5 + 5"
+        ]
+        
+        for text in examples_text:
+            example = Text(text, color=WHITE, font_size=28)
+            examples.add(example)
+        
+        examples.arrange(DOWN, buff=0.5)
+        examples.next_to(equation, DOWN, buff=1)
+        
+        self.play(Create(examples))
+        self.wait(2)
+        
+        # Key Insight
+        insight = Text("Could graphical patterns reveal insights or exceptions?", color=GOLD, font_size=30)
+        insight.next_to(examples, DOWN, buff=1)
+        self.play(Write(insight))
+        self.wait(2)
+        
+        # Conclusion
+        self.play(FadeOut(title), FadeOut(concept), FadeOut(equation), 
+                  FadeOut(examples), FadeOut(insight))
+        
+        conclusion = Text("The beauty of mathematics lies in its patterns", color=WHITE, font_size=32)
+        conclusion2 = Text("and the mysteries that remain unsolved", color=GOLD, font_size=32)
+        conclusion2.next_to(conclusion, DOWN)
+        
+        self.play(Write(conclusion))
+        self.wait(1)
+        self.play(Write(conclusion2))
+        self.wait(2)
+```
+
+---
+
+## Example 50: Goldbach's Conjecture - Exploring Prime Pairs with Machine Learning: A Look into Goldbach's Conjecture
+Visual Style: Dynamic and engaging, with a color palette of deep blues and vibrant yellows, mirroring the aesthetic of 3Blue1Brown. Use smooth transitions to illustrate learning and complex number landscapes. Inclu
+
+```python
+from manim import *
+
+class GoldbachML(Scene):
+    def construct(self):
+        # Title
+        title = Text("Exploring Prime Pairs with Machine Learning", font_size=28).to_edge(UP)
+        subtitle = Text("A Look into Goldbach's Conjecture", font_size=24).next_to(title, DOWN)
+        
+        # Introduction
+        self.play(Write(title))
+        self.play(Write(subtitle))
+        self.wait(1)
+        
+        # Explain Goldbach's Conjecture
+        self.play(FadeOut(subtitle))
+        conjecture = Text("Every even integer > 2 is the sum of two primes", font_size=24).shift(UP)
+        self.play(Write(conjecture))
+        self.wait(1)
+        
+        # Examples
+        example1 = Text("4 = 2 + 2", font_size=28).shift(DOWN * 0.5)
+        example2 = Text("6 = 3 + 3", font_size=28).shift(DOWN * 1.5)
+        
+        self.play(Write(example1))
+        self.play(Write(example2))
+        self.wait(2)
+        
+        # Clear screen
+        self.play(
+            FadeOut(conjecture),
+            FadeOut(example1),
+            FadeOut(example2)
+        )
+        
+        # Machine Learning Introduction
+        ml_intro = Text("Machine Learning Approach", font_size=28).next_to(title, DOWN)
+        self.play(Write(ml_intro))
+        self.wait(1)
+        
+        # Simple Neural Network Visualization
+        input_node = Circle(radius=0.3, color=BLUE).shift(LEFT*3)
+        hidden_node = Circle(radius=0.3, color=YELLOW)
+        output_node = Circle(radius=0.3, color=GREEN).shift(RIGHT*3)
+        
+        connection1 = Line(input_node.get_right(), hidden_node.get_left())
+        connection2 = Line(hidden_node.get_right(), output_node.get_left())
+        
+        # Create Neural Network elements
+        self.play(Create(input_node))
+        self.play(Create(hidden_node))
+        self.play(Create(output_node))
+        self.play(Create(connection1), Create(connection2))
+        
+        # Add labels
+        input_label = Text("Even Numbers", font_size=20).next_to(input_node, DOWN)
+        output_label = Text("Prime Pairs", font_size=20).next_to(output_node, DOWN)
+        
+        self.play(Write(input_label), Write(output_label))
+        self.wait(2)
+        
+        # Clear screen for conclusion
+        self.play(
+            FadeOut(title),  # Also fade out the title
+            FadeOut(ml_intro),
+            FadeOut(input_node), FadeOut(hidden_node), FadeOut(output_node),
+            FadeOut(connection1), FadeOut(connection2),
+            FadeOut(input_label), FadeOut(output_label)
+        )
+        
+        # Conclusion
+        conclusion = Text("Can AI help solve Goldbach's Conjecture?", font_size=28)
+        self.play(Write(conclusion))
+        self.wait(2)
+```
+
+---

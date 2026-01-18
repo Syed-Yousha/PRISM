@@ -1,0 +1,257 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# 3D SURFACES AND SHAPES - Spheres, Cubes, and Parametric Surfaces
+# Creating beautiful 3D mathematical objects
+# NOTE: All 3D examples require: from manim import *; import numpy as np
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## BASIC 3D SHAPES
+```python
+from manim import *
+import numpy as np
+
+class Basic3DShapes(ThreeDScene):
+    def construct(self):
+        self.set_camera_orientation(phi=60*DEGREES, theta=-45*DEGREES)
+        
+        # Sphere
+        sphere = Sphere(radius=1, color=BLUE)
+        sphere.set_opacity(0.7)
+        self.play(Create(sphere), run_time=1.5)
+        
+        # Cube
+        cube = Cube(side_length=1.5, color=RED)
+        cube.set_opacity(0.7)
+        self.play(Create(cube), run_time=1.5)
+        
+        # Cylinder
+        cylinder = Cylinder(radius=0.5, height=2, color=GREEN)
+        self.play(Create(cylinder), run_time=1.5)
+        
+        # Cone
+        cone = Cone(base_radius=1, height=2, color=YELLOW)
+        self.play(Create(cone), run_time=1.5)
+        
+        # Torus (donut shape)
+        torus = Torus(major_radius=1.5, minor_radius=0.5, color=PURPLE)
+        self.play(Create(torus), run_time=1.5)
+```
+
+## 3D AXES SETUP
+```python
+# Standard 3D axes
+axes = ThreeDAxes(
+    x_range=[-5, 5, 1],
+    y_range=[-5, 5, 1],
+    z_range=[-3, 3, 1],
+    x_length=10,
+    y_length=10,
+    z_length=6,
+    axis_config={"color": WHITE}
+)
+self.play(Create(axes), run_time=2)
+
+# Axes with labels (fixed to frame)
+x_label = MathTex("x").next_to(axes.x_axis, RIGHT)
+y_label = MathTex("y").next_to(axes.y_axis, UP)
+z_label = MathTex("z").next_to(axes.z_axis, OUT)
+self.add_fixed_in_frame_mobjects(x_label, y_label, z_label)
+```
+
+## PARAMETRIC SURFACES
+```python
+# Paraboloid (bowl shape) - z = x² + y²
+# NOTE: In ManimCE, Surface uses checkerboard_colors or set methods for coloring
+paraboloid = Surface(
+    lambda u, v: np.array([
+        u,
+        v,
+        u**2 + v**2
+    ]),
+    u_range=[-2, 2],
+    v_range=[-2, 2],
+    resolution=(30, 30),
+    checkerboard_colors=[BLUE_D, BLUE_E],  # FIXED: Use checkerboard_colors
+    fill_opacity=0.7
+)
+self.play(Create(paraboloid), run_time=2)
+
+# Saddle surface - z = x² - y²
+saddle = Surface(
+    lambda u, v: np.array([
+        u,
+        v,
+        u**2 - v**2
+    ]),
+    u_range=[-2, 2],
+    v_range=[-2, 2],
+    resolution=(30, 30),
+    checkerboard_colors=[YELLOW_D, YELLOW_E],  # FIXED: Use checkerboard_colors
+    fill_opacity=0.7
+)
+self.play(Create(saddle), run_time=2)
+
+# Hemisphere
+hemisphere = Surface(
+    lambda u, v: np.array([
+        np.cos(u) * np.sin(v),
+        np.sin(u) * np.sin(v),
+        np.cos(v)
+    ]),
+    u_range=[0, TAU],
+    v_range=[0, PI/2],
+    resolution=(30, 15),
+    checkerboard_colors=[BLUE_D, BLUE_E],  # FIXED: Use checkerboard_colors
+    fill_opacity=0.8
+)
+self.play(Create(hemisphere), run_time=2)
+```
+
+## 3D FUNCTION PLOTTING
+```python
+class Plot3DFunction(ThreeDScene):
+    def construct(self):
+        self.set_camera_orientation(phi=60*DEGREES, theta=-45*DEGREES)
+        
+        # Create axes
+        axes = ThreeDAxes(
+            x_range=[-3, 3, 1],
+            y_range=[-3, 3, 1],
+            z_range=[-2, 2, 1]
+        )
+        
+        # Plot z = sin(x) * cos(y)
+        surface = Surface(
+            lambda u, v: axes.c2p(u, v, np.sin(u) * np.cos(v)),
+            u_range=[-3, 3],
+            v_range=[-3, 3],
+            resolution=(40, 40),
+            fill_color=BLUE,
+            fill_opacity=0.6,
+            stroke_color=WHITE,
+            stroke_width=0.5
+        )
+        
+        # Title
+        title = MathTex(r"z = \sin(x)\cos(y)", font_size=40, color=YELLOW)
+        self.add_fixed_in_frame_mobjects(title)
+        title.to_edge(UP)
+        
+        self.play(Write(title), run_time=1)
+        self.play(Create(axes), run_time=1.5)
+        self.play(Create(surface), run_time=3)
+        
+        # Rotate to show 3D nature
+        self.begin_ambient_camera_rotation(rate=0.2)
+        self.wait(5)
+        self.stop_ambient_camera_rotation()
+```
+
+## 3D VECTORS AND ARROWS
+```python
+# 3D vector/arrow
+vector = Arrow3D(
+    start=ORIGIN,
+    end=[2, 1, 2],
+    color=YELLOW
+)
+self.play(Create(vector), run_time=1)
+
+# Multiple vectors from origin
+v1 = Arrow3D(ORIGIN, [2, 0, 0], color=RED)
+v2 = Arrow3D(ORIGIN, [0, 2, 0], color=GREEN)
+v3 = Arrow3D(ORIGIN, [0, 0, 2], color=BLUE)
+
+self.play(Create(v1), Create(v2), Create(v3), run_time=1.5)
+
+# Vector labels
+label_v1 = MathTex(r"\vec{i}", color=RED, font_size=28)
+label_v2 = MathTex(r"\vec{j}", color=GREEN, font_size=28)
+label_v3 = MathTex(r"\vec{k}", color=BLUE, font_size=28)
+self.add_fixed_in_frame_mobjects(label_v1, label_v2, label_v3)
+```
+
+## COMPLETE EXAMPLE: Volume of a Sphere
+```python
+from manim import *
+
+class SphereVolume(ThreeDScene):
+    def construct(self):
+        # Title
+        title = Text("Volume of a Sphere", font_size=44, color=YELLOW)
+        self.add_fixed_in_frame_mobjects(title)
+        title.to_edge(UP)
+        self.play(Write(title), run_time=1)
+        
+        # Set up 3D view
+        self.set_camera_orientation(phi=60*DEGREES, theta=-45*DEGREES)
+        
+        # Create sphere
+        sphere = Sphere(radius=2, color=BLUE)
+        sphere.set_opacity(0.6)
+        
+        # Create axes
+        axes = ThreeDAxes(
+            x_range=[-3, 3, 1],
+            y_range=[-3, 3, 1],
+            z_range=[-3, 3, 1],
+            x_length=6,
+            y_length=6,
+            z_length=6
+        )
+        
+        self.play(Create(axes), run_time=1.5)
+        self.play(Create(sphere), run_time=2)
+        
+        # Radius line
+        radius_line = Line3D(
+            start=ORIGIN,
+            end=[2, 0, 0],
+            color=YELLOW,
+            thickness=0.05
+        )
+        self.play(Create(radius_line), run_time=1)
+        
+        # Radius label (fixed to frame)
+        r_label = MathTex("r", font_size=32, color=YELLOW)
+        self.add_fixed_in_frame_mobjects(r_label)
+        r_label.move_to(RIGHT * 1 + DOWN * 0.5)
+        self.play(Write(r_label), run_time=0.5)
+        
+        # Formula
+        formula = MathTex(
+            r"V = \frac{4}{3}\pi r^3",
+            font_size=48,
+            color=WHITE
+        )
+        self.add_fixed_in_frame_mobjects(formula)
+        formula.to_edge(DOWN)
+        
+        # Box around formula
+        box = SurroundingRectangle(formula, color=GREEN, buff=0.2)
+        self.add_fixed_in_frame_mobjects(box)
+        
+        self.play(Write(formula), run_time=2)
+        self.play(Create(box), run_time=0.5)
+        
+        # Rotate to show sphere is 3D
+        self.begin_ambient_camera_rotation(rate=0.15)
+        self.wait(4)
+        self.stop_ambient_camera_rotation()
+        
+        self.wait(1)
+```
+
+## 3D WIREFRAME SHAPES
+```python
+# Wireframe sphere (mesh only, no fill)
+sphere_wireframe = Sphere(radius=1.5)
+sphere_wireframe.set_fill(opacity=0)
+sphere_wireframe.set_stroke(color=BLUE, width=1)
+self.play(Create(sphere_wireframe), run_time=2)
+
+# Wireframe cube
+cube_wireframe = Cube(side_length=2)
+cube_wireframe.set_fill(opacity=0)
+cube_wireframe.set_stroke(color=YELLOW, width=2)
+self.play(Create(cube_wireframe), run_time=1.5)
+```

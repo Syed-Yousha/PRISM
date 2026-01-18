@@ -1,0 +1,213 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# GEOMETRIC SHAPES - Visual Building Blocks
+# Circles, Squares, Lines, Triangles, and more
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## CIRCLES
+```python
+# Basic circle
+circle = Circle(radius=1.5, color=BLUE)
+self.play(Create(circle), run_time=1.0)
+
+# Filled circle
+filled_circle = Circle(
+    radius=1.0,
+    color=BLUE,
+    fill_color=BLUE,
+    fill_opacity=0.3
+)
+self.play(Create(filled_circle), run_time=1.0)
+
+# Circle with stroke
+circle = Circle(radius=2, color=YELLOW, stroke_width=4)
+self.play(Create(circle), run_time=1.5)
+
+# Dot (small circle)
+dot = Dot(point=ORIGIN, color=RED, radius=0.1)
+self.play(Create(dot), run_time=0.3)
+
+# Arc (partial circle)
+arc = Arc(radius=2, start_angle=0, angle=PI/2, color=GREEN)
+self.play(Create(arc), run_time=1.0)
+```
+
+## RECTANGLES AND SQUARES
+```python
+# Square
+square = Square(side_length=2, color=BLUE)
+self.play(Create(square), run_time=1.0)
+
+# Rectangle
+rect = Rectangle(width=4, height=2, color=TEAL)
+self.play(Create(rect), run_time=1.0)
+
+# Filled rectangle
+filled_rect = Rectangle(
+    width=3, height=2,
+    color=BLUE,
+    fill_color=BLUE,
+    fill_opacity=0.3
+)
+self.play(Create(filled_rect), run_time=1.0)
+
+# Rounded rectangle
+rounded = RoundedRectangle(
+    width=4, height=2,
+    corner_radius=0.3,
+    color=YELLOW
+)
+self.play(Create(rounded), run_time=1.0)
+
+# Surrounding rectangle (highlight box)
+formula = MathTex(r"E = mc^2")
+box = SurroundingRectangle(formula, color=GREEN, buff=0.2)
+self.play(Write(formula))
+self.play(Create(box), run_time=0.5)
+```
+
+## LINES AND ARROWS
+```python
+# Simple line
+line = Line(start=LEFT * 3, end=RIGHT * 3, color=WHITE)
+self.play(Create(line), run_time=1.0)
+
+# Arrow
+arrow = Arrow(start=LEFT * 2, end=RIGHT * 2, color=YELLOW)
+self.play(Create(arrow), run_time=1.0)
+
+# Double arrow
+double_arrow = DoubleArrow(start=LEFT * 2, end=RIGHT * 2, color=BLUE)
+self.play(Create(double_arrow), run_time=1.0)
+
+# Dashed line
+dashed = DashedLine(start=UP * 2, end=DOWN * 2, color=TEAL)
+self.play(Create(dashed), run_time=1.0)
+
+# Line with label
+line = Line(LEFT * 2, RIGHT * 2, color=BLUE)
+brace = Brace(line, DOWN, color=WHITE)
+label = brace.get_text("length")
+self.play(Create(line), run_time=1.0)
+self.play(Create(brace), Write(label), run_time=0.8)
+```
+
+## TRIANGLES
+```python
+# Equilateral triangle
+triangle = Triangle(color=BLUE)
+triangle.scale(2)
+self.play(Create(triangle), run_time=1.0)
+
+# Right triangle (custom polygon)
+right_triangle = Polygon(
+    ORIGIN, RIGHT * 3, RIGHT * 3 + UP * 2,
+    color=BLUE
+)
+self.play(Create(right_triangle), run_time=1.0)
+
+# Right angle marker
+right_angle = RightAngle(
+    Line(ORIGIN, RIGHT * 3),
+    Line(RIGHT * 3, RIGHT * 3 + UP * 2),
+    length=0.3,
+    color=WHITE
+)
+self.play(Create(right_angle), run_time=0.5)
+
+# Labeled triangle vertices
+A = Dot(ORIGIN, color=RED)
+B = Dot(RIGHT * 3, color=RED)
+C = Dot(RIGHT * 3 + UP * 2, color=RED)
+
+label_A = MathTex("A", font_size=28).next_to(A, LEFT)
+label_B = MathTex("B", font_size=28).next_to(B, DOWN)
+label_C = MathTex("C", font_size=28).next_to(C, UP)
+```
+
+## POLYGONS
+```python
+# Regular polygon
+pentagon = RegularPolygon(n=5, color=TEAL)
+pentagon.scale(1.5)
+self.play(Create(pentagon), run_time=1.0)
+
+hexagon = RegularPolygon(n=6, color=BLUE)
+hexagon.scale(1.5)
+self.play(Create(hexagon), run_time=1.0)
+
+# Custom polygon
+custom_shape = Polygon(
+    [-2, -1, 0], [0, 2, 0], [2, -1, 0], [1, -2, 0], [-1, -2, 0],
+    color=YELLOW
+)
+self.play(Create(custom_shape), run_time=1.5)
+```
+
+## GROUPING SHAPES (VGroup)
+```python
+# Create multiple shapes as a group
+circle = Circle(radius=0.5, color=BLUE)
+square = Square(side_length=1, color=RED)
+triangle = Triangle(color=GREEN).scale(0.7)
+
+# Arrange horizontally
+shapes = VGroup(circle, square, triangle)
+shapes.arrange(RIGHT, buff=1.0)
+shapes.move_to(ORIGIN)
+
+self.play(Create(shapes), run_time=2.0)
+
+# Animate the whole group
+self.play(shapes.animate.shift(UP * 2), run_time=1.0)
+self.play(shapes.animate.scale(1.5), run_time=1.0)
+```
+
+## COMPLETE EXAMPLE: Right Triangle Proof
+```python
+from manim import *
+
+class RightTriangleDemo(Scene):
+    def construct(self):
+        # Title
+        title = Text("Right Triangle", font_size=48, color=YELLOW)
+        title.to_edge(UP)
+        self.play(Write(title), run_time=1.0)
+        
+        # Create triangle
+        A = ORIGIN
+        B = RIGHT * 4
+        C = RIGHT * 4 + UP * 3
+        
+        # Sides
+        side_a = Line(B, C, color=BLUE, stroke_width=4)
+        side_b = Line(A, B, color=TEAL, stroke_width=4)
+        side_c = Line(A, C, color=YELLOW, stroke_width=4)
+        
+        triangle = VGroup(side_a, side_b, side_c)
+        triangle.move_to(ORIGIN)
+        
+        self.play(Create(side_b), run_time=1.0)
+        self.play(Create(side_a), run_time=1.0)
+        self.play(Create(side_c), run_time=1.0)
+        
+        # Right angle marker
+        right_angle = RightAngle(side_b, side_a, length=0.3, color=WHITE)
+        self.play(Create(right_angle), run_time=0.5)
+        
+        # Labels
+        label_a = MathTex("a", font_size=32, color=BLUE).next_to(side_a, RIGHT)
+        label_b = MathTex("b", font_size=32, color=TEAL).next_to(side_b, DOWN)
+        label_c = MathTex("c", font_size=32, color=YELLOW).next_to(side_c, LEFT)
+        
+        self.play(Write(label_a), Write(label_b), Write(label_c), run_time=1.0)
+        
+        # Formula
+        formula = MathTex(r"a^2 + b^2 = c^2", font_size=44)
+        formula[0:2].set_color(BLUE)
+        formula[3:5].set_color(TEAL)
+        formula[6:8].set_color(YELLOW)
+        formula.to_edge(DOWN)
+        
+        self.play(Write(formula), run_time=1.5)
+        self.wait(2.0)
+```

@@ -1,0 +1,352 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# LINEAR EQUATIONS - Solving, Rearranging, Word Problems
+# IGCSE/O-Level Algebra Topic
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## SOLVING ONE-STEP EQUATIONS
+```python
+# Basic equations like x + 5 = 12
+title = Text("One-Step Equations", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Balance concept
+balance = VGroup(
+    Line(LEFT * 2, RIGHT * 2, color=WHITE),
+    Triangle(fill_opacity=0.5, color=GRAY).scale(0.3).shift(DOWN * 0.3),
+    Rectangle(width=1.5, height=0.4, color=BLUE, fill_opacity=0.5).shift(LEFT * 1 + UP * 0.2),
+    Rectangle(width=0.8, height=0.4, color=GREEN, fill_opacity=0.5).shift(RIGHT * 1 + UP * 0.2),
+    MathTex("x + 5", font_size=24).shift(LEFT * 1 + UP * 0.6),
+    MathTex("12", font_size=24).shift(RIGHT * 1 + UP * 0.6)
+)
+balance.shift(UP * 1.3)
+
+# Equation
+eq = MathTex("x + 5 = 12", font_size=48).shift(UP * 0.2)
+
+# Solution steps
+steps = VGroup(
+    MathTex("x + 5 - 5 = 12 - 5", font_size=36, color=BLUE),
+    Text("(subtract 5 from both sides)", font_size=20, color=GRAY),
+    MathTex("x = 7", font_size=48, color=GREEN)
+).arrange(DOWN, buff=0.2)
+steps.shift(DOWN * 1)
+
+# More examples
+examples = VGroup(
+    MathTex("x - 3 = 8 \\Rightarrow x = 11", font_size=28),
+    MathTex("4x = 20 \\Rightarrow x = 5", font_size=28),
+    MathTex("\\frac{x}{3} = 6 \\Rightarrow x = 18", font_size=28)
+).arrange(RIGHT, buff=1)
+examples.to_edge(DOWN, buff=0.6)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(balance), run_time=1.5)
+self.play(Write(eq), run_time=1.0)
+self.play(Write(steps), run_time=2.0)
+self.play(Write(examples), run_time=1.5)
+```
+
+## SOLVING TWO-STEP EQUATIONS
+```python
+# 2x + 5 = 13
+title = Text("Two-Step Equations", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Equation
+eq = MathTex("2x + 5 = 13", font_size=48).shift(UP * 1.5)
+
+# Method
+method = Text("Inverse operations in reverse order", font_size=24, color=GRAY)
+method.shift(UP * 0.8)
+
+# Steps
+step1 = VGroup(
+    Text("Step 1: Subtract 5 from both sides", font_size=22, color=BLUE),
+    MathTex("2x + 5 - 5 = 13 - 5", font_size=32),
+    MathTex("2x = 8", font_size=36, color=BLUE)
+).arrange(DOWN, buff=0.15)
+step1.shift(DOWN * 0.2)
+
+step2 = VGroup(
+    Text("Step 2: Divide both sides by 2", font_size=22, color=GREEN),
+    MathTex("\\frac{2x}{2} = \\frac{8}{2}", font_size=32),
+    MathTex("x = 4", font_size=48, color=GREEN)
+).arrange(DOWN, buff=0.15)
+step2.shift(DOWN * 2)
+
+# Check
+check = VGroup(
+    Text("Check: ", font_size=22, color=ORANGE),
+    MathTex("2(4) + 5 = 8 + 5 = 13 \\checkmark", font_size=28, color=ORANGE)
+).arrange(RIGHT, buff=0.3)
+check.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(eq), run_time=1.0)
+self.play(Write(method), run_time=0.8)
+self.play(Write(step1), run_time=1.5)
+self.play(Write(step2), run_time=1.5)
+self.play(Write(check), run_time=1.0)
+```
+
+## EQUATIONS WITH BRACKETS
+```python
+# 3(x + 2) = 21
+title = Text("Equations with Brackets", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Equation
+eq = MathTex("3(x + 2) = 21", font_size=48).shift(UP * 1.5)
+
+# Method 1: Expand first
+method1 = VGroup(
+    Text("Method 1: Expand first", font_size=24, color=BLUE),
+    MathTex("3x + 6 = 21", font_size=32),
+    MathTex("3x = 15", font_size=32),
+    MathTex("x = 5", font_size=40, color=GREEN)
+).arrange(DOWN, buff=0.2)
+method1.shift(LEFT * 3.5 + DOWN * 0.5)
+
+# Method 2: Divide first
+method2 = VGroup(
+    Text("Method 2: Divide first", font_size=24, color=RED),
+    MathTex("\\frac{3(x+2)}{3} = \\frac{21}{3}", font_size=32),
+    MathTex("x + 2 = 7", font_size=32),
+    MathTex("x = 5", font_size=40, color=GREEN)
+).arrange(DOWN, buff=0.2)
+method2.shift(RIGHT * 3 + DOWN * 0.5)
+
+# Note
+note = Text("Both methods give the same answer!", font_size=24, color=YELLOW)
+note.to_edge(DOWN, buff=0.6)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(eq), run_time=1.0)
+self.play(Write(method1), run_time=2.0)
+self.play(Write(method2), run_time=2.0)
+self.play(Write(note), run_time=1.0)
+```
+
+## EQUATIONS WITH UNKNOWNS ON BOTH SIDES
+```python
+# 5x + 3 = 2x + 12
+title = Text("Unknowns on Both Sides", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Equation
+eq = MathTex("5x + 3 = 2x + 12", font_size=48).shift(UP * 1.5)
+
+# Strategy
+strategy = Text("Collect x terms on one side, numbers on other", font_size=24, color=GRAY)
+strategy.shift(UP * 0.8)
+
+# Steps
+step1 = VGroup(
+    Text("Subtract 2x from both sides:", font_size=20, color=BLUE),
+    MathTex("5x - 2x + 3 = 12", font_size=32),
+    MathTex("3x + 3 = 12", font_size=32)
+).arrange(DOWN, buff=0.1)
+step1.shift(DOWN * 0 + LEFT * 3.5)
+
+step2 = VGroup(
+    Text("Subtract 3 from both sides:", font_size=20, color=GREEN),
+    MathTex("3x = 9", font_size=36)
+).arrange(DOWN, buff=0.1)
+step2.shift(DOWN * 0 + RIGHT * 3)
+
+step3 = VGroup(
+    Text("Divide by 3:", font_size=20, color=ORANGE),
+    MathTex("x = 3", font_size=48, color=GREEN)
+).arrange(DOWN, buff=0.1)
+step3.shift(DOWN * 1.5)
+
+answer_box = SurroundingRectangle(step3[1], color=GREEN, buff=0.2)
+
+# Check
+check = MathTex("\\text{Check: } 5(3)+3 = 18, \\quad 2(3)+12 = 18 \\checkmark", font_size=24, color=ORANGE)
+check.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(eq), run_time=1.0)
+self.play(Write(strategy), run_time=0.8)
+self.play(Write(step1), run_time=1.5)
+self.play(Write(step2), run_time=1.2)
+self.play(Write(step3), Create(answer_box), run_time=1.2)
+self.play(Write(check), run_time=1.0)
+```
+
+## EQUATIONS WITH FRACTIONS
+```python
+# Clearing fractions
+title = Text("Equations with Fractions", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Equation
+eq = MathTex("\\frac{x+1}{3} + \\frac{x-2}{4} = 2", font_size=44).shift(UP * 1.5)
+
+# Strategy
+strategy = Text("Multiply by LCM of denominators (12)", font_size=24, color=GRAY)
+strategy.shift(UP * 0.8)
+
+# Steps
+step1 = VGroup(
+    Text("Multiply everything by 12:", font_size=20, color=BLUE),
+    MathTex("12 \\times \\frac{x+1}{3} + 12 \\times \\frac{x-2}{4} = 12 \\times 2", font_size=28),
+    MathTex("4(x+1) + 3(x-2) = 24", font_size=32)
+).arrange(DOWN, buff=0.1)
+step1.shift(DOWN * 0)
+
+step2 = VGroup(
+    Text("Expand and simplify:", font_size=20, color=GREEN),
+    MathTex("4x + 4 + 3x - 6 = 24", font_size=32),
+    MathTex("7x - 2 = 24", font_size=32),
+    MathTex("7x = 26", font_size=32),
+    MathTex("x = \\frac{26}{7}", font_size=36, color=GREEN)
+).arrange(DOWN, buff=0.1)
+step2.shift(DOWN * 2)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(eq), run_time=1.0)
+self.play(Write(strategy), run_time=0.8)
+self.play(Write(step1), run_time=2.0)
+self.play(Write(step2), run_time=2.5)
+```
+
+## REARRANGING FORMULAS
+```python
+# Make x the subject
+title = Text("Rearranging Formulas", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Original formula
+formula = MathTex("v = u + at", font_size=48).shift(UP * 1.5)
+task = Text("Make a the subject", font_size=24, color=GRAY).shift(UP * 0.9)
+
+# Steps
+steps = VGroup(
+    MathTex("v = u + at", font_size=36),
+    MathTex("v - u = at", font_size=36, color=BLUE),
+    Text("(subtract u)", font_size=18, color=GRAY),
+    MathTex("\\frac{v - u}{t} = a", font_size=36, color=GREEN),
+    Text("(divide by t)", font_size=18, color=GRAY),
+    MathTex("a = \\frac{v - u}{t}", font_size=44, color=GREEN)
+).arrange(DOWN, buff=0.2)
+steps.shift(DOWN * 0.5)
+
+# More examples (side)
+examples = VGroup(
+    Text("More examples:", font_size=22, color=YELLOW),
+    MathTex("A = \\pi r^2 \\Rightarrow r = \\sqrt{\\frac{A}{\\pi}}", font_size=28),
+    MathTex("y = mx + c \\Rightarrow x = \\frac{y-c}{m}", font_size=28)
+).arrange(DOWN, buff=0.2, aligned_edge=LEFT)
+examples.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(formula), Write(task), run_time=1.0)
+self.play(Write(steps), run_time=3.0)
+self.play(Write(examples), run_time=1.5)
+```
+
+## WORD PROBLEM TO EQUATION
+```python
+# Setting up equations from words
+title = Text("Word Problems → Equations", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Problem
+problem = VGroup(
+    Text("Problem:", font_size=24, color=BLUE),
+    Text("Sam has 3 times as many sweets as Tom.", font_size=22),
+    Text("Together they have 24 sweets.", font_size=22),
+    Text("How many does each have?", font_size=22)
+).arrange(DOWN, buff=0.1, aligned_edge=LEFT)
+problem.shift(UP * 1.2)
+
+# Define variable
+define = VGroup(
+    Text("Let Tom = x sweets", font_size=22, color=GREEN),
+    Text("Then Sam = 3x sweets", font_size=22, color=GREEN)
+).arrange(DOWN, buff=0.1, aligned_edge=LEFT)
+define.shift(UP * 0.1 + LEFT * 3)
+
+# Set up equation
+setup = VGroup(
+    Text("Total = 24:", font_size=22, color=ORANGE),
+    MathTex("x + 3x = 24", font_size=36)
+).arrange(DOWN, buff=0.1)
+setup.shift(UP * 0.1 + RIGHT * 3)
+
+# Solve
+solve = VGroup(
+    MathTex("4x = 24", font_size=32),
+    MathTex("x = 6", font_size=36, color=GREEN)
+).arrange(DOWN, buff=0.2)
+solve.shift(DOWN * 1)
+
+# Answer
+answer = VGroup(
+    Text("Tom has 6 sweets", font_size=24, color=GREEN),
+    Text("Sam has 18 sweets", font_size=24, color=GREEN)
+).arrange(RIGHT, buff=1)
+answer.to_edge(DOWN, buff=0.6)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(problem), run_time=2.0)
+self.play(Write(define), run_time=1.0)
+self.play(Write(setup), run_time=1.0)
+self.play(Write(solve), run_time=1.5)
+self.play(Write(answer), run_time=1.0)
+```
+
+## LINEAR EQUATION FLOWCHART
+```python
+# How to solve any linear equation
+title = Text("Solving Linear Equations - Flowchart", font_size=32, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Steps
+steps = VGroup(
+    VGroup(
+        Rectangle(width=5, height=0.6, color=BLUE, fill_opacity=0.3),
+        Text("1. Clear fractions (multiply by LCM)", font_size=18)
+    ),
+    VGroup(
+        Rectangle(width=5, height=0.6, color=GREEN, fill_opacity=0.3),
+        Text("2. Expand any brackets", font_size=18)
+    ),
+    VGroup(
+        Rectangle(width=5, height=0.6, color=ORANGE, fill_opacity=0.3),
+        Text("3. Collect like terms", font_size=18)
+    ),
+    VGroup(
+        Rectangle(width=5, height=0.6, color=RED, fill_opacity=0.3),
+        Text("4. Move x terms to one side", font_size=18)
+    ),
+    VGroup(
+        Rectangle(width=5, height=0.6, color=PURPLE, fill_opacity=0.3),
+        Text("5. Move numbers to other side", font_size=18)
+    ),
+    VGroup(
+        Rectangle(width=5, height=0.6, color=TEAL, fill_opacity=0.3),
+        Text("6. Divide to find x", font_size=18)
+    )
+)
+
+for i, step in enumerate(steps):
+    step[1].move_to(step[0])
+    step.shift(UP * 1.2 - DOWN * i * 0.7)
+
+# Arrows
+arrows = VGroup()
+for i in range(5):
+    arrow = Arrow(
+        steps[i].get_bottom(),
+        steps[i+1].get_top(),
+        buff=0.1,
+        color=WHITE,
+        stroke_width=2
+    )
+    arrows.add(arrow)
+
+# Final tip
+tip = Text("Always CHECK your answer!", font_size=24, color=YELLOW)
+tip.to_edge(DOWN, buff=0.4)
+
+self.play(Write(title), run_time=0.8)
+for step in steps:
+    self.play(Create(step), run_time=0.5)
+self.play(Create(arrows), run_time=1.0)
+self.play(Write(tip), run_time=0.8)
+```

@@ -1,0 +1,185 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# TEXT AND MATH - The Foundation of Educational Videos
+# How to display text and mathematical formulas correctly
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## MATHTEX BASICS - Mathematical Formulas
+```python
+# ALWAYS use raw strings (r"...") for LaTeX
+# ALWAYS escape backslashes properly
+
+# Simple expressions
+equation = MathTex(r"a^2 + b^2 = c^2", font_size=48, color=WHITE)
+self.play(Write(equation), run_time=1.5)
+
+# Fractions
+fraction = MathTex(r"\frac{a}{b}", font_size=48)
+self.play(Write(fraction))
+
+# Square roots
+sqrt_expr = MathTex(r"\sqrt{x^2 + y^2}", font_size=48)
+self.play(Write(sqrt_expr))
+
+# Complex formula - Quadratic Formula
+quadratic = MathTex(
+    r"x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}",
+    font_size=48,
+    color=WHITE
+)
+quadratic.move_to(ORIGIN)
+self.play(Write(quadratic), run_time=2.5)
+```
+
+## COLOR-CODED EQUATIONS (3Blue1Brown Signature)
+```python
+# Split equation into parts for individual coloring
+equation = MathTex(
+    r"E", r"=", r"m", r"c^2",
+    font_size=56
+)
+equation[0].set_color(YELLOW)    # E
+equation[2].set_color(BLUE)      # m
+equation[3].set_color(RED)       # c^2
+self.play(Write(equation), run_time=2.0)
+
+# Highlight specific parts
+self.play(Indicate(equation[0], color=YELLOW, scale_factor=1.3), run_time=0.5)
+self.play(Indicate(equation[3], color=RED, scale_factor=1.3), run_time=0.5)
+```
+
+## MULTI-LINE EQUATIONS
+```python
+# Aligned equations (derivation style)
+equations = MathTex(
+    r"f(x) &= x^2 + 2x + 1 \\",
+    r"&= (x + 1)^2",
+    font_size=40
+)
+equations.arrange(DOWN, aligned_edge=LEFT)
+self.play(Write(equations[0]), run_time=1.5)
+self.wait(0.5)
+self.play(Write(equations[1]), run_time=1.5)
+
+# Step-by-step derivation
+step1 = MathTex(r"x^2 + 5x + 6 = 0", font_size=44)
+step2 = MathTex(r"(x + 2)(x + 3) = 0", font_size=44)
+step3 = MathTex(r"x = -2 \text{ or } x = -3", font_size=44, color=GREEN)
+
+step1.move_to(UP * 1)
+step2.move_to(ORIGIN)
+step3.move_to(DOWN * 1)
+
+self.play(Write(step1), run_time=1.5)
+self.wait(0.5)
+self.play(Write(step2), run_time=1.5)
+self.wait(0.5)
+self.play(Write(step3), run_time=1.5)
+
+# Highlight final answer
+box = SurroundingRectangle(step3, color=GREEN, buff=0.2)
+self.play(Create(box), run_time=0.5)
+```
+
+## TEXT OBJECTS - Plain Text
+```python
+# Title text
+title = Text("The Pythagorean Theorem", font_size=48, color=YELLOW)
+title.to_edge(UP)
+self.play(Write(title), run_time=1.5)
+
+# Bullet points (NEVER use \bullet in LaTeX!)
+point1 = Text("• First key concept", font_size=28, color=WHITE)
+point2 = Text("• Second key concept", font_size=28, color=WHITE)
+point3 = Text("• Third key concept", font_size=28, color=WHITE)
+
+points = VGroup(point1, point2, point3)
+points.arrange(DOWN, aligned_edge=LEFT, buff=0.4)
+points.move_to(ORIGIN)
+
+self.play(Write(point1), run_time=0.8)
+self.play(Write(point2), run_time=0.8)
+self.play(Write(point3), run_time=0.8)
+
+# Labels for shapes
+label = Text("radius", font_size=24, color=TEAL)
+label.next_to(some_line, UP, buff=0.1)
+self.play(Write(label), run_time=0.5)
+```
+
+## EQUATION TRANSFORMATIONS (The 3b1b Magic)
+```python
+# TransformMatchingTex - morphs between equations beautifully
+eq1 = MathTex(r"a^2 + b^2", font_size=48)
+eq2 = MathTex(r"c^2", font_size=48)
+
+self.play(Write(eq1), run_time=1.5)
+self.wait(1.0)
+self.play(TransformMatchingTex(eq1, eq2), run_time=1.5)
+
+# ReplacementTransform for complete changes
+old_eq = MathTex(r"\frac{dy}{dx} = 2x")
+new_eq = MathTex(r"y = x^2 + C")
+new_eq.move_to(old_eq)
+
+self.play(Write(old_eq), run_time=1.5)
+self.wait(0.5)
+self.play(ReplacementTransform(old_eq, new_eq), run_time=1.5)
+```
+
+## COMMON LATEX PATTERNS
+```python
+# Subscripts and superscripts
+MathTex(r"x_1, x_2, x_n")           # Subscripts
+MathTex(r"x^2, x^{10}, e^{i\pi}")   # Superscripts
+
+# Greek letters
+MathTex(r"\alpha, \beta, \gamma, \theta, \pi, \omega")
+
+# Calculus
+MathTex(r"\frac{d}{dx}[x^2] = 2x")                    # Derivative
+MathTex(r"\int_0^1 x^2 \, dx = \frac{1}{3}")          # Integral
+MathTex(r"\lim_{x \to \infty} \frac{1}{x} = 0")       # Limit
+MathTex(r"\sum_{i=1}^{n} i = \frac{n(n+1)}{2}")       # Sum
+
+# Set notation
+MathTex(r"x \in \mathbb{R}")
+MathTex(r"A \cup B, A \cap B, A \subset B")
+
+# Inequalities
+MathTex(r"x \leq 5, y \geq 0, a \neq b")
+
+# Matrices
+MathTex(r"\begin{bmatrix} a & b \\ c & d \end{bmatrix}")
+```
+
+## COMPLETE EXAMPLE: Pythagorean Theorem
+```python
+from manim import *
+
+class PythagoreanTheorem(Scene):
+    def construct(self):
+        # Title
+        title = Text("The Pythagorean Theorem", font_size=48, color=YELLOW)
+        title.to_edge(UP)
+        self.play(Write(title), run_time=1.5)
+        
+        # Main theorem
+        theorem = MathTex(
+            r"a^2", r"+", r"b^2", r"=", r"c^2",
+            font_size=56
+        )
+        theorem[0].set_color(BLUE)
+        theorem[2].set_color(TEAL)
+        theorem[4].set_color(YELLOW)
+        theorem.move_to(ORIGIN)
+        
+        self.play(Write(theorem), run_time=2.0)
+        self.wait(1.0)
+        
+        # Highlight each part
+        self.play(Indicate(theorem[0], color=BLUE), run_time=0.5)
+        self.play(Indicate(theorem[2], color=TEAL), run_time=0.5)
+        self.play(Indicate(theorem[4], color=YELLOW), run_time=0.5)
+        
+        self.wait(2.0)
+```

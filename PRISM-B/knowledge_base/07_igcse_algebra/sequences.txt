@@ -1,0 +1,414 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# SEQUENCES - Linear, Quadratic, Geometric, nth Term
+# IGCSE/O-Level Algebra Topic
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## SEQUENCE INTRODUCTION
+```python
+# What is a sequence?
+title = Text("Introduction to Sequences", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Definition
+definition = VGroup(
+    Text("A sequence is an ordered list of numbers", font_size=24, color=WHITE),
+    Text("following a specific pattern or rule", font_size=24, color=WHITE)
+).arrange(DOWN, buff=0.1)
+definition.shift(UP * 1.3)
+
+# Example sequence
+seq = VGroup(
+    MathTex("2, 5, 8, 11, 14, ...", font_size=44, color=GREEN)
+)
+seq.shift(UP * 0.3)
+
+# Terms labeling
+terms = VGroup(
+    MathTex("a_1", font_size=24, color=BLUE),
+    MathTex("a_2", font_size=24, color=BLUE),
+    MathTex("a_3", font_size=24, color=BLUE),
+    MathTex("a_4", font_size=24, color=BLUE),
+    MathTex("a_5", font_size=24, color=BLUE)
+).arrange(RIGHT, buff=0.7)
+terms.shift(DOWN * 0.3)
+
+# Pattern
+pattern = VGroup(
+    Text("Pattern: add 3 each time", font_size=24, color=ORANGE),
+    Text("Common difference = 3", font_size=22, color=ORANGE)
+).arrange(DOWN, buff=0.1)
+pattern.shift(DOWN * 1)
+
+# Types
+types = VGroup(
+    Text("Types of sequences:", font_size=22, color=GRAY),
+    Text("• Linear (arithmetic) - constant difference", font_size=18),
+    Text("• Quadratic - differences increase by constant", font_size=18),
+    Text("• Geometric - multiply by constant ratio", font_size=18)
+).arrange(DOWN, buff=0.1, aligned_edge=LEFT)
+types.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(definition), run_time=1.0)
+self.play(Write(seq), run_time=1.0)
+self.play(Write(terms), run_time=1.0)
+self.play(Write(pattern), run_time=1.0)
+self.play(Write(types), run_time=1.5)
+```
+
+## LINEAR SEQUENCES - NTH TERM
+```python
+# Finding nth term of arithmetic sequence
+title = Text("Linear Sequences: nth Term", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Sequence
+seq = MathTex("3, 7, 11, 15, 19, ...", font_size=44).shift(UP * 1.5)
+
+# Find common difference
+diff = VGroup(
+    Text("Common difference:", font_size=22, color=BLUE),
+    MathTex("d = 7 - 3 = 4", font_size=32, color=BLUE)
+).arrange(DOWN, buff=0.1)
+diff.shift(UP * 0.6)
+
+# Formula
+formula = VGroup(
+    Text("nth term formula:", font_size=22, color=GREEN),
+    MathTex("a_n = a_1 + (n-1)d", font_size=36, color=GREEN),
+    Text("or equivalently:", font_size=18, color=GRAY),
+    MathTex("a_n = dn + (a_1 - d)", font_size=32)
+).arrange(DOWN, buff=0.15)
+formula.shift(DOWN * 0.3)
+
+# Calculate
+calc = VGroup(
+    MathTex("a_n = 4n + (3 - 4)", font_size=32),
+    MathTex("a_n = 4n - 1", font_size=40, color=GREEN)
+).arrange(DOWN, buff=0.2)
+calc.shift(DOWN * 1.6)
+calc_box = SurroundingRectangle(calc[1], color=GREEN, buff=0.2)
+
+# Check
+check = MathTex("\\text{Check: } a_1 = 4(1) - 1 = 3 \\checkmark", font_size=24, color=ORANGE)
+check.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(seq), run_time=1.0)
+self.play(Write(diff), run_time=1.0)
+self.play(Write(formula), run_time=2.0)
+self.play(Write(calc), Create(calc_box), run_time=1.5)
+self.play(Write(check), run_time=1.0)
+```
+
+## DIFFERENCE METHOD
+```python
+# Visual method for finding nth term
+title = Text("Difference Method", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Sequence with differences
+seq = MathTex("5, 8, 11, 14, 17", font_size=40).shift(UP * 1.5)
+
+# First differences
+diffs = VGroup(
+    MathTex("+3", font_size=28, color=BLUE).shift(LEFT * 1.5),
+    MathTex("+3", font_size=28, color=BLUE).shift(LEFT * 0.3),
+    MathTex("+3", font_size=28, color=BLUE).shift(RIGHT * 0.9),
+    MathTex("+3", font_size=28, color=BLUE).shift(RIGHT * 2.1)
+)
+diffs.shift(UP * 0.9)
+
+# Connection arrows
+arrows = VGroup(
+    Arrow(UP * 1.2 + LEFT * 2, UP * 1.2 + LEFT * 0.8, color=BLUE, buff=0.1, stroke_width=2),
+    Arrow(UP * 1.2 + LEFT * 0.8, UP * 1.2 + RIGHT * 0.4, color=BLUE, buff=0.1, stroke_width=2),
+    Arrow(UP * 1.2 + RIGHT * 0.4, UP * 1.2 + RIGHT * 1.6, color=BLUE, buff=0.1, stroke_width=2),
+    Arrow(UP * 1.2 + RIGHT * 1.6, UP * 1.2 + RIGHT * 2.8, color=BLUE, buff=0.1, stroke_width=2)
+)
+
+# Explanation
+explain = VGroup(
+    Text("Constant first difference = 3", font_size=22, color=BLUE),
+    Text("So coefficient of n is 3", font_size=22, color=GREEN),
+    MathTex("\\text{nth term} = 3n + ?", font_size=32)
+).arrange(DOWN, buff=0.2)
+explain.shift(DOWN * 0.3)
+
+# Find constant
+find_c = VGroup(
+    Text("To find constant, use n = 1:", font_size=20, color=ORANGE),
+    MathTex("3(1) + ? = 5", font_size=32),
+    MathTex("? = 2", font_size=32, color=GREEN)
+).arrange(DOWN, buff=0.15)
+find_c.shift(DOWN * 1.7)
+
+# Answer
+answer = MathTex("\\text{nth term} = 3n + 2", font_size=44, color=GREEN)
+answer.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(seq), run_time=1.0)
+self.play(Create(arrows), Write(diffs), run_time=1.5)
+self.play(Write(explain), run_time=1.5)
+self.play(Write(find_c), run_time=1.5)
+self.play(Write(answer), run_time=1.0)
+```
+
+## QUADRATIC SEQUENCES
+```python
+# Second differences constant
+title = Text("Quadratic Sequences", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Sequence
+seq = MathTex("2, 6, 12, 20, 30, ...", font_size=40).shift(UP * 1.8)
+
+# First differences
+first = VGroup(
+    Text("1st diff:", font_size=18, color=BLUE),
+    MathTex("+4", font_size=24, color=BLUE),
+    MathTex("+6", font_size=24, color=BLUE),
+    MathTex("+8", font_size=24, color=BLUE),
+    MathTex("+10", font_size=24, color=BLUE)
+).arrange(RIGHT, buff=0.5)
+first.shift(UP * 1.1)
+
+# Second differences
+second = VGroup(
+    Text("2nd diff:", font_size=18, color=GREEN),
+    MathTex("+2", font_size=24, color=GREEN),
+    MathTex("+2", font_size=24, color=GREEN),
+    MathTex("+2", font_size=24, color=GREEN)
+).arrange(RIGHT, buff=0.8)
+second.shift(UP * 0.5)
+
+# Formula
+formula = VGroup(
+    Text("If 2nd difference = 2, coefficient of n² is 1", font_size=20, color=WHITE),
+    MathTex("\\text{nth term} = an^2 + bn + c", font_size=32),
+    MathTex("= n^2 + bn + c", font_size=32)
+).arrange(DOWN, buff=0.2)
+formula.shift(DOWN * 0.3)
+
+# Working out
+work = VGroup(
+    Text("Compare with n²:", font_size=18, color=ORANGE),
+    MathTex("n^2: 1, 4, 9, 16, 25, ...", font_size=28),
+    MathTex("\\text{seq} - n^2: 1, 2, 3, 4, 5, ...", font_size=28, color=ORANGE),
+    Text("This is n!", font_size=18, color=GREEN)
+).arrange(DOWN, buff=0.15)
+work.shift(DOWN * 1.5)
+
+# Answer
+answer = MathTex("\\text{nth term} = n^2 + n = n(n+1)", font_size=40, color=GREEN)
+answer.to_edge(DOWN, buff=0.4)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(seq), run_time=1.0)
+self.play(Write(first), run_time=1.5)
+self.play(Write(second), run_time=1.0)
+self.play(Write(formula), run_time=1.5)
+self.play(Write(work), run_time=2.0)
+self.play(Write(answer), run_time=1.0)
+```
+
+## GEOMETRIC SEQUENCES
+```python
+# Multiply by constant ratio
+title = Text("Geometric Sequences", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Sequence
+seq = MathTex("3, 6, 12, 24, 48, ...", font_size=44).shift(UP * 1.5)
+
+# Ratios
+ratios = VGroup(
+    MathTex("\\times 2", font_size=24, color=RED),
+    MathTex("\\times 2", font_size=24, color=RED),
+    MathTex("\\times 2", font_size=24, color=RED),
+    MathTex("\\times 2", font_size=24, color=RED)
+).arrange(RIGHT, buff=1)
+ratios.shift(UP * 0.9)
+
+# Common ratio
+cr = VGroup(
+    Text("Common ratio:", font_size=22, color=RED),
+    MathTex("r = \\frac{6}{3} = 2", font_size=32, color=RED)
+).arrange(RIGHT, buff=0.5)
+cr.shift(UP * 0.2)
+
+# Formula
+formula = VGroup(
+    Text("nth term formula:", font_size=22, color=GREEN),
+    MathTex("a_n = a_1 \\times r^{n-1}", font_size=44, color=GREEN)
+).arrange(DOWN, buff=0.2)
+formula.shift(DOWN * 0.6)
+formula_box = SurroundingRectangle(formula, color=GREEN, buff=0.3)
+
+# Example
+example = VGroup(
+    MathTex("a_n = 3 \\times 2^{n-1}", font_size=36),
+    Text("Check:", font_size=18, color=GRAY),
+    MathTex("a_5 = 3 \\times 2^4 = 3 \\times 16 = 48 \\checkmark", font_size=28, color=ORANGE)
+).arrange(DOWN, buff=0.15)
+example.shift(DOWN * 2)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(seq), run_time=1.0)
+self.play(Write(ratios), run_time=1.0)
+self.play(Write(cr), run_time=1.0)
+self.play(Write(formula), Create(formula_box), run_time=1.5)
+self.play(Write(example), run_time=1.5)
+```
+
+## TERM-TO-TERM vs POSITION-TO-TERM
+```python
+# Two ways to describe sequences
+title = Text("Two Types of Rules", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Sequence
+seq = MathTex("2, 5, 8, 11, 14, ...", font_size=40).shift(UP * 1.5)
+
+# Term-to-term
+ttt = VGroup(
+    Rectangle(width=5, height=2, color=BLUE, fill_opacity=0.2),
+    Text("Term-to-Term Rule", font_size=24, color=BLUE),
+    Text("Describes how to get", font_size=18),
+    Text("from one term to the next", font_size=18),
+    MathTex("a_{n+1} = a_n + 3", font_size=28, color=BLUE),
+    Text("Start: 2, add 3", font_size=18, color=GRAY)
+)
+ttt[1].move_to(ttt[0].get_top() + DOWN * 0.3)
+ttt[2].move_to(ttt[0].get_center() + UP * 0.2)
+ttt[3].move_to(ttt[0].get_center() + DOWN * 0.1)
+ttt[4].move_to(ttt[0].get_center() + DOWN * 0.5)
+ttt[5].move_to(ttt[0].get_bottom() + UP * 0.3)
+ttt.shift(LEFT * 3 + DOWN * 0.5)
+
+# Position-to-term
+ptt = VGroup(
+    Rectangle(width=5, height=2, color=GREEN, fill_opacity=0.2),
+    Text("Position-to-Term Rule", font_size=24, color=GREEN),
+    Text("Describes how to find", font_size=18),
+    Text("any term directly", font_size=18),
+    MathTex("a_n = 3n - 1", font_size=28, color=GREEN),
+    Text("(nth term formula)", font_size=18, color=GRAY)
+)
+ptt[1].move_to(ptt[0].get_top() + DOWN * 0.3)
+ptt[2].move_to(ptt[0].get_center() + UP * 0.2)
+ptt[3].move_to(ptt[0].get_center() + DOWN * 0.1)
+ptt[4].move_to(ptt[0].get_center() + DOWN * 0.5)
+ptt[5].move_to(ptt[0].get_bottom() + UP * 0.3)
+ptt.shift(RIGHT * 3 + DOWN * 0.5)
+
+# Comparison
+comp = VGroup(
+    Text("Position-to-term is more useful:", font_size=22, color=ORANGE),
+    Text("Find the 100th term easily!", font_size=20, color=ORANGE),
+    MathTex("a_{100} = 3(100) - 1 = 299", font_size=28, color=GREEN)
+).arrange(DOWN, buff=0.15)
+comp.to_edge(DOWN, buff=0.4)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(seq), run_time=1.0)
+self.play(Create(ttt), run_time=1.5)
+self.play(Create(ptt), run_time=1.5)
+self.play(Write(comp), run_time=1.5)
+```
+
+## FINDING A SPECIFIC TERM
+```python
+# Is 100 in the sequence?
+title = Text("Finding if a Number is in a Sequence", font_size=32, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Question
+question = VGroup(
+    Text("A sequence has nth term: ", font_size=24),
+    MathTex("a_n = 4n + 3", font_size=36, color=BLUE),
+    Text("Is 99 a term in this sequence?", font_size=24, color=WHITE)
+).arrange(DOWN, buff=0.2)
+question.shift(UP * 1.2)
+
+# Method
+method = VGroup(
+    Text("Set nth term = 99 and solve for n:", font_size=22, color=GREEN),
+    MathTex("4n + 3 = 99", font_size=36),
+    MathTex("4n = 96", font_size=36),
+    MathTex("n = 24", font_size=40, color=GREEN)
+).arrange(DOWN, buff=0.2)
+method.shift(DOWN * 0.5)
+
+# Conclusion
+conclusion = VGroup(
+    Text("Since n = 24 is a positive integer,", font_size=22, color=WHITE),
+    MathTex("99 \\text{ IS the 24th term}", font_size=32, color=GREEN)
+).arrange(DOWN, buff=0.2)
+conclusion.to_edge(DOWN, buff=1)
+
+# Counter example
+counter = VGroup(
+    Text("If n = 24.5 (not integer), then", font_size=18, color=RED),
+    Text("that number would NOT be in the sequence", font_size=18, color=RED)
+).arrange(DOWN, buff=0.1)
+counter.to_edge(DOWN, buff=0.4)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(question), run_time=1.5)
+self.play(Write(method), run_time=2.0)
+self.play(Write(conclusion), run_time=1.0)
+self.play(Write(counter), run_time=1.0)
+```
+
+## SPECIAL SEQUENCES
+```python
+# Triangular, square, cube numbers
+title = Text("Special Number Sequences", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Triangular numbers
+tri = VGroup(
+    Text("Triangular Numbers", font_size=24, color=BLUE),
+    MathTex("1, 3, 6, 10, 15, 21, ...", font_size=28),
+    MathTex("T_n = \\frac{n(n+1)}{2}", font_size=28, color=BLUE)
+).arrange(DOWN, buff=0.15)
+tri.shift(UP * 1 + LEFT * 3.5)
+
+# Visual for triangular
+tri_dots = VGroup(
+    Dot(UP * 0.5 + LEFT * 3.5, radius=0.08, color=BLUE),
+    VGroup(
+        Dot(DOWN * 0 + LEFT * 3.7, radius=0.08, color=BLUE),
+        Dot(DOWN * 0 + LEFT * 3.3, radius=0.08, color=BLUE)
+    ),
+    VGroup(
+        Dot(DOWN * 0.5 + LEFT * 3.9, radius=0.08, color=BLUE),
+        Dot(DOWN * 0.5 + LEFT * 3.5, radius=0.08, color=BLUE),
+        Dot(DOWN * 0.5 + LEFT * 3.1, radius=0.08, color=BLUE)
+    )
+)
+
+# Square numbers
+sq = VGroup(
+    Text("Square Numbers", font_size=24, color=GREEN),
+    MathTex("1, 4, 9, 16, 25, 36, ...", font_size=28),
+    MathTex("S_n = n^2", font_size=28, color=GREEN)
+).arrange(DOWN, buff=0.15)
+sq.shift(UP * 1 + RIGHT * 0)
+
+# Cube numbers
+cube = VGroup(
+    Text("Cube Numbers", font_size=24, color=RED),
+    MathTex("1, 8, 27, 64, 125, ...", font_size=28),
+    MathTex("C_n = n^3", font_size=28, color=RED)
+).arrange(DOWN, buff=0.15)
+cube.shift(UP * 1 + RIGHT * 3.5)
+
+# Fibonacci
+fib = VGroup(
+    Text("Fibonacci Sequence", font_size=24, color=ORANGE),
+    MathTex("1, 1, 2, 3, 5, 8, 13, 21, ...", font_size=28),
+    Text("Each term = sum of previous two", font_size=18, color=GRAY)
+).arrange(DOWN, buff=0.15)
+fib.shift(DOWN * 1.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(tri), run_time=1.5)
+self.play(Write(sq), run_time=1.5)
+self.play(Write(cube), run_time=1.5)
+self.play(Write(fib), run_time=1.5)
+```

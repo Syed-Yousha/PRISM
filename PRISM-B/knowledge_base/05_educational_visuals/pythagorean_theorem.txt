@@ -1,0 +1,197 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# PYTHAGOREAN THEOREM - Visual Proofs and Examples
+# Right triangles, square proofs, and step-by-step examples
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## RIGHT TRIANGLE WITH LABELED SIDES
+```python
+# Create a proper right triangle (3-4-5)
+# Points: A at origin, B at (3,0), C at (0,4)
+point_A = ORIGIN
+point_B = RIGHT * 3
+point_C = UP * 4
+
+# Create the three sides
+side_a = Line(point_B, point_C, color=RED, stroke_width=4)    # opposite (a=4)
+side_b = Line(point_A, point_B, color=BLUE, stroke_width=4)   # adjacent (b=3)
+side_c = Line(point_A, point_C, color=GREEN, stroke_width=4)  # hypotenuse (c=5)
+
+triangle = VGroup(side_a, side_b, side_c)
+triangle.move_to(ORIGIN)
+
+# Right angle marker
+right_angle = Square(side_length=0.4, color=WHITE, stroke_width=2)
+right_angle.move_to(point_A + RIGHT * 0.2 + UP * 0.2)
+
+# Labels for sides
+label_a = MathTex("a", font_size=32, color=RED).next_to(side_a, RIGHT, buff=0.2)
+label_b = MathTex("b", font_size=32, color=BLUE).next_to(side_b, DOWN, buff=0.2)
+label_c = MathTex("c", font_size=32, color=GREEN).next_to(side_c, LEFT, buff=0.2)
+
+self.play(Create(side_b), run_time=0.8)
+self.play(Create(side_a), run_time=0.8)
+self.play(Create(side_c), run_time=0.8)
+self.play(Create(right_angle), run_time=0.5)
+self.play(Write(label_a), Write(label_b), Write(label_c), run_time=1.0)
+```
+
+## VISUAL PROOF WITH SQUARES ON EACH SIDE
+```python
+# 3-4-5 right triangle with squares on each side
+# Triangle
+A, B, C = ORIGIN, RIGHT * 3, UP * 4
+triangle = Polygon(A, B, C, color=WHITE, stroke_width=3)
+triangle.shift(LEFT * 2 + DOWN * 1)
+
+# Square on side b (bottom, 3x3)
+sq_b = Square(side_length=3, color=BLUE, fill_opacity=0.3, stroke_width=2)
+sq_b.next_to(triangle, DOWN, buff=0).align_to(triangle, LEFT)
+
+# Square on side a (right, 4x4)
+sq_a = Square(side_length=4, color=RED, fill_opacity=0.3, stroke_width=2)
+sq_a.rotate(-np.arctan(4/3))
+sq_a.next_to(triangle.get_vertices()[1], RIGHT, buff=0)
+
+# Square on side c (hypotenuse, 5x5)
+sq_c = Square(side_length=5, color=GREEN, fill_opacity=0.3, stroke_width=2)
+sq_c.rotate(np.arctan(3/4))
+sq_c.move_to(triangle.get_center() + LEFT * 2.5 + UP * 0.5)
+
+# Area labels
+area_a = MathTex(r"a^2 = 16", font_size=28, color=RED)
+area_b = MathTex(r"b^2 = 9", font_size=28, color=BLUE)
+area_c = MathTex(r"c^2 = 25", font_size=28, color=GREEN)
+
+self.play(Create(triangle), run_time=1.0)
+self.play(Create(sq_b), Write(area_b.next_to(sq_b, DOWN)), run_time=1.0)
+self.play(Create(sq_a), Write(area_a.next_to(sq_a, RIGHT)), run_time=1.0)
+self.play(Create(sq_c), Write(area_c.next_to(sq_c, LEFT)), run_time=1.0)
+
+# Show the equation
+equation = MathTex(r"9 + 16 = 25", font_size=40, color=YELLOW).to_edge(DOWN, buff=0.5)
+self.play(Write(equation), run_time=1.0)
+```
+
+## STEP-BY-STEP EXAMPLE SOLVING
+```python
+# Problem: Find c when a=3, b=4
+title = Text("Find the hypotenuse", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Show the triangle
+triangle = Polygon([0,0,0], [3,0,0], [0,4,0], color=BLUE, stroke_width=3)
+triangle.scale(0.5).shift(LEFT * 3)
+
+# Labels on triangle
+label_3 = MathTex("3", font_size=28).next_to(triangle, DOWN, buff=0.2)
+label_4 = MathTex("4", font_size=28).next_to(triangle, LEFT, buff=0.2)
+label_c = MathTex("c = ?", font_size=28, color=YELLOW).move_to(triangle.get_center() + RIGHT * 0.8)
+
+# Step-by-step solution on the right
+step1 = MathTex(r"a^2 + b^2 = c^2", font_size=36).shift(RIGHT * 2 + UP * 1)
+step2 = MathTex(r"3^2 + 4^2 = c^2", font_size=36).shift(RIGHT * 2 + UP * 0)
+step3 = MathTex(r"9 + 16 = c^2", font_size=36).shift(RIGHT * 2 + DOWN * 1)
+step4 = MathTex(r"25 = c^2", font_size=36).shift(RIGHT * 2 + DOWN * 2)
+step5 = MathTex(r"c = 5", font_size=40, color=GREEN).shift(RIGHT * 2 + DOWN * 3)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(triangle), Write(label_3), Write(label_4), Write(label_c), run_time=1.5)
+self.play(Write(step1), run_time=1.0)
+self.play(Write(step2), run_time=1.0)
+self.play(Write(step3), run_time=1.0)
+self.play(Write(step4), run_time=1.0)
+self.play(Write(step5), run_time=1.0)
+self.play(Indicate(step5, color=YELLOW), run_time=0.8)
+```
+
+## FINDING A MISSING LEG
+```python
+# Given c=13, b=5, find a
+title = Text("Find the missing leg", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Formula transformation
+formula1 = MathTex(r"a^2 + b^2 = c^2", font_size=40)
+formula2 = MathTex(r"a^2 = c^2 - b^2", font_size=40)
+
+formula1.move_to(UP * 1)
+formula2.move_to(UP * 1)
+
+# Substitution
+sub1 = MathTex(r"a^2 = 13^2 - 5^2", font_size=40).move_to(ORIGIN)
+sub2 = MathTex(r"a^2 = 169 - 25", font_size=40).move_to(DOWN * 1)
+sub3 = MathTex(r"a^2 = 144", font_size=40).move_to(DOWN * 2)
+sub4 = MathTex(r"a = 12", font_size=44, color=GREEN).move_to(DOWN * 3)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(formula1), run_time=1.0)
+self.play(Transform(formula1, formula2), run_time=1.0)
+self.play(Write(sub1), run_time=1.0)
+self.play(Write(sub2), run_time=1.0)
+self.play(Write(sub3), run_time=1.0)
+self.play(Write(sub4), run_time=1.0)
+```
+
+## REAL-WORLD APPLICATION: LADDER AGAINST WALL
+```python
+# Ladder leaning against wall
+# Wall (vertical line)
+wall = Line(DOWN * 2, UP * 3, color=GRAY, stroke_width=4)
+wall.shift(LEFT * 2)
+
+# Ground (horizontal line)
+ground = Line(LEFT * 3, RIGHT * 2, color=GRAY, stroke_width=4)
+ground.shift(DOWN * 2)
+
+# Ladder (hypotenuse)
+ladder = Line(LEFT * 2 + DOWN * 2, LEFT * 2 + UP * 2, color=YELLOW, stroke_width=6)
+# Actually make it diagonal
+ladder = Line(RIGHT * 1 + DOWN * 2, LEFT * 2 + UP * 2, color=YELLOW, stroke_width=6)
+
+# Labels
+height_label = MathTex("4m", font_size=28, color=GREEN).next_to(wall, LEFT, buff=0.3)
+base_label = MathTex("3m", font_size=28, color=BLUE).next_to(ground, DOWN, buff=0.3).shift(LEFT * 0.5)
+ladder_label = MathTex("?", font_size=32, color=YELLOW).next_to(ladder, RIGHT, buff=0.3)
+
+# Question
+question = Text("How long is the ladder?", font_size=32, color=WHITE).to_edge(UP, buff=0.5)
+
+self.play(Create(wall), Create(ground), run_time=1.0)
+self.play(Create(ladder), run_time=1.0)
+self.play(Write(height_label), Write(base_label), Write(ladder_label), run_time=1.0)
+self.play(Write(question), run_time=0.8)
+
+# Solution
+solution = MathTex(r"\sqrt{3^2 + 4^2} = \sqrt{25} = 5m", font_size=36, color=GREEN)
+solution.to_edge(DOWN, buff=0.5)
+self.play(Write(solution), run_time=1.5)
+```
+
+## PYTHAGOREAN TRIPLES VISUALIZATION
+```python
+# Show common Pythagorean triples: 3-4-5, 5-12-13, 8-15-17
+title = Text("Pythagorean Triples", font_size=40, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Create three mini triangles
+def create_mini_triangle(a, b, scale=0.15):
+    return Polygon(
+        [0, 0, 0],
+        [a * scale, 0, 0],
+        [0, b * scale, 0],
+        color=BLUE,
+        fill_opacity=0.3,
+        stroke_width=2
+    )
+
+tri1 = create_mini_triangle(3, 4, 0.3).shift(LEFT * 4)
+label1 = MathTex(r"3^2 + 4^2 = 5^2", font_size=28).next_to(tri1, DOWN, buff=0.3)
+
+tri2 = create_mini_triangle(5, 12, 0.15).shift(ORIGIN)
+label2 = MathTex(r"5^2 + 12^2 = 13^2", font_size=28).next_to(tri2, DOWN, buff=0.3)
+
+tri3 = create_mini_triangle(8, 15, 0.12).shift(RIGHT * 4)
+label3 = MathTex(r"8^2 + 15^2 = 17^2", font_size=28).next_to(tri3, DOWN, buff=0.3)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(tri1), Write(label1), run_time=1.0)
+self.play(Create(tri2), Write(label2), run_time=1.0)
+self.play(Create(tri3), Write(label3), run_time=1.0)
+```

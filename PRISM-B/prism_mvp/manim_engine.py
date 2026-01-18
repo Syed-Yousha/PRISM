@@ -1,23 +1,22 @@
 """
-PRISM Manim Engine - The "Cinematographer" Stage
-=================================================
-Uses Gemini (smart) to convert Director's detailed plan into perfect Manim code.
+PRISM Manim Engine - LLM Step 2: Code Generator
+================================================
+Converts PromptMaker's animation script into executable Manim code.
 
-ROLE: Execute the Director's vision with flawless code
-- Convert detailed instructions → valid Manim CE syntax
-- Apply Khan Academy / 3Blue1Brown aesthetic
-- Handle timing synchronization with audio
-- Ensure zero LaTeX errors through post-processing
+TWO-STEP LLM ARCHITECTURE:
+┌─────────────────┐     ┌─────────────────┐
+│  STEP 1: PROMPT │────>│  STEP 2: CODE   │  <-- YOU ARE HERE
+│     MAKER       │     │   GENERATOR     │
+└─────────────────┘     └─────────────────┘
+       │                        │
+  Topic + RAG            Refined Prompt
+  Examples               → Manim Code
 
-ARCHITECTURE:
-Director's Plan JSON → Cinematographer (Gemini) → generated_scene.py → Render → Video
-
-STYLE RULES:
-- Background: BLACK (#000000)
-- Split-screen: Notes LEFT (30%), Animation RIGHT (70%)
-- Colors: BLUE (main), YELLOW (highlight), TEAL (secondary), GREEN (success)
-- Typography: MathTex for math, Text for labels
-- Animations: Write(), Create(), Transform(), Indicate(), FadeOut()
+This module handles Step 2:
+- Receives AnimationScript from PromptMaker (Step 1)
+- Generates precise Manim code for each section
+- Handles audio duration matching
+- Error-resilient with fallbacks
 """
 
 import os
@@ -25,211 +24,411 @@ import sys
 import re
 import time
 import subprocess
-from typing import Dict, Optional, List
+from typing import Dict, Optional, List, TYPE_CHECKING
 
 import google.generativeai as genai
+from groq import Groq
 
 from data_models import VideoScript, Segment
+from config import (
+    SCRIPT_DIR, GENERATED_SCRIPT_PATH, GEMINI_API_KEY, GEMINI_MODEL,
+    GROQ_API_KEY, GROQ_MODEL, QUALITY_PRESETS
+)
 
-
-# ============== CONFIGURATION ==============
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-GENERATED_SCRIPT_PATH = os.path.join(SCRIPT_DIR, "generated_scene.py")
-
-# Gemini API
-GEMINI_API_KEY = "AIzaSyBZoIVx4TF852_TBe-qB9ASfUKUaadkpe8"
-GEMINI_MODEL = "gemini-2.0-flash-exp"
+# Type hint for AnimationScript without circular import
+if TYPE_CHECKING:
+    from prompt_maker import AnimationScript
 
 genai.configure(api_key=GEMINI_API_KEY)
 
-# Quality presets
-QUALITY_PRESETS = {
-    "l": ("480p15", 15),
-    "m": ("720p30", 30),
-    "h": ("1080p60", 60),
-}
 DEFAULT_QUALITY = "m"
 
 
-# ============== CINEMATOGRAPHER SYSTEM PROMPT ==============
-CINEMATOGRAPHER_PROMPT = '''You are an elite Manim Community Edition programmer creating Khan Academy / 3Blue1Brown style educational videos.
+# ============== CODE GENERATOR SYSTEM PROMPT ==============
+CODE_GENERATOR_PROMPT = '''You are an elite Manim Community Edition code generator creating CLEAN, EDUCATIONAL animations.
 
-## 🎨 MANDATORY VISUAL STYLE
+## 🎯 YOUR MISSION
+Generate CLEAN, WELL-SPACED Manim code. Students must clearly see every element.
+This is STEP 2 of a 2-step pipeline - Step 1 already planned the content.
 
-### Screen Layout (CRITICAL - Follow Exactly)
-```
-┌──────────────────────────────────────────────────────────┐
-│              TITLE - YELLOW, font_size=44                │
-│                     to_edge(UP)                          │
-├─────────────────┬────────────────────────────────────────┤
-│                 │                                        │
-│   LEFT PANEL    │         MAIN ANIMATION                 │
-│   (OPTIONAL)    │         CENTER or RIGHT * 2            │
-│   LEFT * 5      │                                        │
-│                 │         This is where ALL the          │
-│   Small label   │         important visuals go:          │
-│   only if       │         formulas, graphs, shapes       │
-│   needed        │                                        │
-│                 │                                        │
-└─────────────────┴────────────────────────────────────────┘
-```
+## ⏱️ CRITICAL: AUDIO SYNC
+- Target duration: {duration:.1f} seconds
+- Your animations MUST fill this time EXACTLY
+- End with self.wait(X) where X = remaining time
+- NEVER exceed the duration!
 
-### LEFT PANEL RULES (IMPORTANT!)
-- The LEFT panel should contain ONLY a SHORT label (max 20 chars)
-- Use font_size=20 or smaller
-- Position at LEFT * 5 + UP * 2
-- Do NOT put long text, code, or formulas on the left
-- If blackboard_text is long, just show the FIRST WORD or skip it entirely
-- Main content goes on the RIGHT side (RIGHT * 2 or CENTER)
-
-### Color Palette (USE EXACTLY)
-- YELLOW = titles, highlights, emphasis
-- BLUE = primary shapes, main elements
-- TEAL = secondary elements, labels
-- WHITE = text, formulas
-- GREEN = correct answers, success
-- RED = warnings, errors
-
-### Typography Rules (CRITICAL)
+## 🚨 CRITICAL: CLEAN SCREEN BETWEEN SECTIONS
+**ALWAYS start EVERY section (except first) with:**
 ```python
-# Math formulas - ALWAYS use MathTex with raw strings
-MathTex(r"a^2 + b^2 = c^2", font_size=48, color=WHITE)
-MathTex(r"x = \\frac{{-b \\pm \\sqrt{{b^2-4ac}}}}{{2a}}")
-
-# Plain text - use Text
-Text("Key Points", font_size=36, color=BLUE)
-Text("• Bullet point", font_size=28, color=WHITE)
-
-# NEVER DO THESE (will crash):
-# Tex(r"\\bullet")     - Use Text("•") instead!
-# MathTex(r"$x^2$")    - No $ signs inside MathTex!
-```
-
-### Animation Patterns
-```python
-# Text appearing (handwriting effect)
-self.play(Write(text), run_time=1.5)
-
-# Shapes appearing
-self.play(Create(shape), run_time=1.0)
-
-# Highlighting (sync with speech)
-self.play(Indicate(term, color=YELLOW), run_time=0.5)
-
-# Equation transforms
-self.play(TransformMatchingTex(eq1, eq2), run_time=1.5)
-
-# Movement
-self.play(obj.animate.shift(RIGHT * 2), run_time=0.8)
-
-# Clear screen between sections
+# Clear previous content for clean slate
 self.play(*[FadeOut(mob) for mob in self.mobjects], run_time=0.5)
 ```
 
-### 3D Text Rule (IMPORTANT)
-```python
-# For ThreeDScene, always add text to fixed frame first:
-title = Text("Title", font_size=44, color=YELLOW)
-self.add_fixed_in_frame_mobjects(title)  # REQUIRED!
-title.to_edge(UP)
-self.play(Write(title))
+## 🖼️ SCREEN LAYOUT - PREVENT OVERLAP!
+```
+┌──────────────────────────────────────────────────────────┐
+│    TITLE (font_size=40, YELLOW, to_edge(UP, buff=0.5))   │
+│                                                          │
+├──────────────────────────────────────────────────────────┤
+│                                                          │
+│         MAIN CONTENT (font_size=44, CENTERED)            │
+│              Use scale(0.8) if content is big            │
+│                                                          │
+│         Keep shapes SMALL: radius=1.5 max                │
+│         Keep formulas readable: font_size=44             │
+│                                                          │
+├──────────────────────────────────────────────────────────┤
+│    NOTES (font_size=24, TEAL, to_edge(DOWN, buff=0.5))   │
+└──────────────────────────────────────────────────────────┘
 ```
 
-## 📋 RAG EXAMPLES (Working Code)
-{rag_context}
+## 📏 SPACING RULES (CRITICAL!)
+- Title: `to_edge(UP, buff=0.5)` - NEVER overlap with content
+- Main content: `move_to(ORIGIN)` or `move_to(UP*0.5)`
+- Notes: `to_edge(DOWN, buff=0.5)` - NEVER overlap with content
+- Between elements: Use `buff=0.5` minimum
+- Shapes: Keep radius ≤ 1.5, use `.scale(0.7)` if needed
 
-## 🎬 SECTION TO ANIMATE
-{section_details}
+## 📝 NOTES DISPLAY
 
-## ⏱️ TIMING REQUIREMENT
-Duration: {duration} seconds
-- Your animations must fill this time
-- End with self.wait() for remaining time
+Blackboard Notes: {blackboard_notes}
 
-## 📝 OUTPUT RULES
+**CORRECT way (small, at bottom, no overlap):**
+```python
+notes = VGroup()
+for note in {blackboard_notes}:
+    notes.add(Text(note, font_size=24, color=TEAL))
+notes.arrange(RIGHT, buff=0.8)
+notes.to_edge(DOWN, buff=0.5)
+self.play(Write(notes), run_time=0.8)
+```
+
+## 🎨 TYPOGRAPHY RULES (SMALLER SIZES!)
+
+### Math Formulas - ALWAYS use MathTex
+```python
+formula = MathTex(r"x = \\frac{{-b \\pm \\sqrt{{b^2-4ac}}}}{{2a}}", font_size=44)
+formula.move_to(ORIGIN)  # Always center!
+```
+
+### Plain Text - use Text
+```python
+title = Text("Title Here", font_size=40, color=YELLOW)
+title.to_edge(UP, buff=0.5)  # Always add buff!
+```
+
+### SIZING RULES:
+- Title: font_size=40 (not bigger!)
+- Main formula: font_size=44
+- Labels: font_size=28
+- Notes: font_size=24
+- Shapes: radius ≤ 1.5, scale(0.7) if needed
+
+### NEVER DO:
+- `Tex(r"\\bullet")` → Use `Text("•")` instead!
+- `MathTex(r"$x^2$")` → No $ signs in MathTex!
+- `formula[5]` → Index errors! Use `formula` or `formula[0]`
+- Large shapes that overlap other elements
+
+## 🎬 ANIMATION PATTERNS
+
+```python
+# ALWAYS clear screen between sections (except first):
+self.play(*[FadeOut(mob) for mob in self.mobjects], run_time=0.5)
+
+self.play(Write(text), run_time=1.5)      # Text appearing
+self.play(Create(shape), run_time=1.0)     # Shapes appearing  
+self.play(Indicate(obj, color=YELLOW), run_time=0.5)  # Highlighting
+self.wait(X)  # Fill remaining time
+```
+
+## 🎨 COLOR PALETTE
+- YELLOW: titles, emphasis
+- BLUE: primary elements
+- TEAL: notes, secondary
+- WHITE: text, formulas
+- GREEN: success, answers
+
+## � FORBIDDEN - NEVER DO THIS:
+1. **NEVER use Text() to describe a visual - CREATE the visual instead!**
+   - ❌ BAD: `Text("Here is a triangle showing the theorem")`
+   - ✅ GOOD: `Polygon([0,0,0], [3,0,0], [0,4,0], color=BLUE)`
+
+2. **NEVER write long sentences as main content**
+   - ❌ BAD: `Text("To understand this concept we need to...", font_size=28)`
+   - ✅ GOOD: Show formulas and shapes, keep text under 5 words
+
+3. **ALWAYS create ACTUAL shapes for visualization sections**
+   - Use Circle, Square, Triangle, Line, Arrow, Polygon, Axes, NumberLine
+   - NEVER just describe what should be shown
+
+## 📊 VISUAL CODE EXAMPLES:
+
+### Fraction visualization (pie/sector):
+```python
+circle = Circle(radius=1.5, color=BLUE, stroke_width=3)
+sector = Sector(outer_radius=1.5, angle=PI/2, color=YELLOW, fill_opacity=0.7)
+self.play(Create(circle), Create(sector))
+```
+
+### Right triangle:
+```python
+triangle = Polygon([0,0,0], [3,0,0], [0,2,0], color=BLUE, stroke_width=3)
+right_angle = Square(side_length=0.3).move_to([0.15, 0.15, 0])
+```
+
+### Graph/Plot:
+```python
+axes = Axes(x_range=[-3,3], y_range=[-2,5], x_length=6, y_length=4)
+graph = axes.plot(lambda x: x**2, color=BLUE)
+self.play(Create(axes), Create(graph))
+```
+
+### Number line:
+```python
+line = NumberLine(x_range=[0, 10, 1], length=10, include_numbers=True)
+dot = Dot(line.n2p(5), color=RED)
+```
+
+## �📋 ANIMATION PLAN FROM STEP 1
+
+Section: {title}
+Type: {section_type}
+Duration: {duration:.1f} seconds (MUST MATCH!)
+Visual Mode: {visual_mode}
+Clear Previous: {clear_previous}
+
+**What the viewer hears (narration):**
+"{narration}"
+
+**Animation Plan:**
+- Main Elements: {main_elements}
+- Animations: {animations}
+- Layout: {layout}
+- Colors: {color_scheme}
+
+**Blackboard Notes:** {blackboard_notes}
+
+## 📤 OUTPUT RULES (CRITICAL!)
 1. Return ONLY executable Python code
-2. NO imports, NO class definition
-3. NO markdown code fences (```)
-4. Start with a section comment
-5. Put ALL main visuals on RIGHT side (RIGHT * 2) or CENTER
-6. LEFT side: only tiny label or nothing
-7. End with self.wait(X) where X fills remaining time
+2. NO imports, NO class definition, NO markdown
+3. **ALWAYS clear screen first** (except section 1): `self.play(*[FadeOut(mob) for mob in self.mobjects], run_time=0.5)`
+4. Keep elements SMALL and WELL-SPACED
+5. Title at TOP with buff=0.5, Notes at BOTTOM with buff=0.5
+6. Main content CENTERED with proper spacing
+7. End with self.wait() to fill remaining time
 
-Generate the Manim code:'''
+Generate the Manim code now:'''
 
 
 class ManimEngine:
     """
-    The Cinematographer: Converts Director's plan into perfect Manim code.
+    LLM Step 2: Code Generator
     
-    Uses Gemini for smart code generation with RAG context.
-    Applies strict Khan Academy / 3Blue1Brown aesthetic.
+    Converts PromptMaker's AnimationScript into executable Manim code.
+    Uses Groq (primary) with Gemini fallback.
     """
     
     def __init__(self, quality: str = DEFAULT_QUALITY):
-        """Initialize Manim Engine with Gemini."""
+        """Initialize Code Generator."""
         self.quality = quality
         self.model = genai.GenerativeModel(GEMINI_MODEL)
-        print(f"   🎥 Cinematographer initialized (Gemini, quality={quality})")
+        self.groq_client = Groq(api_key=GROQ_API_KEY)
+        print(f"   🔧 Code Generator initialized (Groq primary, quality={quality})")
     
-    def generate_full_scene(self, plan: Dict, video_script: VideoScript, rag_context: str = "") -> str:
+    def generate_from_script(self, animation_script: 'AnimationScript', video_script: VideoScript) -> str:
         """
-        Generate complete Manim scene from Director's production plan.
+        Generate Manim code from AnimationScript (Step 1 output).
+        
+        This is the main entry point for the 2-step pipeline.
         
         Args:
-            plan: Director's production plan with sections
+            animation_script: AnimationScript from PromptMaker (Step 1)
             video_script: VideoScript with audio durations
-            rag_context: RAG context with working code examples
             
         Returns:
             Complete Python code as string
         """
-        print(f"   🎥 Generating Manim code for {len(plan.get('sections', []))} sections...")
+        topic = animation_script.topic
+        sections = animation_script.sections
+        segments = video_script.segments
         
-        topic = plan.get("topic", "Educational Topic")
-        sections = plan.get("sections", [])
+        print(f"   🔧 Code Generator processing {len(sections)} sections...")
         
-        # Build the complete scene file
+        # Build header
         header = self._generate_header(topic, len(sections))
         
         # Generate code for each section
         section_codes = []
         for i, section in enumerate(sections):
-            # Get audio duration from video_script if available
-            duration = section.get("duration", 10)
-            if i < len(video_script.segments):
-                duration = video_script.segments[i].duration or duration
+            # Match section with audio segment for duration
+            segment = segments[i] if i < len(segments) else None
+            duration = segment.duration if segment else section.get("duration_estimate", 8.0)
             
             print(f"      Section {i+1}/{len(sections)}: {section.get('title', 'Unknown')} ({duration:.1f}s)")
             
-            # Generate section code
-            code = self._generate_section_code(
+            code = self._generate_section_code_from_plan(
                 section=section,
                 duration=duration,
-                is_first=(i == 0),
-                rag_context=rag_context
+                is_first=(i == 0)
             )
             
-            section_codes.append(code)
+            if not code:
+                print(f"         ⚠️ Using fallback for section {i+1}")
+                segment_for_fallback = segment or Segment(
+                    id=section.get("id", i+1),
+                    title=section.get("title", f"Section {i+1}"),
+                    section_type=section.get("type", "content"),
+                    duration=duration
+                )
+                code = self._fallback_code(segment_for_fallback, is_first=(i == 0), topic=topic)
             
-            # Brief pause between API calls
-            time.sleep(0.3)
+            section_codes.append(code)
+            time.sleep(0.5)  # Rate limiting
         
-        # Combine all parts
+        # Combine and post-process
         footer = self._generate_footer()
         full_code = header + "\n".join(section_codes) + footer
+        full_code = self._post_process(full_code)
         
-        # Post-process to fix common issues
+        print(f"   ✅ Generated {len(full_code):,} chars of Manim code")
+        return full_code
+    
+    def _generate_section_code_from_plan(self, section: Dict, duration: float, is_first: bool) -> Optional[str]:
+        """Generate Manim code from a section's animation plan."""
+        # Extract animation plan
+        anim_plan = section.get("animation_plan", {})
+        bb_notes = section.get("blackboard_notes", [])
+        
+        # Build prompt with all the plan details
+        prompt = CODE_GENERATOR_PROMPT.format(
+            duration=duration,
+            title=section.get("title", "Section"),
+            section_type=section.get("type", "content"),
+            visual_mode=section.get("visual_mode", "2D"),
+            clear_previous="NO (first section)" if is_first else "YES",
+            narration=section.get("narration", ""),
+            blackboard_notes=str(bb_notes) if bb_notes else "[]",
+            main_elements=", ".join(anim_plan.get("main_elements", ["No specific elements"])),
+            animations=", ".join(anim_plan.get("animations", ["Standard animations"])),
+            layout=anim_plan.get("layout", "Centered layout"),
+            color_scheme=str(anim_plan.get("color_scheme", {}))
+        )
+        
+        # Try Groq first
+        code = None
+        try:
+            groq_response = self.groq_client.chat.completions.create(
+                model=GROQ_MODEL,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.3,
+                max_tokens=2500,
+            )
+            code = groq_response.choices[0].message.content.strip()
+            print(f"         ✅ Groq success")
+        except Exception as e:
+            print(f"         ⚠️ Groq failed: {str(e)[:60]}...")
+            
+            # Gemini fallback
+            try:
+                print(f"         🔄 Trying Gemini fallback...")
+                response = self.model.generate_content(
+                    prompt,
+                    generation_config=genai.types.GenerationConfig(
+                        temperature=0.3,
+                        max_output_tokens=2500,
+                    )
+                )
+                code = response.text.strip()
+                print(f"         ✅ Gemini fallback success")
+            except Exception as gemini_e:
+                print(f"         ⚠️ Gemini failed: {str(gemini_e)[:60]}...")
+                return None
+        
+        if code:
+            code = self._clean_code(code)
+            indented = self._indent_code(code)
+            
+            section_id = section.get("id", "?")
+            title = section.get("title", "Section").upper()
+            
+            return f"""
+        # {'═'*60}
+        # SECTION {section_id}: {title} ({duration:.1f}s)
+        # Type: {section.get('type', 'content')}
+        # {'═'*60}
+{indented}
+"""
+        return None
+    
+    # Legacy method for backward compatibility
+    def generate_code(self, video_script: VideoScript, rag_context: str = "", max_retries: int = 2) -> str:
+        """
+        Generate complete Manim scene from VideoScript.
+        
+        Args:
+            video_script: VideoScript with segments and REAL audio durations
+            rag_context: RAG context with working code examples
+            max_retries: Retries per section on LLM failure
+            
+        Returns:
+            Complete Python code as string
+        """
+        topic = video_script.topic
+        segments = video_script.segments
+        
+        print(f"   🔧 Engineer generating code for {len(segments)} sections...")
+        
+        if rag_context:
+            print(f"   📚 RAG context: {len(rag_context):,} chars")
+        
+        # Build header
+        header = self._generate_header(topic, len(segments))
+        
+        # Generate code for each section with retry
+        section_codes = []
+        for i, segment in enumerate(segments):
+            print(f"      Section {i+1}/{len(segments)}: {segment.title} ({segment.duration:.1f}s)")
+            
+            code = None
+            last_error = None
+            
+            for attempt in range(max_retries + 1):
+                try:
+                    code = self._generate_section_code(
+                        segment=segment,
+                        is_first=(i == 0),
+                        rag_context=rag_context,
+                        topic=topic
+                    )
+                    if code:
+                        break
+                except Exception as e:
+                    last_error = str(e)
+                    if attempt < max_retries:
+                        print(f"         ⚠️ Retry {attempt + 1}/{max_retries}: {last_error[:50]}...")
+                        time.sleep(1)
+            
+            if not code:
+                print(f"         ⚠️ Using fallback for section {segment.id}")
+                code = self._fallback_code(segment, is_first=(i == 0), topic=topic)
+            
+            section_codes.append(code)
+            time.sleep(1)  # Rate limiting
+        
+        # Combine and post-process
+        footer = self._generate_footer()
+        full_code = header + "\n".join(section_codes) + footer
         full_code = self._post_process(full_code)
         
         print(f"   ✅ Generated {len(full_code):,} chars of Manim code")
         return full_code
     
     def _generate_header(self, topic: str, num_sections: int) -> str:
-        """Generate the scene file header."""
+        """Generate scene file header."""
         return f'''"""
-PRISM Generated Scene
-=====================
+PRISM Generated Scene - Audio-Synced
+=====================================
 Topic: {topic}
 Sections: {num_sections}
 Generated: {time.strftime("%Y-%m-%d %H:%M:%S")}
@@ -239,73 +438,78 @@ Style: Khan Academy / 3Blue1Brown
 from manim import *
 import numpy as np
 
-config.background_color = "#000000"
+config.background_color = "#1e1e1e"
 
 
-class GenScene(ThreeDScene):
-    """Auto-generated educational animation."""
+class GenScene(Scene):
+    """Auto-generated educational animation with clean 2D layout."""
     
     def construct(self):
-        # 2D camera setup
-        self.set_camera_orientation(phi=0*DEGREES, theta=-90*DEGREES)
-        
 '''
     
-    def _generate_section_code(self, section: Dict, duration: float, is_first: bool, rag_context: str) -> str:
-        """Generate Manim code for a single section using Gemini."""
-        section_id = section.get("id", 1)
-        section_type = section.get("type", "concept")
-        title = section.get("title", f"Section {section_id}")
+    def _generate_section_code(self, segment: Segment, is_first: bool, rag_context: str, topic: str) -> str:
+        """Generate Manim code for a single section (legacy segment-based)."""
+        # Get blackboard notes as list
+        bb_notes = segment.get_blackboard_notes_list()
+        bb_notes_str = str(bb_notes) if bb_notes else "[]"
         
-        # Build section details for prompt
-        section_details = f"""
-Section ID: {section_id}
-Type: {section_type}
-Title: {title}
-Duration: {duration:.1f} seconds
-
-Narration (viewer hears):
-"{section.get('narration', '')}"
-
-Blackboard Text (LEFT side - use add_fixed_in_frame_mobjects):
-{section.get('blackboard_text', '')}
-
-Director's Animation Instructions:
-{chr(10).join('- ' + str(instr) for instr in section.get('manim_instructions', []))}
-
-Visual Mode: {section.get('visual_mode', '2D')}
-Clear Previous: {"NO (first section)" if is_first else "YES - start with FadeOut all mobjects"}
-"""
-        
-        prompt = CINEMATOGRAPHER_PROMPT.format(
-            rag_context=rag_context[:3000] if rag_context else "No RAG context.",
-            section_details=section_details,
-            duration=duration
+        # Build prompt using the new CODE_GENERATOR_PROMPT format
+        prompt = CODE_GENERATOR_PROMPT.format(
+            duration=segment.duration,
+            title=segment.title,
+            section_type=segment.section_type,
+            visual_mode=segment.visual_mode,
+            clear_previous="NO (first section)" if is_first else "YES",
+            narration=segment.narration or "No narration",
+            blackboard_notes=bb_notes_str,
+            main_elements=", ".join(segment.visual_instructions[:3]) if segment.visual_instructions else "Standard visual elements",
+            animations="Standard animations for " + segment.section_type,
+            layout="Centered layout",
+            color_scheme="{}"
         )
         
+        # Try Groq first
+        code = None
         try:
-            response = self.model.generate_content(
-                prompt,
-                generation_config=genai.types.GenerationConfig(
-                    temperature=0.3,
-                    max_output_tokens=2500,
-                )
+            groq_response = self.groq_client.chat.completions.create(
+                model=GROQ_MODEL,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.3,
+                max_tokens=2500,
             )
+            code = groq_response.choices[0].message.content.strip()
+            print(f"         ✅ Groq success")
+        except Exception as e:
+            print(f"         ⚠️ Groq failed: {str(e)[:60]}...")
             
-            code = response.text.strip()
+            # Gemini fallback
+            try:
+                print(f"         🔄 Trying Gemini fallback...")
+                response = self.model.generate_content(
+                    prompt,
+                    generation_config=genai.types.GenerationConfig(
+                        temperature=0.3,
+                        max_output_tokens=2500,
+                    )
+                )
+                code = response.text.strip()
+                print(f"         ✅ Gemini fallback success")
+            except Exception as gemini_e:
+                print(f"         ⚠️ Gemini failed: {str(gemini_e)[:60]}...")
+                return None
+        
+        if code:
             code = self._clean_code(code)
             indented = self._indent_code(code)
             
             return f"""
         # {'═'*60}
-        # SECTION {section_id}: {title.upper()} ({duration:.1f}s)
-        # Type: {section_type}
+        # SECTION {segment.id}: {segment.title.upper()} ({segment.duration:.1f}s)
+        # Type: {segment.section_type}
         # {'═'*60}
 {indented}
 """
-        except Exception as e:
-            print(f"      ⚠️ LLM failed for section {section_id}: {e}")
-            return self._fallback_code(section, duration, is_first)
+        return None
     
     def _clean_code(self, code: str) -> str:
         """Clean LLM-generated code."""
@@ -325,131 +529,95 @@ Clear Previous: {"NO (first section)" if is_first else "YES - start with FadeOut
             for line in code.split('\n')
         )
     
-    def _fallback_code(self, section: Dict, duration: float, is_first: bool) -> str:
-        """Generate fallback code when LLM fails."""
-        section_id = section.get("id", 1)
-        
-        # Clean title - remove special chars that break Python strings
-        title = section.get("title", f"Section {section_id}")[:30]
-        title = title.replace('"', "'").replace("\\", "").replace("\n", " ").replace("\r", "")
+    def _fallback_code(self, segment: Segment, is_first: bool, topic: str) -> str:
+        """Generate reliable fallback code when LLM fails."""
+        title = segment.title[:25].replace('"', "'").replace("\\", "")
         title = ''.join(c for c in title if ord(c) < 128)
         
-        # Clean blackboard text - remove special chars that break Python strings
-        blackboard = section.get("blackboard_text", title)
-        # CRITICAL: Replace newlines FIRST before truncating
-        blackboard = blackboard.replace("\n", " | ").replace("\r", "")
-        blackboard = blackboard[:50]  # Truncate after newline replacement
-        blackboard = blackboard.replace('"', "'").replace("\\", "")
-        # Replace special math chars with ASCII equivalents
-        blackboard = blackboard.replace("²", "^2").replace("³", "^3")
-        blackboard = blackboard.replace("÷", "/").replace("×", "*")
-        blackboard = blackboard.replace("≤", "<=").replace("≥", ">=")
-        blackboard = blackboard.replace("≠", "!=").replace("±", "+/-")
-        # Remove any remaining non-ASCII
-        blackboard = ''.join(c for c in blackboard if ord(c) < 128)
+        clean_topic = topic[:20].replace('"', "'").replace("\\", "")
+        clean_topic = ''.join(c for c in clean_topic if ord(c) < 128)
         
-        section_type = section.get("type", "concept")
-        wait_time = max(duration - 4.5, 1.0)
+        wait_time = max(segment.duration - 4.0, 1.0)
+        
+        # Get blackboard notes
+        bb_notes = segment.get_blackboard_notes_list()[:3]  # Max 3 notes
         
         clear = "" if is_first else """
         # Clear previous
         self.play(*[FadeOut(mob) for mob in self.mobjects], run_time=0.5)
 """
         
-        # Visual based on section type - ALL visuals centered or slightly right
-        if section_type == "hook":
-            visual = '''
-        # Hook visual - engaging question mark
-        hook_text = Text("?", font_size=144, color=YELLOW)
-        hook_text.move_to(ORIGIN)
-        self.play(Write(hook_text), run_time=1.0)
-        self.play(hook_text.animate.scale(1.3), run_time=0.5)
-        self.play(hook_text.animate.scale(1/1.3), run_time=0.3)
-        self.play(FadeOut(hook_text), run_time=0.5)'''
-        elif section_type == "formula":
-            visual = '''
-        # Main formula - centered and prominent
-        formula = MathTex(r"f(x) = ax^2 + bx + c", font_size=56, color=WHITE)
-        formula.move_to(ORIGIN)
-        box = SurroundingRectangle(formula, color=BLUE, buff=0.3)
-        self.play(Write(formula), run_time=2.0)
-        self.play(Create(box), run_time=0.5)
-        self.play(Indicate(formula, color=YELLOW), run_time=0.8)'''
-        elif section_type == "breakdown":
-            visual = '''
-        # Breakdown - color-coded parts
-        eq = MathTex(r"a", r"x^2", r"+", r"b", r"x", r"+", r"c", font_size=56)
-        eq[0].set_color(BLUE)
-        eq[3].set_color(YELLOW)
-        eq[6].set_color(TEAL)
-        eq.move_to(ORIGIN)
-        self.play(Write(eq), run_time=1.5)
-        self.play(Indicate(eq[0], color=BLUE, scale_factor=1.3), run_time=0.5)
-        self.play(Indicate(eq[3], color=YELLOW, scale_factor=1.3), run_time=0.5)
-        self.play(Indicate(eq[6], color=TEAL, scale_factor=1.3), run_time=0.5)'''
-        elif section_type == "example":
-            visual = '''
-        # Worked example - step by step
-        step1 = MathTex(r"x^2 + 5x + 6 = 0", font_size=44, color=WHITE)
-        step1.move_to(UP * 0.5)
-        self.play(Write(step1), run_time=1.2)
-        
-        step2 = MathTex(r"x = -2", font_size=48, color=GREEN)
-        step3 = MathTex(r"x = -3", font_size=48, color=GREEN)
-        answers = VGroup(step2, step3).arrange(RIGHT, buff=1.5)
-        answers.move_to(DOWN * 1)
-        self.play(Write(step2), run_time=0.8)
-        self.play(Write(step3), run_time=0.8)
-        
-        box = SurroundingRectangle(answers, color=GREEN, buff=0.3)
-        self.play(Create(box), run_time=0.5)'''
-        elif section_type == "visualization":
-            visual = '''
-        # Graph - centered axes with curve
-        axes = Axes(
-            x_range=[-4, 4, 1], y_range=[-2, 8, 2],
-            x_length=6, y_length=4,
-            axis_config={"color": WHITE, "include_tip": True}
-        ).move_to(ORIGIN)
-        curve = axes.plot(lambda x: x**2, color=BLUE, x_range=[-2.5, 2.5])
-        label = MathTex(r"y = x^2", font_size=32, color=BLUE).next_to(curve, UR)
-        self.add_fixed_in_frame_mobjects(label)
-        self.play(Create(axes), run_time=1.0)
-        self.play(Create(curve), run_time=1.5)
-        self.play(Write(label), run_time=0.5)'''
-        elif section_type == "summary":
-            visual = '''
-        # Summary - clean bullet points centered
-        p1 = Text("• Key concept learned", font_size=28, color=WHITE)
-        p2 = Text("• Formula applied", font_size=28, color=WHITE)
-        p3 = Text("• Example solved", font_size=28, color=WHITE)
-        points = VGroup(p1, p2, p3).arrange(DOWN, aligned_edge=LEFT, buff=0.5)
-        points.move_to(ORIGIN)
-        self.add_fixed_in_frame_mobjects(p1, p2, p3)
-        self.play(Write(p1), run_time=0.7)
-        self.play(Write(p2), run_time=0.7)
-        self.play(Write(p3), run_time=0.7)'''
+        # Build VGroup code for notes (centered at bottom)
+        if bb_notes:
+            notes_code = f'''
+        # Notes (centered at bottom)
+        notes = VGroup()
+        note_texts = {bb_notes}
+        for note in note_texts:
+            notes.add(Text(note, font_size=24, color=TEAL))
+        notes.arrange(RIGHT, buff=0.8)
+        notes.to_edge(DOWN, buff=0.5)
+        self.play(Write(notes), run_time=0.8)
+'''
         else:
-            visual = '''
-        # Default - simple centered visual
-        shape = Circle(radius=1.5, color=BLUE, fill_opacity=0.3)
-        shape.move_to(ORIGIN)
-        self.play(Create(shape), run_time=1.5)
-        self.play(Indicate(shape, color=YELLOW), run_time=0.5)'''
+            notes_code = ""
+        
+        # Section type specific visual (CENTERED, CLEAN)
+        if segment.section_type == "hook":
+            visual = f'''
+        # Hook visual (centered)
+        main_text = Text("{clean_topic}", font_size=44, color=BLUE)
+        main_text.move_to(ORIGIN)
+        self.play(Write(main_text), run_time=1.5)
+'''
+        elif segment.section_type == "formula":
+            visual = f'''
+        # Formula display (centered)
+        formula = MathTex(r"f(x) = ax^2 + bx + c", font_size=44, color=WHITE)
+        formula.move_to(ORIGIN)
+        self.play(Write(formula), run_time=2.0)
+'''
+        elif segment.section_type == "example":
+            visual = f'''
+        # Worked example (centered)
+        step1 = Text("Step 1: Setup", font_size=32, color=WHITE)
+        step2 = Text("Step 2: Solve", font_size=32, color=YELLOW)
+        step3 = Text("Step 3: Answer", font_size=32, color=GREEN)
+        steps = VGroup(step1, step2, step3).arrange(DOWN, buff=0.4)
+        steps.move_to(ORIGIN)
+        self.play(Write(step1), run_time=0.6)
+        self.play(Write(step2), run_time=0.6)
+        self.play(Write(step3), run_time=0.6)
+'''
+        elif segment.section_type == "summary":
+            visual = f'''
+        # Summary (centered)
+        summary = Text("Key Takeaways", font_size=40, color=YELLOW)
+        summary.move_to(UP * 0.3)
+        check = Text("Remember the formula!", font_size=28, color=GREEN)
+        check.next_to(summary, DOWN, buff=0.4)
+        self.play(Write(summary), run_time=0.8)
+        self.play(Write(check), run_time=0.5)
+'''
+        else:
+            visual = f'''
+        # Content display (centered)
+        content = Text("{clean_topic}", font_size=40, color=BLUE)
+        content.move_to(ORIGIN)
+        self.play(Write(content), run_time=1.5)
+'''
         
         return f"""
         # {'═'*60}
-        # SECTION {section_id}: {title.upper()} ({duration:.1f}s) [FALLBACK]
+        # SECTION {segment.id}: {title.upper()} ({segment.duration:.1f}s) [FALLBACK]
         # {'═'*60}
 {clear}
         # Title
-        title = Text("{title}", font_size=44, color=YELLOW)
-        self.add_fixed_in_frame_mobjects(title)
-        title.to_edge(UP)
-        self.play(Write(title), run_time=1.0)
-{visual}
-        
-        self.wait({wait_time:.1f})
+        title = Text("{title}", font_size=40, color=YELLOW)
+        title.to_edge(UP, buff=0.5)
+        self.play(Write(title), run_time=0.8)
+{notes_code}{visual}
+        self.wait({wait_time:.2f})
 """
     
     def _generate_footer(self) -> str:
@@ -469,7 +637,13 @@ Clear Previous: {"NO (first section)" if is_first else "YES - start with FadeOut
         code = re.sub(r"TextMobject\(", "Text(", code)
         code = re.sub(r"TexMobject\(", "MathTex(", code)
         
-        # LaTeX bullet fix (CRITICAL)
+        # REMOVE add_fixed_in_frame_mobjects (only for 3D scenes, we use 2D Scene now)
+        code = re.sub(r'\s*self\.add_fixed_in_frame_mobjects\([^)]*\)\s*\n?', '\n', code)
+        
+        # REMOVE set_camera_orientation (only for 3D scenes)
+        code = re.sub(r'\s*self\.set_camera_orientation\([^)]*\)\s*\n?', '\n', code)
+        
+        # LaTeX bullet fix
         code = code.replace(r'\\bullet', '•')
         code = code.replace(r'\bullet', '•')
         
@@ -480,65 +654,206 @@ Clear Previous: {"NO (first section)" if is_first else "YES - start with FadeOut
         # Ensure raw strings
         code = re.sub(r'(MathTex|Tex)\s*\(\s*"\\\\', r'\1(r"\\', code)
         
+        # FIX: Dot with 2D point → 3D point (CRITICAL!)
+        # Dot(point=(-2, 0), ...) → Dot(point=np.array([-2, 0, 0]), ...)
+        code = re.sub(
+            r'Dot\s*\(\s*point\s*=\s*\(\s*([^,]+)\s*,\s*([^,)]+)\s*\)',
+            r'Dot(point=np.array([\1, \2, 0]))',
+            code
+        )
+        # Also handle Dot((-2, 0)) without point= keyword
+        code = re.sub(
+            r'Dot\s*\(\s*\(\s*([^,]+)\s*,\s*([^,)]+)\s*\)\s*\)',
+            r'Dot(point=np.array([\1, \2, 0]))',
+            code
+        )
+        
+        # FIX: 3D object syntax
+        code = re.sub(r'Sphere\s*\(\s*color\s*=\s*([^,)]+)\s*,\s*radius\s*=\s*([^,)]+)\s*\)', 
+                      r'Sphere(radius=\2).set_color(\1)', code)
+        code = re.sub(r'Sphere\s*\(\s*radius\s*=\s*([^,)]+)\s*,\s*color\s*=\s*([^,)]+)\s*\)',
+                      r'Sphere(radius=\1).set_color(\2)', code)
+        
+        code = re.sub(r'Cone\s*\(\s*color\s*=\s*([^,)]+)\s*,\s*radius\s*=\s*([^,)]+)\s*,\s*height\s*=\s*([^,)]+)\s*\)',
+                      r'Cone(base_radius=\2, height=\3).set_color(\1)', code)
+        code = re.sub(r'Cone\s*\(\s*radius\s*=\s*([^,)]+)\s*,\s*height\s*=\s*([^,)]+)\s*\)',
+                      r'Cone(base_radius=\1, height=\2)', code)
+        
+        # FIX: MathTex indexing issues - high indices cause IndexError
+        code = re.sub(r'Indicate\s*\(\s*(\w+)\s*\[\s*([3-9]|\d{2,})\s*\]', r'Indicate(\1', code)
+        code = re.sub(r'(\w+)\s*\[\s*([4-9]|\d{2,})\s*\]', r'\1[0]', code)
+        
+        # FIX: ParametricFunction needs 3D output
+        code = re.sub(
+            r'ParametricFunction\s*\(\s*lambda\s+(\w+)\s*:\s*\(\s*([^,]+)\s*,\s*([^,)]+)\s*\)',
+            r'ParametricFunction(lambda \1: np.array([\2, \3, 0])',
+            code
+        )
+        
+        # FIX: Remove problematic pipe characters in Text
+        code = re.sub(r'Text\s*\(\s*["\']([^"\']*\|[^"\']*)["\']', 
+                      lambda m: f'Text("{m.group(1).split("|")[0].strip()}"', code)
+        
+        # FIX: Polygon with 2D points → 3D points
+        # Polygon([(-1, -1), (1, -1), (0, 1)], ...) → use proper 3D coords
+        def fix_polygon_2d(match):
+            """Convert 2D polygon points to 3D."""
+            points_str = match.group(1)
+            rest = match.group(2) if match.group(2) else ""
+            # Parse the 2D points and add z=0
+            # Simple fix: replace (x, y) with [x, y, 0]
+            fixed = re.sub(r'\(\s*([^,]+)\s*,\s*([^)]+)\s*\)', r'[\1, \2, 0]', points_str)
+            return f'Polygon({fixed}{rest})'
+        
+        code = re.sub(
+            r'Polygon\s*\(\s*\[((?:\s*\([^)]+\)\s*,?\s*)+)\](\s*,\s*[^)]+)?\)',
+            fix_polygon_2d,
+            code
+        )
+        
         return code
     
-    def render(self, code: str, topic: str) -> str:
-        """Render the generated Manim code to video."""
+    def render(self, code: str, topic: str, max_retries: int = 2) -> str:
+        """
+        Render the generated Manim code to video with retry on error.
+        
+        Args:
+            code: Complete Manim Python code
+            topic: Topic for filename
+            max_retries: Number of retries on render failure
+            
+        Returns:
+            Path to rendered video, or empty string on failure
+        """
         print(f"   🎬 Rendering video (quality: {self.quality})...")
         
         safe_name = re.sub(r"[^\w\s-]", "", topic).replace(" ", "_")[:20]
         timestamp = int(time.time())
         output_name = f"PRISM_{safe_name}_{timestamp}"
         
+        # Save code
         with open(GENERATED_SCRIPT_PATH, "w", encoding="utf-8") as f:
             f.write(code)
         print(f"   📝 Code saved: {GENERATED_SCRIPT_PATH}")
         
-        try:
-            cmd = [
-                sys.executable, "-m", "manim",
-                f"-q{self.quality}",
-                GENERATED_SCRIPT_PATH,
-                "GenScene",
-                "-o", output_name
-            ]
-            
-            result = subprocess.run(
-                cmd, check=True, capture_output=True, text=True,
-                cwd=SCRIPT_DIR, timeout=600
+        for attempt in range(max_retries + 1):
+            try:
+                cmd = [
+                    sys.executable, "-m", "manim",
+                    f"-q{self.quality}",
+                    GENERATED_SCRIPT_PATH,
+                    "GenScene",
+                    "-o", output_name
+                ]
+                
+                result = subprocess.run(
+                    cmd, check=True, capture_output=True, text=True,
+                    cwd=SCRIPT_DIR, timeout=600
+                )
+                
+                # Find output video
+                quality_dirs = {"l": "480p15", "m": "720p30", "h": "1080p60"}
+                video_dir = os.path.join(
+                    SCRIPT_DIR, "media", "videos", "generated_scene",
+                    quality_dirs.get(self.quality, "720p30")
+                )
+                video_path = os.path.join(video_dir, f"{output_name}.mp4")
+                
+                if os.path.exists(video_path):
+                    size_mb = os.path.getsize(video_path) / (1024 * 1024)
+                    print(f"   ✅ Rendered: {output_name}.mp4 ({size_mb:.1f} MB)")
+                    return video_path
+                
+                # Search for video
+                if os.path.exists(video_dir):
+                    files = [f for f in os.listdir(video_dir) if f.endswith('.mp4')]
+                    if files:
+                        newest = max(files, key=lambda x: os.path.getmtime(os.path.join(video_dir, x)))
+                        return os.path.join(video_dir, newest)
+                
+                return ""
+                
+            except subprocess.CalledProcessError as e:
+                error_msg = e.stderr[-500:] if e.stderr else "Unknown error"
+                print(f"   ⚠️ Render error (attempt {attempt + 1}/{max_retries + 1}):\n{error_msg}")
+                
+                if attempt < max_retries:
+                    # Try to fix common errors and retry
+                    code = self._fix_render_error(code, error_msg)
+                    with open(GENERATED_SCRIPT_PATH, "w", encoding="utf-8") as f:
+                        f.write(code)
+                    print(f"   🔄 Applied fixes, retrying...")
+                else:
+                    print(f"   ❌ Render failed after {max_retries + 1} attempts")
+                    print(f"   📝 Debug code at: {GENERATED_SCRIPT_PATH}")
+                    return ""
+                    
+            except subprocess.TimeoutExpired:
+                print("   ❌ Render timeout")
+                return ""
+            except Exception as e:
+                print(f"   ❌ Error: {e}")
+                return ""
+        
+        return ""
+    
+    def _fix_render_error(self, code: str, error_msg: str) -> str:
+        """Attempt to fix code based on render error."""
+        # Index out of range - remove problematic indexing
+        if "IndexError" in error_msg or "list index out of range" in error_msg:
+            code = re.sub(r'(\w+)\s*\[\s*\d+\s*\]', r'\1', code)
+        
+        # ValueError with arrays - fix ParametricFunction
+        if "ValueError" in error_msg and "array" in error_msg:
+            code = re.sub(
+                r'ParametricFunction\s*\(\s*lambda\s+(\w+)\s*:\s*\(\s*([^,]+)\s*,\s*([^,)]+)\s*\)',
+                r'ParametricFunction(lambda \1: np.array([\2, \3, 0])',
+                code
             )
-            
-            quality_dirs = {"l": "480p15", "m": "720p30", "h": "1080p60"}
-            video_dir = os.path.join(
-                SCRIPT_DIR, "media", "videos", "generated_scene",
-                quality_dirs.get(self.quality, "720p30")
-            )
-            video_path = os.path.join(video_dir, f"{output_name}.mp4")
-            
-            if os.path.exists(video_path):
-                size_mb = os.path.getsize(video_path) / (1024 * 1024)
-                print(f"   ✅ Rendered: {output_name}.mp4 ({size_mb:.1f} MB)")
-                return video_path
-            
-            # Search for video
-            if os.path.exists(video_dir):
-                files = [f for f in os.listdir(video_dir) if f.endswith('.mp4')]
-                if files:
-                    newest = max(files, key=lambda x: os.path.getmtime(os.path.join(video_dir, x)))
-                    return os.path.join(video_dir, newest)
-            
-            return ""
-            
-        except subprocess.TimeoutExpired:
-            print("   ❌ Render timeout")
-            return ""
-        except subprocess.CalledProcessError as e:
-            print(f"   ❌ Render failed:\n{e.stderr[-1000:] if e.stderr else 'Unknown'}")
-            return ""
-        except Exception as e:
-            print(f"   ❌ Error: {e}")
-            return ""
+        
+        # Undefined name - comment out problematic lines
+        if "NameError" in error_msg:
+            match = re.search(r"name '(\w+)' is not defined", error_msg)
+            if match:
+                undefined = match.group(1)
+                code = re.sub(rf'.*{undefined}.*\n', '# REMOVED: undefined variable\n', code)
+        
+        return code
+    
+    # Legacy compatibility
+    def generate_full_scene(self, plan: Dict, video_script: VideoScript, rag_context: str) -> str:
+        """Legacy method for backward compatibility."""
+        return self.generate_code(video_script, rag_context)
 
 
 # ============== EXPORTS ==============
 __all__ = ['ManimEngine', 'GENERATED_SCRIPT_PATH', 'DEFAULT_QUALITY']
+
+
+# ============== TESTING ==============
+if __name__ == "__main__":
+    print("=" * 60)
+    print("🔧 PRISM Manim Engine (Engineer) Test")
+    print("=" * 60)
+    
+    # Create test VideoScript
+    from data_models import VideoScript, Segment
+    
+    script = VideoScript(topic="Test Topic")
+    script.add_segment(Segment(
+        id=1,
+        title="Test Section",
+        narration="This is a test.",
+        blackboard_notes=["Note 1", "Note 2"],
+        visual_instructions=["Show title", "Display content"],
+        section_type="hook",
+        duration=10.0
+    ))
+    
+    engine = ManimEngine(quality="l")
+    code = engine.generate_code(script, rag_context="")
+    
+    print(f"\nGenerated code preview ({len(code)} chars):")
+    print(code[:1000])
+    
+    print("\n✅ Engineer test complete")

@@ -1,0 +1,351 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# ZOOMED SCENES - Picture-in-picture, magnification
+# Advanced camera techniques with ZoomedScene
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## BASIC ZOOMED SCENE
+```python
+# Scene type: ZoomedScene
+# Simple zoom on a portion of the scene
+from manim import *
+
+class BasicZoom(ZoomedScene):
+    def construct(self):
+        # Create some content
+        circle = Circle(radius=0.5, color=RED).shift(LEFT * 2)
+        square = Square(side_length=1, color=BLUE).shift(RIGHT * 2)
+        dot = Dot(point=LEFT * 2, color=YELLOW)
+        
+        self.add(circle, square, dot)
+        
+        # Get the zoomed camera and frame
+        zoomed_camera = self.zoomed_camera
+        zoomed_display = self.zoomed_display
+        frame = zoomed_camera.frame
+        
+        # Position the zoom frame on the dot
+        frame.move_to(dot)
+        frame.set_color(PURPLE)
+        
+        # Show the frame
+        self.play(Create(frame))
+        
+        # Activate zooming (shows the zoomed display)
+        self.activate_zooming()
+        self.wait()
+        
+        # Move the frame to follow something
+        self.play(frame.animate.move_to(square))
+        self.wait()
+```
+
+## CUSTOM ZOOMED SCENE CONFIGURATION
+```python
+# Scene type: ZoomedScene
+# Configure zoom parameters
+from manim import *
+
+class CustomZoom(ZoomedScene):
+    def __init__(self, **kwargs):
+        ZoomedScene.__init__(
+            self,
+            zoom_factor=0.3,  # How much to zoom (smaller = more zoom)
+            zoomed_display_height=3,
+            zoomed_display_width=3,
+            image_frame_stroke_width=10,
+            zoomed_camera_config={
+                "default_frame_stroke_width": 3,
+            },
+            zoomed_display_corner=UR,  # Where to show zoomed view
+            zoomed_display_corner_buff=0.5,
+            **kwargs
+        )
+
+    def construct(self):
+        # Complex scene content
+        plane = NumberPlane(x_range=[-5, 5], y_range=[-3, 3])
+        graph = plane.plot(lambda x: np.sin(x), color=RED)
+        
+        self.add(plane, graph)
+        
+        frame = self.zoomed_camera.frame
+        frame.move_to(plane.c2p(0, 0))  # Zoom on origin
+        
+        self.play(Create(frame))
+        self.activate_zooming()
+        self.wait()
+        
+        # Animate the frame along the graph
+        self.play(frame.animate.move_to(plane.c2p(PI, 0)), run_time=3)
+        self.wait()
+```
+
+## ZOOMED DISPLAY POP OUT
+```python
+# Scene type: ZoomedScene
+# Animated pop-out effect for zoomed display
+from manim import *
+
+class ZoomPopOut(ZoomedScene):
+    def __init__(self, **kwargs):
+        ZoomedScene.__init__(
+            self,
+            zoom_factor=0.4,
+            zoomed_display_height=2,
+            zoomed_display_width=3,
+            **kwargs
+        )
+
+    def construct(self):
+        dot = Dot(color=YELLOW)
+        label = Text("Tiny Detail", font_size=8).next_to(dot, DOWN, buff=0.05)
+        
+        self.add(dot, label)
+        
+        frame = self.zoomed_camera.frame
+        zoomed_display = self.zoomed_display
+        
+        frame.move_to(dot)
+        frame.set_color(GREEN)
+        
+        # Create frame
+        self.play(Create(frame))
+        
+        # Activate zoom
+        self.activate_zooming()
+        
+        # Pop out animation
+        self.play(self.get_zoomed_display_pop_out_animation())
+        self.wait(2)
+        
+        # Pop back in (reverse)
+        self.play(
+            self.get_zoomed_display_pop_out_animation(),
+            rate_func=lambda t: smooth(1 - t)  # Reverse
+        )
+        self.play(Uncreate(frame))
+        self.wait()
+```
+
+## MOVING ZOOMED FRAME
+```python
+# Scene type: ZoomedScene
+# Frame that follows a moving object
+from manim import *
+
+class FollowingZoom(ZoomedScene):
+    def __init__(self, **kwargs):
+        ZoomedScene.__init__(
+            self,
+            zoom_factor=0.3,
+            zoomed_display_height=2,
+            zoomed_display_width=4,
+            zoomed_display_corner=DR,
+            **kwargs
+        )
+
+    def construct(self):
+        # Create a path
+        circle_path = Circle(radius=2, color=BLUE)
+        dot = Dot(color=RED)
+        dot.move_to(circle_path.point_from_proportion(0))
+        
+        self.add(circle_path, dot)
+        
+        frame = self.zoomed_camera.frame
+        frame.move_to(dot)
+        
+        # Frame follows the dot
+        frame.add_updater(lambda m: m.move_to(dot.get_center()))
+        
+        self.play(Create(frame))
+        self.activate_zooming()
+        self.play(self.get_zoomed_display_pop_out_animation())
+        
+        # Move dot along path
+        self.play(MoveAlongPath(dot, circle_path), run_time=4, rate_func=linear)
+        
+        frame.clear_updaters()
+        self.wait()
+```
+
+## SCALING ZOOM FRAME
+```python
+# Scene type: ZoomedScene
+# Dynamically change zoom level
+from manim import *
+
+class ScalingZoom(ZoomedScene):
+    def construct(self):
+        # Scene content
+        formula = MathTex(r"\int_0^1 x^2 dx = \frac{1}{3}")
+        small_note = Text("(proof left as exercise)", font_size=6)
+        small_note.next_to(formula, DOWN, buff=0.1)
+        
+        self.add(formula, small_note)
+        
+        frame = self.zoomed_camera.frame
+        zoomed_display = self.zoomed_display
+        
+        frame.move_to(small_note)
+        
+        self.play(Create(frame))
+        self.activate_zooming()
+        self.play(self.get_zoomed_display_pop_out_animation())
+        self.wait()
+        
+        # Scale the frame (zoom in more)
+        self.play(
+            frame.animate.scale(0.5),
+            zoomed_display.animate.scale(1.5)
+        )
+        self.wait()
+        
+        # Zoom back out
+        self.play(
+            frame.animate.scale(2),
+            zoomed_display.animate.scale(0.67)
+        )
+        self.wait()
+```
+
+## MULTIPLE ZOOM REGIONS (Simulated)
+```python
+# Show two zoomed areas side by side
+from manim import *
+
+class DualZoom(Scene):
+    def construct(self):
+        # Main content
+        plane = NumberPlane(x_range=[-4, 4], y_range=[-2, 2])
+        self.add(plane)
+        
+        # Point 1: Origin
+        dot1 = Dot(ORIGIN, color=RED)
+        # Point 2: (2, 1)
+        dot2 = Dot(plane.c2p(2, 1), color=BLUE)
+        
+        self.add(dot1, dot2)
+        
+        # Create zoom boxes manually
+        frame1 = Rectangle(width=1, height=1, color=RED).move_to(dot1)
+        frame2 = Rectangle(width=1, height=1, color=BLUE).move_to(dot2)
+        
+        # Create zoomed displays (manual approach)
+        # Copy and scale the region
+        region1 = VGroup(
+            plane.copy(),
+            dot1.copy()
+        ).move_to(dot1).scale(3)
+        
+        display1 = VGroup(
+            Rectangle(width=2, height=2, color=RED, fill_opacity=0.1),
+            region1
+        ).to_corner(UL)
+        
+        self.play(Create(frame1), Create(frame2))
+        self.wait()
+        
+        # Note: For true multi-zoom, you'd need custom implementation
+        # This shows the concept of highlighting multiple regions
+```
+
+## ZOOM WITH BACKGROUND RECTANGLE
+```python
+# Scene type: ZoomedScene
+# Add background to zoomed display
+from manim import *
+
+class ZoomWithBackground(ZoomedScene):
+    def __init__(self, **kwargs):
+        ZoomedScene.__init__(
+            self,
+            zoom_factor=0.3,
+            zoomed_display_height=2,
+            zoomed_display_width=3,
+            **kwargs
+        )
+
+    def construct(self):
+        # Content
+        text = Text("Look closely at the dot →", font_size=24)
+        dot = Dot(color=YELLOW, radius=0.05).next_to(text, RIGHT)
+        
+        self.add(text, dot)
+        
+        frame = self.zoomed_camera.frame
+        zoomed_display = self.zoomed_display
+        
+        frame.move_to(dot)
+        zoomed_display_frame = zoomed_display.display_frame
+        zoomed_display_frame.set_color(RED)
+        
+        # Background rectangle for zoomed display
+        zd_rect = BackgroundRectangle(
+            zoomed_display,
+            fill_opacity=0.8,
+            buff=MED_SMALL_BUFF
+        )
+        self.add_foreground_mobject(zd_rect)
+        
+        # Updater to keep background with display
+        unfold_camera = UpdateFromFunc(
+            zd_rect,
+            lambda rect: rect.replace(zoomed_display)
+        )
+        
+        self.play(Create(frame))
+        self.activate_zooming()
+        self.play(self.get_zoomed_display_pop_out_animation(), unfold_camera)
+        self.wait(2)
+```
+
+## ZOOM FRAME STYLING
+```python
+# Scene type: ZoomedScene
+# Custom frame appearance
+from manim import *
+
+class StyledZoom(ZoomedScene):
+    def __init__(self, **kwargs):
+        ZoomedScene.__init__(
+            self,
+            zoom_factor=0.25,
+            zoomed_display_height=3,
+            zoomed_display_width=3,
+            image_frame_stroke_width=5,
+            zoomed_camera_config={
+                "default_frame_stroke_width": 3,
+                "default_frame_stroke_color": GOLD,
+            },
+            **kwargs
+        )
+
+    def construct(self):
+        # Graph to zoom on
+        ax = Axes(x_range=[-3, 3], y_range=[-2, 2])
+        graph = ax.plot(lambda x: x**3 - x, color=BLUE)
+        
+        self.add(ax, graph)
+        
+        frame = self.zoomed_camera.frame
+        zoomed_display = self.zoomed_display
+        
+        # Style the display frame
+        zoomed_display.display_frame.set_color(GOLD)
+        
+        # Position at a point of interest (local minimum)
+        frame.move_to(ax.c2p(0.577, -0.385))
+        
+        self.play(Create(frame))
+        self.activate_zooming()
+        self.play(self.get_zoomed_display_pop_out_animation())
+        
+        # Add label to zoomed region
+        label = Text("Local min", font_size=20, color=YELLOW)
+        self.add_foreground_mobject(label)
+        label.next_to(zoomed_display, DOWN)
+        
+        self.play(Write(label))
+        self.wait(2)
+```

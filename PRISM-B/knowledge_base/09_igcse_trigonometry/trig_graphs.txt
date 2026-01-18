@@ -1,0 +1,739 @@
+================================================================================
+IGCSE/O-LEVEL: TRIGONOMETRIC GRAPHS AND TRANSFORMATIONS
+================================================================================
+
+## 1. Graph of y = sin(x)
+
+```python
+from manim import *
+import numpy as np
+
+class SineGraph(Scene):
+    def construct(self):
+        title = Text("Graph of y = sin(x)", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Axes
+        axes = Axes(
+            x_range=[-0.5, 2.5*PI, PI/2],
+            y_range=[-1.5, 1.5, 0.5],
+            x_length=10,
+            y_length=4,
+            axis_config={"include_tip": True}
+        )
+        
+        # Custom x labels
+        x_labels = VGroup(
+            MathTex(r"\frac{\pi}{2}").scale(0.6).next_to(axes.c2p(PI/2, 0), DOWN),
+            MathTex(r"\pi").scale(0.6).next_to(axes.c2p(PI, 0), DOWN),
+            MathTex(r"\frac{3\pi}{2}").scale(0.6).next_to(axes.c2p(3*PI/2, 0), DOWN),
+            MathTex(r"2\pi").scale(0.6).next_to(axes.c2p(2*PI, 0), DOWN),
+        )
+        
+        y_labels = VGroup(
+            MathTex("1").scale(0.6).next_to(axes.c2p(0, 1), LEFT),
+            MathTex("-1").scale(0.6).next_to(axes.c2p(0, -1), LEFT),
+        )
+        
+        self.play(Create(axes), Write(x_labels), Write(y_labels))
+        
+        # Sine curve
+        sine_curve = axes.plot(lambda x: np.sin(x), x_range=[0, 2*PI], color=RED)
+        
+        self.play(Create(sine_curve), run_time=2)
+        
+        # Key features
+        features = VGroup(
+            Text("• Period = 2π", font_size=20, color=WHITE),
+            Text("• Amplitude = 1", font_size=20, color=WHITE),
+            Text("• Range: -1 ≤ y ≤ 1", font_size=20, color=WHITE),
+            Text("• Passes through origin", font_size=20, color=WHITE),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        features.to_edge(RIGHT).shift(DOWN * 0.5)
+        
+        self.play(Write(features))
+        
+        # Mark key points
+        key_points = [
+            (0, 0), (PI/2, 1), (PI, 0), (3*PI/2, -1), (2*PI, 0)
+        ]
+        
+        dots = VGroup()
+        for x, y in key_points:
+            dot = Dot(axes.c2p(x, y), color=YELLOW)
+            dots.add(dot)
+        
+        self.play(Create(dots))
+        
+        self.wait(2)
+```
+
+## 2. Graph of y = cos(x)
+
+```python
+from manim import *
+import numpy as np
+
+class CosineGraph(Scene):
+    def construct(self):
+        title = Text("Graph of y = cos(x)", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Axes
+        axes = Axes(
+            x_range=[-0.5, 2.5*PI, PI/2],
+            y_range=[-1.5, 1.5, 0.5],
+            x_length=10,
+            y_length=4,
+            axis_config={"include_tip": True}
+        )
+        
+        # Custom x labels
+        x_labels = VGroup(
+            MathTex(r"\frac{\pi}{2}").scale(0.6).next_to(axes.c2p(PI/2, 0), DOWN),
+            MathTex(r"\pi").scale(0.6).next_to(axes.c2p(PI, 0), DOWN),
+            MathTex(r"\frac{3\pi}{2}").scale(0.6).next_to(axes.c2p(3*PI/2, 0), DOWN),
+            MathTex(r"2\pi").scale(0.6).next_to(axes.c2p(2*PI, 0), DOWN),
+        )
+        
+        y_labels = VGroup(
+            MathTex("1").scale(0.6).next_to(axes.c2p(0, 1), LEFT),
+            MathTex("-1").scale(0.6).next_to(axes.c2p(0, -1), LEFT),
+        )
+        
+        self.play(Create(axes), Write(x_labels), Write(y_labels))
+        
+        # Cosine curve
+        cos_curve = axes.plot(lambda x: np.cos(x), x_range=[0, 2*PI], color=GREEN)
+        
+        self.play(Create(cos_curve), run_time=2)
+        
+        # Key features
+        features = VGroup(
+            Text("• Period = 2π", font_size=20, color=WHITE),
+            Text("• Amplitude = 1", font_size=20, color=WHITE),
+            Text("• Range: -1 ≤ y ≤ 1", font_size=20, color=WHITE),
+            Text("• Starts at (0, 1)", font_size=20, color=WHITE),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        features.to_edge(RIGHT).shift(DOWN * 0.5)
+        
+        self.play(Write(features))
+        
+        # Mark key points
+        key_points = [
+            (0, 1), (PI/2, 0), (PI, -1), (3*PI/2, 0), (2*PI, 1)
+        ]
+        
+        dots = VGroup()
+        for x, y in key_points:
+            dot = Dot(axes.c2p(x, y), color=YELLOW)
+            dots.add(dot)
+        
+        self.play(Create(dots))
+        
+        # Relationship to sine
+        note = MathTex(r"\cos(x) = \sin\left(x + \frac{\pi}{2}\right)", font_size=24, color=ORANGE)
+        note.to_edge(DOWN, buff=0.5)
+        
+        self.play(Write(note))
+        
+        self.wait(2)
+```
+
+## 3. Graph of y = tan(x)
+
+```python
+from manim import *
+import numpy as np
+
+class TangentGraph(Scene):
+    def construct(self):
+        title = Text("Graph of y = tan(x)", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Axes
+        axes = Axes(
+            x_range=[-PI, PI, PI/4],
+            y_range=[-4, 4, 1],
+            x_length=10,
+            y_length=5,
+            axis_config={"include_tip": True}
+        )
+        
+        # Custom labels
+        x_labels = VGroup(
+            MathTex(r"-\frac{\pi}{2}").scale(0.5).next_to(axes.c2p(-PI/2, 0), DOWN),
+            MathTex(r"\frac{\pi}{2}").scale(0.5).next_to(axes.c2p(PI/2, 0), DOWN),
+        )
+        
+        self.play(Create(axes), Write(x_labels))
+        
+        # Asymptotes
+        asymp1 = DashedLine(axes.c2p(-PI/2, -4), axes.c2p(-PI/2, 4), color=RED)
+        asymp2 = DashedLine(axes.c2p(PI/2, -4), axes.c2p(PI/2, 4), color=RED)
+        
+        asymp_label = Text("Asymptotes", font_size=18, color=RED)
+        asymp_label.next_to(asymp2, RIGHT)
+        
+        self.play(Create(asymp1), Create(asymp2), Write(asymp_label))
+        
+        # Tangent curves (avoiding asymptotes)
+        tan_curve1 = axes.plot(
+            lambda x: np.tan(x), 
+            x_range=[-PI/2 + 0.1, PI/2 - 0.1],
+            color=PURPLE
+        )
+        
+        self.play(Create(tan_curve1), run_time=1.5)
+        
+        # Key features
+        features = VGroup(
+            Text("• Period = π", font_size=20, color=WHITE),
+            Text("• No amplitude", font_size=20, color=WHITE),
+            Text("• Range: all real numbers", font_size=20, color=WHITE),
+            Text("• Asymptotes at ±π/2, ±3π/2, ...", font_size=18, color=WHITE),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        features.to_edge(RIGHT).shift(DOWN * 1)
+        
+        self.play(Write(features))
+        
+        # Mark origin
+        origin_dot = Dot(axes.c2p(0, 0), color=YELLOW)
+        self.play(Create(origin_dot))
+        
+        self.wait(2)
+```
+
+## 4. Amplitude Transformation: y = a·sin(x)
+
+```python
+from manim import *
+import numpy as np
+
+class AmplitudeTransformation(Scene):
+    def construct(self):
+        title = Text("Amplitude: y = a·sin(x)", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Axes
+        axes = Axes(
+            x_range=[0, 2.5*PI, PI/2],
+            y_range=[-3, 3, 1],
+            x_length=9,
+            y_length=4.5,
+            axis_config={"include_tip": True}
+        )
+        axes.shift(LEFT * 0.5)
+        
+        self.play(Create(axes))
+        
+        # y = sin(x) - original
+        sin_curve = axes.plot(lambda x: np.sin(x), x_range=[0, 2*PI], color=WHITE)
+        sin_label = MathTex(r"y = \sin(x)", font_size=24, color=WHITE)
+        sin_label.next_to(axes.c2p(2*PI, 1), RIGHT)
+        
+        self.play(Create(sin_curve), Write(sin_label))
+        
+        # y = 2sin(x)
+        sin2_curve = axes.plot(lambda x: 2*np.sin(x), x_range=[0, 2*PI], color=RED)
+        sin2_label = MathTex(r"y = 2\sin(x)", font_size=24, color=RED)
+        sin2_label.next_to(axes.c2p(PI/2, 2), UP)
+        
+        self.play(Create(sin2_curve), Write(sin2_label))
+        
+        # y = 0.5sin(x)
+        sin_half_curve = axes.plot(lambda x: 0.5*np.sin(x), x_range=[0, 2*PI], color=GREEN)
+        sin_half_label = MathTex(r"y = \frac{1}{2}\sin(x)", font_size=24, color=GREEN)
+        sin_half_label.next_to(axes.c2p(PI/2, 0.5), RIGHT)
+        
+        self.play(Create(sin_half_curve), Write(sin_half_label))
+        
+        # Explanation
+        explanation = VGroup(
+            Text("Amplitude = |a|", font_size=22, color=YELLOW),
+            Text("• a > 1: Stretch vertically", font_size=18, color=WHITE),
+            Text("• 0 < a < 1: Compress vertically", font_size=18, color=WHITE),
+            Text("• a < 0: Reflect in x-axis", font_size=18, color=WHITE),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        explanation.to_edge(DOWN, buff=0.3)
+        
+        self.play(Write(explanation))
+        
+        self.wait(2)
+```
+
+## 5. Period Transformation: y = sin(bx)
+
+```python
+from manim import *
+import numpy as np
+
+class PeriodTransformation(Scene):
+    def construct(self):
+        title = Text("Period: y = sin(bx)", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Axes
+        axes = Axes(
+            x_range=[0, 2.5*PI, PI/2],
+            y_range=[-1.5, 1.5, 0.5],
+            x_length=10,
+            y_length=4,
+            axis_config={"include_tip": True}
+        )
+        
+        x_labels = VGroup(
+            MathTex(r"\pi").scale(0.6).next_to(axes.c2p(PI, 0), DOWN),
+            MathTex(r"2\pi").scale(0.6).next_to(axes.c2p(2*PI, 0), DOWN),
+        )
+        
+        self.play(Create(axes), Write(x_labels))
+        
+        # y = sin(x) - original
+        sin_curve = axes.plot(lambda x: np.sin(x), x_range=[0, 2*PI], color=WHITE)
+        sin_label = MathTex(r"y = \sin(x)", font_size=22, color=WHITE)
+        sin_label.to_edge(RIGHT).shift(UP * 2)
+        
+        self.play(Create(sin_curve), Write(sin_label))
+        
+        # y = sin(2x) - period halved
+        sin2x_curve = axes.plot(lambda x: np.sin(2*x), x_range=[0, 2*PI], color=RED)
+        sin2x_label = MathTex(r"y = \sin(2x)", font_size=22, color=RED)
+        sin2x_label.next_to(sin_label, DOWN, aligned_edge=LEFT)
+        
+        period2 = MathTex(r"\text{Period} = \frac{2\pi}{2} = \pi", font_size=20, color=RED)
+        period2.next_to(sin2x_label, DOWN, aligned_edge=LEFT)
+        
+        self.play(Create(sin2x_curve), Write(sin2x_label), Write(period2))
+        
+        # y = sin(0.5x) - period doubled
+        sin_half_x_curve = axes.plot(lambda x: np.sin(0.5*x), x_range=[0, 2*PI], color=GREEN)
+        sin_half_x_label = MathTex(r"y = \sin\left(\frac{x}{2}\right)", font_size=22, color=GREEN)
+        sin_half_x_label.next_to(period2, DOWN, aligned_edge=LEFT, buff=0.3)
+        
+        period_half = MathTex(r"\text{Period} = \frac{2\pi}{0.5} = 4\pi", font_size=20, color=GREEN)
+        period_half.next_to(sin_half_x_label, DOWN, aligned_edge=LEFT)
+        
+        self.play(Create(sin_half_x_curve), Write(sin_half_x_label), Write(period_half))
+        
+        # Formula box
+        formula = MathTex(r"\text{Period} = \frac{2\pi}{|b|}", font_size=28, color=YELLOW)
+        formula.to_edge(DOWN, buff=0.5)
+        box = SurroundingRectangle(formula, color=YELLOW)
+        
+        self.play(Write(formula), Create(box))
+        
+        self.wait(2)
+```
+
+## 6. Vertical Translation: y = sin(x) + c
+
+```python
+from manim import *
+import numpy as np
+
+class VerticalTranslation(Scene):
+    def construct(self):
+        title = Text("Vertical Shift: y = sin(x) + c", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Axes
+        axes = Axes(
+            x_range=[0, 2.5*PI, PI/2],
+            y_range=[-2, 3, 1],
+            x_length=9,
+            y_length=5,
+            axis_config={"include_tip": True}
+        )
+        axes.shift(LEFT * 0.5)
+        
+        self.play(Create(axes))
+        
+        # y = sin(x) - original
+        sin_curve = axes.plot(lambda x: np.sin(x), x_range=[0, 2*PI], color=WHITE)
+        sin_label = MathTex(r"y = \sin(x)", font_size=22, color=WHITE)
+        sin_label.next_to(axes.c2p(2*PI, 0), UP + RIGHT)
+        
+        self.play(Create(sin_curve), Write(sin_label))
+        
+        # y = sin(x) + 1
+        sin_plus1 = axes.plot(lambda x: np.sin(x) + 1, x_range=[0, 2*PI], color=RED)
+        sin_plus1_label = MathTex(r"y = \sin(x) + 1", font_size=22, color=RED)
+        sin_plus1_label.next_to(axes.c2p(2*PI, 1), UP + RIGHT)
+        
+        self.play(Create(sin_plus1), Write(sin_plus1_label))
+        
+        # Show shift arrow
+        arrow = Arrow(axes.c2p(PI/2, 1), axes.c2p(PI/2, 2), color=RED, buff=0)
+        shift_label = Text("+1", font_size=18, color=RED)
+        shift_label.next_to(arrow, RIGHT)
+        
+        self.play(Create(arrow), Write(shift_label))
+        
+        # y = sin(x) - 1
+        sin_minus1 = axes.plot(lambda x: np.sin(x) - 1, x_range=[0, 2*PI], color=GREEN)
+        sin_minus1_label = MathTex(r"y = \sin(x) - 1", font_size=22, color=GREEN)
+        sin_minus1_label.next_to(axes.c2p(2*PI, -1), DOWN + RIGHT)
+        
+        self.play(Create(sin_minus1), Write(sin_minus1_label))
+        
+        # Explanation
+        explanation = VGroup(
+            Text("c > 0: Shift UP", font_size=20, color=RED),
+            Text("c < 0: Shift DOWN", font_size=20, color=GREEN),
+        ).arrange(DOWN, buff=0.2)
+        explanation.to_edge(DOWN, buff=0.4)
+        
+        self.play(Write(explanation))
+        
+        self.wait(2)
+```
+
+## 7. Phase Shift: y = sin(x + d)
+
+```python
+from manim import *
+import numpy as np
+
+class PhaseShift(Scene):
+    def construct(self):
+        title = Text("Phase Shift: y = sin(x + d)", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Axes
+        axes = Axes(
+            x_range=[-PI/2, 2.5*PI, PI/2],
+            y_range=[-1.5, 1.5, 0.5],
+            x_length=10,
+            y_length=4,
+            axis_config={"include_tip": True}
+        )
+        
+        self.play(Create(axes))
+        
+        # y = sin(x) - original
+        sin_curve = axes.plot(lambda x: np.sin(x), x_range=[0, 2*PI], color=WHITE)
+        sin_label = MathTex(r"y = \sin(x)", font_size=22, color=WHITE)
+        sin_label.to_edge(RIGHT).shift(UP * 2)
+        
+        self.play(Create(sin_curve), Write(sin_label))
+        
+        # y = sin(x + π/2) = cos(x) - shifted left
+        sin_shift_left = axes.plot(lambda x: np.sin(x + PI/2), x_range=[-PI/2, 3*PI/2], color=RED)
+        sin_shift_left_label = MathTex(r"y = \sin\left(x + \frac{\pi}{2}\right)", font_size=20, color=RED)
+        sin_shift_left_label.next_to(sin_label, DOWN, aligned_edge=LEFT)
+        
+        self.play(Create(sin_shift_left), Write(sin_shift_left_label))
+        
+        # Arrow showing left shift
+        arrow_left = Arrow(axes.c2p(PI/2, 1.2), axes.c2p(0, 1.2), color=RED, buff=0)
+        arrow_left_label = MathTex(r"-\frac{\pi}{2}", font_size=18, color=RED)
+        arrow_left_label.next_to(arrow_left, UP)
+        
+        self.play(Create(arrow_left), Write(arrow_left_label))
+        
+        # y = sin(x - π/2) - shifted right
+        sin_shift_right = axes.plot(lambda x: np.sin(x - PI/2), x_range=[PI/2, 5*PI/2], color=GREEN)
+        sin_shift_right_label = MathTex(r"y = \sin\left(x - \frac{\pi}{2}\right)", font_size=20, color=GREEN)
+        sin_shift_right_label.next_to(sin_shift_left_label, DOWN, aligned_edge=LEFT)
+        
+        self.play(Create(sin_shift_right), Write(sin_shift_right_label))
+        
+        # Rules
+        rules = VGroup(
+            MathTex(r"y = \sin(x + d) \text{ shifts LEFT by } d", font_size=20, color=YELLOW),
+            MathTex(r"y = \sin(x - d) \text{ shifts RIGHT by } d", font_size=20, color=YELLOW),
+        ).arrange(DOWN, buff=0.2)
+        rules.to_edge(DOWN, buff=0.4)
+        
+        self.play(Write(rules))
+        
+        self.wait(2)
+```
+
+## 8. Combined Transformations: y = a·sin(bx + c) + d
+
+```python
+from manim import *
+import numpy as np
+
+class CombinedTrigTransformation(Scene):
+    def construct(self):
+        title = Text("y = a·sin(b(x - c)) + d", font_size=32, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Parameter meanings
+        params = VGroup(
+            MathTex(r"a = \text{amplitude (vertical stretch)}", font_size=22, color=RED),
+            MathTex(r"b = \text{affects period } \left(\frac{2\pi}{b}\right)", font_size=22, color=GREEN),
+            MathTex(r"c = \text{horizontal shift}", font_size=22, color=YELLOW),
+            MathTex(r"d = \text{vertical shift}", font_size=22, color=PURPLE),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.2)
+        params.shift(UP * 0.5)
+        
+        self.play(Write(params))
+        self.wait(1)
+        
+        # Example
+        example = MathTex(r"y = 2\sin\left(3\left(x - \frac{\pi}{6}\right)\right) + 1", 
+                         font_size=28, color=ORANGE)
+        example.next_to(params, DOWN, buff=0.5)
+        
+        self.play(Write(example))
+        
+        # Properties
+        properties = VGroup(
+            MathTex(r"\text{Amplitude} = 2", font_size=22, color=RED),
+            MathTex(r"\text{Period} = \frac{2\pi}{3}", font_size=22, color=GREEN),
+            MathTex(r"\text{Phase shift} = \frac{\pi}{6} \text{ right}", font_size=22, color=YELLOW),
+            MathTex(r"\text{Vertical shift} = 1 \text{ up}", font_size=22, color=PURPLE),
+            MathTex(r"\text{Range: } -1 \leq y \leq 3", font_size=22, color=WHITE),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        properties.next_to(example, DOWN, buff=0.5)
+        
+        for prop in properties:
+            self.play(Write(prop), run_time=0.5)
+        
+        self.wait(2)
+```
+
+## 9. Solving Trig Equations Graphically
+
+```python
+from manim import *
+import numpy as np
+
+class SolvingTrigGraphically(Scene):
+    def construct(self):
+        title = Text("Solving Trig Equations Graphically", font_size=32, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Equation
+        equation = MathTex(r"\text{Solve } \sin(x) = 0.5 \text{ for } 0° \leq x \leq 360°", 
+                          font_size=28, color=WHITE)
+        equation.next_to(title, DOWN, buff=0.3)
+        self.play(Write(equation))
+        
+        # Axes (in degrees)
+        axes = Axes(
+            x_range=[0, 400, 90],
+            y_range=[-1.2, 1.2, 0.5],
+            x_length=9,
+            y_length=4,
+            axis_config={"include_tip": True}
+        )
+        axes.shift(DOWN * 0.5)
+        
+        x_labels = VGroup(
+            Text("90°", font_size=16).next_to(axes.c2p(90, 0), DOWN),
+            Text("180°", font_size=16).next_to(axes.c2p(180, 0), DOWN),
+            Text("270°", font_size=16).next_to(axes.c2p(270, 0), DOWN),
+            Text("360°", font_size=16).next_to(axes.c2p(360, 0), DOWN),
+        )
+        
+        self.play(Create(axes), Write(x_labels))
+        
+        # Sine curve
+        sin_curve = axes.plot(
+            lambda x: np.sin(np.radians(x)), 
+            x_range=[0, 360], 
+            color=RED
+        )
+        
+        self.play(Create(sin_curve))
+        
+        # Horizontal line y = 0.5
+        h_line = DashedLine(axes.c2p(0, 0.5), axes.c2p(400, 0.5), color=GREEN)
+        h_line_label = MathTex(r"y = 0.5", font_size=20, color=GREEN)
+        h_line_label.next_to(h_line, RIGHT)
+        
+        self.play(Create(h_line), Write(h_line_label))
+        
+        # Intersection points
+        # sin(x) = 0.5 at x = 30° and x = 150°
+        point1 = Dot(axes.c2p(30, 0.5), color=YELLOW)
+        point2 = Dot(axes.c2p(150, 0.5), color=YELLOW)
+        
+        label1 = MathTex(r"x = 30°", font_size=20, color=YELLOW)
+        label1.next_to(point1, UP)
+        label2 = MathTex(r"x = 150°", font_size=20, color=YELLOW)
+        label2.next_to(point2, UP)
+        
+        self.play(Create(point1), Write(label1))
+        self.play(Create(point2), Write(label2))
+        
+        # Vertical lines to x-axis
+        v_line1 = DashedLine(axes.c2p(30, 0), axes.c2p(30, 0.5), color=YELLOW)
+        v_line2 = DashedLine(axes.c2p(150, 0), axes.c2p(150, 0.5), color=YELLOW)
+        
+        self.play(Create(v_line1), Create(v_line2))
+        
+        # Answer
+        answer = MathTex(r"x = 30° \text{ or } x = 150°", font_size=28, color=GREEN)
+        answer.to_edge(DOWN, buff=0.5)
+        box = SurroundingRectangle(answer, color=GREEN)
+        
+        self.play(Write(answer), Create(box))
+        
+        self.wait(2)
+```
+
+## 10. Sketching Trigonometric Graphs
+
+```python
+from manim import *
+import numpy as np
+
+class SketchingTrigGraphs(Scene):
+    def construct(self):
+        title = Text("Sketching Trig Graphs: Key Points", font_size=32, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Steps for sketching
+        steps = VGroup(
+            Text("1. Identify amplitude |a|", font_size=20, color=RED),
+            Text("2. Calculate period = 2π/b", font_size=20, color=GREEN),
+            Text("3. Find vertical shift d", font_size=20, color=YELLOW),
+            Text("4. Find phase shift c", font_size=20, color=PURPLE),
+            Text("5. Plot key points (max, min, zeros)", font_size=20, color=WHITE),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.2)
+        steps.shift(LEFT * 3 + UP * 0.5)
+        
+        self.play(Write(steps))
+        
+        # Example graph area
+        axes = Axes(
+            x_range=[0, 2.5*PI, PI/2],
+            y_range=[-2, 4, 1],
+            x_length=6,
+            y_length=4,
+            axis_config={"include_tip": True}
+        )
+        axes.shift(RIGHT * 2)
+        
+        self.play(Create(axes))
+        
+        # Example: y = 2sin(x) + 1
+        example_label = MathTex(r"y = 2\sin(x) + 1", font_size=24, color=ORANGE)
+        example_label.next_to(axes, UP)
+        
+        self.play(Write(example_label))
+        
+        # Mark key points
+        # Max at (π/2, 3), Min at (3π/2, -1), Zeros, Middle line at y=1
+        
+        # Middle line
+        mid_line = DashedLine(axes.c2p(0, 1), axes.c2p(2*PI, 1), color=YELLOW, stroke_opacity=0.5)
+        self.play(Create(mid_line))
+        
+        # Key points
+        key_points = [
+            (0, 1, "Start"),
+            (PI/2, 3, "Max"),
+            (PI, 1, ""),
+            (3*PI/2, -1, "Min"),
+            (2*PI, 1, "End"),
+        ]
+        
+        dots = VGroup()
+        for x, y, label_text in key_points:
+            dot = Dot(axes.c2p(x, y), color=YELLOW)
+            dots.add(dot)
+            if label_text:
+                label = Text(label_text, font_size=14, color=YELLOW)
+                label.next_to(dot, UP if y >= 1 else DOWN)
+                dots.add(label)
+        
+        self.play(Create(dots))
+        
+        # Draw the curve
+        curve = axes.plot(lambda x: 2*np.sin(x) + 1, x_range=[0, 2*PI], color=RED)
+        self.play(Create(curve))
+        
+        # Summary
+        summary = VGroup(
+            Text("Amplitude = 2", font_size=16, color=WHITE),
+            Text("Period = 2π", font_size=16, color=WHITE),
+            Text("Range: [-1, 3]", font_size=16, color=WHITE),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.1)
+        summary.next_to(axes, DOWN)
+        
+        self.play(Write(summary))
+        
+        self.wait(2)
+```
+
+## 11. CAST Diagram for Reference Angles
+
+```python
+from manim import *
+import numpy as np
+
+class CASTDiagram(Scene):
+    def construct(self):
+        title = Text("CAST Diagram", font_size=40, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        subtitle = Text("Which trig functions are positive?", font_size=24, color=GRAY)
+        subtitle.next_to(title, DOWN, buff=0.2)
+        self.play(Write(subtitle))
+        
+        # Axes
+        x_axis = Line(LEFT * 3, RIGHT * 3, color=WHITE)
+        y_axis = Line(DOWN * 2.5, UP * 2.5, color=WHITE)
+        
+        self.play(Create(x_axis), Create(y_axis))
+        
+        # Quadrant labels
+        q1 = Text("ALL\n(+)", font_size=28, color=GREEN, weight=BOLD)
+        q1.shift(RIGHT * 1.5 + UP * 1.2)
+        
+        q2 = Text("SIN\n(+)", font_size=28, color=RED, weight=BOLD)
+        q2.shift(LEFT * 1.5 + UP * 1.2)
+        
+        q3 = Text("TAN\n(+)", font_size=28, color=YELLOW, weight=BOLD)
+        q3.shift(LEFT * 1.5 + DOWN * 1.2)
+        
+        q4 = Text("COS\n(+)", font_size=28, color=PURPLE, weight=BOLD)
+        q4.shift(RIGHT * 1.5 + DOWN * 1.2)
+        
+        self.play(Write(q1), Write(q2), Write(q3), Write(q4))
+        
+        # Angle ranges
+        angle_labels = VGroup(
+            Text("0° - 90°", font_size=16).shift(RIGHT * 2.5 + UP * 0.3),
+            Text("90° - 180°", font_size=16).shift(LEFT * 2.5 + UP * 0.3),
+            Text("180° - 270°", font_size=16).shift(LEFT * 2.5 + DOWN * 0.3),
+            Text("270° - 360°", font_size=16).shift(RIGHT * 2.5 + DOWN * 0.3),
+        )
+        
+        self.play(Write(angle_labels))
+        
+        # Mnemonic
+        mnemonic = Text("Remember: All Students Take Calculus", font_size=22, color=ORANGE)
+        mnemonic.to_edge(DOWN, buff=0.8)
+        
+        self.play(Write(mnemonic))
+        
+        # Example usage
+        example = VGroup(
+            Text("Example: sin(150°) = sin(180° - 150°) = sin(30°) = 0.5", font_size=18, color=WHITE),
+            Text("(150° is in Q2 where sine is positive)", font_size=16, color=GRAY)
+        ).arrange(DOWN, buff=0.1)
+        example.to_edge(DOWN, buff=0.2)
+        
+        self.play(Write(example))
+        
+        self.wait(2)
+```

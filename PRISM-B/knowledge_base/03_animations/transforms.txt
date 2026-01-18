@@ -1,0 +1,209 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# TRANSFORMS - The 3Blue1Brown Magic
+# TransformMatchingTex, ReplacementTransform, and equation morphing
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## TRANSFORMMATCHINGTEX - Equation Morphing
+```python
+# The signature 3b1b effect - equations morphing into each other
+# Parts with matching LaTeX smoothly transform
+
+# Basic transform between equations
+eq1 = MathTex(r"a^2 + b^2 = c^2", font_size=48)
+eq2 = MathTex(r"c = \sqrt{a^2 + b^2}", font_size=48)
+
+self.play(Write(eq1), run_time=1.5)
+self.wait(1.0)
+self.play(TransformMatchingTex(eq1, eq2), run_time=2.0)
+self.wait(1.0)
+
+# Transform with color preservation
+eq1 = MathTex(r"x^2", r"+", r"y^2", r"=", r"r^2", font_size=48)
+eq1[0].set_color(BLUE)
+eq1[2].set_color(GREEN)
+eq1[4].set_color(YELLOW)
+
+eq2 = MathTex(r"x^2", r"+", r"y^2", font_size=48)
+eq2[0].set_color(BLUE)
+eq2[2].set_color(GREEN)
+
+self.play(Write(eq1), run_time=1.5)
+self.wait(0.5)
+self.play(TransformMatchingTex(eq1, eq2), run_time=1.5)
+```
+
+## REPLACEMENTTRANSFORM - Complete Replacement
+```python
+# When equations don't share parts, use ReplacementTransform
+old_eq = MathTex(r"\frac{dy}{dx}", font_size=48)
+new_eq = MathTex(r"2x", font_size=48)
+new_eq.move_to(old_eq)  # Position at same location
+
+self.play(Write(old_eq), run_time=1.5)
+self.wait(0.5)
+self.play(ReplacementTransform(old_eq, new_eq), run_time=1.5)
+
+# Step-by-step derivation with ReplacementTransform
+steps = [
+    MathTex(r"y = x^2"),
+    MathTex(r"\frac{dy}{dx} = 2x"),
+    MathTex(r"y' = 2x"),
+]
+
+current = steps[0]
+self.play(Write(current), run_time=1.5)
+
+for next_step in steps[1:]:
+    next_step.move_to(current)
+    self.wait(0.5)
+    self.play(ReplacementTransform(current, next_step), run_time=1.5)
+    current = next_step
+```
+
+## TRANSFORM - Shape Morphing
+```python
+# Morph one shape into another
+circle = Circle(radius=1, color=BLUE)
+square = Square(side_length=2, color=RED)
+
+self.play(Create(circle), run_time=1.0)
+self.wait(0.5)
+self.play(Transform(circle, square), run_time=2.0)
+
+# Circle to triangle
+circle = Circle(radius=1.5, color=BLUE)
+triangle = Triangle(color=YELLOW).scale(2)
+
+self.play(Create(circle), run_time=1.0)
+self.play(Transform(circle, triangle), run_time=2.0)
+```
+
+## FORMULA ANIMATION PATTERNS
+```python
+# Pattern 1: Build up equation piece by piece
+eq = MathTex(r"E", r"=", r"m", r"c^2", font_size=56)
+eq.move_to(ORIGIN)
+
+self.play(Write(eq[0]), run_time=0.5)  # E
+self.play(Write(eq[1]), run_time=0.3)  # =
+self.play(Write(eq[2]), run_time=0.5)  # m
+self.play(Write(eq[3]), run_time=0.5)  # c^2
+
+# Pattern 2: Show then color-code
+full_eq = MathTex(
+    r"F", r"=", r"G", r"\frac{m_1 m_2}{r^2}",
+    font_size=48
+)
+self.play(Write(full_eq), run_time=2.0)
+self.wait(0.5)
+self.play(full_eq[0].animate.set_color(YELLOW), run_time=0.5)
+self.play(full_eq[2].animate.set_color(BLUE), run_time=0.5)
+self.play(full_eq[3].animate.set_color(TEAL), run_time=0.5)
+
+# Pattern 3: Derivation with arrows
+step1 = MathTex(r"ax^2 + bx + c = 0").move_to(UP * 1.5)
+step2 = MathTex(r"x = \frac{-b \pm \sqrt{b^2-4ac}}{2a}").move_to(DOWN * 1.5)
+
+self.play(Write(step1), run_time=1.5)
+self.wait(0.5)
+
+arrow = Arrow(step1.get_bottom(), step2.get_top(), color=YELLOW)
+self.play(Create(arrow), run_time=0.5)
+self.play(Write(step2), run_time=2.0)
+```
+
+## COMPLETE EXAMPLE: Quadratic Derivation
+```python
+from manim import *
+
+class QuadraticDerivation(Scene):
+    def construct(self):
+        # Title
+        title = Text("Solving a Quadratic Equation", font_size=44, color=YELLOW)
+        title.to_edge(UP)
+        self.play(Write(title), run_time=1.0)
+        
+        # Starting equation
+        eq1 = MathTex(r"x^2 + 5x + 6 = 0", font_size=44)
+        eq1.move_to(UP * 0.5)
+        self.play(Write(eq1), run_time=1.5)
+        self.wait(1.0)
+        
+        # Factor form
+        eq2 = MathTex(r"(x + 2)(x + 3) = 0", font_size=44)
+        eq2.move_to(UP * 0.5)
+        
+        self.play(TransformMatchingTex(eq1, eq2), run_time=2.0)
+        self.wait(1.0)
+        
+        # Split into two factors
+        factor1 = MathTex(r"x + 2 = 0", font_size=40, color=BLUE)
+        factor2 = MathTex(r"x + 3 = 0", font_size=40, color=TEAL)
+        
+        factor1.move_to(LEFT * 2.5 + DOWN * 1)
+        factor2.move_to(RIGHT * 2.5 + DOWN * 1)
+        
+        self.play(Write(factor1), Write(factor2), run_time=1.5)
+        self.wait(0.5)
+        
+        # Solutions
+        sol1 = MathTex(r"x = -2", font_size=44, color=GREEN)
+        sol2 = MathTex(r"x = -3", font_size=44, color=GREEN)
+        
+        sol1.move_to(LEFT * 2.5 + DOWN * 2.5)
+        sol2.move_to(RIGHT * 2.5 + DOWN * 2.5)
+        
+        self.play(
+            TransformMatchingTex(factor1.copy(), sol1),
+            TransformMatchingTex(factor2.copy(), sol2),
+            run_time=1.5
+        )
+        
+        # Highlight answers
+        box1 = SurroundingRectangle(sol1, color=GREEN, buff=0.2)
+        box2 = SurroundingRectangle(sol2, color=GREEN, buff=0.2)
+        
+        self.play(Create(box1), Create(box2), run_time=0.5)
+        self.wait(2.0)
+```
+
+## SIMULTANEOUS TRANSFORMS
+```python
+# Multiple transforms at once
+shape1 = Circle(color=BLUE).shift(LEFT * 2)
+shape2 = Square(color=RED).shift(RIGHT * 2)
+
+target1 = Square(color=BLUE).shift(LEFT * 2)
+target2 = Circle(color=RED).shift(RIGHT * 2)
+
+self.play(Create(shape1), Create(shape2), run_time=1.0)
+self.wait(0.5)
+
+# Both transform simultaneously
+self.play(
+    Transform(shape1, target1),
+    Transform(shape2, target2),
+    run_time=2.0
+)
+```
+
+## CYCLIC TRANSFORMS
+```python
+# Cycle through multiple forms
+eq_forms = [
+    MathTex(r"(a+b)^2"),
+    MathTex(r"a^2 + 2ab + b^2"),
+    MathTex(r"a^2 + b^2 + 2ab"),
+    MathTex(r"(a+b)^2"),
+]
+
+current = eq_forms[0]
+self.play(Write(current), run_time=1.5)
+
+# FIXED: Use ReplacementTransform for proper cycling
+# With Transform, the variable 'current' still refers to original mobject
+for next_eq in eq_forms[1:]:
+    next_eq.move_to(current)
+    self.wait(1.0)
+    self.play(ReplacementTransform(current, next_eq), run_time=1.5)
+    current = next_eq  # Now this assignment works correctly

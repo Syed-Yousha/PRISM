@@ -1,0 +1,264 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# HCF, LCM, PRIME FACTORS - Highest Common Factor, Lowest Common Multiple
+# IGCSE/O-Level Number Topic
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## PRIME FACTORIZATION TREE
+```python
+# Factor tree for 60
+title = Text("Prime Factorization: Factor Tree", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Create factor tree visually
+num_60 = MathTex("60", font_size=40, color=WHITE).move_to(UP * 2)
+
+# First split: 60 = 6 × 10
+branch1 = VGroup(
+    Line(num_60.get_bottom(), num_60.get_bottom() + DL * 0.8, color=WHITE),
+    Line(num_60.get_bottom(), num_60.get_bottom() + DR * 0.8, color=WHITE)
+)
+num_6 = MathTex("6", font_size=36).move_to(UP * 1 + LEFT * 1.5)
+num_10 = MathTex("10", font_size=36).move_to(UP * 1 + RIGHT * 1.5)
+
+# Second split: 6 = 2 × 3
+branch2 = VGroup(
+    Line(num_6.get_bottom(), num_6.get_bottom() + DL * 0.6, color=WHITE),
+    Line(num_6.get_bottom(), num_6.get_bottom() + DR * 0.6, color=WHITE)
+)
+num_2a = MathTex("2", font_size=36, color=RED).move_to(UP * 0 + LEFT * 2)
+num_3 = MathTex("3", font_size=36, color=RED).move_to(UP * 0 + LEFT * 1)
+
+# Third split: 10 = 2 × 5
+branch3 = VGroup(
+    Line(num_10.get_bottom(), num_10.get_bottom() + DL * 0.6, color=WHITE),
+    Line(num_10.get_bottom(), num_10.get_bottom() + DR * 0.6, color=WHITE)
+)
+num_2b = MathTex("2", font_size=36, color=RED).move_to(UP * 0 + RIGHT * 1)
+num_5 = MathTex("5", font_size=36, color=RED).move_to(UP * 0 + RIGHT * 2)
+
+# Result
+result = MathTex("60 = 2^2 \\times 3 \\times 5", font_size=48, color=GREEN)
+result.move_to(DOWN * 1.5)
+
+# Circle primes
+circle1 = Circle(radius=0.3, color=RED).move_to(num_2a)
+circle2 = Circle(radius=0.3, color=RED).move_to(num_3)
+circle3 = Circle(radius=0.3, color=RED).move_to(num_2b)
+circle4 = Circle(radius=0.3, color=RED).move_to(num_5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(num_60), run_time=0.5)
+self.play(Create(branch1), Write(num_6), Write(num_10), run_time=1.0)
+self.play(Create(branch2), Write(num_2a), Write(num_3), run_time=1.0)
+self.play(Create(branch3), Write(num_2b), Write(num_5), run_time=1.0)
+self.play(Create(circle1), Create(circle2), Create(circle3), Create(circle4), run_time=0.5)
+self.play(Write(result), run_time=1.0)
+```
+
+## VENN DIAGRAM HCF/LCM
+```python
+# Find HCF and LCM of 12 and 18 using Venn diagram
+title = Text("HCF and LCM using Venn Diagram", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Prime factorizations
+pf1 = MathTex("12 = 2^2 \\times 3", font_size=32, color=BLUE).shift(UP * 2 + LEFT * 3)
+pf2 = MathTex("18 = 2 \\times 3^2", font_size=32, color=GREEN).shift(UP * 2 + RIGHT * 3)
+
+# Venn diagram circles
+circle1 = Circle(radius=1.5, color=BLUE, fill_opacity=0.2).shift(LEFT * 1)
+circle2 = Circle(radius=1.5, color=GREEN, fill_opacity=0.2).shift(RIGHT * 1)
+label1 = Text("12", font_size=24, color=BLUE).next_to(circle1, UP)
+label2 = Text("18", font_size=24, color=GREEN).next_to(circle2, UP)
+
+# Prime factors placement
+only_12 = MathTex("2", font_size=36, color=BLUE).shift(LEFT * 2)  # Extra 2 only in 12
+common = VGroup(
+    MathTex("2", font_size=36, color=WHITE),
+    MathTex("3", font_size=36, color=WHITE)
+).arrange(DOWN, buff=0.3).move_to(ORIGIN)  # Common: 2 and 3
+only_18 = MathTex("3", font_size=36, color=GREEN).shift(RIGHT * 2)  # Extra 3 only in 18
+
+# Results
+hcf_result = VGroup(
+    Text("HCF = Common factors", font_size=24, color=YELLOW),
+    MathTex("= 2 \\times 3 = 6", font_size=36, color=YELLOW)
+).arrange(DOWN, buff=0.2).shift(DOWN * 2 + LEFT * 3)
+
+lcm_result = VGroup(
+    Text("LCM = All factors", font_size=24, color=RED),
+    MathTex("= 2 \\times 2 \\times 3 \\times 3 = 36", font_size=36, color=RED)
+).arrange(DOWN, buff=0.2).shift(DOWN * 2 + RIGHT * 3)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(pf1), Write(pf2), run_time=1.0)
+self.play(Create(circle1), Create(circle2), Write(label1), Write(label2), run_time=1.0)
+self.play(Write(only_12), Write(common), Write(only_18), run_time=1.5)
+self.play(Write(hcf_result), run_time=1.0)
+self.play(Write(lcm_result), run_time=1.0)
+```
+
+## LADDER METHOD HCF
+```python
+# Ladder/Division method for HCF of 48 and 60
+title = Text("Ladder Method for HCF", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Create ladder structure
+ladder = VGroup()
+
+# Headers
+nums = MathTex("48", "\\quad", "60", font_size=36).shift(UP * 2)
+line0 = Line(LEFT * 1.5 + UP * 1.7, RIGHT * 1.5 + UP * 1.7, color=WHITE)
+
+# Division steps
+div2 = MathTex("2", font_size=32, color=RED).shift(LEFT * 2.5 + UP * 1.2)
+result1 = MathTex("24", "\\quad", "30", font_size=36).shift(UP * 1.2)
+line1 = Line(LEFT * 1.5 + UP * 0.9, RIGHT * 1.5 + UP * 0.9, color=WHITE)
+
+div2b = MathTex("2", font_size=32, color=RED).shift(LEFT * 2.5 + UP * 0.4)
+result2 = MathTex("12", "\\quad", "15", font_size=36).shift(UP * 0.4)
+line2 = Line(LEFT * 1.5 + UP * 0.1, RIGHT * 1.5 + UP * 0.1, color=WHITE)
+
+div3 = MathTex("3", font_size=32, color=RED).shift(LEFT * 2.5 + DOWN * 0.4)
+result3 = MathTex("4", "\\quad", "5", font_size=36).shift(DOWN * 0.4)
+line3 = Line(LEFT * 1.5 + DOWN * 0.7, RIGHT * 1.5 + DOWN * 0.7, color=WHITE)
+
+# No more common factors
+note = Text("4 and 5 have no common factors", font_size=22, color=GRAY).shift(DOWN * 1.2)
+
+# HCF calculation
+hcf = MathTex("\\text{HCF} = 2 \\times 2 \\times 3 = 12", font_size=40, color=GREEN)
+hcf.shift(DOWN * 2.2)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(nums), Create(line0), run_time=0.8)
+self.play(Write(div2), Write(result1), Create(line1), run_time=1.0)
+self.play(Write(div2b), Write(result2), Create(line2), run_time=1.0)
+self.play(Write(div3), Write(result3), Create(line3), run_time=1.0)
+self.play(Write(note), run_time=0.8)
+self.play(Write(hcf), run_time=1.0)
+```
+
+## LCM FROM HCF FORMULA
+```python
+# LCM × HCF = a × b
+title = Text("LCM and HCF Relationship", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# The formula
+formula = MathTex("\\text{LCM}(a,b) \\times \\text{HCF}(a,b) = a \\times b", font_size=40)
+formula.shift(UP * 1.5)
+formula_box = SurroundingRectangle(formula, color=YELLOW, buff=0.3)
+
+# Example: a=12, b=18
+example_title = Text("Example: Find LCM of 12 and 18", font_size=28, color=BLUE).shift(UP * 0.3)
+
+steps = VGroup(
+    MathTex("\\text{HCF}(12, 18) = 6", font_size=32, color=GREEN),
+    MathTex("12 \\times 18 = 216", font_size=32),
+    MathTex("\\text{LCM} = \\frac{12 \\times 18}{\\text{HCF}}", font_size=32),
+    MathTex("\\text{LCM} = \\frac{216}{6} = 36", font_size=36, color=RED)
+).arrange(DOWN, buff=0.4)
+steps.shift(DOWN * 1.2)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(formula), Create(formula_box), run_time=1.5)
+self.play(Write(example_title), run_time=0.8)
+for step in steps:
+    self.play(Write(step), run_time=1.0)
+```
+
+## SIEVE OF ERATOSTHENES
+```python
+# Finding primes up to 30
+title = Text("Sieve of Eratosthenes", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Create grid of numbers 1-30
+numbers = VGroup()
+for i in range(30):
+    num = MathTex(str(i + 1), font_size=28)
+    numbers.add(num)
+
+numbers.arrange_in_grid(rows=5, cols=6, buff=0.4)
+numbers.move_to(ORIGIN)
+
+# 1 is not prime (gray)
+# Multiples of 2 (except 2) - red
+# Multiples of 3 (except 3) - orange
+# Multiples of 5 (except 5) - purple
+# Remaining are prime - green
+
+primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
+mult_2 = [4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]
+mult_3 = [9, 15, 21, 27]  # Already have 6, 12, etc
+mult_5 = [25]  # Already have 10, 15, etc
+
+legend = VGroup(
+    VGroup(Square(side_length=0.3, fill_color=GREEN, fill_opacity=0.8), Text("Prime", font_size=18)).arrange(RIGHT, buff=0.2),
+    VGroup(Square(side_length=0.3, fill_color=RED, fill_opacity=0.8), Text("Multiple of 2", font_size=18)).arrange(RIGHT, buff=0.2),
+    VGroup(Square(side_length=0.3, fill_color=ORANGE, fill_opacity=0.8), Text("Multiple of 3", font_size=18)).arrange(RIGHT, buff=0.2),
+).arrange(DOWN, aligned_edge=LEFT, buff=0.2)
+legend.to_corner(DR, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(numbers), run_time=1.5)
+
+# Cross out 1
+self.play(numbers[0].animate.set_color(GRAY), run_time=0.5)
+
+# Cross out multiples of 2
+self.play(*[numbers[i-1].animate.set_color(RED) for i in mult_2], run_time=1.5)
+
+# Cross out multiples of 3
+self.play(*[numbers[i-1].animate.set_color(ORANGE) for i in mult_3], run_time=1.0)
+
+# Cross out multiples of 5
+self.play(*[numbers[i-1].animate.set_color(PURPLE) for i in mult_5], run_time=0.5)
+
+# Highlight primes
+self.play(*[numbers[i-1].animate.set_color(GREEN) for i in primes], run_time=1.5)
+self.play(Write(legend), run_time=1.0)
+```
+
+## WORD PROBLEM - HCF/LCM
+```python
+# Real-world application
+title = Text("HCF/LCM Word Problem", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+problem = Text(
+    "Two buses leave a station together.\nBus A returns every 12 minutes.\nBus B returns every 18 minutes.\nWhen will they next be together?",
+    font_size=24, line_spacing=1.5
+).shift(UP * 1.5)
+
+# Solution
+solution_title = Text("Solution: Find LCM", font_size=28, color=GREEN).shift(UP * 0)
+
+# Visual timeline
+timeline = NumberLine(
+    x_range=[0, 40, 6],
+    length=10,
+    include_numbers=True,
+    font_size=20
+).shift(DOWN * 1)
+
+# Bus A arrivals (every 12 min)
+bus_a_dots = VGroup(*[Dot(timeline.n2p(i), color=BLUE, radius=0.1) for i in [12, 24, 36]])
+bus_a_label = Text("Bus A", font_size=18, color=BLUE).next_to(bus_a_dots[0], UP)
+
+# Bus B arrivals (every 18 min)
+bus_b_dots = VGroup(*[Dot(timeline.n2p(i), color=RED, radius=0.1).shift(DOWN*0.3) for i in [18, 36]])
+bus_b_label = Text("Bus B", font_size=18, color=RED).next_to(bus_b_dots[0], DOWN)
+
+# Answer
+answer = MathTex("\\text{LCM}(12, 18) = 36 \\text{ minutes}", font_size=36, color=GREEN)
+answer.shift(DOWN * 2.5)
+
+# Highlight meeting point
+meeting_circle = Circle(radius=0.25, color=YELLOW).move_to(timeline.n2p(36))
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(problem), run_time=2.0)
+self.play(Write(solution_title), run_time=0.8)
+self.play(Create(timeline), run_time=1.0)
+self.play(Create(bus_a_dots), Write(bus_a_label), run_time=1.0)
+self.play(Create(bus_b_dots), Write(bus_b_label), run_time=1.0)
+self.play(Create(meeting_circle), run_time=0.5)
+self.play(Write(answer), run_time=1.0)
+```

@@ -1,0 +1,674 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# OFFICIAL MANIM DOCUMENTATION EXAMPLES
+# Curated from https://docs.manim.community/en/stable/examples.html
+# MIT Licensed - Free to use
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## BRACE ANNOTATIONS
+```python
+# Annotating distances/lengths with braces
+# Good for: labeling segments, showing measurements
+dot = Dot([-2, -1, 0])
+dot2 = Dot([2, 1, 0])
+line = Line(dot.get_center(), dot2.get_center()).set_color(ORANGE)
+
+# Horizontal brace (default)
+b1 = Brace(line)
+b1text = b1.get_text("Horizontal distance")
+
+# Brace along the line direction
+b2 = Brace(line, direction=line.copy().rotate(PI / 2).get_unit_vector())
+b2text = b2.get_tex("x-x_1")
+
+self.add(line, dot, dot2, b1, b2, b1text, b2text)
+```
+
+## VECTOR ON NUMBER PLANE
+```python
+# Showing a vector with labeled coordinates
+# Good for: vectors, coordinate geometry
+dot = Dot(ORIGIN)
+arrow = Arrow(ORIGIN, [2, 2, 0], buff=0)
+numberplane = NumberPlane()
+origin_text = Text('(0, 0)').next_to(dot, DOWN)
+tip_text = Text('(2, 2)').next_to(arrow.get_end(), RIGHT)
+
+self.add(numberplane, dot, arrow, origin_text, tip_text)
+```
+
+## BOOLEAN OPERATIONS (Set Operations on Shapes)
+```python
+# Union, Intersection, Exclusion, Difference of shapes
+# Good for: Venn diagrams, set theory visualization
+ellipse1 = Ellipse(width=4.0, height=5.0, fill_opacity=0.5, color=BLUE, stroke_width=10).move_to(LEFT)
+ellipse2 = ellipse1.copy().set_color(color=RED).move_to(RIGHT)
+bool_ops_text = MarkupText("<u>Boolean Operations</u>").next_to(ellipse1, UP * 3)
+ellipse_group = Group(bool_ops_text, ellipse1, ellipse2).move_to(LEFT * 3)
+self.play(FadeIn(ellipse_group))
+
+# Intersection
+i = Intersection(ellipse1, ellipse2, color=GREEN, fill_opacity=0.5)
+self.play(i.animate.scale(0.25).move_to(RIGHT * 5 + UP * 2.5))
+intersection_text = Text("Intersection", font_size=23).next_to(i, UP)
+self.play(FadeIn(intersection_text))
+
+# Union
+u = Union(ellipse1, ellipse2, color=ORANGE, fill_opacity=0.5)
+union_text = Text("Union", font_size=23)
+self.play(u.animate.scale(0.3).next_to(i, DOWN, buff=union_text.height * 3))
+union_text.next_to(u, UP)
+self.play(FadeIn(union_text))
+
+# Exclusion (XOR)
+e = Exclusion(ellipse1, ellipse2, color=YELLOW, fill_opacity=0.5)
+exclusion_text = Text("Exclusion", font_size=23)
+self.play(e.animate.scale(0.3).next_to(u, DOWN, buff=exclusion_text.height * 3.5))
+exclusion_text.next_to(e, UP)
+self.play(FadeIn(exclusion_text))
+
+# Difference
+d = Difference(ellipse1, ellipse2, color=PINK, fill_opacity=0.5)
+difference_text = Text("Difference", font_size=23)
+self.play(d.animate.scale(0.3).next_to(u, LEFT, buff=difference_text.height * 3.5))
+difference_text.next_to(d, UP)
+self.play(FadeIn(difference_text))
+```
+
+## POINT MOVING ON SHAPES
+```python
+# Dot moving along a path
+# Good for: parametric curves, tracing paths
+circle = Circle(radius=1, color=BLUE)
+dot = Dot()
+dot2 = dot.copy().shift(RIGHT)
+self.add(dot)
+
+line = Line([3, 0, 0], [5, 0, 0])
+self.add(line)
+
+self.play(GrowFromCenter(circle))
+self.play(Transform(dot, dot2))
+self.play(MoveAlongPath(dot, circle), run_time=2, rate_func=linear)
+self.play(Rotating(dot, about_point=[2, 0, 0]), run_time=1.5)
+self.wait()
+```
+
+## ANIMATE PROPERTY CHANGES
+```python
+# Using .animate to chain property changes
+# Good for: smooth transitions, visual transformations
+square = Square(color=BLUE, fill_opacity=1)
+
+self.play(square.animate.shift(LEFT))
+self.play(square.animate.set_fill(ORANGE))
+self.play(square.animate.scale(0.3))
+self.play(square.animate.rotate(0.4))
+```
+
+## VALUETRACKER WITH ANGLE
+```python
+# Dynamic angle that updates with ValueTracker
+# Good for: trigonometry, angle visualization, interactive demos
+import numpy as np
+
+rotation_center = LEFT
+
+theta_tracker = ValueTracker(110)
+line1 = Line(LEFT, RIGHT)
+line_moving = Line(LEFT, RIGHT)
+line_ref = line_moving.copy()
+line_moving.rotate(theta_tracker.get_value() * DEGREES, about_point=rotation_center)
+
+a = Angle(line1, line_moving, radius=0.5, other_angle=False)
+tex = MathTex(r"\theta").move_to(
+    Angle(line1, line_moving, radius=0.5 + 3 * SMALL_BUFF, other_angle=False).point_from_proportion(0.5)
+)
+
+self.add(line1, line_moving, a, tex)
+self.wait()
+
+# Add updaters for dynamic behavior
+line_moving.add_updater(
+    lambda x: x.become(line_ref.copy()).rotate(
+        theta_tracker.get_value() * DEGREES, about_point=rotation_center
+    )
+)
+a.add_updater(
+    lambda x: x.become(Angle(line1, line_moving, radius=0.5, other_angle=False))
+)
+tex.add_updater(
+    lambda x: x.move_to(
+        Angle(line1, line_moving, radius=0.5 + 3 * SMALL_BUFF, other_angle=False).point_from_proportion(0.5)
+    )
+)
+
+self.play(theta_tracker.animate.set_value(40))
+self.play(theta_tracker.animate.increment_value(140))
+self.play(tex.animate.set_color(RED), run_time=0.5)
+self.play(theta_tracker.animate.set_value(350))
+```
+
+## MULTIPLE VALUETRACKERS
+```python
+# Two dots connected by a line, moving independently
+# Good for: dynamic systems, linked objects
+d1, d2 = Dot(color=BLUE), Dot(color=GREEN)
+dg = VGroup(d1, d2).arrange(RIGHT, buff=1)
+l1 = Line(d1.get_center(), d2.get_center()).set_color(RED)
+
+x = ValueTracker(0)
+y = ValueTracker(0)
+
+d1.add_updater(lambda z: z.set_x(x.get_value()))
+d2.add_updater(lambda z: z.set_y(y.get_value()))
+l1.add_updater(lambda z: z.become(Line(d1.get_center(), d2.get_center())))
+
+self.add(d1, d2, l1)
+self.play(x.animate.set_value(5))
+self.play(y.animate.set_value(4))
+self.wait()
+```
+
+## MOVING GROUP TO DESTINATION
+```python
+# Move a group so a specific element lands on a target
+# Good for: alignment, positioning relative to specific points
+group = VGroup(Dot(LEFT), Dot(ORIGIN), Dot(RIGHT, color=RED), Dot(2 * RIGHT)).scale(1.4)
+dest = Dot([4, 3, 0], color=YELLOW)
+self.add(group, dest)
+# Shift group so red dot (index 2) lands on destination
+self.play(group.animate.shift(dest.get_center() - group[2].get_center()))
+self.wait(0.5)
+```
+
+## SURROUNDING RECTANGLE / FRAMEBOX
+```python
+# Highlight parts of an equation with moving frame
+# Good for: step-by-step derivations, highlighting terms
+text = MathTex(
+    r"\frac{d}{dx}f(x)g(x)=", r"f(x)\frac{d}{dx}g(x)", "+",
+    r"g(x)\frac{d}{dx}f(x)"
+)
+self.play(Write(text))
+
+framebox1 = SurroundingRectangle(text[1], buff=0.1)
+framebox2 = SurroundingRectangle(text[3], buff=0.1)
+
+self.play(Create(framebox1))
+self.wait()
+self.play(ReplacementTransform(framebox1, framebox2))
+self.wait()
+```
+
+## ROTATION UPDATER (dt-based)
+```python
+# Continuous rotation using dt updater
+# Good for: spinning objects, clocks, continuous motion
+def updater_forth(mobj, dt):
+    mobj.rotate_about_origin(dt)
+
+def updater_back(mobj, dt):
+    mobj.rotate_about_origin(-dt)
+
+line_reference = Line(ORIGIN, LEFT).set_color(WHITE)
+line_moving = Line(ORIGIN, LEFT).set_color(YELLOW)
+
+line_moving.add_updater(updater_forth)
+self.add(line_reference, line_moving)
+self.wait(2)
+
+line_moving.remove_updater(updater_forth)
+line_moving.add_updater(updater_back)
+self.wait(2)
+
+line_moving.remove_updater(updater_back)
+self.wait(0.5)
+```
+
+## POINT WITH TRACE (Path Drawing)
+```python
+# A dot that leaves a trail as it moves
+# Good for: tracing curves, showing motion paths
+path = VMobject()
+dot = Dot()
+path.set_points_as_corners([dot.get_center(), dot.get_center()])
+
+def update_path(path):
+    previous_path = path.copy()
+    previous_path.add_points_as_corners([dot.get_center()])
+    path.become(previous_path)
+
+path.add_updater(update_path)
+self.add(path, dot)
+
+self.play(Rotating(dot, angle=PI, about_point=RIGHT, run_time=2))
+self.wait()
+self.play(dot.animate.shift(UP))
+self.play(dot.animate.shift(LEFT))
+self.wait()
+```
+
+## SIN AND COS FUNCTION PLOT
+```python
+# Plotting sine and cosine with labeled graphs
+# Good for: trigonometry, function comparison
+import numpy as np
+
+axes = Axes(
+    x_range=[-10, 10.3, 1],
+    y_range=[-1.5, 1.5, 1],
+    x_length=10,
+    axis_config={"color": GREEN},
+    x_axis_config={
+        "numbers_to_include": np.arange(-10, 10.01, 2),
+        "numbers_with_elongated_ticks": np.arange(-10, 10.01, 2),
+    },
+    tips=False,
+)
+axes_labels = axes.get_axis_labels()
+sin_graph = axes.plot(lambda x: np.sin(x), color=BLUE)
+cos_graph = axes.plot(lambda x: np.cos(x), color=RED)
+
+sin_label = axes.get_graph_label(sin_graph, r"\sin(x)", x_val=-10, direction=UP / 2)
+cos_label = axes.get_graph_label(cos_graph, label=r"\cos(x)")
+
+vert_line = axes.get_vertical_line(axes.i2gp(TAU, cos_graph), color=YELLOW, line_func=Line)
+line_label = axes.get_graph_label(cos_graph, r"x=2\pi", x_val=TAU, direction=UR, color=WHITE)
+
+plot = VGroup(axes, sin_graph, cos_graph, vert_line)
+labels = VGroup(axes_labels, sin_label, cos_label, line_label)
+self.add(plot, labels)
+```
+
+## ANIMATED DOT FINDING MINIMUM
+```python
+# Dot animates to minimum of a function
+# Good for: optimization, calculus, finding extrema
+import numpy as np
+
+ax = Axes(
+    x_range=[0, 10], y_range=[0, 100, 10], axis_config={"include_tip": False}
+)
+labels = ax.get_axis_labels(x_label="x", y_label="f(x)")
+
+t = ValueTracker(0)
+
+def func(x):
+    return 2 * (x - 5) ** 2
+
+graph = ax.plot(func, color=MAROON)
+
+initial_point = [ax.coords_to_point(t.get_value(), func(t.get_value()))]
+dot = Dot(point=initial_point)
+
+dot.add_updater(lambda x: x.move_to(ax.c2p(t.get_value(), func(t.get_value()))))
+x_space = np.linspace(*ax.x_range[:2], 200)
+minimum_index = func(x_space).argmin()
+
+self.add(ax, labels, graph, dot)
+self.play(t.animate.set_value(x_space[minimum_index]))
+self.wait()
+```
+
+## AREA BETWEEN CURVES
+```python
+# Shading area between two curves with Riemann rectangles
+# Good for: integration, area calculations
+import numpy as np
+
+ax = Axes(
+    x_range=[0, 5],
+    y_range=[0, 6],
+    x_axis_config={"numbers_to_include": [2, 3]},
+    tips=False,
+)
+labels = ax.get_axis_labels()
+
+curve_1 = ax.plot(lambda x: 4 * x - x ** 2, x_range=[0, 4], color=BLUE_C)
+curve_2 = ax.plot(lambda x: 0.8 * x ** 2 - 3 * x + 4, x_range=[0, 4], color=GREEN_B)
+
+line_1 = ax.get_vertical_line(ax.input_to_graph_point(2, curve_1), color=YELLOW)
+line_2 = ax.get_vertical_line(ax.i2gp(3, curve_1), color=YELLOW)
+
+riemann_area = ax.get_riemann_rectangles(curve_1, x_range=[0.3, 0.6], dx=0.03, color=BLUE, fill_opacity=0.5)
+area = ax.get_area(curve_2, [2, 3], bounded_graph=curve_1, color=GREY, opacity=0.5)
+
+self.add(ax, labels, curve_1, curve_2, line_1, line_2, riemann_area, area)
+```
+
+## ALWAYS_REDRAW WITH POLYGON
+```python
+# Rectangle that updates based on ValueTracker
+# Good for: dynamic shapes, interactive visualizations
+import numpy as np
+
+def get_rectangle_corners(bottom_left, top_right):
+    return [
+        (top_right[0], top_right[1]),
+        (bottom_left[0], top_right[1]),
+        (bottom_left[0], bottom_left[1]),
+        (top_right[0], bottom_left[1]),
+    ]
+
+ax = Axes(
+    x_range=[0, 10],
+    y_range=[0, 10],
+    x_length=6,
+    y_length=6,
+    axis_config={"include_tip": False},
+)
+
+t = ValueTracker(5)
+k = 25
+
+graph = ax.plot(lambda x: k / x, color=YELLOW_D, x_range=[k / 10, 10.0, 0.01], use_smoothing=False)
+
+def get_rectangle():
+    polygon = Polygon(
+        *[ax.c2p(*i) for i in get_rectangle_corners((0, 0), (t.get_value(), k / t.get_value()))]
+    )
+    polygon.stroke_width = 1
+    polygon.set_fill(BLUE, opacity=0.5)
+    polygon.set_stroke(YELLOW_B)
+    return polygon
+
+polygon = always_redraw(get_rectangle)
+
+dot = Dot()
+dot.add_updater(lambda x: x.move_to(ax.c2p(t.get_value(), k / t.get_value())))
+dot.set_z_index(10)
+
+self.add(ax, graph, dot)
+self.play(Create(polygon))
+self.play(t.animate.set_value(10))
+self.play(t.animate.set_value(k / 10))
+self.play(t.animate.set_value(5))
+```
+
+## LINE GRAPH (Discrete Data)
+```python
+# Plotting discrete data points connected by lines
+# Good for: statistics, data visualization, temperature graphs
+import numpy as np
+
+ax = Axes(
+    x_range=[0, 40, 5],
+    y_range=[-8, 32, 5],
+    x_length=9,
+    y_length=6,
+    x_axis_config={"numbers_to_include": np.arange(0, 40, 5)},
+    y_axis_config={"numbers_to_include": np.arange(-5, 34, 5)},
+    tips=False,
+)
+labels = ax.get_axis_labels(x_label=Tex(r"$\Delta Q$"), y_label=Tex(r"T[$^\circ C$]"))
+
+x_vals = [0, 8, 38, 39]
+y_vals = [20, 0, 0, -5]
+graph = ax.plot_line_graph(x_values=x_vals, y_values=y_vals)
+
+self.add(ax, labels, graph)
+```
+
+## MOVING CAMERA SCENE
+```python
+# Camera follows a moving dot along a graph
+# Scene type: MovingCameraScene
+# Good for: following motion, zooming on details
+import numpy as np
+
+class FollowingGraphCamera(MovingCameraScene):
+    def construct(self):
+        self.camera.frame.save_state()
+
+        ax = Axes(x_range=[-1, 10], y_range=[-1, 10])
+        graph = ax.plot(lambda x: np.sin(x), color=BLUE, x_range=[0, 3 * PI])
+
+        moving_dot = Dot(ax.i2gp(graph.t_min, graph), color=ORANGE)
+        dot_1 = Dot(ax.i2gp(graph.t_min, graph))
+        dot_2 = Dot(ax.i2gp(graph.t_max, graph))
+
+        self.add(ax, graph, dot_1, dot_2, moving_dot)
+        self.play(self.camera.frame.animate.scale(0.5).move_to(moving_dot))
+
+        def update_curve(mob):
+            mob.move_to(moving_dot.get_center())
+
+        self.camera.frame.add_updater(update_curve)
+        self.play(MoveAlongPath(moving_dot, graph, rate_func=linear))
+        self.camera.frame.remove_updater(update_curve)
+
+        self.play(Restore(self.camera.frame))
+```
+
+## FIXED IN FRAME MOBJECTS (3D with 2D text)
+```python
+# Keep 2D text fixed while 3D scene rotates
+# Scene type: ThreeDScene
+# Good for: 3D scenes with labels, titles
+class FixedInFrameMObjectTest(ThreeDScene):
+    def construct(self):
+        axes = ThreeDAxes()
+        self.set_camera_orientation(phi=75 * DEGREES, theta=-45 * DEGREES)
+        
+        text3d = Text("This is a 3D text")
+        self.add_fixed_in_frame_mobjects(text3d)
+        text3d.to_corner(UL)
+        
+        self.add(axes)
+        self.wait()
+```
+
+## 3D LIGHT SOURCE POSITION
+```python
+# Controlling lighting on 3D surfaces
+# Scene type: ThreeDScene
+# Good for: 3D visualization, surface shading
+import numpy as np
+
+class ThreeDLightSourcePosition(ThreeDScene):
+    def construct(self):
+        axes = ThreeDAxes()
+        sphere = Surface(
+            lambda u, v: np.array([
+                1.5 * np.cos(u) * np.cos(v),
+                1.5 * np.cos(u) * np.sin(v),
+                1.5 * np.sin(u)
+            ]),
+            v_range=[0, TAU],
+            u_range=[-PI / 2, PI / 2],
+            checkerboard_colors=[RED_D, RED_E],
+            resolution=(15, 32)
+        )
+        # Move light source
+        self.renderer.camera.light_source.move_to(3 * IN)
+        self.set_camera_orientation(phi=75 * DEGREES, theta=30 * DEGREES)
+        self.add(axes, sphere)
+```
+
+## 3D CAMERA ROTATION
+```python
+# Ambient camera rotation around 3D scene
+# Scene type: ThreeDScene
+# Good for: showcasing 3D objects from multiple angles
+class ThreeDCameraRotation(ThreeDScene):
+    def construct(self):
+        axes = ThreeDAxes()
+        circle = Circle()
+        self.set_camera_orientation(phi=75 * DEGREES, theta=30 * DEGREES)
+        self.add(circle, axes)
+        
+        self.begin_ambient_camera_rotation(rate=0.1)
+        self.wait(3)
+        self.stop_ambient_camera_rotation()
+        
+        self.move_camera(phi=75 * DEGREES, theta=30 * DEGREES)
+        self.wait()
+```
+
+## 3D SURFACE PLOT (Gaussian)
+```python
+# Parametric 3D surface with checkerboard coloring
+# Scene type: ThreeDScene
+# Good for: multivariable calculus, 3D functions
+import numpy as np
+
+class ThreeDSurfacePlot(ThreeDScene):
+    def construct(self):
+        resolution_fa = 24
+        self.set_camera_orientation(phi=75 * DEGREES, theta=-30 * DEGREES)
+
+        def param_gauss(u, v):
+            x = u
+            y = v
+            sigma, mu = 0.4, [0.0, 0.0]
+            d = np.linalg.norm(np.array([x - mu[0], y - mu[1]]))
+            z = np.exp(-(d ** 2 / (2.0 * sigma ** 2)))
+            return np.array([x, y, z])
+
+        gauss_plane = Surface(
+            param_gauss,
+            resolution=(resolution_fa, resolution_fa),
+            v_range=[-2, +2],
+            u_range=[-2, +2]
+        )
+        gauss_plane.scale(2, about_point=ORIGIN)
+        gauss_plane.set_style(fill_opacity=1, stroke_color=GREEN)
+        gauss_plane.set_fill_by_checkerboard(ORANGE, BLUE, opacity=0.5)
+        
+        axes = ThreeDAxes()
+        self.add(axes, gauss_plane)
+```
+
+## OPENING MANIM (Advanced Demo)
+```python
+# Complex demo with transforms, grids, non-linear functions
+# Good for: impressive intro, showcasing Manim capabilities
+import numpy as np
+
+title = Tex(r"This is some \LaTeX")
+basel = MathTex(r"\sum_{n=1}^\infty \frac{1}{n^2} = \frac{\pi^2}{6}")
+VGroup(title, basel).arrange(DOWN)
+
+self.play(Write(title), FadeIn(basel, shift=DOWN))
+self.wait()
+
+transform_title = Tex("That was a transform")
+transform_title.to_corner(UP + LEFT)
+self.play(
+    Transform(title, transform_title),
+    LaggedStart(*[FadeOut(obj, shift=DOWN) for obj in basel]),
+)
+self.wait()
+
+grid = NumberPlane()
+grid_title = Tex("This is a grid", font_size=72)
+grid_title.move_to(transform_title)
+
+self.add(grid, grid_title)
+self.play(
+    FadeOut(title),
+    FadeIn(grid_title, shift=UP),
+    Create(grid, run_time=3, lag_ratio=0.1),
+)
+self.wait()
+
+grid_transform_title = Tex(r"That was a non-linear function \\ applied to the grid")
+grid_transform_title.move_to(grid_title, UL)
+grid.prepare_for_nonlinear_transform()
+
+self.play(
+    grid.animate.apply_function(
+        lambda p: p + np.array([np.sin(p[1]), np.sin(p[0]), 0])
+    ),
+    run_time=3,
+)
+self.wait()
+self.play(Transform(grid_title, grid_transform_title))
+self.wait()
+```
+
+## SINE CURVE FROM UNIT CIRCLE
+```python
+# Classic animation: unit circle generating sine wave
+# Good for: trigonometry, understanding sine function
+import numpy as np
+
+class SineCurveUnitCircle(Scene):
+    def construct(self):
+        self.show_axis()
+        self.show_circle()
+        self.move_dot_and_draw_curve()
+        self.wait()
+
+    def show_axis(self):
+        x_start = np.array([-6, 0, 0])
+        x_end = np.array([6, 0, 0])
+        y_start = np.array([-4, -2, 0])
+        y_end = np.array([-4, 2, 0])
+
+        x_axis = Line(x_start, x_end)
+        y_axis = Line(y_start, y_end)
+        self.add(x_axis, y_axis)
+        self.add_x_labels()
+
+        self.origin_point = np.array([-4, 0, 0])
+        self.curve_start = np.array([-3, 0, 0])
+
+    def add_x_labels(self):
+        x_labels = [
+            MathTex(r"\pi"), MathTex(r"2 \pi"),
+            MathTex(r"3 \pi"), MathTex(r"4 \pi"),
+        ]
+        for i in range(len(x_labels)):
+            x_labels[i].next_to(np.array([-1 + 2 * i, 0, 0]), DOWN)
+            self.add(x_labels[i])
+
+    def show_circle(self):
+        circle = Circle(radius=1)
+        circle.move_to(self.origin_point)
+        self.add(circle)
+        self.circle = circle
+
+    def move_dot_and_draw_curve(self):
+        orbit = self.circle
+        origin_point = self.origin_point
+
+        dot = Dot(radius=0.08, color=YELLOW)
+        dot.move_to(orbit.point_from_proportion(0))
+        self.t_offset = 0
+        rate = 0.25
+
+        def go_around_circle(mob, dt):
+            self.t_offset += (dt * rate)
+            mob.move_to(orbit.point_from_proportion(self.t_offset % 1))
+
+        def get_line_to_circle():
+            return Line(origin_point, dot.get_center(), color=BLUE)
+
+        def get_line_to_curve():
+            x = self.curve_start[0] + self.t_offset * 4
+            y = dot.get_center()[1]
+            return Line(dot.get_center(), np.array([x, y, 0]), color=YELLOW_A, stroke_width=2)
+
+        self.curve = VGroup()
+        self.curve.add(Line(self.curve_start, self.curve_start))
+
+        def get_curve():
+            last_line = self.curve[-1]
+            x = self.curve_start[0] + self.t_offset * 4
+            y = dot.get_center()[1]
+            new_line = Line(last_line.get_end(), np.array([x, y, 0]), color=YELLOW_D)
+            self.curve.add(new_line)
+            return self.curve
+
+        dot.add_updater(go_around_circle)
+        origin_to_circle_line = always_redraw(get_line_to_circle)
+        dot_to_curve_line = always_redraw(get_line_to_curve)
+        sine_curve_line = always_redraw(get_curve)
+
+        self.add(dot)
+        self.add(orbit, origin_to_circle_line, dot_to_curve_line, sine_curve_line)
+        self.wait(8.5)
+
+        dot.remove_updater(go_around_circle)
+```

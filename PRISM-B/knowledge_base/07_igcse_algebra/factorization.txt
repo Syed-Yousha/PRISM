@@ -1,0 +1,404 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# FACTORIZATION - Common Factor, Grouping, Quadratic
+# IGCSE/O-Level Algebra Topic
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## COMMON FACTOR
+```python
+# Taking out HCF
+title = Text("Common Factor", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Concept
+concept = Text("Find the HCF of all terms and take it out", font_size=24, color=WHITE)
+concept.shift(UP * 1.5)
+
+# Example 1
+ex1 = VGroup(
+    MathTex("6x + 12", font_size=40),
+    Text("HCF of 6 and 12 is 6", font_size=20, color=GRAY),
+    MathTex("= 6(x + 2)", font_size=44, color=GREEN)
+).arrange(DOWN, buff=0.2)
+ex1.shift(LEFT * 3.5 + DOWN * 0.2)
+
+# Example 2
+ex2 = VGroup(
+    MathTex("8a^2 + 12ab", font_size=40),
+    Text("HCF: 4a", font_size=20, color=GRAY),
+    MathTex("= 4a(2a + 3b)", font_size=44, color=GREEN)
+).arrange(DOWN, buff=0.2)
+ex2.shift(RIGHT * 3 + DOWN * 0.2)
+
+# Example 3 (negative)
+ex3 = VGroup(
+    MathTex("-3x^2 - 6x", font_size=40),
+    MathTex("= -3x(x + 2)", font_size=44, color=GREEN)
+).arrange(DOWN, buff=0.3)
+ex3.to_edge(DOWN, buff=1)
+
+# Check arrow
+check = VGroup(
+    Text("Check: expand to verify!", font_size=22, color=ORANGE),
+    MathTex("6(x+2) = 6x + 12 \\checkmark", font_size=24, color=ORANGE)
+).arrange(RIGHT, buff=0.5)
+check.to_edge(DOWN, buff=0.4)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(concept), run_time=0.8)
+self.play(Write(ex1), run_time=1.5)
+self.play(Write(ex2), run_time=1.5)
+self.play(Write(ex3), run_time=1.5)
+self.play(Write(check), run_time=1.0)
+```
+
+## FACTORIZING BY GROUPING
+```python
+# Four terms → two groups
+title = Text("Factorizing by Grouping", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Expression
+expr = MathTex("ax + ay + bx + by", font_size=44)
+expr.shift(UP * 1.5)
+
+# Step 1: Group
+step1 = VGroup(
+    Text("Step 1: Group into pairs", font_size=22, color=BLUE),
+    MathTex("= (ax + ay) + (bx + by)", font_size=36)
+).arrange(DOWN, buff=0.15)
+step1.shift(UP * 0.3)
+
+# Step 2: Factor each group
+step2 = VGroup(
+    Text("Step 2: Factor each group", font_size=22, color=GREEN),
+    MathTex("= a(x + y) + b(x + y)", font_size=36)
+).arrange(DOWN, buff=0.15)
+step2.shift(DOWN * 0.7)
+
+# Step 3: Common bracket
+step3 = VGroup(
+    Text("Step 3: Factor out common bracket", font_size=22, color=ORANGE),
+    MathTex("= (x + y)(a + b)", font_size=44, color=GREEN)
+).arrange(DOWN, buff=0.15)
+step3.shift(DOWN * 1.7)
+
+# Box the answer
+answer_box = SurroundingRectangle(step3[1], color=GREEN, buff=0.2)
+
+# Another example
+example2 = VGroup(
+    MathTex("2x^2 + 3x + 6x + 9", font_size=28),
+    MathTex("= x(2x + 3) + 3(2x + 3)", font_size=28),
+    MathTex("= (2x + 3)(x + 3)", font_size=32, color=GREEN)
+).arrange(RIGHT, buff=0.5)
+example2.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(expr), run_time=1.0)
+self.play(Write(step1), run_time=1.2)
+self.play(Write(step2), run_time=1.2)
+self.play(Write(step3), Create(answer_box), run_time=1.5)
+self.play(Write(example2), run_time=1.5)
+```
+
+## FACTORIZING QUADRATICS (a=1)
+```python
+# x² + bx + c
+title = Text("Factorizing Quadratics (coefficient of x² = 1)", font_size=32, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Method
+method = VGroup(
+    MathTex("x^2 + bx + c = (x + p)(x + q)", font_size=36),
+    Text("where p × q = c  and  p + q = b", font_size=24, color=GRAY)
+).arrange(DOWN, buff=0.2)
+method.shift(UP * 1.2)
+
+# Example
+example = MathTex("x^2 + 7x + 12", font_size=44).shift(UP * 0.2)
+
+# Factor pairs table
+table_title = Text("Find factors of 12:", font_size=22, color=BLUE).shift(DOWN * 0.3 + LEFT * 3.5)
+table = VGroup(
+    MathTex("1 \\times 12 = 12, \\quad 1 + 12 = 13", font_size=24),
+    MathTex("2 \\times 6 = 12, \\quad 2 + 6 = 8", font_size=24),
+    MathTex("3 \\times 4 = 12, \\quad 3 + 4 = 7 \\checkmark", font_size=24, color=GREEN)
+).arrange(DOWN, buff=0.15, aligned_edge=LEFT)
+table.shift(DOWN * 1.2 + LEFT * 3)
+
+# Answer
+answer = MathTex("x^2 + 7x + 12 = (x + 3)(x + 4)", font_size=40, color=GREEN)
+answer.shift(DOWN * 1 + RIGHT * 2.5)
+
+# Tips
+tips = VGroup(
+    Text("• Both positive → both + in brackets", font_size=20, color=ORANGE),
+    Text("• Both negative → both - in brackets", font_size=20, color=ORANGE),
+    Text("• Different signs → bigger one has same sign as middle", font_size=20, color=ORANGE)
+).arrange(DOWN, buff=0.1, aligned_edge=LEFT)
+tips.to_edge(DOWN, buff=0.4)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(method), run_time=1.5)
+self.play(Write(example), run_time=1.0)
+self.play(Write(table_title), Write(table), run_time=2.0)
+self.play(Write(answer), run_time=1.0)
+self.play(Write(tips), run_time=1.5)
+```
+
+## FACTORIZING QUADRATICS (a≠1)
+```python
+# ax² + bx + c
+title = Text("Factorizing Quadratics (coefficient of x² ≠ 1)", font_size=32, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Example
+example = MathTex("2x^2 + 7x + 3", font_size=44).shift(UP * 1.5)
+
+# Step 1: Multiply a × c
+step1 = VGroup(
+    Text("Step 1: Multiply 2 × 3 = 6", font_size=22, color=BLUE),
+    Text("Find factors of 6 that add to 7: 1 and 6", font_size=22, color=BLUE)
+).arrange(DOWN, buff=0.1)
+step1.shift(UP * 0.5)
+
+# Step 2: Split middle term
+step2 = VGroup(
+    Text("Step 2: Split the middle term", font_size=22, color=GREEN),
+    MathTex("2x^2 + 1x + 6x + 3", font_size=32)
+).arrange(DOWN, buff=0.1)
+step2.shift(DOWN * 0.3)
+
+# Step 3: Factor by grouping
+step3 = VGroup(
+    Text("Step 3: Factor by grouping", font_size=22, color=ORANGE),
+    MathTex("= x(2x + 1) + 3(2x + 1)", font_size=32),
+    MathTex("= (2x + 1)(x + 3)", font_size=40, color=GREEN)
+).arrange(DOWN, buff=0.1)
+step3.shift(DOWN * 1.3)
+
+answer_box = SurroundingRectangle(step3[2], color=GREEN, buff=0.15)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(example), run_time=1.0)
+self.play(Write(step1), run_time=1.5)
+self.play(Write(step2), run_time=1.5)
+self.play(Write(step3), Create(answer_box), run_time=2.0)
+```
+
+## DIFFERENCE OF TWO SQUARES
+```python
+# a² - b² = (a + b)(a - b)
+title = Text("Difference of Two Squares", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Formula
+formula = MathTex("a^2 - b^2 = (a + b)(a - b)", font_size=48, color=WHITE)
+formula.shift(UP * 1.5)
+formula_box = SurroundingRectangle(formula, color=YELLOW, buff=0.3)
+
+# Visual recognition
+recognize = VGroup(
+    Text("Recognize: square - square", font_size=24, color=BLUE),
+    MathTex("x^2 - 16 = x^2 - 4^2", font_size=32, color=BLUE)
+).arrange(DOWN, buff=0.1)
+recognize.shift(UP * 0.3)
+
+# Examples
+examples = VGroup(
+    MathTex("x^2 - 9 = (x + 3)(x - 3)", font_size=36),
+    MathTex("4y^2 - 25 = (2y)^2 - 5^2 = (2y + 5)(2y - 5)", font_size=32),
+    MathTex("a^2 - 1 = (a + 1)(a - 1)", font_size=36),
+    MathTex("9x^2 - 16y^2 = (3x + 4y)(3x - 4y)", font_size=32)
+).arrange(DOWN, buff=0.3, aligned_edge=LEFT)
+examples.shift(DOWN * 1)
+
+# Highlight each as squared
+examples[0].set_color(GREEN)
+examples[1].set_color(GREEN)
+examples[2].set_color(GREEN)
+examples[3].set_color(GREEN)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(formula), Create(formula_box), run_time=1.5)
+self.play(Write(recognize), run_time=1.0)
+for ex in examples:
+    self.play(Write(ex), run_time=0.8)
+```
+
+## PERFECT SQUARE TRINOMIALS
+```python
+# Recognizing and factoring perfect squares
+title = Text("Perfect Square Trinomials", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Formulas
+formula1 = MathTex("a^2 + 2ab + b^2 = (a + b)^2", font_size=40, color=GREEN)
+formula1.shift(UP * 1.5 + LEFT * 3)
+
+formula2 = MathTex("a^2 - 2ab + b^2 = (a - b)^2", font_size=40, color=RED)
+formula2.shift(UP * 1.5 + RIGHT * 3)
+
+# How to recognize
+recognize = VGroup(
+    Text("Recognize: First and last are perfect squares,", font_size=22, color=GRAY),
+    Text("middle = 2 × √first × √last", font_size=22, color=GRAY)
+).arrange(DOWN, buff=0.1)
+recognize.shift(UP * 0.5)
+
+# Examples
+ex1 = VGroup(
+    MathTex("x^2 + 6x + 9", font_size=32),
+    MathTex("= x^2 + 2(3)(x) + 3^2", font_size=28, color=BLUE),
+    MathTex("= (x + 3)^2", font_size=36, color=GREEN)
+).arrange(DOWN, buff=0.15)
+ex1.shift(DOWN * 0.5 + LEFT * 3.5)
+
+ex2 = VGroup(
+    MathTex("4x^2 - 20x + 25", font_size=32),
+    MathTex("= (2x)^2 - 2(2x)(5) + 5^2", font_size=28, color=BLUE),
+    MathTex("= (2x - 5)^2", font_size=36, color=RED)
+).arrange(DOWN, buff=0.15)
+ex2.shift(DOWN * 0.5 + RIGHT * 2.5)
+
+# Tip
+tip = Text("Check: middle term = 2 × 2x × 5 = 20x ✓", font_size=22, color=ORANGE)
+tip.to_edge(DOWN, buff=0.6)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(formula1), Write(formula2), run_time=1.5)
+self.play(Write(recognize), run_time=1.0)
+self.play(Write(ex1), run_time=1.5)
+self.play(Write(ex2), run_time=1.5)
+self.play(Write(tip), run_time=1.0)
+```
+
+## FACTORIZATION FLOWCHART
+```python
+# Decision tree for which method to use
+title = Text("Factorization Flowchart", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Start
+start = VGroup(
+    Rectangle(width=3, height=0.6, color=WHITE, fill_opacity=0.2),
+    Text("Look at expression", font_size=18)
+)
+start[1].move_to(start[0])
+start.shift(UP * 1.5)
+
+# Question 1: Common factor?
+q1 = VGroup(
+    Polygon([0, 0.4, 0], [1.5, 0, 0], [0, -0.4, 0], [-1.5, 0, 0], color=BLUE, fill_opacity=0.2),
+    Text("Common\nfactor?", font_size=14)
+)
+q1[1].move_to(q1[0])
+q1.shift(UP * 0.5)
+
+# Yes → Take out factor
+yes1 = VGroup(
+    Rectangle(width=2.5, height=0.5, color=GREEN, fill_opacity=0.2),
+    Text("Take out HCF", font_size=16, color=GREEN)
+)
+yes1[1].move_to(yes1[0])
+yes1.shift(UP * 0.5 + LEFT * 3)
+
+# Question 2: How many terms?
+q2 = VGroup(
+    Polygon([0, 0.4, 0], [1.5, 0, 0], [0, -0.4, 0], [-1.5, 0, 0], color=ORANGE, fill_opacity=0.2),
+    Text("How many\nterms?", font_size=14)
+)
+q2[1].move_to(q2[0])
+q2.shift(DOWN * 0.5)
+
+# 2 terms
+two = VGroup(
+    Rectangle(width=2.8, height=0.5, color=RED, fill_opacity=0.2),
+    Text("Diff. of squares?", font_size=14, color=RED)
+)
+two[1].move_to(two[0])
+two.shift(DOWN * 1.2 + LEFT * 3.5)
+
+# 3 terms
+three = VGroup(
+    Rectangle(width=2.5, height=0.5, color=BLUE, fill_opacity=0.2),
+    Text("Factorize quadratic", font_size=14, color=BLUE)
+)
+three[1].move_to(three[0])
+three.shift(DOWN * 1.2)
+
+# 4 terms
+four = VGroup(
+    Rectangle(width=2.5, height=0.5, color=GREEN, fill_opacity=0.2),
+    Text("Try grouping", font_size=14, color=GREEN)
+)
+four[1].move_to(four[0])
+four.shift(DOWN * 1.2 + RIGHT * 3.5)
+
+# Arrows
+arrows = VGroup(
+    Arrow(start.get_bottom(), q1.get_top(), buff=0.1, color=WHITE),
+    Arrow(q1.get_left(), yes1.get_right(), buff=0.1, color=GREEN),
+    Arrow(q1.get_bottom(), q2.get_top(), buff=0.1, color=WHITE),
+    Arrow(q2.get_left() + DOWN * 0.2, two.get_top(), buff=0.1, color=RED),
+    Arrow(q2.get_bottom(), three.get_top(), buff=0.1, color=BLUE),
+    Arrow(q2.get_right() + DOWN * 0.2, four.get_top(), buff=0.1, color=GREEN)
+)
+
+# Labels
+labels = VGroup(
+    Text("Yes", font_size=14, color=GREEN).next_to(arrows[1], UP, buff=0.1),
+    Text("No", font_size=14).next_to(arrows[2], RIGHT, buff=0.1),
+    Text("2", font_size=14, color=RED).shift(DOWN * 0.8 + LEFT * 2),
+    Text("3", font_size=14, color=BLUE).shift(DOWN * 0.8),
+    Text("4", font_size=14, color=GREEN).shift(DOWN * 0.8 + RIGHT * 2)
+)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(start), run_time=0.5)
+self.play(Create(arrows[0]), Create(q1), run_time=0.8)
+self.play(Create(arrows[1]), Create(yes1), Write(labels[0]), run_time=0.8)
+self.play(Create(arrows[2]), Create(q2), Write(labels[1]), run_time=0.8)
+self.play(
+    Create(arrows[3]), Create(two), Write(labels[2]),
+    Create(arrows[4]), Create(three), Write(labels[3]),
+    Create(arrows[5]), Create(four), Write(labels[4]),
+    run_time=1.5
+)
+```
+
+## FACTORIZATION PRACTICE TYPES
+```python
+# Summary of all types
+title = Text("Factorization Types Summary", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+types = VGroup(
+    VGroup(
+        Text("1. Common Factor", font_size=24, color=BLUE),
+        MathTex("6x + 9 = 3(2x + 3)", font_size=28)
+    ).arrange(DOWN, buff=0.1),
+    
+    VGroup(
+        Text("2. Grouping", font_size=24, color=GREEN),
+        MathTex("ax + ay + bx + by = (x+y)(a+b)", font_size=28)
+    ).arrange(DOWN, buff=0.1),
+    
+    VGroup(
+        Text("3. Difference of Squares", font_size=24, color=RED),
+        MathTex("x^2 - 16 = (x+4)(x-4)", font_size=28)
+    ).arrange(DOWN, buff=0.1),
+    
+    VGroup(
+        Text("4. Quadratic (a=1)", font_size=24, color=ORANGE),
+        MathTex("x^2 + 5x + 6 = (x+2)(x+3)", font_size=28)
+    ).arrange(DOWN, buff=0.1),
+    
+    VGroup(
+        Text("5. Quadratic (a≠1)", font_size=24, color=PURPLE),
+        MathTex("2x^2 + 5x + 3 = (2x+3)(x+1)", font_size=28)
+    ).arrange(DOWN, buff=0.1),
+    
+    VGroup(
+        Text("6. Perfect Square", font_size=24, color=TEAL),
+        MathTex("x^2 + 6x + 9 = (x+3)^2", font_size=28)
+    ).arrange(DOWN, buff=0.1)
+).arrange(DOWN, buff=0.35, aligned_edge=LEFT)
+types.move_to(ORIGIN)
+
+self.play(Write(title), run_time=0.8)
+for t in types:
+    self.play(Write(t), run_time=0.8)
+```

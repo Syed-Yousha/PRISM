@@ -13,6 +13,7 @@ FEATURES:
 2. Returns top 3 diverse code snippets
 3. Built-in fallback reference for guaranteed syntax
 4. Caching for repeated queries
+5. Bespoke Manim dataset integration for verified examples
 """
 
 import os
@@ -20,12 +21,101 @@ import chromadb
 from typing import List, Dict, Optional
 from functools import lru_cache
 
-# ============== CONFIGURATION ==============
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-BASE_DIR = os.path.dirname(SCRIPT_DIR)
-DB_PATH = os.path.join(BASE_DIR, "vector_db")
-COLLECTION_NAME = "prism_codebase"  # Bespoke Curator collection
-DEFAULT_N_RESULTS = 3  # Top 3 most relevant examples
+from config import DB_PATH, KNOWLEDGE_BASE_PATH, COLLECTION_NAME, DEFAULT_N_RESULTS
+
+# Import Bespoke curator for verified Manim examples
+try:
+    from bespoke_curator import get_bespoke_rag_context, get_bespoke_examples, initialize_bespoke_database
+    BESPOKE_AVAILABLE = True
+except ImportError:
+    BESPOKE_AVAILABLE = False
+    print("   ⚠️ Bespoke curator not available, using built-in reference only")
+
+
+# ============== LOCAL KNOWLEDGE BASE LOADER ==============
+def load_local_knowledge_base() -> str:
+    """
+    Load all .txt files from the knowledge_base folder.
+    This provides PRISM-specific 3Blue1Brown style examples.
+    
+    Returns:
+        Concatenated content from all knowledge base files
+    """
+    if not os.path.exists(KNOWLEDGE_BASE_PATH):
+        return ""
+    
+    knowledge = []
+    knowledge.append("\n" + "=" * 70)
+    knowledge.append("🎨 PRISM STYLE GUIDE - 3Blue1Brown / Khan Academy Standards")
+    knowledge.append("=" * 70 + "\n")
+    
+    # Priority order for loading
+    priority_folders = [
+        "00_style_guide",
+        "01_basics",
+        "02_3d_scenes",
+        "03_animations",
+        "04_graphs",
+        "05_educational_visuals",  # Topic-specific visual examples (fractions, vectors, etc.)
+        "06_igcse_number",         # IGCSE Number topics (integers, HCF/LCM, ratio, percentages, etc.)
+        "07_igcse_algebra",        # IGCSE Algebra (expressions, equations, inequalities, sequences)
+        "08_igcse_geometry",       # IGCSE Geometry (angles, polygons, circles, transformations)
+        "09_igcse_trigonometry",   # IGCSE Trigonometry (SOH CAH TOA, sine/cosine rules, graphs)
+        "10_igcse_statistics",     # IGCSE Statistics & Probability (averages, charts, probability)
+        "11_igcse_mensuration",    # IGCSE Mensuration (area, perimeter, volume, surface area)
+        "12_igcse_sets_matrices",  # IGCSE Sets & Matrices (Venn diagrams, matrix operations)
+        "13_igcse_vectors",        # IGCSE Vectors (column vectors, magnitude, position vectors)
+        "14_igcse_functions"       # IGCSE Functions (notation, composite, inverse functions)
+    ]
+    
+    for folder in priority_folders:
+        folder_path = os.path.join(KNOWLEDGE_BASE_PATH, folder)
+        if os.path.exists(folder_path):
+            for filename in sorted(os.listdir(folder_path)):
+                if filename.endswith('.txt'):
+                    filepath = os.path.join(folder_path, filename)
+                    try:
+                        with open(filepath, 'r', encoding='utf-8') as f:
+                            content = f.read()
+                            knowledge.append(f"\n{'─' * 60}")
+                            knowledge.append(f"📚 {folder}/{filename}")
+                            knowledge.append("─" * 60)
+                            knowledge.append(content)
+                    except Exception:
+                        pass
+    
+    # Also scan root level if any loose files
+    for filename in sorted(os.listdir(KNOWLEDGE_BASE_PATH)):
+        filepath = os.path.join(KNOWLEDGE_BASE_PATH, filename)
+        if os.path.isfile(filepath) and filename.endswith('.txt'):
+            try:
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                    knowledge.append(f"\n{'─' * 60}")
+                    knowledge.append(f"📚 {filename}")
+                    knowledge.append("─" * 60)
+                    knowledge.append(content)
+            except Exception:
+                pass
+    
+    if len(knowledge) > 3:  # More than just headers
+        knowledge.append("\n" + "=" * 70)
+        knowledge.append("END PRISM STYLE GUIDE")
+        knowledge.append("=" * 70 + "\n")
+        return "\n".join(knowledge)
+    
+    return ""
+
+
+# Cache the local knowledge base (loaded once)
+_LOCAL_KB_CACHE = None
+
+def get_local_knowledge_base() -> str:
+    """Get cached local knowledge base content."""
+    global _LOCAL_KB_CACHE
+    if _LOCAL_KB_CACHE is None:
+        _LOCAL_KB_CACHE = load_local_knowledge_base()
+    return _LOCAL_KB_CACHE
 
 
 # ============== BUILT-IN REFERENCE ==============
@@ -258,8 +348,10 @@ class RAGEngine:
         Get relevant code context for a topic.
         
         This is the main method called by other engines. Returns:
-        1. Built-in Manim syntax reference (always)
-        2. Top N relevant code examples from database (if available)
+        1. Bespoke Manim verified examples (HIGHEST PRIORITY - real working code)
+        2. PRISM local knowledge base (3Blue1Brown style examples)
+        3. Built-in Manim syntax reference (always)
+        4. Top N relevant code examples from ChromaDB (if available)
         
         Args:
             topic: Educational topic (e.g., "Pythagorean Theorem", "3D vectors")
@@ -273,8 +365,26 @@ class RAGEngine:
         if cache_key in self._cache:
             return self._cache[cache_key]
         
-        # Start with built-in reference (guaranteed valid syntax)
-        context = MANIM_REFERENCE
+        context = ""
+        
+        # === HIGHEST PRIORITY: Bespoke Manim verified examples ===
+        if BESPOKE_AVAILABLE:
+            try:
+                bespoke_context = get_bespoke_rag_context(max_chars=10000)
+                if bespoke_context:
+                    context += "\n=== VERIFIED MANIM CODE FROM BESPOKE DATABASE ===\n"
+                    context += "⚠️ USE THESE PATTERNS AS YOUR PRIMARY REFERENCE!\n"
+                    context += "These are real, tested, working Manim CE examples.\n\n"
+                    context += bespoke_context
+                    context += "\n=== END BESPOKE EXAMPLES ===\n\n"
+            except Exception as e:
+                print(f"   ⚠️ Bespoke context failed: {e}")
+        
+        # Add LOCAL KNOWLEDGE BASE (PRISM style guide)
+        context += get_local_knowledge_base()
+        
+        # Add built-in reference (guaranteed valid syntax)
+        context += MANIM_REFERENCE
         
         # Add database examples if available
         if self._connected and self.collection:

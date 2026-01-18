@@ -1,22 +1,31 @@
 """
-PRISM - Click-and-Watch Video Generator
-=======================================
-NEW ARCHITECTURE: Director → Cinematographer Pattern
+PRISM - Audio-First Video Generator
+====================================
+TWO-STEP LLM ARCHITECTURE:
 
-PIPELINE:
-1. RAG: Fetch relevant Manim code examples from Curator database
-2. DIRECTOR (Groq): Analyze topic → Create detailed production plan
-3. AUDIO: Generate TTS audio from narrations (parallel, 8 workers)
-4. CINEMATOGRAPHER (Gemini): Convert plan → Perfect Manim code
-5. RENDER: Execute Manim → Generate video
-6. MERGE: Combine audio + video + background music
-7. CLEANUP: Remove temporary files
+┌─────────────────────────────────────────────────────────────────┐
+│                    PRISM v3.1 PIPELINE                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌──────────────┐      ┌──────────────┐      ┌──────────────┐  │
+│  │   RAG        │      │  LLM STEP 1  │      │  LLM STEP 2  │  │
+│  │  Knowledge   │─────>│   PROMPT     │─────>│    CODE      │  │
+│  │   Fetch      │      │    MAKER     │      │  GENERATOR   │  │
+│  └──────────────┘      └──────────────┘      └──────────────┘  │
+│         │                     │                      │          │
+│   Manim Examples        AnimationScript         Manim Code     │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  Then: Audio Generation → Render → Merge                        │
+└─────────────────────────────────────────────────────────────────┘
 
-WHY THIS WORKS:
-- Groq (fast) plans the video structure with specific instructions
-- Gemini (smart) converts instructions to correct Manim code
-- RAG prevents hallucination by providing working examples
-- Audio-first timing ensures perfect sync
+STEP 1 (PromptMaker): Topic + RAG → Detailed Animation Script
+STEP 2 (ManimEngine): Animation Script → Executable Manim Code
+
+WHY TWO STEPS:
+- Step 1 focuses on PEDAGOGY and VISUAL PLANNING
+- Step 2 focuses on CORRECT MANIM SYNTAX
+- Separation of concerns = fewer errors!
 """
 
 import os
@@ -34,25 +43,22 @@ from moviepy import (
     vfx
 )
 
-from prompt_director import PromptDirector
 from audio_engine import AudioEngine
-from manim_engine import ManimEngine, GENERATED_SCRIPT_PATH
+from manim_engine import ManimEngine
 from rag_engine import RAGEngine
+from prompt_maker import PromptMaker, AnimationScript
 from data_models import VideoScript
+from config import (
+    SCRIPT_DIR, MUSIC_DIR, RENDER_QUALITY, BGM_VOLUME, BGM_URLS,
+    GENERATED_SCRIPT_PATH, BGM_ENABLED
+)
 
-
-# ============== CONFIGURATION ==============
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-MUSIC_DIR = os.path.join(SCRIPT_DIR, "media", "music")
-
-RENDER_QUALITY = "l"  # l=480p (fast), m=720p (default), h=1080p
-BGM_VOLUME = 0.03  # Very subtle background music (3% volume)
-# Free royalty-free music URLs (with fallbacks)
-BGM_URLS = [
-    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",  # SoundHelix (no auth needed)
-    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-    "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Chad_Crouch/Arps/Chad_Crouch_-_Shipping_Lanes.mp3",
-]
+# Import Bespoke curator for verified Manim examples
+try:
+    from bespoke_curator import initialize_bespoke_database
+    BESPOKE_AVAILABLE = True
+except ImportError:
+    BESPOKE_AVAILABLE = False
 
 
 # ============== AUDIO HELPERS ==============
@@ -64,7 +70,6 @@ def get_bgm() -> Optional[str]:
     if os.path.exists(path) and os.path.getsize(path) > 10000:
         return path
     
-    # Try each URL with proper headers
     for url in BGM_URLS:
         try:
             print(f"   🎵 Downloading background music...")
@@ -77,8 +82,7 @@ def get_bgm() -> Optional[str]:
             if os.path.exists(path) and os.path.getsize(path) > 10000:
                 print("   ✅ BGM downloaded")
                 return path
-        except Exception as e:
-            print(f"   ⚠️ BGM source failed, trying next...")
+        except Exception:
             continue
     
     print("   ⚠️ All BGM sources failed - video will have narration only")
@@ -112,7 +116,11 @@ def merge_audio(video_script: VideoScript) -> Optional[str]:
 
 
 def mix_bgm(voice_path: str, output_path: str) -> str:
-    """Mix voiceover with background music."""
+    """Mix voiceover with background music (if enabled)."""
+    # Check if BGM is disabled
+    if not BGM_ENABLED:
+        return voice_path
+    
     try:
         voice = AudioFileClip(voice_path)
         bgm_path = get_bgm()
@@ -195,11 +203,11 @@ def run_pipeline(topic: str, quality: str = RENDER_QUALITY, cleanup: bool = True
     """
     Full Pipeline: Topic → Video
     
-    NEW ARCHITECTURE:
+    TWO-STEP LLM ARCHITECTURE:
     1. RAG Fetch - Get working code examples
-    2. Director (Groq) - Create detailed production plan  
-    3. Audio - Parallel TTS generation
-    4. Cinematographer (Gemini) - Generate Manim code
+    2. LLM Step 1 (PromptMaker) - Generate detailed animation script
+    3. Audio Generation - Create narration audio with exact durations
+    4. LLM Step 2 (ManimEngine) - Generate Manim code from script
     5. Render - Execute Manim
     6. Merge - Combine audio + video + BGM
     """
@@ -208,18 +216,26 @@ def run_pipeline(topic: str, quality: str = RENDER_QUALITY, cleanup: bool = True
     # Header
     quality_names = {'l': '480p', 'm': '720p', 'h': '1080p'}
     print("\n" + "═" * 60)
-    print("   🔮 PRISM Video Generator v2.0")
-    print("   Director → Cinematographer Architecture")
+    print("   🔮 PRISM Video Generator v3.1")
+    print("   Two-Step LLM Architecture")
     print("═" * 60)
     print(f"   📚 Topic: {topic}")
     print(f"   🎬 Quality: {quality} ({quality_names.get(quality, '720p')})")
     print("═" * 60)
     
     # ═══════════════════════════════════════════════════════════
-    # PHASE 0: RAG - Knowledge Fetch
+    # PHASE 1: RAG - Knowledge Fetch + Bespoke Database
     # ═══════════════════════════════════════════════════════════
-    print("\n📚 PHASE 0: Loading knowledge base...")
+    print("\n📚 PHASE 1: Loading knowledge base (RAG)...")
     phase_start = time.time()
+    
+    # Initialize Bespoke Manim database (verified examples)
+    if BESPOKE_AVAILABLE:
+        print("   🎬 Initializing Bespoke Manim database...")
+        try:
+            initialize_bespoke_database()
+        except Exception as e:
+            print(f"   ⚠️ Bespoke init failed: {e}")
     
     rag = RAGEngine()
     rag_context = rag.get_context(topic)
@@ -228,53 +244,65 @@ def run_pipeline(topic: str, quality: str = RENDER_QUALITY, cleanup: bool = True
     print(f"   ✅ RAG complete ({len(rag_context):,} chars, {rag_time:.1f}s)")
     
     # ═══════════════════════════════════════════════════════════
-    # PHASE 1: DIRECTOR (Groq) - Production Planning
+    # PHASE 2: LLM STEP 1 - Prompt Maker (Animation Script)
     # ═══════════════════════════════════════════════════════════
-    print("\n🎬 PHASE 1: Director planning video...")
+    print("\n📝 PHASE 2: LLM Step 1 - PromptMaker creating animation script...")
     phase_start = time.time()
     
-    director = PromptDirector()
-    plan = director.create_production_plan(topic, rag_context)
+    prompt_maker = PromptMaker()
+    animation_script = prompt_maker.generate_prompt(topic, rag_context)
     
-    director_time = time.time() - phase_start
-    sections_count = len(plan.get("sections", []))
-    print(f"   ✅ Plan ready: {sections_count} sections ({director_time:.1f}s)")
+    if not animation_script or not animation_script.sections:
+        print("   ❌ PromptMaker failed to create animation script")
+        return ""
+    
+    promptmaker_time = time.time() - phase_start
+    print(f"   ✅ Animation Script: {len(animation_script.sections)} sections (~{animation_script.total_duration}s)")
+    
+    # Show section details
+    for section in animation_script.sections:
+        print(f"      Section {section.get('id')}: {section.get('title')} ({section.get('type')})")
     
     # ═══════════════════════════════════════════════════════════
-    # PHASE 2: AUDIO - Parallel TTS Generation
+    # PHASE 3: AUDIO - Generate narration with exact durations
     # ═══════════════════════════════════════════════════════════
-    print("\n🎤 PHASE 2: Generating audio...")
+    print("\n🎤 PHASE 3: Generating audio narration...")
     phase_start = time.time()
     
-    audio_engine = AudioEngine()
-    video_script = audio_engine.generate_from_plan(plan)
+    director = AudioEngine()
+    # Convert AnimationScript to VideoScript format for audio generation
+    video_script = director.generate_audio_from_script(topic, animation_script)
     
-    if not video_script.segments:
-        print("   ❌ No audio generated")
+    if not video_script or not video_script.segments:
+        print("   ❌ Audio generation failed")
         return ""
     
     audio_time = time.time() - phase_start
-    print(f"   ✅ Audio: {video_script.total_duration:.1f}s ({audio_time:.1f}s)")
+    print(f"   ✅ Audio: {video_script.total_duration:.1f}s total ({audio_time:.1f}s)")
     
     # ═══════════════════════════════════════════════════════════
-    # PHASE 3: CINEMATOGRAPHER (Gemini) - Code Generation
+    # PHASE 4: LLM STEP 2 - Code Generator (Manim Code)
     # ═══════════════════════════════════════════════════════════
-    print("\n🎥 PHASE 3: Cinematographer generating code...")
+    print("\n🔧 PHASE 4: LLM Step 2 - ManimEngine generating code...")
     phase_start = time.time()
     
-    cinematographer = ManimEngine(quality=quality)
-    code = cinematographer.generate_full_scene(plan, video_script, rag_context)
+    engineer = ManimEngine(quality=quality)
+    code = engineer.generate_from_script(animation_script, video_script)
     
-    code_time = time.time() - phase_start
-    print(f"   ✅ Code: {len(code):,} chars ({code_time:.1f}s)")
+    if not code:
+        print("   ❌ Code Generator failed")
+        return ""
+    
+    codegen_time = time.time() - phase_start
+    print(f"   ✅ Code: {len(code):,} chars ({codegen_time:.1f}s)")
     
     # ═══════════════════════════════════════════════════════════
-    # PHASE 4: RENDER - Manim Execution
+    # PHASE 5: RENDER - Manim Execution (with retry)
     # ═══════════════════════════════════════════════════════════
-    print("\n🎨 PHASE 4: Rendering video...")
+    print("\n🎨 PHASE 5: Rendering video...")
     phase_start = time.time()
     
-    video_path = cinematographer.render(code, topic)
+    video_path = engineer.render(code, topic)
     
     if not video_path or not os.path.exists(video_path):
         print(f"   ❌ Render failed. Debug: {GENERATED_SCRIPT_PATH}")
@@ -284,9 +312,9 @@ def run_pipeline(topic: str, quality: str = RENDER_QUALITY, cleanup: bool = True
     print(f"   ✅ Rendered ({render_time:.1f}s)")
     
     # ═══════════════════════════════════════════════════════════
-    # PHASE 5: MERGE - Audio + Video + BGM
+    # PHASE 6: MERGE - Audio + Video + BGM
     # ═══════════════════════════════════════════════════════════
-    print("\n🔧 PHASE 5: Merging audio + video...")
+    print("\n🔧 PHASE 6: Merging audio + video...")
     phase_start = time.time()
     
     narration = merge_audio(video_script)
@@ -307,7 +335,7 @@ def run_pipeline(topic: str, quality: str = RENDER_QUALITY, cleanup: bool = True
     print(f"   ✅ Merged ({merge_time:.1f}s)")
     
     # ═══════════════════════════════════════════════════════════
-    # PHASE 6: CLEANUP
+    # PHASE 7: CLEANUP
     # ═══════════════════════════════════════════════════════════
     if cleanup:
         cleanup_temp_files(video_script.output_dir)
@@ -324,14 +352,29 @@ def run_pipeline(topic: str, quality: str = RENDER_QUALITY, cleanup: bool = True
     print(f"   📁 Output: {final}")
     print(f"   📊 Duration: {video_script.total_duration:.0f}s")
     print(f"   ⏱️  Total Time: {elapsed:.0f}s")
-    print(f"   📈 Breakdown:")
-    print(f"       RAG:          {rag_time:.1f}s")
-    print(f"       Director:     {director_time:.1f}s")
-    print(f"       Audio:        {audio_time:.1f}s")
-    print(f"       Code Gen:     {code_time:.1f}s")
-    print(f"       Render:       {render_time:.1f}s")
-    print(f"       Merge:        {merge_time:.1f}s")
+    print(f"   📈 Breakdown (2-Step LLM Pipeline):")
+    print(f"       RAG:              {rag_time:.1f}s")
+    print(f"       LLM Step 1:       {promptmaker_time:.1f}s  (PromptMaker)")
+    print(f"       Audio Gen:        {audio_time:.1f}s")
+    print(f"       LLM Step 2:       {codegen_time:.1f}s  (CodeGenerator)")
+    print(f"       Render:           {render_time:.1f}s")
+    print(f"       Merge:            {merge_time:.1f}s")
     print("═" * 60)
+    
+    # ═══════════════════════════════════════════════════════════
+    # AUTO-OPEN VIDEO
+    # ═══════════════════════════════════════════════════════════
+    if final and os.path.exists(final):
+        print(f"\n🎥 Opening video...")
+        try:
+            if sys.platform == "win32":
+                os.startfile(final)
+            elif sys.platform == "darwin":
+                os.system(f'open "{final}"')
+            else:
+                os.system(f'xdg-open "{final}"')
+        except Exception as e:
+            print(f"   ⚠️ Could not auto-open video: {e}")
     
     return final
 
@@ -340,8 +383,8 @@ def run_pipeline(topic: str, quality: str = RENDER_QUALITY, cleanup: bool = True
 def main():
     """CLI Entry Point."""
     print("\n" + "═" * 60)
-    print("   🔮 PRISM v2.0 - Educational Video Generator")
-    print("   Director → Cinematographer Architecture")
+    print("   🔮 PRISM v3.1 - Two-Step LLM Video Generator")
+    print("   RAG → PromptMaker (Step 1) → CodeGenerator (Step 2)")
     print("═" * 60)
     
     topic = input("\n📝 Enter topic: ").strip()
@@ -387,6 +430,9 @@ def generate_video(topic: str, quality: str = "l", cleanup: bool = True) -> str:
     return run_pipeline(topic, quality=quality, cleanup=cleanup)
 
 
-# ============== ENTRY POINT ==============
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 1:
+        topic = " ".join(sys.argv[1:])
+        video = run_pipeline(topic, quality='l')
+    else:
+        main()

@@ -1,0 +1,260 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# SVG IMPORTS - Loading and manipulating SVG files
+# Vector graphics integration in Manim
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## BASIC SVG IMPORT
+```python
+# Load an SVG file
+from manim import *
+
+# Load SVG from file path
+svg = SVGMobject("path/to/image.svg")
+svg.scale(2)
+svg.move_to(ORIGIN)
+
+self.play(Create(svg), run_time=2)
+self.wait()
+```
+
+## SVG WITH COLOR MODIFICATION
+```python
+# Change colors of SVG elements
+from manim import *
+
+svg = SVGMobject("icon.svg")
+svg.scale(1.5)
+
+# Set overall color
+svg.set_color(BLUE)
+
+# Or set fill and stroke separately
+svg.set_fill(RED, opacity=0.8)
+svg.set_stroke(WHITE, width=2)
+
+self.play(DrawBorderThenFill(svg))
+self.wait()
+```
+
+## ACCESSING SVG SUBMOBJECTS
+```python
+# SVGs often have multiple parts
+from manim import *
+
+svg = SVGMobject("complex_icon.svg")
+
+# SVG is a VGroup of submobjects
+print(f"Number of parts: {len(svg)}")
+
+# Access individual parts by index
+first_part = svg[0]
+second_part = svg[1]
+
+# Color different parts differently
+if len(svg) >= 3:
+    svg[0].set_fill(RED)
+    svg[1].set_fill(GREEN)
+    svg[2].set_fill(BLUE)
+
+self.play(Create(svg))
+self.wait()
+
+# Animate individual parts
+self.play(svg[0].animate.shift(LEFT))
+self.play(svg[1].animate.scale(1.5))
+self.wait()
+```
+
+## SVG ANIMATION TECHNIQUES
+```python
+# Different ways to animate SVGs
+from manim import *
+
+svg = SVGMobject("drawing.svg").scale(2)
+
+# Method 1: Create (draws the paths)
+self.play(Create(svg), run_time=3)
+self.wait()
+self.remove(svg)
+
+# Method 2: DrawBorderThenFill
+svg2 = SVGMobject("drawing.svg").scale(2)
+self.play(DrawBorderThenFill(svg2), run_time=3)
+self.wait()
+self.remove(svg2)
+
+# Method 3: FadeIn
+svg3 = SVGMobject("drawing.svg").scale(2)
+self.play(FadeIn(svg3))
+self.wait()
+
+# Method 4: Write (for text-like SVGs)
+svg4 = SVGMobject("text_path.svg").scale(2)
+self.play(Write(svg4), run_time=2)
+self.wait()
+```
+
+## POSITIONING SVG
+```python
+# Place SVG in scene
+from manim import *
+
+svg = SVGMobject("logo.svg").scale(0.5)
+
+# Position methods
+svg.to_edge(UP)
+# or
+svg.to_corner(UL)
+# or
+svg.move_to(RIGHT * 2 + UP)
+# or
+svg.next_to(some_mobject, DOWN, buff=0.5)
+
+self.add(svg)
+self.wait()
+```
+
+## SVG WITH TEXT
+```python
+# Combine SVG with text labels
+from manim import *
+
+icon = SVGMobject("info_icon.svg").scale(0.8)
+icon.set_color(YELLOW)
+
+label = Text("Important!", font_size=32)
+label.next_to(icon, RIGHT, buff=0.3)
+
+group = VGroup(icon, label)
+group.move_to(ORIGIN)
+
+self.play(FadeIn(icon), Write(label))
+self.wait()
+```
+
+## TRANSFORMING SVG
+```python
+# Transform between SVGs or shapes
+from manim import *
+
+svg1 = SVGMobject("shape1.svg").scale(1.5).set_color(RED)
+svg2 = SVGMobject("shape2.svg").scale(1.5).set_color(BLUE)
+
+self.play(Create(svg1))
+self.wait()
+
+self.play(Transform(svg1, svg2), run_time=2)
+self.wait()
+```
+
+## SVG AS BACKGROUND
+```python
+# Use SVG as scene background element
+from manim import *
+
+# Load and position background
+background = SVGMobject("background_pattern.svg")
+background.scale(4)
+background.set_opacity(0.2)
+background.set_color(GRAY)
+
+# Main content
+title = Text("My Presentation", font_size=48)
+
+self.add(background)
+self.play(Write(title))
+self.wait()
+```
+
+## MULTIPLE SVGS ARRANGED
+```python
+# Arrange multiple SVG icons
+from manim import *
+
+# Load multiple icons
+icon1 = SVGMobject("icon1.svg").scale(0.5).set_color(RED)
+icon2 = SVGMobject("icon2.svg").scale(0.5).set_color(GREEN)
+icon3 = SVGMobject("icon3.svg").scale(0.5).set_color(BLUE)
+
+icons = VGroup(icon1, icon2, icon3)
+icons.arrange(RIGHT, buff=1)
+
+labels = VGroup(
+    Text("Option A", font_size=20),
+    Text("Option B", font_size=20),
+    Text("Option C", font_size=20)
+)
+
+for icon, label in zip(icons, labels):
+    label.next_to(icon, DOWN, buff=0.3)
+
+self.play(LaggedStart(*[FadeIn(icon) for icon in icons], lag_ratio=0.3))
+self.play(LaggedStart(*[Write(label) for label in labels], lag_ratio=0.3))
+self.wait()
+```
+
+## IMAGE MOBJECT (For Raster Images)
+```python
+# For PNG/JPG images (not vector)
+from manim import *
+
+# Load raster image
+image = ImageMobject("photo.png")
+image.scale(2)
+image.to_edge(LEFT)
+
+# Add border
+border = SurroundingRectangle(image, color=WHITE, buff=0.1)
+
+self.play(FadeIn(image), Create(border))
+self.wait()
+```
+
+## CREATING SIMPLE ICONS PROGRAMMATICALLY
+```python
+# When you don't have SVG, create simple icons
+from manim import *
+
+# Play button icon
+def create_play_icon():
+    triangle = Triangle(fill_opacity=1, color=GREEN)
+    triangle.rotate(-PI/2)
+    circle = Circle(radius=1.2, color=WHITE, stroke_width=3)
+    return VGroup(circle, triangle.scale(0.5))
+
+# Pause button icon
+def create_pause_icon():
+    bar1 = Rectangle(width=0.3, height=0.8, fill_opacity=1, color=WHITE)
+    bar2 = bar1.copy()
+    bars = VGroup(bar1, bar2).arrange(RIGHT, buff=0.2)
+    circle = Circle(radius=1.2, color=WHITE, stroke_width=3)
+    return VGroup(circle, bars)
+
+play = create_play_icon().shift(LEFT * 2)
+pause = create_pause_icon().shift(RIGHT * 2)
+
+self.play(Create(play), Create(pause))
+self.wait()
+self.play(Transform(play, pause.copy().move_to(play)))
+self.wait()
+```
+
+## SVG PATH DATA (Advanced)
+```python
+# Create mobject from SVG path string
+from manim import *
+
+# SVG path data for a simple shape
+path_string = "M 0 0 L 1 0 L 1 1 L 0 1 Z"  # Square
+
+shape = VMobject()
+shape.set_points_as_corners([
+    ORIGIN, RIGHT, RIGHT + UP, UP, ORIGIN
+])
+shape.set_fill(BLUE, opacity=0.5)
+shape.set_stroke(WHITE, width=2)
+shape.scale(2)
+
+self.play(Create(shape))
+self.wait()
+```

@@ -1,0 +1,184 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# 3D CAMERA LOGIC - Controlling the 3D View
+# Camera positioning, rotation, and movement
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## 3D SCENE SETUP
+```python
+from manim import *
+
+class My3DScene(ThreeDScene):
+    def construct(self):
+        # CRITICAL: Set background color
+        self.camera.background_color = "#000000"
+        
+        # Set initial camera angle
+        self.set_camera_orientation(
+            phi=75 * DEGREES,    # Angle from z-axis (0=top-down, 90=side)
+            theta=-45 * DEGREES  # Rotation around z-axis
+        )
+        
+        # Your 3D content here
+        axes = ThreeDAxes()
+        self.play(Create(axes))
+```
+
+## CAMERA ANGLES EXPLAINED
+```python
+# phi = vertical angle (tilt)
+# 0 degrees = looking straight down
+# 45 degrees = angled view (good default)
+# 90 degrees = looking from the side
+
+# theta = horizontal angle (rotation)
+# 0 degrees = looking from +y axis
+# 90 degrees = looking from +x axis
+# -45 degrees = looking from corner (isometric-ish)
+
+# COMMON PRESETS:
+# Isometric view
+self.set_camera_orientation(phi=60*DEGREES, theta=-45*DEGREES)
+
+# Top-down view
+self.set_camera_orientation(phi=0*DEGREES, theta=0*DEGREES)
+
+# Front view  
+self.set_camera_orientation(phi=90*DEGREES, theta=0*DEGREES)
+
+# Side view
+self.set_camera_orientation(phi=90*DEGREES, theta=-90*DEGREES)
+
+# 2D-like view (for ThreeDScene with 2D content)
+self.set_camera_orientation(phi=0*DEGREES, theta=-90*DEGREES)
+```
+
+## ANIMATED CAMERA MOVEMENT
+```python
+# Rotate camera around scene
+self.begin_ambient_camera_rotation(rate=0.2)  # Slow rotation
+self.wait(5)
+self.stop_ambient_camera_rotation()
+
+# Move camera to specific angle
+self.move_camera(
+    phi=45 * DEGREES,
+    theta=-30 * DEGREES,
+    run_time=2
+)
+
+# Zoom effect (move camera closer/farther)
+self.move_camera(
+    frame_center=[0, 0, 1],  # Move focus point up
+    run_time=1.5
+)
+```
+
+## TEXT IN 3D SCENES (CRITICAL!)
+```python
+class Text3DExample(ThreeDScene):
+    def construct(self):
+        self.set_camera_orientation(phi=60*DEGREES, theta=-45*DEGREES)
+        
+        # CRITICAL: Add text to fixed frame BEFORE positioning
+        title = Text("3D Visualization", font_size=44, color=YELLOW)
+        self.add_fixed_in_frame_mobjects(title)  # REQUIRED!
+        title.to_edge(UP)
+        self.play(Write(title), run_time=1.0)
+        
+        # Math formulas also need fixed frame
+        formula = MathTex(r"V = \frac{4}{3}\pi r^3", font_size=40)
+        self.add_fixed_in_frame_mobjects(formula)  # REQUIRED!
+        formula.to_edge(DOWN)
+        self.play(Write(formula), run_time=1.5)
+        
+        # 3D objects are added normally
+        sphere = Sphere(radius=1, color=BLUE)
+        self.play(Create(sphere), run_time=1.5)
+```
+
+## CAMERA WITH 3D OBJECTS
+```python
+class CameraFollowExample(ThreeDScene):
+    def construct(self):
+        # Setup
+        axes = ThreeDAxes(
+            x_range=[-3, 3, 1],
+            y_range=[-3, 3, 1],
+            z_range=[-3, 3, 1]
+        )
+        self.set_camera_orientation(phi=60*DEGREES, theta=-45*DEGREES)
+        
+        # Create 3D object
+        sphere = Sphere(radius=0.5, color=BLUE)
+        sphere.move_to([2, 0, 0])
+        
+        self.play(Create(axes), Create(sphere), run_time=2)
+        
+        # Rotate camera while keeping object in view
+        self.begin_ambient_camera_rotation(rate=0.3)
+        self.wait(4)
+        self.stop_ambient_camera_rotation()
+        
+        # Snap to specific view
+        self.move_camera(phi=75*DEGREES, theta=30*DEGREES, run_time=2)
+```
+
+## COMPLETE EXAMPLE: 3D Coordinate System Tour
+```python
+from manim import *
+
+class CoordinateSystemTour(ThreeDScene):
+    def construct(self):
+        # Title (fixed to frame)
+        title = Text("3D Coordinate System", font_size=44, color=YELLOW)
+        self.add_fixed_in_frame_mobjects(title)
+        title.to_edge(UP)
+        
+        # Start with 2D view
+        self.set_camera_orientation(phi=0*DEGREES, theta=-90*DEGREES)
+        self.play(Write(title), run_time=1.0)
+        
+        # Create axes
+        axes = ThreeDAxes(
+            x_range=[-4, 4, 1],
+            y_range=[-4, 4, 1],
+            z_range=[-3, 3, 1],
+            x_length=8,
+            y_length=8,
+            z_length=6
+        )
+        
+        # Axis labels (fixed to frame)
+        x_label = MathTex("x", font_size=32, color=RED)
+        y_label = MathTex("y", font_size=32, color=GREEN)
+        z_label = MathTex("z", font_size=32, color=BLUE)
+        
+        self.add_fixed_in_frame_mobjects(x_label, y_label, z_label)
+        x_label.move_to(RIGHT * 4.5)
+        y_label.move_to(UP * 4.5)
+        z_label.move_to(OUT * 3.5)
+        
+        self.play(Create(axes), run_time=2)
+        self.play(Write(x_label), Write(y_label), Write(z_label), run_time=1)
+        
+        # Transition to 3D view
+        self.move_camera(phi=60*DEGREES, theta=-45*DEGREES, run_time=3)
+        
+        # Add a point
+        point = Sphere(radius=0.15, color=YELLOW)
+        point.move_to([2, 1, 1.5])
+        
+        # Coordinate label
+        coord_label = MathTex(r"(2, 1, 1.5)", font_size=28, color=YELLOW)
+        self.add_fixed_in_frame_mobjects(coord_label)
+        coord_label.move_to(RIGHT * 4 + UP * 2)
+        
+        self.play(Create(point), Write(coord_label), run_time=1.5)
+        
+        # Rotate to show depth
+        self.begin_ambient_camera_rotation(rate=0.2)
+        self.wait(5)
+        self.stop_ambient_camera_rotation()
+        
+        self.wait(1)
+```

@@ -1,0 +1,805 @@
+================================================================================
+IGCSE/O-LEVEL: CUMULATIVE FREQUENCY AND HISTOGRAMS
+================================================================================
+
+## 1. Cumulative Frequency Table
+
+```python
+from manim import *
+import numpy as np
+
+class CumulativeFrequencyTable(Scene):
+    def construct(self):
+        title = Text("Cumulative Frequency", font_size=40, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        definition = Text("Running total of frequencies", font_size=24, color=GRAY)
+        definition.next_to(title, DOWN, buff=0.2)
+        self.play(Write(definition))
+        
+        # Create table headers
+        headers = VGroup(
+            Text("Score", font_size=20, color=YELLOW),
+            Text("Frequency", font_size=20, color=YELLOW),
+            Text("Cumulative\nFrequency", font_size=18, color=YELLOW),
+        )
+        headers[0].move_to(LEFT * 4 + UP * 1)
+        headers[1].move_to(LEFT * 1.5 + UP * 1)
+        headers[2].move_to(RIGHT * 1.5 + UP * 1)
+        
+        self.play(Write(headers))
+        
+        # Table data
+        data = [
+            ("0-10", 3, 3),
+            ("11-20", 7, 10),
+            ("21-30", 12, 22),
+            ("31-40", 15, 37),
+            ("41-50", 8, 45),
+            ("51-60", 5, 50),
+        ]
+        
+        prev_cf = 0
+        for i, (score, freq, cf) in enumerate(data):
+            row_y = UP * 0.3 + DOWN * i * 0.5
+            
+            score_text = Text(score, font_size=18, color=WHITE)
+            score_text.move_to(LEFT * 4 + row_y)
+            
+            freq_text = Text(str(freq), font_size=18, color=WHITE)
+            freq_text.move_to(LEFT * 1.5 + row_y)
+            
+            cf_text = Text(str(cf), font_size=18, color=GREEN)
+            cf_text.move_to(RIGHT * 1.5 + row_y)
+            
+            self.play(Write(score_text), Write(freq_text), run_time=0.3)
+            
+            # Show calculation
+            if prev_cf > 0:
+                calc = MathTex(f"{prev_cf} + {freq} = {cf}", font_size=18, color=GREEN)
+            else:
+                calc = MathTex(f"= {cf}", font_size=18, color=GREEN)
+            calc.move_to(RIGHT * 4 + row_y)
+            
+            self.play(Write(cf_text), Write(calc), run_time=0.4)
+            prev_cf = cf
+        
+        # Note
+        note = Text("Upper boundary used for plotting", font_size=20, color=ORANGE)
+        note.to_edge(DOWN, buff=0.5)
+        
+        self.play(Write(note))
+        
+        self.wait(2)
+```
+
+## 2. Cumulative Frequency Curve (Ogive)
+
+```python
+from manim import *
+import numpy as np
+
+class CumulativeFrequencyCurve(Scene):
+    def construct(self):
+        title = Text("Cumulative Frequency Curve", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Axes
+        axes = Axes(
+            x_range=[0, 70, 10],
+            y_range=[0, 55, 10],
+            x_length=8,
+            y_length=5,
+            axis_config={"include_tip": True, "include_numbers": True}
+        )
+        axes.shift(DOWN * 0.3)
+        
+        x_label = Text("Score", font_size=20)
+        x_label.next_to(axes, DOWN)
+        y_label = Text("Cumulative\nFrequency", font_size=18)
+        y_label.next_to(axes, LEFT)
+        
+        self.play(Create(axes), Write(x_label), Write(y_label))
+        
+        # Data points (upper boundary, cumulative frequency)
+        points = [(10, 3), (20, 10), (30, 22), (40, 37), (50, 45), (60, 50)]
+        
+        # Plot points
+        dots = VGroup()
+        for x, y in points:
+            dot = Dot(axes.c2p(x, y), color=RED)
+            dots.add(dot)
+        
+        self.play(Create(dots))
+        
+        # Draw smooth curve through points
+        x_vals = [p[0] for p in points]
+        y_vals = [p[1] for p in points]
+        
+        curve = VMobject()
+        curve.set_points_smoothly([axes.c2p(x, y) for x, y in points])
+        curve.set_color(YELLOW)
+        curve.set_stroke(width=3)
+        
+        self.play(Create(curve))
+        
+        # S-shape label
+        shape_note = Text("'S' shaped curve (Ogive)", font_size=20, color=YELLOW)
+        shape_note.to_edge(RIGHT).shift(UP)
+        
+        self.play(Write(shape_note))
+        
+        self.wait(2)
+```
+
+## 3. Finding Median from Cumulative Frequency
+
+```python
+from manim import *
+import numpy as np
+
+class MedianFromCF(Scene):
+    def construct(self):
+        title = Text("Finding Median from CF Curve", font_size=32, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Axes
+        axes = Axes(
+            x_range=[0, 70, 10],
+            y_range=[0, 55, 10],
+            x_length=7,
+            y_length=4.5,
+            axis_config={"include_tip": True, "include_numbers": True}
+        )
+        axes.shift(DOWN * 0.5 + LEFT * 0.5)
+        
+        self.play(Create(axes))
+        
+        # CF curve
+        points = [(10, 3), (20, 10), (30, 22), (40, 37), (50, 45), (60, 50)]
+        curve = VMobject()
+        curve.set_points_smoothly([axes.c2p(x, y) for x, y in points])
+        curve.set_color(WHITE)
+        curve.set_stroke(width=2)
+        
+        self.play(Create(curve))
+        
+        # Total frequency
+        total_label = MathTex(r"n = 50", font_size=24, color=WHITE)
+        total_label.to_edge(RIGHT).shift(UP * 2)
+        self.play(Write(total_label))
+        
+        # Median position
+        median_pos = MathTex(r"\text{Median position} = \frac{50}{2} = 25", font_size=22, color=GREEN)
+        median_pos.next_to(total_label, DOWN, buff=0.3)
+        self.play(Write(median_pos))
+        
+        # Horizontal line at y = 25
+        h_line = DashedLine(axes.c2p(0, 25), axes.c2p(32, 25), color=GREEN)
+        self.play(Create(h_line))
+        
+        # Vertical line down to x-axis
+        v_line = DashedLine(axes.c2p(32, 25), axes.c2p(32, 0), color=GREEN)
+        self.play(Create(v_line))
+        
+        # Mark intersection
+        median_dot = Dot(axes.c2p(32, 25), color=YELLOW)
+        self.play(Create(median_dot))
+        
+        # Median value
+        median_value = MathTex(r"\text{Median} \approx 32", font_size=26, color=YELLOW)
+        median_value.next_to(median_pos, DOWN, buff=0.3)
+        self.play(Write(median_value))
+        
+        # Steps summary
+        steps = VGroup(
+            Text("Steps:", font_size=20, color=ORANGE, weight=BOLD),
+            Text("1. Find n/2", font_size=18, color=WHITE),
+            Text("2. Draw horizontal to curve", font_size=18, color=WHITE),
+            Text("3. Draw vertical to x-axis", font_size=18, color=WHITE),
+            Text("4. Read median value", font_size=18, color=WHITE),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        steps.to_edge(DOWN, buff=0.3)
+        
+        self.play(Write(steps))
+        
+        self.wait(2)
+```
+
+## 4. Finding Quartiles and IQR
+
+```python
+from manim import *
+import numpy as np
+
+class QuartilesFromCF(Scene):
+    def construct(self):
+        title = Text("Quartiles from CF Curve", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Axes
+        axes = Axes(
+            x_range=[0, 70, 10],
+            y_range=[0, 55, 10],
+            x_length=7,
+            y_length=4.5,
+            axis_config={"include_tip": True, "include_numbers": True}
+        )
+        axes.shift(DOWN * 0.5 + LEFT * 1)
+        
+        self.play(Create(axes))
+        
+        # CF curve
+        points = [(10, 3), (20, 10), (30, 22), (40, 37), (50, 45), (60, 50)]
+        curve = VMobject()
+        curve.set_points_smoothly([axes.c2p(x, y) for x, y in points])
+        curve.set_color(WHITE)
+        
+        self.play(Create(curve))
+        
+        # n = 50
+        n_label = Text("n = 50", font_size=20, color=WHITE)
+        n_label.to_edge(RIGHT).shift(UP * 2.5)
+        self.play(Write(n_label))
+        
+        # Q1 at n/4 = 12.5
+        q1_h = DashedLine(axes.c2p(0, 12.5), axes.c2p(23, 12.5), color=RED)
+        q1_v = DashedLine(axes.c2p(23, 12.5), axes.c2p(23, 0), color=RED)
+        q1_dot = Dot(axes.c2p(23, 12.5), color=RED)
+        
+        self.play(Create(q1_h), Create(q1_v), Create(q1_dot))
+        
+        q1_label = MathTex(r"Q_1 \approx 23", font_size=22, color=RED)
+        q1_label.next_to(n_label, DOWN, buff=0.3)
+        self.play(Write(q1_label))
+        
+        # Q3 at 3n/4 = 37.5
+        q3_h = DashedLine(axes.c2p(0, 37.5), axes.c2p(40, 37.5), color=GREEN)
+        q3_v = DashedLine(axes.c2p(40, 37.5), axes.c2p(40, 0), color=GREEN)
+        q3_dot = Dot(axes.c2p(40, 37.5), color=GREEN)
+        
+        self.play(Create(q3_h), Create(q3_v), Create(q3_dot))
+        
+        q3_label = MathTex(r"Q_3 \approx 40", font_size=22, color=GREEN)
+        q3_label.next_to(q1_label, DOWN, buff=0.3)
+        self.play(Write(q3_label))
+        
+        # IQR calculation
+        iqr_calc = VGroup(
+            MathTex(r"\text{IQR} = Q_3 - Q_1", font_size=22, color=YELLOW),
+            MathTex(r"= 40 - 23", font_size=22, color=YELLOW),
+            MathTex(r"= 17", font_size=26, color=YELLOW),
+        ).arrange(DOWN, buff=0.2)
+        iqr_calc.next_to(q3_label, DOWN, buff=0.3)
+        
+        self.play(Write(iqr_calc))
+        
+        # Box showing positions
+        positions = VGroup(
+            MathTex(r"Q_1: \frac{n}{4} = 12.5", font_size=18, color=RED),
+            MathTex(r"Q_2: \frac{n}{2} = 25", font_size=18, color=PURPLE),
+            MathTex(r"Q_3: \frac{3n}{4} = 37.5", font_size=18, color=GREEN),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        positions.to_edge(DOWN, buff=0.3).shift(LEFT * 3)
+        
+        self.play(Write(positions))
+        
+        self.wait(2)
+```
+
+## 5. Box and Whisker Plot
+
+```python
+from manim import *
+import numpy as np
+
+class BoxWhiskerPlot(Scene):
+    def construct(self):
+        title = Text("Box and Whisker Plot", font_size=40, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Number line
+        number_line = NumberLine(
+            x_range=[0, 60, 10],
+            length=10,
+            include_numbers=True
+        )
+        number_line.shift(UP * 0.5)
+        
+        self.play(Create(number_line))
+        
+        # Values for the box plot
+        minimum = 8
+        q1 = 23
+        median = 32
+        q3 = 40
+        maximum = 55
+        
+        # Box
+        box = Rectangle(
+            width=number_line.n2p(q3)[0] - number_line.n2p(q1)[0],
+            height=1,
+            color=YELLOW,
+            fill_opacity=0.3
+        )
+        box.move_to((number_line.n2p(q1) + number_line.n2p(q3)) / 2)
+        box.shift(DOWN * 1)
+        
+        self.play(Create(box))
+        
+        # Median line
+        median_line = Line(
+            number_line.n2p(median) + DOWN * 0.5,
+            number_line.n2p(median) + DOWN * 1.5,
+            color=RED,
+            stroke_width=4
+        )
+        
+        self.play(Create(median_line))
+        
+        # Whiskers
+        left_whisker = Line(
+            number_line.n2p(minimum) + DOWN * 1,
+            number_line.n2p(q1) + DOWN * 1,
+            color=WHITE
+        )
+        right_whisker = Line(
+            number_line.n2p(q3) + DOWN * 1,
+            number_line.n2p(maximum) + DOWN * 1,
+            color=WHITE
+        )
+        
+        # End caps
+        left_cap = Line(
+            number_line.n2p(minimum) + DOWN * 0.8,
+            number_line.n2p(minimum) + DOWN * 1.2,
+            color=WHITE
+        )
+        right_cap = Line(
+            number_line.n2p(maximum) + DOWN * 0.8,
+            number_line.n2p(maximum) + DOWN * 1.2,
+            color=WHITE
+        )
+        
+        self.play(Create(left_whisker), Create(right_whisker))
+        self.play(Create(left_cap), Create(right_cap))
+        
+        # Labels
+        labels = VGroup(
+            MathTex(r"\text{Min}=8", font_size=18).next_to(left_cap, DOWN),
+            MathTex(r"Q_1=23", font_size=18).next_to(number_line.n2p(q1) + DOWN * 1.5, DOWN),
+            MathTex(r"\text{Med}=32", font_size=18, color=RED).next_to(median_line, DOWN),
+            MathTex(r"Q_3=40", font_size=18).next_to(number_line.n2p(q3) + DOWN * 1.5, DOWN),
+            MathTex(r"\text{Max}=55", font_size=18).next_to(right_cap, DOWN),
+        )
+        
+        self.play(Write(labels))
+        
+        # IQR and Range
+        stats = VGroup(
+            MathTex(r"\text{IQR} = Q_3 - Q_1 = 40 - 23 = 17", font_size=22, color=YELLOW),
+            MathTex(r"\text{Range} = 55 - 8 = 47", font_size=22, color=GREEN),
+        ).arrange(DOWN, buff=0.2)
+        stats.to_edge(DOWN, buff=0.4)
+        
+        self.play(Write(stats))
+        
+        self.wait(2)
+```
+
+## 6. Histograms with Unequal Class Widths
+
+```python
+from manim import *
+import numpy as np
+
+class HistogramUnequalWidth(Scene):
+    def construct(self):
+        title = Text("Histograms: Unequal Class Widths", font_size=32, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Key point
+        key = MathTex(r"\text{Frequency Density} = \frac{\text{Frequency}}{\text{Class Width}}", 
+                     font_size=26, color=YELLOW)
+        key.next_to(title, DOWN, buff=0.3)
+        self.play(Write(key))
+        
+        # Axes
+        axes = Axes(
+            x_range=[0, 55, 10],
+            y_range=[0, 3, 0.5],
+            x_length=8,
+            y_length=4,
+            axis_config={"include_tip": True}
+        )
+        axes.shift(DOWN * 0.5)
+        
+        x_label = Text("Value", font_size=18)
+        x_label.next_to(axes, DOWN)
+        y_label = Text("Frequency\nDensity", font_size=16)
+        y_label.next_to(axes, LEFT)
+        
+        self.play(Create(axes), Write(x_label), Write(y_label))
+        
+        # Data: (start, end, frequency)
+        data = [
+            (0, 10, 10),   # width=10, fd=1
+            (10, 20, 20),  # width=10, fd=2
+            (20, 40, 24),  # width=20, fd=1.2
+            (40, 50, 6),   # width=10, fd=0.6
+        ]
+        
+        bars = VGroup()
+        for start, end, freq in data:
+            width = end - start
+            fd = freq / width
+            
+            bar = Rectangle(
+                width=(axes.c2p(end, 0)[0] - axes.c2p(start, 0)[0]),
+                height=(axes.c2p(0, fd)[1] - axes.c2p(0, 0)[1]),
+                fill_color=BLUE,
+                fill_opacity=0.6,
+                stroke_color=WHITE
+            )
+            bar.move_to(axes.c2p((start + end)/2, fd/2))
+            bars.add(bar)
+            
+            # Frequency density label
+            fd_label = MathTex(f"{fd}", font_size=18, color=WHITE)
+            fd_label.move_to(axes.c2p((start + end)/2, fd + 0.15))
+        
+        self.play(Create(bars), run_time=2)
+        
+        # Example calculation
+        example = VGroup(
+            Text("Example:", font_size=18, color=ORANGE),
+            MathTex(r"\text{Class 20-40: freq=24, width=20}", font_size=18),
+            MathTex(r"\text{FD} = \frac{24}{20} = 1.2", font_size=22, color=GREEN),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        example.to_edge(RIGHT).shift(DOWN)
+        
+        self.play(Write(example))
+        
+        # Note
+        note = Text("Area of bar = Frequency", font_size=20, color=ORANGE)
+        note.to_edge(DOWN, buff=0.3)
+        
+        self.play(Write(note))
+        
+        self.wait(2)
+```
+
+## 7. Reading Histograms
+
+```python
+from manim import *
+import numpy as np
+
+class ReadingHistograms(Scene):
+    def construct(self):
+        title = Text("Reading Histograms", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Formula reminder
+        formula = MathTex(r"\text{Frequency} = \text{Frequency Density} \times \text{Class Width}", 
+                         font_size=24, color=YELLOW)
+        formula.next_to(title, DOWN, buff=0.2)
+        self.play(Write(formula))
+        
+        # Axes
+        axes = Axes(
+            x_range=[0, 60, 10],
+            y_range=[0, 4, 1],
+            x_length=7,
+            y_length=4,
+            axis_config={"include_tip": True, "include_numbers": True}
+        )
+        axes.shift(LEFT * 1.5 + DOWN * 0.5)
+        
+        y_label = Text("FD", font_size=18)
+        y_label.next_to(axes.y_axis, UP)
+        
+        self.play(Create(axes), Write(y_label))
+        
+        # Bars
+        bars_data = [
+            (0, 10, 2),    # fd=2, freq=20
+            (10, 30, 1.5), # fd=1.5, width=20, freq=30
+            (30, 40, 3),   # fd=3, freq=30
+            (40, 60, 1),   # fd=1, width=20, freq=20
+        ]
+        
+        bars = VGroup()
+        for start, end, fd in bars_data:
+            bar = Rectangle(
+                width=(axes.c2p(end, 0)[0] - axes.c2p(start, 0)[0]),
+                height=(axes.c2p(0, fd)[1] - axes.c2p(0, 0)[1]),
+                fill_color=RED,
+                fill_opacity=0.5,
+                stroke_color=WHITE
+            )
+            bar.move_to(axes.c2p((start + end)/2, fd/2))
+            bars.add(bar)
+        
+        self.play(Create(bars))
+        
+        # Calculations table
+        calc_title = Text("Finding frequencies:", font_size=20, color=WHITE)
+        calc_title.to_edge(RIGHT).shift(UP * 1.5 + LEFT * 0.5)
+        
+        calcs = VGroup(
+            MathTex(r"0\text{-}10: 2 \times 10 = 20", font_size=18),
+            MathTex(r"10\text{-}30: 1.5 \times 20 = 30", font_size=18),
+            MathTex(r"30\text{-}40: 3 \times 10 = 30", font_size=18),
+            MathTex(r"40\text{-}60: 1 \times 20 = 20", font_size=18),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        calcs.next_to(calc_title, DOWN, aligned_edge=LEFT, buff=0.2)
+        
+        self.play(Write(calc_title))
+        for calc in calcs:
+            self.play(Write(calc), run_time=0.4)
+        
+        # Total
+        total = MathTex(r"\text{Total} = 20 + 30 + 30 + 20 = 100", font_size=22, color=GREEN)
+        total.next_to(calcs, DOWN, buff=0.3)
+        
+        self.play(Write(total))
+        
+        self.wait(2)
+```
+
+## 8. Percentiles from Cumulative Frequency
+
+```python
+from manim import *
+import numpy as np
+
+class PercentilesFromCF(Scene):
+    def construct(self):
+        title = Text("Percentiles from CF Curve", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Definition
+        definition = MathTex(r"P_k = \text{value below which } k\% \text{ of data falls}", 
+                            font_size=24, color=GRAY)
+        definition.next_to(title, DOWN, buff=0.2)
+        self.play(Write(definition))
+        
+        # Axes
+        axes = Axes(
+            x_range=[0, 100, 20],
+            y_range=[0, 110, 20],
+            x_length=7,
+            y_length=4,
+            axis_config={"include_tip": True, "include_numbers": True}
+        )
+        axes.shift(LEFT * 1 + DOWN * 0.5)
+        
+        self.play(Create(axes))
+        
+        # CF curve (n=100)
+        points = [(20, 15), (40, 35), (60, 65), (80, 90), (100, 100)]
+        curve = VMobject()
+        curve.set_points_smoothly([axes.c2p(x, y) for x, y in points])
+        curve.set_color(WHITE)
+        
+        self.play(Create(curve))
+        
+        # Find P90 (90th percentile)
+        # At 90% of 100 = 90 on y-axis
+        p90_h = DashedLine(axes.c2p(0, 90), axes.c2p(80, 90), color=RED)
+        p90_v = DashedLine(axes.c2p(80, 90), axes.c2p(80, 0), color=RED)
+        p90_dot = Dot(axes.c2p(80, 90), color=YELLOW)
+        
+        self.play(Create(p90_h))
+        self.play(Create(p90_v), Create(p90_dot))
+        
+        p90_label = MathTex(r"P_{90} = 80", font_size=24, color=RED)
+        p90_label.to_edge(RIGHT).shift(UP * 1)
+        
+        self.play(Write(p90_label))
+        
+        # Find P25 (25th percentile = Q1)
+        p25_h = DashedLine(axes.c2p(0, 25), axes.c2p(32, 25), color=GREEN)
+        p25_v = DashedLine(axes.c2p(32, 25), axes.c2p(32, 0), color=GREEN)
+        p25_dot = Dot(axes.c2p(32, 25), color=YELLOW)
+        
+        self.play(Create(p25_h), Create(p25_v), Create(p25_dot))
+        
+        p25_label = MathTex(r"P_{25} = Q_1 = 32", font_size=24, color=GREEN)
+        p25_label.next_to(p90_label, DOWN, buff=0.3)
+        
+        self.play(Write(p25_label))
+        
+        # Key relationships
+        relationships = VGroup(
+            MathTex(r"Q_1 = P_{25}", font_size=20, color=WHITE),
+            MathTex(r"Q_2 = P_{50} = \text{Median}", font_size=20, color=WHITE),
+            MathTex(r"Q_3 = P_{75}", font_size=20, color=WHITE),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        relationships.to_edge(DOWN, buff=0.4)
+        
+        self.play(Write(relationships))
+        
+        self.wait(2)
+```
+
+## 9. Comparing Distributions
+
+```python
+from manim import *
+import numpy as np
+
+class ComparingDistributions(Scene):
+    def construct(self):
+        title = Text("Comparing Distributions", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Two box plots for comparison
+        number_line = NumberLine(
+            x_range=[0, 100, 20],
+            length=8,
+            include_numbers=True
+        )
+        number_line.shift(UP * 0.5)
+        
+        self.play(Create(number_line))
+        
+        # Dataset A: Class A test scores
+        # Min=35, Q1=50, Med=60, Q3=70, Max=85
+        boxA = self.create_box_plot(number_line, 35, 50, 60, 70, 85, UP * 0.8, RED, "Class A")
+        
+        # Dataset B: Class B test scores
+        # Min=20, Q1=40, Med=55, Q3=75, Max=95
+        boxB = self.create_box_plot(number_line, 20, 40, 55, 75, 95, DOWN * 1.5, GREEN, "Class B")
+        
+        self.play(Create(boxA), Create(boxB))
+        
+        # Comparison statements
+        comparisons = VGroup(
+            Text("Comparisons:", font_size=22, color=YELLOW, weight=BOLD),
+            Text("• Class A has higher median (60 vs 55)", font_size=18, color=WHITE),
+            Text("• Class B has larger IQR (35 vs 20)", font_size=18, color=WHITE),
+            Text("• Class B has larger range (75 vs 50)", font_size=18, color=WHITE),
+            Text("• Class A is more consistent", font_size=18, color=WHITE),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        comparisons.to_edge(DOWN, buff=0.3)
+        
+        self.play(Write(comparisons))
+        
+        self.wait(2)
+    
+    def create_box_plot(self, nl, minimum, q1, median, q3, maximum, shift, color, label):
+        group = VGroup()
+        
+        # Box
+        box = Rectangle(
+            width=nl.n2p(q3)[0] - nl.n2p(q1)[0],
+            height=0.5,
+            color=color,
+            fill_opacity=0.3
+        )
+        box.move_to((nl.n2p(q1) + nl.n2p(q3)) / 2 + shift)
+        group.add(box)
+        
+        # Median
+        med_line = Line(
+            nl.n2p(median) + shift + UP * 0.25,
+            nl.n2p(median) + shift + DOWN * 0.25,
+            color=color,
+            stroke_width=3
+        )
+        group.add(med_line)
+        
+        # Whiskers
+        left_whisker = Line(nl.n2p(minimum) + shift, nl.n2p(q1) + shift, color=WHITE)
+        right_whisker = Line(nl.n2p(q3) + shift, nl.n2p(maximum) + shift, color=WHITE)
+        group.add(left_whisker, right_whisker)
+        
+        # Caps
+        left_cap = Line(nl.n2p(minimum) + shift + UP * 0.15, nl.n2p(minimum) + shift + DOWN * 0.15, color=WHITE)
+        right_cap = Line(nl.n2p(maximum) + shift + UP * 0.15, nl.n2p(maximum) + shift + DOWN * 0.15, color=WHITE)
+        group.add(left_cap, right_cap)
+        
+        # Label
+        label_text = Text(label, font_size=18, color=color)
+        label_text.next_to(box, LEFT)
+        group.add(label_text)
+        
+        return group
+```
+
+## 10. Estimating Mean from Grouped Data
+
+```python
+from manim import *
+import numpy as np
+
+class EstimatingMeanGrouped(Scene):
+    def construct(self):
+        title = Text("Estimating Mean from Grouped Data", font_size=32, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Formula
+        formula = MathTex(r"\bar{x} = \frac{\sum fx}{\sum f}", font_size=32, color=YELLOW)
+        formula.next_to(title, DOWN, buff=0.2)
+        self.play(Write(formula))
+        
+        # Table headers
+        headers = VGroup(
+            Text("Class", font_size=18, color=YELLOW),
+            Text("Midpoint (x)", font_size=18, color=YELLOW),
+            Text("Freq (f)", font_size=18, color=YELLOW),
+            Text("fx", font_size=18, color=YELLOW),
+        )
+        
+        for i, h in enumerate(headers):
+            h.move_to(LEFT * 4.5 + RIGHT * i * 2.5 + UP * 0.8)
+        
+        self.play(Write(headers))
+        
+        # Data
+        data = [
+            ("0-10", 5, 3, 15),
+            ("10-20", 15, 7, 105),
+            ("20-30", 25, 12, 300),
+            ("30-40", 35, 8, 280),
+        ]
+        
+        total_f = 0
+        total_fx = 0
+        
+        for i, (cls, mid, f, fx) in enumerate(data):
+            row_y = UP * 0.2 + DOWN * i * 0.5
+            
+            cls_text = Text(cls, font_size=16).move_to(LEFT * 4.5 + row_y)
+            mid_text = Text(str(mid), font_size=16).move_to(LEFT * 2 + row_y)
+            f_text = Text(str(f), font_size=16).move_to(RIGHT * 0.5 + row_y)
+            fx_text = Text(str(fx), font_size=16).move_to(RIGHT * 3 + row_y)
+            
+            self.play(
+                Write(cls_text), Write(mid_text), Write(f_text), Write(fx_text),
+                run_time=0.4
+            )
+            
+            total_f += f
+            total_fx += fx
+        
+        # Totals
+        total_line_y = UP * 0.2 + DOWN * 4 * 0.5
+        
+        sum_f = MathTex(r"\sum f = 30", font_size=20, color=GREEN)
+        sum_f.move_to(RIGHT * 0.5 + total_line_y)
+        
+        sum_fx = MathTex(r"\sum fx = 700", font_size=20, color=GREEN)
+        sum_fx.move_to(RIGHT * 3 + total_line_y)
+        
+        self.play(Write(sum_f), Write(sum_fx))
+        
+        # Calculation
+        calc = VGroup(
+            MathTex(r"\bar{x} = \frac{700}{30}", font_size=26),
+            MathTex(r"= 23.33 \text{ (2 d.p.)}", font_size=26, color=GREEN),
+        ).arrange(DOWN, buff=0.2)
+        calc.to_edge(DOWN, buff=0.5)
+        
+        self.play(Write(calc))
+        
+        # Note
+        note = Text("Use midpoints as estimates for class values", font_size=18, color=ORANGE)
+        note.to_edge(DOWN, buff=0.1)
+        
+        self.play(Write(note))
+        
+        self.wait(2)
+```

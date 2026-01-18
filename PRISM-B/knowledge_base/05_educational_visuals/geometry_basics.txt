@@ -1,0 +1,291 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# GEOMETRY BASICS - Shapes, Angles, Area, Perimeter
+# Polygons, circles, triangles, transformations
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## BASIC SHAPES SHOWCASE
+```python
+# Display common geometric shapes
+title = Text("Basic Geometric Shapes", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Create shapes in a row
+triangle = Triangle(fill_opacity=0.5, fill_color=RED, color=RED).scale(0.8)
+square = Square(fill_opacity=0.5, fill_color=BLUE, color=BLUE).scale(0.8)
+circle = Circle(fill_opacity=0.5, fill_color=GREEN, color=GREEN).scale(0.8)
+pentagon = RegularPolygon(5, fill_opacity=0.5, fill_color=PURPLE, color=PURPLE).scale(0.8)
+hexagon = RegularPolygon(6, fill_opacity=0.5, fill_color=ORANGE, color=ORANGE).scale(0.8)
+
+shapes = VGroup(triangle, square, circle, pentagon, hexagon)
+shapes.arrange(RIGHT, buff=0.8)
+shapes.move_to(ORIGIN)
+
+# Labels
+labels = VGroup(
+    Text("Triangle", font_size=20).next_to(triangle, DOWN, buff=0.3),
+    Text("Square", font_size=20).next_to(square, DOWN, buff=0.3),
+    Text("Circle", font_size=20).next_to(circle, DOWN, buff=0.3),
+    Text("Pentagon", font_size=20).next_to(pentagon, DOWN, buff=0.3),
+    Text("Hexagon", font_size=20).next_to(hexagon, DOWN, buff=0.3),
+)
+
+self.play(Write(title), run_time=0.8)
+self.play(
+    Create(triangle), Create(square), Create(circle),
+    Create(pentagon), Create(hexagon),
+    run_time=2.0
+)
+self.play(Write(labels), run_time=1.0)
+```
+
+## ANGLE TYPES
+```python
+# Show acute, right, obtuse angles
+title = Text("Types of Angles", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Acute angle (45 degrees)
+acute_line1 = Line(ORIGIN, RIGHT * 2, color=WHITE)
+acute_line2 = Line(ORIGIN, RIGHT * 2, color=WHITE).rotate(45 * DEGREES, about_point=ORIGIN)
+acute_arc = Arc(radius=0.5, angle=45 * DEGREES, color=GREEN)
+acute_label = MathTex(r"45°", font_size=24, color=GREEN).shift(RIGHT * 0.8 + UP * 0.3)
+acute_name = Text("Acute", font_size=24, color=GREEN).shift(DOWN * 0.5)
+acute_group = VGroup(acute_line1, acute_line2, acute_arc, acute_label, acute_name).shift(LEFT * 4)
+
+# Right angle (90 degrees)
+right_line1 = Line(ORIGIN, RIGHT * 2, color=WHITE)
+right_line2 = Line(ORIGIN, UP * 2, color=WHITE)
+# FIXED: Position right angle marker at vertex (origin) aligned to corner
+right_square = Square(side_length=0.3, color=BLUE, fill_opacity=0).move_to(ORIGIN, aligned_edge=DL)
+right_label = MathTex(r"90°", font_size=24, color=BLUE).shift(RIGHT * 0.6 + UP * 0.6)
+right_name = Text("Right", font_size=24, color=BLUE).shift(DOWN * 0.5)
+right_group = VGroup(right_line1, right_line2, right_square, right_label, right_name).move_to(ORIGIN)
+
+# Obtuse angle (135 degrees)
+obtuse_line1 = Line(ORIGIN, RIGHT * 2, color=WHITE)
+obtuse_line2 = Line(ORIGIN, RIGHT * 2, color=WHITE).rotate(135 * DEGREES, about_point=ORIGIN)
+obtuse_arc = Arc(radius=0.5, angle=135 * DEGREES, color=RED)
+obtuse_label = MathTex(r"135°", font_size=24, color=RED).shift(UP * 0.8)
+obtuse_name = Text("Obtuse", font_size=24, color=RED).shift(DOWN * 0.5)
+obtuse_group = VGroup(obtuse_line1, obtuse_line2, obtuse_arc, obtuse_label, obtuse_name).shift(RIGHT * 4)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(acute_group), run_time=1.0)
+self.play(Create(right_group), run_time=1.0)
+self.play(Create(obtuse_group), run_time=1.0)
+```
+
+## AREA OF A RECTANGLE
+```python
+# Visual proof: Area = length × width
+title = Text("Area of a Rectangle", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# The rectangle
+rect = Rectangle(width=4, height=2.5, fill_opacity=0.3, fill_color=BLUE, color=BLUE)
+rect.move_to(LEFT * 1.5)
+
+# Grid lines to show unit squares
+grid = VGroup()
+for i in range(1, 4):  # vertical lines
+    grid.add(Line(rect.get_corner(DL) + RIGHT * i, rect.get_corner(UL) + RIGHT * i, color=BLUE, stroke_width=1))
+for i in range(1, 3):  # horizontal lines (approximate)
+    grid.add(Line(rect.get_corner(DL) + UP * i * 0.833, rect.get_corner(DR) + UP * i * 0.833, color=BLUE, stroke_width=1))
+
+# Dimension labels
+length_brace = Brace(rect, DOWN, color=WHITE)
+length_label = MathTex(r"\text{length} = 4", font_size=28).next_to(length_brace, DOWN, buff=0.2)
+width_brace = Brace(rect, RIGHT, color=WHITE)
+width_label = MathTex(r"\text{width} = 2.5", font_size=28).next_to(width_brace, RIGHT, buff=0.2)
+
+# Formula
+formula = MathTex(r"A = l \times w", font_size=40).shift(RIGHT * 3 + UP * 0.5)
+calculation = MathTex(r"A = 4 \times 2.5 = 10", font_size=36, color=GREEN).shift(RIGHT * 3 + DOWN * 0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(rect), run_time=1.0)
+self.play(Create(grid), run_time=1.0)
+self.play(Create(length_brace), Write(length_label), run_time=1.0)
+self.play(Create(width_brace), Write(width_label), run_time=1.0)
+self.play(Write(formula), run_time=1.0)
+self.play(Write(calculation), run_time=1.0)
+```
+
+## AREA OF A CIRCLE
+```python
+# Area = πr²
+title = Text("Area of a Circle", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# The circle
+circle = Circle(radius=2, fill_opacity=0.3, fill_color=GREEN, color=GREEN)
+circle.shift(LEFT * 2)
+
+# Radius line
+center_dot = Dot(circle.get_center(), color=WHITE, radius=0.08)
+radius_line = Line(circle.get_center(), circle.get_center() + RIGHT * 2, color=RED, stroke_width=4)
+radius_label = MathTex(r"r", font_size=32, color=RED).next_to(radius_line, UP, buff=0.1)
+
+# Formula steps
+formula1 = MathTex(r"A = \pi r^2", font_size=48).shift(RIGHT * 3 + UP * 0.5)
+example = Text("If r = 3 cm:", font_size=24).shift(RIGHT * 3 + DOWN * 0.5)
+calculation = MathTex(r"A = \pi \times 3^2 = 9\pi \approx 28.27 \text{ cm}^2", font_size=28, color=GREEN)
+calculation.shift(RIGHT * 3 + DOWN * 1.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(circle), run_time=1.0)
+self.play(Create(center_dot), Create(radius_line), Write(radius_label), run_time=1.0)
+self.play(Write(formula1), run_time=1.0)
+self.play(Write(example), run_time=0.8)
+self.play(Write(calculation), run_time=1.0)
+```
+
+## PERIMETER OF SHAPES
+```python
+# Show perimeter as "walking around the edge"
+title = Text("Perimeter - Distance Around", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# A square with side 3
+square = Square(side_length=3, color=WHITE)
+square.shift(LEFT * 3)
+
+# Animate tracing the perimeter
+traced_path = VMobject(color=RED, stroke_width=6)
+traced_path.set_points_as_corners([
+    square.get_corner(DL),
+    square.get_corner(DR),
+    square.get_corner(UR),
+    square.get_corner(UL),
+    square.get_corner(DL)
+])
+
+# Side labels
+s1 = MathTex("3", font_size=28).next_to(square, DOWN, buff=0.2)
+s2 = MathTex("3", font_size=28).next_to(square, RIGHT, buff=0.2)
+s3 = MathTex("3", font_size=28).next_to(square, UP, buff=0.2)
+s4 = MathTex("3", font_size=28).next_to(square, LEFT, buff=0.2)
+
+# Formula
+formula = MathTex(r"P = 4s = 4 \times 3 = 12", font_size=36).shift(RIGHT * 2 + UP * 0.5)
+unit = Text("units", font_size=24).next_to(formula, RIGHT, buff=0.2)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(square), run_time=1.0)
+self.play(Write(s1), Write(s2), Write(s3), Write(s4), run_time=1.0)
+self.play(Create(traced_path), run_time=2.0)  # Trace the perimeter
+self.play(Write(formula), Write(unit), run_time=1.0)
+```
+
+## TRIANGLE AREA
+```python
+# Area = (1/2) × base × height
+title = Text("Area of a Triangle", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# The triangle
+triangle = Polygon(
+    LEFT * 2 + DOWN * 1.5,
+    RIGHT * 2 + DOWN * 1.5,
+    UP * 1.5,
+    fill_opacity=0.3, fill_color=BLUE, color=BLUE
+)
+
+# Base line
+base_line = Line(LEFT * 2 + DOWN * 1.5, RIGHT * 2 + DOWN * 1.5, color=RED, stroke_width=4)
+base_label = MathTex(r"b = 4", font_size=28, color=RED).next_to(base_line, DOWN, buff=0.2)
+
+# Height line (dashed)
+height_line = DashedLine(UP * 1.5, DOWN * 1.5, color=GREEN, stroke_width=3)
+height_label = MathTex(r"h = 3", font_size=28, color=GREEN).next_to(height_line, LEFT, buff=0.2)
+
+# Right angle marker
+right_angle = Square(side_length=0.25, color=WHITE).move_to(DOWN * 1.5 + RIGHT * 0.125 + UP * 0.125)
+
+# Formula
+formula = MathTex(r"A = \frac{1}{2} \times b \times h", font_size=40).shift(RIGHT * 3.5 + UP * 0.5)
+calculation = MathTex(r"A = \frac{1}{2} \times 4 \times 3 = 6", font_size=36, color=GREEN)
+calculation.shift(RIGHT * 3.5 + DOWN * 0.5)
+
+triangle_group = VGroup(triangle, base_line, height_line, base_label, height_label, right_angle)
+triangle_group.shift(LEFT * 1.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(triangle), run_time=1.0)
+self.play(Create(base_line), Write(base_label), run_time=1.0)
+self.play(Create(height_line), Write(height_label), run_time=1.0)
+self.play(Create(right_angle), run_time=0.5)
+self.play(Write(formula), run_time=1.0)
+self.play(Write(calculation), run_time=1.0)
+```
+
+## CONGRUENT VS SIMILAR SHAPES
+```python
+# Show congruent (same size) vs similar (same shape, different size)
+title = Text("Congruent vs Similar", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Congruent triangles (identical)
+tri1 = Triangle(fill_opacity=0.5, fill_color=BLUE, color=BLUE).scale(0.8)
+tri2 = Triangle(fill_opacity=0.5, fill_color=BLUE, color=BLUE).scale(0.8)
+tri1.shift(LEFT * 4 + UP * 0.5)
+tri2.shift(LEFT * 2 + UP * 0.5)
+congruent_label = Text("Congruent", font_size=28, color=BLUE).shift(LEFT * 3 + DOWN * 1.5)
+equals_sign = MathTex(r"\cong", font_size=48).shift(LEFT * 3 + UP * 0.5)
+
+# Similar triangles (same shape, different size)
+tri3 = Triangle(fill_opacity=0.5, fill_color=GREEN, color=GREEN).scale(0.6)
+tri4 = Triangle(fill_opacity=0.5, fill_color=GREEN, color=GREEN).scale(1.2)
+tri3.shift(RIGHT * 1.5 + UP * 0.5)
+tri4.shift(RIGHT * 4 + UP * 0.5)
+similar_label = Text("Similar", font_size=28, color=GREEN).shift(RIGHT * 2.5 + DOWN * 1.5)
+similar_sign = MathTex(r"\sim", font_size=48).shift(RIGHT * 2.75 + UP * 0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(tri1), Create(tri2), run_time=1.0)
+self.play(Write(equals_sign), Write(congruent_label), run_time=0.8)
+self.play(Create(tri3), Create(tri4), run_time=1.0)
+self.play(Write(similar_sign), Write(similar_label), run_time=0.8)
+```
+
+## TRANSFORMATIONS - TRANSLATION
+```python
+# Show a shape moving (translation)
+title = Text("Translation (Slide)", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Original shape
+square = Square(side_length=1.5, fill_opacity=0.5, fill_color=BLUE, color=BLUE)
+square.shift(LEFT * 3 + DOWN * 0.5)
+
+# Ghost of original position
+original_ghost = square.copy()
+original_ghost.set_fill(opacity=0.2)
+original_ghost.set_stroke(opacity=0.5)
+
+# Arrow showing translation vector
+arrow = Arrow(LEFT * 3 + DOWN * 0.5, RIGHT * 1 + UP * 1, color=RED, buff=0)
+translation_label = MathTex(r"(4, 1.5)", font_size=28, color=RED).next_to(arrow, UP, buff=0.2)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(square), run_time=1.0)
+self.play(FadeIn(original_ghost), run_time=0.5)
+self.play(Create(arrow), Write(translation_label), run_time=1.0)
+self.play(square.animate.shift(RIGHT * 4 + UP * 1.5), run_time=2.0)
+```
+
+## TRANSFORMATIONS - ROTATION
+```python
+# Show a shape rotating
+title = Text("Rotation (Turn)", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# The shape
+triangle = Triangle(fill_opacity=0.5, fill_color=GREEN, color=GREEN).scale(1.2)
+
+# Center point of rotation
+center_dot = Dot(ORIGIN, color=RED, radius=0.1)
+center_label = Text("center", font_size=20, color=RED).next_to(center_dot, DOWN, buff=0.2)
+
+# Rotation arc indicator
+rotation_arc = Arc(radius=1.8, start_angle=0, angle=90 * DEGREES, color=YELLOW)
+rotation_arrow = rotation_arc.copy()
+rotation_label = MathTex(r"90°", font_size=28, color=YELLOW).shift(RIGHT * 1.8 + UP * 0.8)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(triangle), run_time=1.0)
+self.play(Create(center_dot), Write(center_label), run_time=0.8)
+self.play(Create(rotation_arc), Write(rotation_label), run_time=1.0)
+self.play(Rotate(triangle, 90 * DEGREES, about_point=ORIGIN), run_time=2.0)
+```

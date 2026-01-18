@@ -1,0 +1,236 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# WRITING ANIMATIONS - Text and Shape Appearance Effects
+# Write, Create, FadeIn, DrawBorderThenFill, and more
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## WRITE - Handwriting Effect for Text
+```python
+# Write is perfect for text and math (simulates handwriting)
+title = Text("Introduction to Calculus", font_size=48, color=YELLOW)
+self.play(Write(title), run_time=1.5)
+
+# Math formula with Write
+formula = MathTex(r"\int_0^1 x^2 \, dx = \frac{1}{3}", font_size=44)
+self.play(Write(formula), run_time=2.0)
+
+# Multiple Write animations sequentially
+eq1 = MathTex(r"y = x^2")
+eq2 = MathTex(r"y' = 2x")
+eq3 = MathTex(r"y'' = 2")
+
+eq1.move_to(UP * 1)
+eq2.move_to(ORIGIN)
+eq3.move_to(DOWN * 1)
+
+self.play(Write(eq1), run_time=1.0)
+self.play(Write(eq2), run_time=1.0)
+self.play(Write(eq3), run_time=1.0)
+```
+
+## CREATE - For Shapes and Lines
+```python
+# Create is perfect for geometric shapes
+circle = Circle(radius=1.5, color=BLUE)
+self.play(Create(circle), run_time=1.0)
+
+# Create for lines and arrows
+line = Line(LEFT * 3, RIGHT * 3, color=WHITE)
+arrow = Arrow(ORIGIN, UP * 2, color=YELLOW)
+
+self.play(Create(line), run_time=1.0)
+self.play(Create(arrow), run_time=0.8)
+
+# Create for axes
+axes = Axes(x_range=[-5, 5], y_range=[-3, 3])
+self.play(Create(axes), run_time=1.5)
+
+# Create for graphs/curves
+graph = axes.plot(lambda x: x**2, color=BLUE)
+self.play(Create(graph), run_time=2.0)
+```
+
+## FADEIN - Smooth Appearance
+```python
+# FadeIn - objects appear smoothly
+shape = Square(side_length=2, color=BLUE)
+self.play(FadeIn(shape), run_time=1.0)
+
+# FadeIn with direction
+text = Text("Hello!", font_size=48)
+self.play(FadeIn(text, shift=UP), run_time=1.0)  # Fades in from below
+
+# FadeIn from different directions
+self.play(FadeIn(obj, shift=DOWN))   # From above
+self.play(FadeIn(obj, shift=LEFT))   # From right
+self.play(FadeIn(obj, shift=RIGHT))  # From left
+
+# FadeIn with scale
+self.play(FadeIn(shape, scale=0.5), run_time=1.0)  # Grows while fading in
+```
+
+## FADEOUT - Smooth Disappearance
+```python
+# FadeOut single object
+self.play(FadeOut(shape), run_time=0.5)
+
+# FadeOut with direction
+self.play(FadeOut(text, shift=UP), run_time=0.5)  # Exits upward
+
+# FadeOut all objects (PRISM standard for section transitions)
+self.play(*[FadeOut(mob) for mob in self.mobjects], run_time=0.5)
+
+# FadeOut specific group
+shapes = VGroup(circle, square, triangle)
+self.play(FadeOut(shapes), run_time=0.5)
+```
+
+## DRAWBORDERTHENFILL - Outline First, Then Fill
+```python
+# Great for shapes where you want to emphasize the boundary
+shape = Circle(radius=1.5, color=BLUE, fill_opacity=0.5)
+self.play(DrawBorderThenFill(shape), run_time=2.0)
+
+# Works well for rectangles
+rect = Rectangle(width=3, height=2, color=GREEN, fill_opacity=0.3)
+self.play(DrawBorderThenFill(rect), run_time=1.5)
+
+# For complex polygons
+polygon = RegularPolygon(n=6, color=YELLOW, fill_opacity=0.4)
+polygon.scale(2)
+self.play(DrawBorderThenFill(polygon), run_time=2.0)
+```
+
+## INDICATE - Highlight/Emphasis
+```python
+# Quick flash of attention
+formula = MathTex(r"E = mc^2")
+self.play(Write(formula))
+self.play(Indicate(formula, color=YELLOW), run_time=0.5)
+
+# Indicate specific part
+eq = MathTex(r"a^2", r"+", r"b^2", r"=", r"c^2")
+self.play(Write(eq))
+self.play(Indicate(eq[0], color=BLUE), run_time=0.5)  # Highlight a²
+self.play(Indicate(eq[2], color=GREEN), run_time=0.5)  # Highlight b²
+self.play(Indicate(eq[4], color=RED), run_time=0.5)   # Highlight c²
+
+# Indicate with scale
+self.play(Indicate(text, scale_factor=1.3), run_time=0.5)
+```
+
+## CIRCUMSCRIBE - Circle Around Object
+```python
+# Draw attention by circling an object
+answer = MathTex(r"x = 5", color=GREEN)
+self.play(Write(answer))
+self.play(Circumscribe(answer, color=YELLOW), run_time=1.0)
+
+# Circumscribe with different shapes
+self.play(Circumscribe(obj, Circle, color=RED), run_time=1.0)
+self.play(Circumscribe(obj, Rectangle, color=BLUE), run_time=1.0)
+```
+
+## GROWTHARROW / GROWFROMCENTER
+```python
+# Arrow growing from start to end
+arrow = Arrow(LEFT * 2, RIGHT * 2, color=YELLOW)
+self.play(GrowArrow(arrow), run_time=1.0)
+
+# Shape growing from center
+circle = Circle(radius=1.5, color=BLUE)
+self.play(GrowFromCenter(circle), run_time=1.0)
+
+# Multiple objects growing
+shapes = VGroup(
+    Circle(radius=0.5, color=RED).shift(LEFT * 2),
+    Square(side_length=1, color=GREEN),
+    Triangle(color=BLUE).shift(RIGHT * 2).scale(0.8)
+)
+self.play(GrowFromCenter(shapes), run_time=1.5)
+```
+
+## ANIMATION SEQUENCING
+```python
+# Sequential animations
+self.play(Write(text1), run_time=1.0)
+self.play(Write(text2), run_time=1.0)
+self.play(Write(text3), run_time=1.0)
+
+# Simultaneous animations
+self.play(
+    Write(text1),
+    Create(shape1),
+    FadeIn(image1),
+    run_time=1.5
+)
+
+# With pauses between
+self.play(Write(eq1), run_time=1.5)
+self.wait(0.5)  # Pause for narration
+self.play(Write(eq2), run_time=1.5)
+self.wait(1.0)  # Longer pause for emphasis
+```
+
+## COMPLETE EXAMPLE: Building an Equation
+```python
+from manim import *
+
+class BuildEquation(Scene):
+    def construct(self):
+        # Title
+        title = Text("Building the Pythagorean Theorem", font_size=40, color=YELLOW)
+        title.to_edge(UP)
+        self.play(Write(title), run_time=1.0)
+        
+        # Step 1: Show the equation parts
+        part_a = MathTex(r"a^2", font_size=56, color=BLUE)
+        plus1 = MathTex(r"+", font_size=56)
+        part_b = MathTex(r"b^2", font_size=56, color=GREEN)
+        equals = MathTex(r"=", font_size=56)
+        part_c = MathTex(r"c^2", font_size=56, color=RED)
+        
+        # Arrange horizontally
+        equation = VGroup(part_a, plus1, part_b, equals, part_c)
+        equation.arrange(RIGHT, buff=0.3)
+        equation.move_to(ORIGIN)
+        
+        # Animate each part appearing
+        self.play(FadeIn(part_a, shift=UP), run_time=0.8)
+        self.wait(0.3)
+        self.play(Write(plus1), run_time=0.3)
+        self.play(FadeIn(part_b, shift=UP), run_time=0.8)
+        self.wait(0.3)
+        self.play(Write(equals), run_time=0.3)
+        self.play(FadeIn(part_c, shift=UP), run_time=0.8)
+        
+        # Emphasize the complete equation
+        self.wait(0.5)
+        box = SurroundingRectangle(equation, color=YELLOW, buff=0.3)
+        self.play(Create(box), run_time=0.5)
+        
+        # Highlight each part
+        self.play(Indicate(part_a, color=BLUE, scale_factor=1.2), run_time=0.5)
+        self.play(Indicate(part_b, color=GREEN, scale_factor=1.2), run_time=0.5)
+        self.play(Indicate(part_c, color=RED, scale_factor=1.2), run_time=0.5)
+        
+        self.wait(2.0)
+```
+
+## ANIMATION TIMING BEST PRACTICES
+```python
+# STANDARD TIMING FOR PRISM:
+WRITE_TEXT = 1.5       # Text appearing
+WRITE_FORMULA = 2.0    # Complex formulas
+CREATE_SHAPE = 1.0     # Basic shapes
+CREATE_COMPLEX = 2.0   # Axes, graphs
+TRANSFORM = 1.5        # Equation morphing
+INDICATE = 0.5         # Quick highlight
+FADE = 0.5             # Fade in/out
+WAIT_SHORT = 0.5       # Brief pause
+WAIT_MEDIUM = 1.0      # Standard pause
+WAIT_LONG = 2.0        # Emphasis
+
+# Always wait after important content
+self.play(Write(key_formula), run_time=2.0)
+self.wait(1.0)  # Let it sink in
+```

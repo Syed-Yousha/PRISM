@@ -1,0 +1,349 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# BOUNDS & APPROXIMATION - Upper/Lower Bounds, Error
+# IGCSE/O-Level Number Topic
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## UPPER AND LOWER BOUNDS CONCEPT
+```python
+# Introduction to bounds
+title = Text("Upper and Lower Bounds", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Scenario
+scenario = Text("A length is measured as 25 cm to the nearest cm", font_size=28, color=WHITE)
+scenario.shift(UP * 1.5)
+
+# Number line
+number_line = NumberLine(
+    x_range=[24, 26, 0.5],
+    length=10,
+    include_numbers=True,
+    numbers_with_elongated_ticks=[24.5, 25, 25.5],
+    font_size=24
+).shift(DOWN * 0.2)
+
+# Shaded region
+bounds_region = Rectangle(
+    width=5, height=0.5, 
+    color=GREEN, fill_opacity=0.3
+)
+bounds_region.move_to(number_line.n2p(25))
+
+# Lower bound
+lb = MathTex("24.5", font_size=32, color=RED)
+lb_label = Text("Lower Bound (LB)", font_size=20, color=RED)
+lb.next_to(number_line.n2p(24.5), DOWN * 2)
+lb_label.next_to(lb, DOWN, buff=0.1)
+
+# Upper bound
+ub = MathTex("25.5", font_size=32, color=BLUE)
+ub_label = Text("Upper Bound (UB)", font_size=20, color=BLUE)
+ub.next_to(number_line.n2p(25.5), DOWN * 2)
+ub_label.next_to(ub, DOWN, buff=0.1)
+
+# Formula
+formula = MathTex("\\text{LB} \\leq \\text{actual value} < \\text{UB}", font_size=32, color=ORANGE)
+formula.to_edge(DOWN, buff=0.8)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(scenario), run_time=1.0)
+self.play(Create(number_line), run_time=1.0)
+self.play(FadeIn(bounds_region), run_time=0.8)
+self.play(Write(lb), Write(lb_label), run_time=1.0)
+self.play(Write(ub), Write(ub_label), run_time=1.0)
+self.play(Write(formula), run_time=1.0)
+```
+
+## FINDING BOUNDS FROM ACCURACY
+```python
+# Different rounding scenarios
+title = Text("Finding Bounds from Accuracy", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Table header
+headers = VGroup(
+    Text("Measurement", font_size=24, color=WHITE),
+    Text("Accuracy", font_size=24, color=WHITE),
+    Text("Lower Bound", font_size=24, color=RED),
+    Text("Upper Bound", font_size=24, color=BLUE)
+).arrange(RIGHT, buff=1.5)
+headers.shift(UP * 1.5)
+
+# Table rows
+row1 = VGroup(
+    MathTex("8\\text{ cm}", font_size=28),
+    Text("nearest cm", font_size=22),
+    MathTex("7.5", font_size=28, color=RED),
+    MathTex("8.5", font_size=28, color=BLUE)
+).arrange(RIGHT, buff=1.6)
+row1.shift(UP * 0.7)
+
+row2 = VGroup(
+    MathTex("4.6\\text{ m}", font_size=28),
+    Text("1 d.p.", font_size=22),
+    MathTex("4.55", font_size=28, color=RED),
+    MathTex("4.65", font_size=28, color=BLUE)
+).arrange(RIGHT, buff=1.7)
+row2.shift(UP * 0)
+
+row3 = VGroup(
+    MathTex("120", font_size=28),
+    Text("nearest 10", font_size=22),
+    MathTex("115", font_size=28, color=RED),
+    MathTex("125", font_size=28, color=BLUE)
+).arrange(RIGHT, buff=1.7)
+row3.shift(DOWN * 0.7)
+
+row4 = VGroup(
+    MathTex("2500", font_size=28),
+    Text("2 s.f.", font_size=22),
+    MathTex("2450", font_size=28, color=RED),
+    MathTex("2550", font_size=28, color=BLUE)
+).arrange(RIGHT, buff=1.6)
+row4.shift(DOWN * 1.4)
+
+# Rule
+rule = VGroup(
+    Rectangle(width=10, height=0.8, color=GREEN, fill_opacity=0.2),
+    Text("Half the accuracy below and above", font_size=24, color=GREEN)
+)
+rule[1].move_to(rule[0])
+rule.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(headers), run_time=1.0)
+self.play(Write(row1), run_time=1.0)
+self.play(Write(row2), run_time=1.0)
+self.play(Write(row3), run_time=1.0)
+self.play(Write(row4), run_time=1.0)
+self.play(Create(rule), run_time=1.0)
+```
+
+## BOUNDS IN ADDITION
+```python
+# Maximum and minimum for A + B
+title = Text("Bounds: Addition", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Problem
+problem = VGroup(
+    Text("A = 5 cm (nearest cm)", font_size=24, color=WHITE),
+    Text("B = 3 cm (nearest cm)", font_size=24, color=WHITE)
+).arrange(RIGHT, buff=2)
+problem.shift(UP * 1.5)
+
+# Bounds
+a_bounds = MathTex("A: 4.5 \\leq A < 5.5", font_size=28, color=BLUE).shift(UP * 0.7 + LEFT * 3)
+b_bounds = MathTex("B: 2.5 \\leq B < 3.5", font_size=28, color=RED).shift(UP * 0.7 + RIGHT * 3)
+
+# Maximum sum
+max_calc = VGroup(
+    Text("Maximum A + B", font_size=24, color=GREEN),
+    MathTex("= 5.5 + 3.5", font_size=32),
+    MathTex("= 9.0", font_size=36, color=GREEN)
+).arrange(DOWN, buff=0.2)
+max_calc.shift(DOWN * 0.5 + LEFT * 3)
+
+# Minimum sum
+min_calc = VGroup(
+    Text("Minimum A + B", font_size=24, color=ORANGE),
+    MathTex("= 4.5 + 2.5", font_size=32),
+    MathTex("= 7.0", font_size=36, color=ORANGE)
+).arrange(DOWN, buff=0.2)
+min_calc.shift(DOWN * 0.5 + RIGHT * 3)
+
+# Rule
+rule = VGroup(
+    Rectangle(width=9, height=0.8, color=YELLOW, fill_opacity=0.2),
+    Text("MAX: UB + UB    MIN: LB + LB", font_size=24, color=YELLOW)
+)
+rule[1].move_to(rule[0])
+rule.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(problem), run_time=1.0)
+self.play(Write(a_bounds), Write(b_bounds), run_time=1.0)
+self.play(Write(max_calc), run_time=1.5)
+self.play(Write(min_calc), run_time=1.5)
+self.play(Create(rule), run_time=1.0)
+```
+
+## BOUNDS IN SUBTRACTION
+```python
+# Maximum and minimum for A - B
+title = Text("Bounds: Subtraction", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Problem
+problem = VGroup(
+    Text("A = 10 m (nearest m)", font_size=24),
+    Text("B = 4 m (nearest m)", font_size=24)
+).arrange(RIGHT, buff=2)
+problem.shift(UP * 1.5)
+
+# Bounds
+a_bounds = MathTex("A: 9.5 \\leq A < 10.5", font_size=28, color=BLUE).shift(UP * 0.7)
+
+b_bounds = MathTex("B: 3.5 \\leq B < 4.5", font_size=28, color=RED).shift(UP * 0.2)
+
+# Maximum difference (big - small)
+max_calc = VGroup(
+    Text("Maximum A - B", font_size=24, color=GREEN),
+    Text("(big - small)", font_size=18, color=GRAY),
+    MathTex("= 10.5 - 3.5", font_size=32),
+    MathTex("= 7.0", font_size=36, color=GREEN)
+).arrange(DOWN, buff=0.15)
+max_calc.shift(DOWN * 0.8 + LEFT * 3)
+
+# Minimum difference (small - big)
+min_calc = VGroup(
+    Text("Minimum A - B", font_size=24, color=ORANGE),
+    Text("(small - big)", font_size=18, color=GRAY),
+    MathTex("= 9.5 - 4.5", font_size=32),
+    MathTex("= 5.0", font_size=36, color=ORANGE)
+).arrange(DOWN, buff=0.15)
+min_calc.shift(DOWN * 0.8 + RIGHT * 3)
+
+# Rule
+rule = VGroup(
+    Rectangle(width=9, height=0.8, color=YELLOW, fill_opacity=0.2),
+    Text("MAX: UB - LB    MIN: LB - UB", font_size=24, color=YELLOW)
+)
+rule[1].move_to(rule[0])
+rule.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(problem), run_time=1.0)
+self.play(Write(a_bounds), Write(b_bounds), run_time=1.0)
+self.play(Write(max_calc), run_time=1.5)
+self.play(Write(min_calc), run_time=1.5)
+self.play(Create(rule), run_time=1.0)
+```
+
+## BOUNDS IN MULTIPLICATION
+```python
+# Maximum and minimum for A × B
+title = Text("Bounds: Multiplication", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Problem
+problem = Text("Area = length × width", font_size=28, color=WHITE)
+problem.shift(UP * 1.8)
+
+values = VGroup(
+    Text("Length = 6 cm (nearest cm)", font_size=22),
+    Text("Width = 4 cm (nearest cm)", font_size=22)
+).arrange(RIGHT, buff=1.5)
+values.shift(UP * 1.2)
+
+# Bounds
+l_bounds = MathTex("L: 5.5 \\leq L < 6.5", font_size=26, color=BLUE).shift(UP * 0.5 + LEFT * 3)
+w_bounds = MathTex("W: 3.5 \\leq W < 4.5", font_size=26, color=RED).shift(UP * 0.5 + RIGHT * 3)
+
+# Maximum area
+max_calc = VGroup(
+    Text("Maximum Area", font_size=24, color=GREEN),
+    MathTex("= 6.5 \\times 4.5", font_size=32),
+    MathTex("= 29.25 \\text{ cm}^2", font_size=36, color=GREEN)
+).arrange(DOWN, buff=0.2)
+max_calc.shift(DOWN * 0.5 + LEFT * 3)
+
+# Minimum area
+min_calc = VGroup(
+    Text("Minimum Area", font_size=24, color=ORANGE),
+    MathTex("= 5.5 \\times 3.5", font_size=32),
+    MathTex("= 19.25 \\text{ cm}^2", font_size=36, color=ORANGE)
+).arrange(DOWN, buff=0.2)
+min_calc.shift(DOWN * 0.5 + RIGHT * 3)
+
+# Rule
+rule = VGroup(
+    Rectangle(width=9, height=0.8, color=YELLOW, fill_opacity=0.2),
+    Text("MAX: UB × UB    MIN: LB × LB", font_size=24, color=YELLOW)
+)
+rule[1].move_to(rule[0])
+rule.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(problem), Write(values), run_time=1.0)
+self.play(Write(l_bounds), Write(w_bounds), run_time=1.0)
+self.play(Write(max_calc), run_time=1.5)
+self.play(Write(min_calc), run_time=1.5)
+self.play(Create(rule), run_time=1.0)
+```
+
+## BOUNDS IN DIVISION
+```python
+# Maximum and minimum for A ÷ B
+title = Text("Bounds: Division", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Problem
+problem = VGroup(
+    Text("Speed = Distance ÷ Time", font_size=26),
+    Text("Distance = 100 m (nearest 10 m)", font_size=22),
+    Text("Time = 12 s (nearest second)", font_size=22)
+).arrange(DOWN, buff=0.2)
+problem.shift(UP * 1.5)
+
+# Bounds
+d_bounds = MathTex("D: 95 \\leq D < 105", font_size=26, color=BLUE).shift(UP * 0.3 + LEFT * 3)
+t_bounds = MathTex("T: 11.5 \\leq T < 12.5", font_size=26, color=RED).shift(UP * 0.3 + RIGHT * 3)
+
+# Maximum speed (big/small)
+max_calc = VGroup(
+    Text("Maximum Speed", font_size=22, color=GREEN),
+    Text("(big ÷ small)", font_size=18, color=GRAY),
+    MathTex("= \\frac{105}{11.5}", font_size=30),
+    MathTex("= 9.13 \\text{ m/s}", font_size=32, color=GREEN)
+).arrange(DOWN, buff=0.15)
+max_calc.shift(DOWN * 0.9 + LEFT * 3)
+
+# Minimum speed (small/big)
+min_calc = VGroup(
+    Text("Minimum Speed", font_size=22, color=ORANGE),
+    Text("(small ÷ big)", font_size=18, color=GRAY),
+    MathTex("= \\frac{95}{12.5}", font_size=30),
+    MathTex("= 7.6 \\text{ m/s}", font_size=32, color=ORANGE)
+).arrange(DOWN, buff=0.15)
+min_calc.shift(DOWN * 0.9 + RIGHT * 3)
+
+# Rule
+rule = VGroup(
+    Rectangle(width=9, height=0.8, color=YELLOW, fill_opacity=0.2),
+    Text("MAX: UB ÷ LB    MIN: LB ÷ UB", font_size=24, color=YELLOW)
+)
+rule[1].move_to(rule[0])
+rule.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(problem), run_time=1.5)
+self.play(Write(d_bounds), Write(t_bounds), run_time=1.0)
+self.play(Write(max_calc), run_time=1.5)
+self.play(Write(min_calc), run_time=1.5)
+self.play(Create(rule), run_time=1.0)
+```
+
+## BOUNDS SUMMARY
+```python
+# All rules on one screen
+title = Text("Bounds Summary", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Table
+rules = VGroup(
+    VGroup(Text("Operation", font_size=24), Text("Maximum", font_size=24, color=GREEN), Text("Minimum", font_size=24, color=ORANGE)).arrange(RIGHT, buff=2),
+    VGroup(MathTex("A + B", font_size=28), MathTex("UB + UB", font_size=28, color=GREEN), MathTex("LB + LB", font_size=28, color=ORANGE)).arrange(RIGHT, buff=2),
+    VGroup(MathTex("A - B", font_size=28), MathTex("UB - LB", font_size=28, color=GREEN), MathTex("LB - UB", font_size=28, color=ORANGE)).arrange(RIGHT, buff=2),
+    VGroup(MathTex("A \\times B", font_size=28), MathTex("UB \\times UB", font_size=28, color=GREEN), MathTex("LB \\times LB", font_size=28, color=ORANGE)).arrange(RIGHT, buff=2),
+    VGroup(MathTex("A \\div B", font_size=28), MathTex("\\frac{UB}{LB}", font_size=28, color=GREEN), MathTex("\\frac{LB}{UB}", font_size=28, color=ORANGE)).arrange(RIGHT, buff=2),
+    VGroup(MathTex("A^2", font_size=28), MathTex("UB^2", font_size=28, color=GREEN), MathTex("LB^2", font_size=28, color=ORANGE)).arrange(RIGHT, buff=2)
+).arrange(DOWN, buff=0.35)
+rules.move_to(ORIGIN)
+
+# Tip
+tip = VGroup(
+    Rectangle(width=10, height=0.6, color=BLUE, fill_opacity=0.2),
+    Text("Remember: Upper bound is NOT included (use < not ≤)", font_size=20, color=BLUE)
+)
+tip[1].move_to(tip[0])
+tip.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+for rule in rules:
+    self.play(Write(rule), run_time=0.5)
+self.play(Create(tip), run_time=1.0)
+```

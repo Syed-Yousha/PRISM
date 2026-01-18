@@ -1,0 +1,491 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# PHYSICS ANIMATIONS - Pendulums, Projectiles, Springs
+# Classical mechanics visualizations
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## SIMPLE PENDULUM
+```python
+# Swinging pendulum with realistic motion
+from manim import *
+import numpy as np
+
+class SimplePendulum(Scene):
+    def construct(self):
+        # Pendulum parameters
+        length = 3
+        pivot = UP * 2
+        g = 9.8
+        theta_max = PI / 6  # 30 degrees max swing
+        
+        # Period of pendulum: T = 2π√(L/g)
+        period = 2 * PI * np.sqrt(length / g)
+        
+        # Create pendulum parts
+        pivot_dot = Dot(pivot, color=WHITE, radius=0.1)
+        
+        # ValueTracker for angle
+        theta = ValueTracker(theta_max)
+        
+        def get_pendulum():
+            angle = theta.get_value()
+            end_point = pivot + length * np.array([np.sin(angle), -np.cos(angle), 0])
+            rod = Line(pivot, end_point, color=WHITE, stroke_width=3)
+            bob = Dot(end_point, color=RED, radius=0.2)
+            return VGroup(rod, bob)
+        
+        pendulum = always_redraw(get_pendulum)
+        
+        # Title
+        title = Text("Simple Pendulum", font_size=36, color=YELLOW).to_edge(UP)
+        formula = MathTex(r"T = 2\pi\sqrt{\frac{L}{g}}", font_size=32).to_corner(UR)
+        
+        self.add(pivot_dot, pendulum, title, formula)
+        
+        # Animate swinging (simple harmonic motion)
+        # θ(t) = θ_max * cos(ωt) where ω = √(g/L)
+        omega = np.sqrt(g / length)
+        
+        for _ in range(3):  # 3 full swings
+            self.play(
+                theta.animate.set_value(-theta_max),
+                rate_func=lambda t: theta_max * np.cos(omega * t * period / 2) / theta_max,
+                run_time=period / 2
+            )
+            self.play(
+                theta.animate.set_value(theta_max),
+                rate_func=lambda t: -theta_max * np.cos(omega * t * period / 2) / theta_max,
+                run_time=period / 2
+            )
+```
+
+## PENDULUM WITH UPDATER
+```python
+# Continuous pendulum motion using dt updater
+from manim import *
+import numpy as np
+
+class PendulumUpdater(Scene):
+    def construct(self):
+        length = 2.5
+        pivot = UP * 2.5
+        g = 10
+        theta_0 = PI / 4
+        omega = np.sqrt(g / length)
+        
+        self.time = 0
+        
+        pivot_dot = Dot(pivot, color=GRAY)
+        
+        def get_angle():
+            return theta_0 * np.cos(omega * self.time)
+        
+        rod = Line(pivot, pivot + DOWN * length)
+        bob = Dot(color=BLUE, radius=0.25)
+        
+        def update_pendulum(mob, dt):
+            self.time += dt
+            angle = get_angle()
+            end = pivot + length * np.array([np.sin(angle), -np.cos(angle), 0])
+            rod.put_start_and_end_on(pivot, end)
+            bob.move_to(end)
+        
+        pendulum = VGroup(rod, bob)
+        pendulum.add_updater(update_pendulum)
+        
+        self.add(pivot_dot, pendulum)
+        self.wait(8)
+        
+        pendulum.remove_updater(update_pendulum)
+```
+
+## PROJECTILE MOTION
+```python
+# Ball thrown at an angle
+from manim import *
+import numpy as np
+
+class ProjectileMotion(Scene):
+    def construct(self):
+        # Physics parameters
+        v0 = 5  # initial velocity (scaled for scene)
+        angle = PI / 4  # 45 degrees
+        g = 10  # gravity (scaled)
+        
+        v0x = v0 * np.cos(angle)
+        v0y = v0 * np.sin(angle)
+        
+        # Time of flight
+        t_flight = 2 * v0y / g
+        
+        # Axes
+        axes = Axes(
+            x_range=[0, 6, 1],
+            y_range=[0, 3, 1],
+            x_length=10,
+            y_length=5,
+            axis_config={"include_tip": True}
+        ).to_edge(DOWN, buff=0.5)
+        
+        labels = axes.get_axis_labels(x_label="x", y_label="y")
+        
+        # Trajectory equation: y = x*tan(θ) - g*x²/(2*v0²*cos²(θ))
+        def trajectory(x):
+            return x * np.tan(angle) - (g * x**2) / (2 * v0**2 * np.cos(angle)**2)
+        
+        # Plot path
+        path = axes.plot(trajectory, x_range=[0, v0x * t_flight], color=YELLOW)
+        
+        # Projectile (ball)
+        ball = Dot(axes.c2p(0, 0), color=RED, radius=0.15)
+        
+        # Velocity vectors
+        def get_velocity_vector(t):
+            x = v0x * t
+            y = v0y * t - 0.5 * g * t**2
+            vx = v0x
+            vy = v0y - g * t
+            pos = axes.c2p(x, y)
+            vel_end = pos + 0.3 * np.array([vx, vy, 0])
+            return Arrow(pos, vel_end, buff=0, color=GREEN, stroke_width=3)
+        
+        title = Text("Projectile Motion", font_size=36, color=YELLOW).to_edge(UP)
+        
+        self.play(Write(title))
+        self.play(Create(axes), Write(labels))
+        self.play(Create(path), run_time=2)
+        self.add(ball)
+        
+        # Animate ball along path
+        self.play(MoveAlongPath(ball, path), run_time=3, rate_func=linear)
+        self.wait()
+```
+
+## PROJECTILE WITH TRACE
+```python
+# Ball leaving a dotted trail
+from manim import *
+import numpy as np
+
+class ProjectileTrace(Scene):
+    def construct(self):
+        v0 = 4
+        angle = PI / 3
+        g = 10
+        
+        axes = Axes(
+            x_range=[0, 5, 1],
+            y_range=[0, 4, 1],
+            x_length=8,
+            y_length=5
+        ).shift(DOWN * 0.5)
+        
+        ball = Dot(axes.c2p(0, 0), color=RED, radius=0.15)
+        
+        # Trace path
+        trace = TracedPath(ball.get_center, stroke_color=YELLOW, stroke_width=2)
+        
+        t = ValueTracker(0)
+        t_max = 2 * v0 * np.sin(angle) / g
+        
+        def update_ball(mob):
+            time = t.get_value()
+            x = v0 * np.cos(angle) * time
+            y = v0 * np.sin(angle) * time - 0.5 * g * time**2
+            if y < 0:
+                y = 0
+            mob.move_to(axes.c2p(x, y))
+        
+        ball.add_updater(update_ball)
+        
+        self.add(axes, trace, ball)
+        self.play(t.animate.set_value(t_max), run_time=3, rate_func=linear)
+        ball.clear_updaters()
+        self.wait()
+```
+
+## SPRING-MASS SYSTEM
+```python
+# Oscillating mass on a spring
+from manim import *
+import numpy as np
+
+class SpringMass(Scene):
+    def construct(self):
+        # Parameters
+        k = 4  # spring constant
+        m = 1  # mass
+        omega = np.sqrt(k / m)
+        amplitude = 1.5
+        
+        ceiling = Line(LEFT * 2 + UP * 3, RIGHT * 2 + UP * 3, color=GRAY)
+        ceiling_hash = VGroup(*[
+            Line(UP * 3 + LEFT * 2 + RIGHT * i * 0.4, 
+                 UP * 3.2 + LEFT * 2 + RIGHT * (i * 0.4 - 0.2), color=GRAY)
+            for i in range(11)
+        ])
+        
+        # Spring (using zigzag)
+        def create_spring(start, end, coils=8):
+            spring = VMobject()
+            points = [start]
+            
+            direction = end - start
+            length = np.linalg.norm(direction)
+            unit = direction / length
+            perp = np.array([-unit[1], unit[0], 0])
+            
+            for i in range(coils * 2 + 1):
+                t = i / (coils * 2)
+                pos = start + t * direction
+                if i % 2 == 1:
+                    pos += perp * 0.2 * (1 if (i // 2) % 2 == 0 else -1)
+                points.append(pos)
+            
+            points.append(end)
+            spring.set_points_as_corners(points)
+            spring.set_color(WHITE)
+            return spring
+        
+        equilibrium = UP * 1
+        mass = Square(side_length=0.5, color=BLUE, fill_opacity=1)
+        
+        t = ValueTracker(0)
+        
+        def get_position():
+            return equilibrium + DOWN * amplitude * np.cos(omega * t.get_value())
+        
+        def update_system(mob):
+            pos = get_position()
+            mass.move_to(pos)
+        
+        mass.add_updater(update_system)
+        
+        spring = always_redraw(
+            lambda: create_spring(UP * 3, mass.get_top())
+        )
+        
+        title = Text("Spring-Mass Oscillation", font_size=32, color=YELLOW).to_edge(UP)
+        formula = MathTex(r"x(t) = A\cos(\omega t)", font_size=28).to_corner(UR)
+        
+        self.add(ceiling, ceiling_hash, spring, mass, title, formula)
+        self.play(t.animate.set_value(4 * PI), run_time=8, rate_func=linear)
+        mass.clear_updaters()
+```
+
+## FALLING OBJECT (Free Fall)
+```python
+# Ball falling under gravity
+from manim import *
+import numpy as np
+
+class FreeFall(Scene):
+    def construct(self):
+        # Scene setup
+        ground = Line(LEFT * 5, RIGHT * 5, color=GREEN).to_edge(DOWN, buff=1)
+        height_line = DashedLine(UP * 3 + LEFT * 3, DOWN * 2 + LEFT * 3, color=GRAY)
+        
+        ball = Dot(UP * 3 + LEFT * 3, color=RED, radius=0.2)
+        
+        # Height marker
+        h0 = 5  # initial height (arbitrary units)
+        g = 10
+        
+        t = ValueTracker(0)
+        t_fall = np.sqrt(2 * h0 / g)
+        
+        def update_ball(mob):
+            time = t.get_value()
+            height = h0 - 0.5 * g * time**2
+            if height < 0:
+                height = 0
+            # Map to scene coordinates
+            y = UP * 3 + DOWN * (h0 - height)
+            mob.move_to(LEFT * 3 + y)
+        
+        ball.add_updater(update_ball)
+        
+        # Height label
+        height_text = always_redraw(
+            lambda: MathTex(
+                f"h = {max(0, h0 - 0.5 * g * t.get_value()**2):.1f}",
+                font_size=28
+            ).next_to(ball, RIGHT)
+        )
+        
+        title = Text("Free Fall", font_size=36, color=YELLOW).to_edge(UP)
+        equation = MathTex(r"h = h_0 - \frac{1}{2}gt^2", font_size=32).to_corner(UR)
+        
+        self.add(ground, height_line, ball, height_text, title, equation)
+        self.play(t.animate.set_value(t_fall), run_time=2, rate_func=linear)
+        ball.clear_updaters()
+        
+        # Bounce effect
+        self.play(ball.animate.shift(UP * 0.5), run_time=0.1)
+        self.play(ball.animate.shift(DOWN * 0.5), run_time=0.1)
+        self.wait()
+```
+
+## CIRCULAR MOTION
+```python
+# Object moving in a circle with velocity/acceleration vectors
+from manim import *
+import numpy as np
+
+class CircularMotion(Scene):
+    def construct(self):
+        radius = 2
+        omega = 1  # angular velocity
+        
+        # Circle path
+        circle = Circle(radius=radius, color=BLUE_C)
+        center = Dot(ORIGIN, color=WHITE)
+        
+        # Moving object
+        ball = Dot(color=RED, radius=0.15)
+        ball.move_to(RIGHT * radius)
+        
+        t = ValueTracker(0)
+        
+        def update_ball(mob):
+            angle = omega * t.get_value()
+            mob.move_to(radius * np.array([np.cos(angle), np.sin(angle), 0]))
+        
+        ball.add_updater(update_ball)
+        
+        # Velocity vector (tangent)
+        velocity = always_redraw(lambda: Arrow(
+            ball.get_center(),
+            ball.get_center() + 0.8 * np.array([
+                -np.sin(omega * t.get_value()),
+                np.cos(omega * t.get_value()),
+                0
+            ]),
+            color=GREEN,
+            buff=0
+        ))
+        
+        # Centripetal acceleration (toward center)
+        acceleration = always_redraw(lambda: Arrow(
+            ball.get_center(),
+            ball.get_center() + 0.5 * np.array([
+                -np.cos(omega * t.get_value()),
+                -np.sin(omega * t.get_value()),
+                0
+            ]),
+            color=YELLOW,
+            buff=0
+        ))
+        
+        # Labels
+        v_label = Text("v", font_size=24, color=GREEN).to_corner(UL)
+        a_label = Text("a", font_size=24, color=YELLOW).next_to(v_label, DOWN)
+        
+        title = Text("Circular Motion", font_size=36, color=YELLOW).to_edge(UP)
+        
+        self.add(circle, center, ball, velocity, acceleration, title)
+        self.add(v_label, a_label)
+        
+        self.play(t.animate.set_value(2 * PI), run_time=6, rate_func=linear)
+        ball.clear_updaters()
+        self.wait()
+```
+
+## COLLISION (Elastic)
+```python
+# Two balls colliding elastically
+from manim import *
+import numpy as np
+
+class ElasticCollision(Scene):
+    def construct(self):
+        # Two balls with different masses
+        ball1 = Dot(LEFT * 4, color=RED, radius=0.3)
+        ball2 = Dot(RIGHT * 1, color=BLUE, radius=0.2)
+        
+        m1, m2 = 2, 1  # masses
+        v1, v2 = 3, -1  # initial velocities
+        
+        # After elastic collision:
+        # v1' = (m1-m2)/(m1+m2)*v1 + 2*m2/(m1+m2)*v2
+        # v2' = 2*m1/(m1+m2)*v1 + (m2-m1)/(m1+m2)*v2
+        v1_final = ((m1 - m2) * v1 + 2 * m2 * v2) / (m1 + m2)
+        v2_final = (2 * m1 * v1 + (m2 - m1) * v2) / (m1 + m2)
+        
+        label1 = MathTex("m_1", font_size=24, color=RED).next_to(ball1, UP)
+        label2 = MathTex("m_2", font_size=24, color=BLUE).next_to(ball2, UP)
+        
+        title = Text("Elastic Collision", font_size=36, color=YELLOW).to_edge(UP)
+        
+        self.add(ball1, ball2, label1, label2, title)
+        
+        # Move toward each other
+        self.play(
+            ball1.animate.shift(RIGHT * 3),
+            ball2.animate.shift(LEFT * 1),
+            label1.animate.shift(RIGHT * 3),
+            label2.animate.shift(LEFT * 1),
+            run_time=1.5,
+            rate_func=linear
+        )
+        
+        # Flash at collision
+        flash = Flash(ball1.get_center() + RIGHT * 0.2, color=WHITE)
+        self.play(flash, run_time=0.2)
+        
+        # Move apart after collision
+        self.play(
+            ball1.animate.shift(RIGHT * v1_final),
+            ball2.animate.shift(RIGHT * v2_final * 2),
+            label1.animate.shift(RIGHT * v1_final),
+            label2.animate.shift(RIGHT * v2_final * 2),
+            run_time=1.5,
+            rate_func=linear
+        )
+        self.wait()
+```
+
+## WAVE MOTION
+```python
+# Traveling sine wave
+from manim import *
+import numpy as np
+
+class WaveMotion(Scene):
+    def construct(self):
+        axes = Axes(
+            x_range=[0, 8, 1],
+            y_range=[-2, 2, 1],
+            x_length=10,
+            y_length=4
+        )
+        
+        t = ValueTracker(0)
+        wavelength = 2
+        amplitude = 1.5
+        speed = 1
+        k = 2 * PI / wavelength
+        omega = speed * k
+        
+        wave = always_redraw(
+            lambda: axes.plot(
+                lambda x: amplitude * np.sin(k * x - omega * t.get_value()),
+                color=BLUE,
+                x_range=[0, 8]
+            )
+        )
+        
+        # Show a particle oscillating
+        particle = always_redraw(
+            lambda: Dot(
+                axes.c2p(4, amplitude * np.sin(k * 4 - omega * t.get_value())),
+                color=RED,
+                radius=0.1
+            )
+        )
+        
+        title = Text("Traveling Wave", font_size=36, color=YELLOW).to_edge(UP)
+        
+        self.add(axes, wave, particle, title)
+        self.play(t.animate.set_value(4 * PI), run_time=8, rate_func=linear)
+        self.wait()
+```

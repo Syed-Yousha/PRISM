@@ -1,0 +1,400 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# ANGLES - Types, Properties, Parallel Lines
+# IGCSE/O-Level Geometry Topic
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## TYPES OF ANGLES
+```python
+# Acute, right, obtuse, reflex
+title = Text("Types of Angles", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Acute angle
+acute = VGroup(
+    Line(ORIGIN, RIGHT * 1.5, color=BLUE),
+    Line(ORIGIN, UP * 1 + RIGHT * 0.5, color=BLUE),
+    Arc(radius=0.4, start_angle=0, angle=PI/4, color=BLUE),
+    Text("Acute", font_size=20, color=BLUE),
+    MathTex("< 90°", font_size=20, color=BLUE)
+)
+acute[3].shift(DOWN * 0.3)
+acute[4].shift(DOWN * 0.6)
+acute.shift(LEFT * 4.5 + UP * 0.5)
+
+# Right angle
+right = VGroup(
+    Line(ORIGIN, RIGHT * 1.5, color=GREEN),
+    Line(ORIGIN, UP * 1.5, color=GREEN),
+    Square(side_length=0.3, color=GREEN).shift(RIGHT * 0.15 + UP * 0.15),
+    Text("Right", font_size=20, color=GREEN),
+    MathTex("= 90°", font_size=20, color=GREEN)
+)
+right[3].shift(DOWN * 0.3)
+right[4].shift(DOWN * 0.6)
+right.shift(LEFT * 1.5 + UP * 0.5)
+
+# Obtuse angle
+obtuse = VGroup(
+    Line(ORIGIN, RIGHT * 1.5, color=ORANGE),
+    Line(ORIGIN, UP * 1 + LEFT * 0.5, color=ORANGE),
+    Arc(radius=0.4, start_angle=0, angle=2*PI/3, color=ORANGE),
+    Text("Obtuse", font_size=20, color=ORANGE),
+    MathTex("90° - 180°", font_size=20, color=ORANGE)
+)
+obtuse[3].shift(DOWN * 0.3)
+obtuse[4].shift(DOWN * 0.6)
+obtuse.shift(RIGHT * 1.5 + UP * 0.5)
+
+# Reflex angle
+reflex = VGroup(
+    Line(ORIGIN, RIGHT * 1.5, color=RED),
+    Line(ORIGIN, DOWN * 1 + RIGHT * 0.5, color=RED),
+    Arc(radius=0.4, start_angle=0, angle=-5*PI/4, color=RED),
+    Text("Reflex", font_size=20, color=RED),
+    MathTex("180° - 360°", font_size=20, color=RED)
+)
+reflex[3].shift(DOWN * 1.2)
+reflex[4].shift(DOWN * 1.5)
+reflex.shift(RIGHT * 4.5 + UP * 0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(acute), run_time=1.0)
+self.play(Create(right), run_time=1.0)
+self.play(Create(obtuse), run_time=1.0)
+self.play(Create(reflex), run_time=1.0)
+```
+
+## ANGLES ON A STRAIGHT LINE
+```python
+# Angles sum to 180°
+title = Text("Angles on a Straight Line", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Straight line
+line = Line(LEFT * 3, RIGHT * 3, color=WHITE).shift(UP * 0.5)
+
+# Two angles
+angle_line = Line(ORIGIN + UP * 0.5, UP * 2.5 + RIGHT * 0.5, color=BLUE)
+
+# Arc for angle a
+arc_a = Arc(radius=0.6, start_angle=0, angle=PI/3, color=GREEN).shift(UP * 0.5)
+label_a = MathTex("a", font_size=32, color=GREEN).shift(UP * 1 + RIGHT * 0.8)
+
+# Arc for angle b
+arc_b = Arc(radius=0.6, start_angle=PI/3, angle=2*PI/3, color=RED).shift(UP * 0.5)
+label_b = MathTex("b", font_size=32, color=RED).shift(UP * 1 + LEFT * 0.8)
+
+# Rule
+rule = VGroup(
+    MathTex("a + b = 180°", font_size=48, color=WHITE),
+    Text("Angles on a straight line add up to 180°", font_size=24, color=GRAY)
+).arrange(DOWN, buff=0.3)
+rule.shift(DOWN * 1.5)
+rule_box = SurroundingRectangle(rule, color=YELLOW, buff=0.3)
+
+# Example
+example = MathTex("\\text{If } a = 70°, \\text{ then } b = 180° - 70° = 110°", font_size=28, color=ORANGE)
+example.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(line), run_time=0.5)
+self.play(Create(angle_line), run_time=0.5)
+self.play(Create(arc_a), Write(label_a), run_time=0.8)
+self.play(Create(arc_b), Write(label_b), run_time=0.8)
+self.play(Write(rule), Create(rule_box), run_time=1.5)
+self.play(Write(example), run_time=1.0)
+```
+
+## ANGLES AT A POINT
+```python
+# Angles sum to 360°
+title = Text("Angles at a Point", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Four lines from center
+center = ORIGIN + UP * 0.3
+lines = VGroup(
+    Line(center, center + RIGHT * 2, color=WHITE),
+    Line(center, center + UP * 2 + RIGHT * 0.5, color=WHITE),
+    Line(center, center + LEFT * 1.5 + UP * 0.5, color=WHITE),
+    Line(center, center + DOWN * 1.5 + LEFT * 0.5, color=WHITE)
+)
+
+# Angles
+angles = VGroup(
+    MathTex("a", font_size=28, color=BLUE).shift(UP * 0.8 + RIGHT * 1),
+    MathTex("b", font_size=28, color=GREEN).shift(UP * 1 + LEFT * 0.5),
+    MathTex("c", font_size=28, color=RED).shift(DOWN * 0.5 + LEFT * 0.8),
+    MathTex("d", font_size=28, color=ORANGE).shift(DOWN * 0.5 + RIGHT * 0.8)
+)
+
+# Arcs
+arcs = VGroup(
+    Arc(radius=0.5, start_angle=0, angle=PI/3, color=BLUE).shift(center),
+    Arc(radius=0.5, start_angle=PI/3, angle=2*PI/5, color=GREEN).shift(center),
+    Arc(radius=0.5, start_angle=PI/3 + 2*PI/5, angle=2*PI/3, color=RED).shift(center),
+    Arc(radius=0.5, start_angle=PI/3 + 2*PI/5 + 2*PI/3, angle=7*PI/15, color=ORANGE).shift(center)
+)
+
+# Rule
+rule = VGroup(
+    MathTex("a + b + c + d = 360°", font_size=44, color=WHITE),
+    Text("Angles at a point add up to 360°", font_size=24, color=GRAY)
+).arrange(DOWN, buff=0.3)
+rule.shift(DOWN * 2)
+rule_box = SurroundingRectangle(rule, color=YELLOW, buff=0.3)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(lines), run_time=1.0)
+self.play(Create(arcs), Write(angles), run_time=1.5)
+self.play(Write(rule), Create(rule_box), run_time=1.5)
+```
+
+## VERTICALLY OPPOSITE ANGLES
+```python
+# Equal angles
+title = Text("Vertically Opposite Angles", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Two intersecting lines
+line1 = Line(LEFT * 2.5 + UP, RIGHT * 2.5 + DOWN, color=WHITE)
+line2 = Line(LEFT * 2.5 + DOWN, RIGHT * 2.5 + UP, color=WHITE)
+
+# Center point
+center = ORIGIN
+
+# Highlight angles
+arc_a1 = Arc(radius=0.6, start_angle=PI/4, angle=PI/2, color=GREEN).shift(center)
+arc_a2 = Arc(radius=0.6, start_angle=5*PI/4, angle=PI/2, color=GREEN).shift(center)
+arc_b1 = Arc(radius=0.5, start_angle=-PI/4, angle=PI/2, color=RED).shift(center)
+arc_b2 = Arc(radius=0.5, start_angle=3*PI/4, angle=PI/2, color=RED).shift(center)
+
+# Labels
+label_a1 = MathTex("a", font_size=28, color=GREEN).shift(UP * 0.8)
+label_a2 = MathTex("a", font_size=28, color=GREEN).shift(DOWN * 0.8)
+label_b1 = MathTex("b", font_size=28, color=RED).shift(RIGHT * 0.8)
+label_b2 = MathTex("b", font_size=28, color=RED).shift(LEFT * 0.8)
+
+# Rule
+rule = VGroup(
+    Text("Vertically opposite angles are EQUAL", font_size=28, color=WHITE),
+    MathTex("a = a \\quad \\text{and} \\quad b = b", font_size=32, color=GRAY)
+).arrange(DOWN, buff=0.3)
+rule.shift(DOWN * 2)
+
+# Example
+example = MathTex("\\text{If } a = 65°, \\text{ then opposite angle} = 65°", font_size=26, color=ORANGE)
+example.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(line1), Create(line2), run_time=1.0)
+self.play(Create(arc_a1), Create(arc_a2), Write(label_a1), Write(label_a2), run_time=1.5)
+self.play(Create(arc_b1), Create(arc_b2), Write(label_b1), Write(label_b2), run_time=1.5)
+self.play(Write(rule), run_time=1.5)
+self.play(Write(example), run_time=1.0)
+```
+
+## PARALLEL LINES - CORRESPONDING ANGLES
+```python
+# F-angles
+title = Text("Corresponding Angles (F-angles)", font_size=32, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Two parallel lines
+line1 = Line(LEFT * 3 + UP, RIGHT * 3 + UP, color=WHITE)
+line2 = Line(LEFT * 3 + DOWN, RIGHT * 3 + DOWN, color=WHITE)
+
+# Transversal
+transversal = Line(LEFT * 1 + UP * 2, RIGHT * 1 + DOWN * 2, color=BLUE)
+
+# Arrows showing parallel
+arrow1 = Arrow(LEFT * 2 + UP * 1.1, LEFT * 1.5 + UP * 1.1, color=YELLOW, buff=0)
+arrow2 = Arrow(LEFT * 2 + DOWN * 0.9, LEFT * 1.5 + DOWN * 0.9, color=YELLOW, buff=0)
+
+# Corresponding angles (in same position)
+arc1 = Arc(radius=0.4, start_angle=PI, angle=-PI/3, color=GREEN).shift(LEFT * 0.3 + UP)
+arc2 = Arc(radius=0.4, start_angle=PI, angle=-PI/3, color=GREEN).shift(LEFT * 0.3 + DOWN)
+label1 = MathTex("a", font_size=24, color=GREEN).shift(LEFT * 0.8 + UP * 1.3)
+label2 = MathTex("a", font_size=24, color=GREEN).shift(LEFT * 0.8 + DOWN * 0.7)
+
+# F-shape highlight
+f_shape = VMobject(color=RED, stroke_width=3)
+f_shape.set_points_as_corners([
+    LEFT * 1.5 + UP, RIGHT * 0.5 + UP,
+    RIGHT * 0.5 + UP, LEFT * 0.3 + DOWN * 0.5,
+    LEFT * 0.3 + DOWN * 0.5, RIGHT * 0.5 + DOWN
+])
+
+# Rule
+rule = VGroup(
+    MathTex("a = a", font_size=36, color=GREEN),
+    Text("Corresponding angles are EQUAL", font_size=24)
+).arrange(DOWN, buff=0.2)
+rule.shift(RIGHT * 3)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(line1), Create(line2), run_time=0.8)
+self.play(Create(transversal), run_time=0.5)
+self.play(Create(arrow1), Create(arrow2), run_time=0.5)
+self.play(Create(arc1), Create(arc2), Write(label1), Write(label2), run_time=1.5)
+self.play(Create(f_shape), run_time=1.0)
+self.play(Write(rule), run_time=1.5)
+```
+
+## PARALLEL LINES - ALTERNATE ANGLES
+```python
+# Z-angles
+title = Text("Alternate Angles (Z-angles)", font_size=32, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Two parallel lines
+line1 = Line(LEFT * 3 + UP, RIGHT * 3 + UP, color=WHITE)
+line2 = Line(LEFT * 3 + DOWN, RIGHT * 3 + DOWN, color=WHITE)
+
+# Transversal
+transversal = Line(LEFT * 1 + UP * 2, RIGHT * 1 + DOWN * 2, color=BLUE)
+
+# Arrows showing parallel
+arrow1 = Arrow(LEFT * 2 + UP * 1.1, LEFT * 1.5 + UP * 1.1, color=YELLOW, buff=0)
+arrow2 = Arrow(LEFT * 2 + DOWN * 0.9, LEFT * 1.5 + DOWN * 0.9, color=YELLOW, buff=0)
+
+# Alternate angles (on opposite sides of transversal)
+arc1 = Arc(radius=0.4, start_angle=0, angle=-PI/3, color=RED).shift(RIGHT * 0.3 + UP)
+arc2 = Arc(radius=0.4, start_angle=PI, angle=-PI/3, color=RED).shift(LEFT * 0.3 + DOWN)
+label1 = MathTex("b", font_size=24, color=RED).shift(RIGHT * 0.8 + UP * 0.7)
+label2 = MathTex("b", font_size=24, color=RED).shift(LEFT * 0.8 + DOWN * 0.7)
+
+# Z-shape highlight
+z_shape = VMobject(color=GREEN, stroke_width=3)
+z_shape.set_points_as_corners([
+    RIGHT * 1 + UP, LEFT * 0.5 + UP,
+    LEFT * 0.5 + UP, RIGHT * 0.5 + DOWN,
+    RIGHT * 0.5 + DOWN, LEFT * 1 + DOWN
+])
+
+# Rule
+rule = VGroup(
+    MathTex("b = b", font_size=36, color=RED),
+    Text("Alternate angles are EQUAL", font_size=24)
+).arrange(DOWN, buff=0.2)
+rule.shift(RIGHT * 3)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(line1), Create(line2), run_time=0.8)
+self.play(Create(transversal), run_time=0.5)
+self.play(Create(arrow1), Create(arrow2), run_time=0.5)
+self.play(Create(arc1), Create(arc2), Write(label1), Write(label2), run_time=1.5)
+self.play(Create(z_shape), run_time=1.0)
+self.play(Write(rule), run_time=1.5)
+```
+
+## PARALLEL LINES - CO-INTERIOR ANGLES
+```python
+# C-angles / Allied angles
+title = Text("Co-interior Angles (C-angles)", font_size=32, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Two parallel lines
+line1 = Line(LEFT * 3 + UP, RIGHT * 3 + UP, color=WHITE)
+line2 = Line(LEFT * 3 + DOWN, RIGHT * 3 + DOWN, color=WHITE)
+
+# Transversal
+transversal = Line(LEFT * 1 + UP * 2, RIGHT * 1 + DOWN * 2, color=BLUE)
+
+# Co-interior angles (same side of transversal)
+arc1 = Arc(radius=0.4, start_angle=PI, angle=-2*PI/3, color=ORANGE).shift(LEFT * 0.3 + UP)
+arc2 = Arc(radius=0.4, start_angle=PI, angle=PI/3, color=PURPLE).shift(LEFT * 0.3 + DOWN)
+label1 = MathTex("c", font_size=24, color=ORANGE).shift(LEFT * 0.8 + UP * 0.6)
+label2 = MathTex("d", font_size=24, color=PURPLE).shift(LEFT * 0.8 + DOWN * 1.3)
+
+# C-shape highlight
+c_shape = VMobject(color=TEAL, stroke_width=3)
+c_shape.set_points_as_corners([
+    LEFT * 1 + UP, RIGHT * 0 + UP,
+    RIGHT * 0 + UP, RIGHT * 0 + DOWN,
+    RIGHT * 0 + DOWN, LEFT * 1 + DOWN
+])
+
+# Rule
+rule = VGroup(
+    MathTex("c + d = 180°", font_size=36, color=WHITE),
+    Text("Co-interior angles are", font_size=22),
+    Text("SUPPLEMENTARY (add to 180°)", font_size=22, color=TEAL)
+).arrange(DOWN, buff=0.15)
+rule.shift(RIGHT * 3)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(line1), Create(line2), run_time=0.8)
+self.play(Create(transversal), run_time=0.5)
+self.play(Create(arc1), Create(arc2), Write(label1), Write(label2), run_time=1.5)
+self.play(Create(c_shape), run_time=1.0)
+self.play(Write(rule), run_time=1.5)
+```
+
+## ANGLES IN TRIANGLES
+```python
+# Sum = 180°
+title = Text("Angles in a Triangle", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Triangle
+triangle = Polygon(
+    LEFT * 2 + DOWN, RIGHT * 2 + DOWN, UP * 1.5,
+    color=WHITE, fill_opacity=0.1
+)
+
+# Angles
+arc_a = Arc(radius=0.4, start_angle=0, angle=PI/3, color=BLUE).shift(LEFT * 2 + DOWN)
+arc_b = Arc(radius=0.4, start_angle=2*PI/3, angle=PI/3, color=GREEN).shift(RIGHT * 2 + DOWN)
+arc_c = Arc(radius=0.4, start_angle=4*PI/3 - 0.1, angle=PI/3, color=RED).shift(UP * 1.5)
+
+label_a = MathTex("a", font_size=28, color=BLUE).shift(LEFT * 1.3 + DOWN * 0.5)
+label_b = MathTex("b", font_size=28, color=GREEN).shift(RIGHT * 1.3 + DOWN * 0.5)
+label_c = MathTex("c", font_size=28, color=RED).shift(UP * 0.8)
+
+# Rule
+rule = VGroup(
+    MathTex("a + b + c = 180°", font_size=48, color=WHITE),
+    Text("Angles in a triangle sum to 180°", font_size=24, color=GRAY)
+).arrange(DOWN, buff=0.3)
+rule.shift(DOWN * 2.5)
+rule_box = SurroundingRectangle(rule, color=YELLOW, buff=0.3)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(triangle), run_time=1.0)
+self.play(Create(arc_a), Write(label_a), run_time=0.8)
+self.play(Create(arc_b), Write(label_b), run_time=0.8)
+self.play(Create(arc_c), Write(label_c), run_time=0.8)
+self.play(Write(rule), Create(rule_box), run_time=1.5)
+```
+
+## EXTERIOR ANGLE OF TRIANGLE
+```python
+# Equal to sum of opposite interior angles
+title = Text("Exterior Angle of a Triangle", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Triangle
+triangle = Polygon(
+    LEFT * 2 + DOWN, RIGHT * 2 + DOWN, UP * 1,
+    color=WHITE, fill_opacity=0.1
+)
+
+# Extended base
+extended = Line(RIGHT * 2 + DOWN, RIGHT * 4 + DOWN, color=YELLOW)
+
+# Interior angles
+arc_a = Arc(radius=0.4, start_angle=0, angle=0.9, color=BLUE).shift(LEFT * 2 + DOWN)
+arc_b = Arc(radius=0.4, start_angle=2.2, angle=0.9, color=GREEN).shift(UP * 1)
+label_a = MathTex("a", font_size=28, color=BLUE).shift(LEFT * 1.3 + DOWN * 0.5)
+label_b = MathTex("b", font_size=28, color=GREEN).shift(UP * 0.4)
+
+# Exterior angle
+arc_ext = Arc(radius=0.5, start_angle=0, angle=-1.2, color=RED).shift(RIGHT * 2 + DOWN)
+label_ext = MathTex("e", font_size=28, color=RED).shift(RIGHT * 3 + DOWN * 0.3)
+
+# Rule
+rule = VGroup(
+    MathTex("e = a + b", font_size=48, color=WHITE),
+    Text("Exterior angle = sum of opposite interior angles", font_size=22, color=GRAY)
+).arrange(DOWN, buff=0.3)
+rule.shift(DOWN * 2.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(triangle), run_time=1.0)
+self.play(Create(extended), run_time=0.5)
+self.play(Create(arc_a), Write(label_a), Create(arc_b), Write(label_b), run_time=1.5)
+self.play(Create(arc_ext), Write(label_ext), run_time=1.0)
+self.play(Write(rule), run_time=1.5)
+```

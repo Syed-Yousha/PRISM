@@ -1,0 +1,419 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# STATISTICS - Mean, Median, Mode, Charts, Probability
+# IGCSE/O-Level Statistics Topic
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## MEAN (AVERAGE)
+```python
+# Sum divided by count
+title = Text("Mean (Average)", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Data
+data = MathTex("3, 5, 7, 8, 12", font_size=44, color=WHITE).shift(UP * 1.5)
+
+# Formula
+formula = MathTex("\\text{Mean} = \\frac{\\text{Sum of values}}{\\text{Number of values}}", font_size=36, color=BLUE)
+formula.shift(UP * 0.5)
+
+# Calculation
+calc = VGroup(
+    MathTex("\\text{Sum} = 3 + 5 + 7 + 8 + 12 = 35", font_size=32),
+    MathTex("\\text{Count} = 5", font_size=32),
+    MathTex("\\text{Mean} = \\frac{35}{5} = 7", font_size=40, color=GREEN)
+).arrange(DOWN, buff=0.25)
+calc.shift(DOWN * 0.8)
+
+# Visual
+dots = VGroup()
+for i, val in enumerate([3, 5, 7, 8, 12]):
+    dot = Dot(LEFT * 3 + RIGHT * i * 0.5 + DOWN * 2.2, radius=0.08, color=BLUE)
+    label = MathTex(str(val), font_size=20).next_to(dot, DOWN, buff=0.1)
+    dots.add(VGroup(dot, label))
+
+mean_line = DashedLine(LEFT * 1 + DOWN * 2.2, LEFT * 1 + DOWN * 2.5, color=GREEN)
+mean_label = MathTex("\\bar{x} = 7", font_size=24, color=GREEN).next_to(mean_line, DOWN, buff=0.1)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(data), run_time=1.0)
+self.play(Write(formula), run_time=1.0)
+self.play(Write(calc), run_time=2.0)
+```
+
+## MEDIAN (MIDDLE VALUE)
+```python
+# Middle value when ordered
+title = Text("Median (Middle Value)", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Odd number of values
+odd = VGroup(
+    Text("Odd number of values:", font_size=24, color=BLUE),
+    MathTex("2, 5, 7, 9, 15", font_size=32),
+    Text("Middle value = Median", font_size=20, color=GRAY),
+    MathTex("\\text{Median} = 7", font_size=36, color=GREEN)
+).arrange(DOWN, buff=0.2)
+odd.shift(UP * 1 + LEFT * 3.5)
+
+# Even number of values
+even = VGroup(
+    Text("Even number of values:", font_size=24, color=RED),
+    MathTex("3, 5, 8, 12, 15, 20", font_size=32),
+    Text("Average of two middle values", font_size=20, color=GRAY),
+    MathTex("\\text{Median} = \\frac{8 + 12}{2} = 10", font_size=32, color=GREEN)
+).arrange(DOWN, buff=0.2)
+even.shift(UP * 1 + RIGHT * 3)
+
+# Position formula
+position = VGroup(
+    Text("Position of median:", font_size=22, color=ORANGE),
+    MathTex("\\text{Position} = \\frac{n + 1}{2}", font_size=32, color=ORANGE)
+).arrange(DOWN, buff=0.15)
+position.shift(DOWN * 1.5)
+
+# Note
+note = Text("Data MUST be in order first!", font_size=24, color=RED)
+note.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(odd), run_time=2.0)
+self.play(Write(even), run_time=2.0)
+self.play(Write(position), run_time=1.5)
+self.play(Write(note), run_time=1.0)
+```
+
+## MODE (MOST COMMON)
+```python
+# Most frequent value
+title = Text("Mode (Most Common)", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Data
+data = MathTex("3, 5, 7, 7, 7, 8, 12", font_size=44).shift(UP * 1.5)
+
+# Highlight mode
+highlight = SurroundingRectangle(data[0][4:9], color=GREEN, buff=0.1)
+
+# Explanation
+explain = VGroup(
+    Text("7 appears 3 times - most often!", font_size=24, color=GREEN),
+    MathTex("\\text{Mode} = 7", font_size=44, color=GREEN)
+).arrange(DOWN, buff=0.3)
+explain.shift(UP * 0.3)
+
+# Special cases
+cases = VGroup(
+    Text("Special cases:", font_size=22, color=YELLOW),
+    Text("• No mode: all values appear same number of times", font_size=18),
+    Text("• Bimodal: two modes if two values tie for most", font_size=18),
+    Text("• Mode works for non-numeric data too!", font_size=18, color=ORANGE)
+).arrange(DOWN, buff=0.15, aligned_edge=LEFT)
+cases.shift(DOWN * 1.5)
+
+# Bar representation
+bars = VGroup()
+counts = [(3, 1), (5, 1), (7, 3), (8, 1), (12, 1)]
+for i, (val, count) in enumerate(counts):
+    bar = Rectangle(width=0.5, height=count * 0.4, color=BLUE, fill_opacity=0.5)
+    bar.shift(LEFT * 2 + RIGHT * i * 0.7 + DOWN * 2.5 + UP * count * 0.2)
+    label = MathTex(str(val), font_size=18).next_to(bar, DOWN, buff=0.1)
+    bars.add(VGroup(bar, label))
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(data), run_time=1.0)
+self.play(Create(highlight), run_time=0.8)
+self.play(Write(explain), run_time=1.5)
+self.play(Write(cases), run_time=2.0)
+```
+
+## RANGE
+```python
+# Spread of data
+title = Text("Range", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Formula
+formula = MathTex("\\text{Range} = \\text{Highest} - \\text{Lowest}", font_size=44, color=WHITE)
+formula.shift(UP * 1.3)
+
+# Data
+data = MathTex("4, 7, 12, 15, 23", font_size=40).shift(UP * 0.3)
+
+# Calculation
+calc = VGroup(
+    MathTex("\\text{Highest} = 23", font_size=32, color=BLUE),
+    MathTex("\\text{Lowest} = 4", font_size=32, color=RED),
+    MathTex("\\text{Range} = 23 - 4 = 19", font_size=40, color=GREEN)
+).arrange(DOWN, buff=0.3)
+calc.shift(DOWN * 0.8)
+
+# Number line visual
+nl = NumberLine(x_range=[0, 25, 5], length=8, include_numbers=True).shift(DOWN * 2.5)
+dot_low = Dot(nl.n2p(4), color=RED, radius=0.12)
+dot_high = Dot(nl.n2p(23), color=BLUE, radius=0.12)
+range_line = Line(nl.n2p(4), nl.n2p(23), color=GREEN, stroke_width=6)
+range_label = MathTex("\\text{Range} = 19", font_size=24, color=GREEN).shift(DOWN * 3.2)
+
+# Note
+note = Text("Range measures the spread of data", font_size=22, color=GRAY)
+note.to_edge(DOWN, buff=0.3)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(formula), run_time=1.0)
+self.play(Write(data), run_time=1.0)
+self.play(Write(calc), run_time=2.0)
+self.play(Create(nl), Create(dot_low), Create(dot_high), Create(range_line), run_time=1.5)
+self.play(Write(range_label), Write(note), run_time=1.0)
+```
+
+## MEAN FROM FREQUENCY TABLE
+```python
+# Grouped data
+title = Text("Mean from Frequency Table", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Table
+headers = VGroup(
+    MathTex("x", font_size=28),
+    MathTex("f", font_size=28, color=BLUE),
+    MathTex("fx", font_size=28, color=GREEN)
+).arrange(RIGHT, buff=1.5)
+headers.shift(UP * 1.3)
+
+row1 = VGroup(
+    MathTex("2", font_size=24), MathTex("3", font_size=24, color=BLUE), MathTex("6", font_size=24, color=GREEN)
+).arrange(RIGHT, buff=1.7)
+row1.shift(UP * 0.7)
+
+row2 = VGroup(
+    MathTex("3", font_size=24), MathTex("5", font_size=24, color=BLUE), MathTex("15", font_size=24, color=GREEN)
+).arrange(RIGHT, buff=1.6)
+row2.shift(UP * 0.2)
+
+row3 = VGroup(
+    MathTex("4", font_size=24), MathTex("2", font_size=24, color=BLUE), MathTex("8", font_size=24, color=GREEN)
+).arrange(RIGHT, buff=1.7)
+row3.shift(DOWN * 0.3)
+
+total = VGroup(
+    Text("Total:", font_size=20),
+    MathTex("\\Sigma f = 10", font_size=24, color=BLUE),
+    MathTex("\\Sigma fx = 29", font_size=24, color=GREEN)
+).arrange(RIGHT, buff=0.8)
+total.shift(DOWN * 1)
+
+# Formula
+formula = MathTex("\\text{Mean} = \\frac{\\Sigma fx}{\\Sigma f} = \\frac{29}{10} = 2.9", font_size=36, color=WHITE)
+formula.shift(DOWN * 2)
+
+# Box the answer
+answer = MathTex("\\bar{x} = 2.9", font_size=44, color=GREEN)
+answer.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(headers), run_time=0.8)
+self.play(Write(row1), Write(row2), Write(row3), run_time=2.0)
+self.play(Write(total), run_time=1.5)
+self.play(Write(formula), run_time=1.5)
+self.play(Write(answer), run_time=1.0)
+```
+
+## PROBABILITY BASICS
+```python
+# P(event) = favorable / total
+title = Text("Probability Basics", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Formula
+formula = MathTex("P(\\text{event}) = \\frac{\\text{Number of favorable outcomes}}{\\text{Total number of outcomes}}", font_size=32)
+formula.shift(UP * 1.3)
+
+# Scale
+scale = VGroup(
+    Line(LEFT * 4, RIGHT * 4, color=WHITE),
+    MathTex("0", font_size=24).shift(LEFT * 4 + DOWN * 0.3),
+    MathTex("1", font_size=24).shift(RIGHT * 4 + DOWN * 0.3),
+    Text("Impossible", font_size=18, color=RED).shift(LEFT * 4 + DOWN * 0.7),
+    Text("Certain", font_size=18, color=GREEN).shift(RIGHT * 4 + DOWN * 0.7),
+    MathTex("0.5", font_size=24).shift(DOWN * 0.3),
+    Text("Even chance", font_size=18, color=BLUE).shift(DOWN * 0.7)
+)
+scale.shift(UP * 0.3)
+
+# Example
+example = VGroup(
+    Text("Example: Rolling a die", font_size=22, color=WHITE),
+    MathTex("P(\\text{getting } 6) = \\frac{1}{6}", font_size=32, color=BLUE),
+    MathTex("P(\\text{even number}) = \\frac{3}{6} = \\frac{1}{2}", font_size=32, color=GREEN),
+    MathTex("P(\\text{less than 7}) = \\frac{6}{6} = 1", font_size=32, color=ORANGE)
+).arrange(DOWN, buff=0.2, aligned_edge=LEFT)
+example.shift(DOWN * 1.5)
+
+# Die visual
+die = Square(side_length=0.8, color=WHITE, fill_opacity=0.1).shift(RIGHT * 4 + DOWN * 1)
+dots = VGroup(
+    Dot(die.get_center() + UP * 0.15 + LEFT * 0.15, radius=0.05),
+    Dot(die.get_center() + DOWN * 0.15 + RIGHT * 0.15, radius=0.05),
+    Dot(die.get_center(), radius=0.05),
+    Dot(die.get_center() + UP * 0.15 + RIGHT * 0.15, radius=0.05),
+    Dot(die.get_center() + DOWN * 0.15 + LEFT * 0.15, radius=0.05)
+)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(formula), run_time=1.5)
+self.play(Create(scale), run_time=1.5)
+self.play(Write(example), run_time=2.5)
+self.play(Create(die), Create(dots), run_time=1.0)
+```
+
+## PROBABILITY RULES
+```python
+# Addition and multiplication
+title = Text("Probability Rules", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Complementary
+comp = VGroup(
+    Rectangle(width=5, height=1.3, color=BLUE, fill_opacity=0.2),
+    Text("Complementary Events", font_size=22, color=BLUE),
+    MathTex("P(\\text{not } A) = 1 - P(A)", font_size=28)
+)
+comp[1].move_to(comp[0].get_top() + DOWN * 0.25)
+comp[2].move_to(comp[0].get_bottom() + UP * 0.4)
+comp.shift(UP * 1 + LEFT * 3)
+
+# Addition (OR)
+add = VGroup(
+    Rectangle(width=5.5, height=1.5, color=GREEN, fill_opacity=0.2),
+    Text("Addition Rule (OR)", font_size=22, color=GREEN),
+    MathTex("P(A \\text{ or } B) = P(A) + P(B)", font_size=24),
+    Text("(if mutually exclusive)", font_size=16, color=GRAY)
+)
+add[1].move_to(add[0].get_top() + DOWN * 0.25)
+add[2].move_to(add[0].get_center())
+add[3].move_to(add[0].get_bottom() + UP * 0.25)
+add.shift(UP * 1 + RIGHT * 3)
+
+# Multiplication (AND)
+mult = VGroup(
+    Rectangle(width=6, height=1.5, color=RED, fill_opacity=0.2),
+    Text("Multiplication Rule (AND)", font_size=22, color=RED),
+    MathTex("P(A \\text{ and } B) = P(A) \\times P(B)", font_size=24),
+    Text("(if independent)", font_size=16, color=GRAY)
+)
+mult[1].move_to(mult[0].get_top() + DOWN * 0.25)
+mult[2].move_to(mult[0].get_center())
+mult[3].move_to(mult[0].get_bottom() + UP * 0.25)
+mult.shift(DOWN * 1)
+
+# Example
+example = VGroup(
+    Text("Example: Two coins", font_size=20, color=ORANGE),
+    MathTex("P(\\text{both heads}) = \\frac{1}{2} \\times \\frac{1}{2} = \\frac{1}{4}", font_size=26, color=ORANGE)
+).arrange(DOWN, buff=0.1)
+example.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(comp), run_time=1.5)
+self.play(Create(add), run_time=1.5)
+self.play(Create(mult), run_time=1.5)
+self.play(Write(example), run_time=1.5)
+```
+
+## BAR CHART
+```python
+# Categorical data
+title = Text("Bar Charts", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Axes
+axes = Axes(
+    x_range=[0, 5, 1],
+    y_range=[0, 8, 2],
+    x_length=5,
+    y_length=4,
+    axis_config={"include_numbers": True}
+).shift(LEFT * 2 + DOWN * 0.5)
+
+# Bars
+colors_list = [RED, BLUE, GREEN, YELLOW]
+values = [5, 7, 3, 6]
+labels_text = ["A", "B", "C", "D"]
+
+bars = VGroup()
+for i, (val, color) in enumerate(zip(values, colors_list)):
+    bar = Rectangle(
+        width=0.6, height=val * 0.5,
+        color=color, fill_opacity=0.7
+    )
+    bar.move_to(axes.c2p(i + 0.8, val / 2))
+    bars.add(bar)
+
+# Labels
+x_labels = VGroup()
+for i, label in enumerate(labels_text):
+    lbl = Text(label, font_size=20)
+    lbl.move_to(axes.c2p(i + 0.8, -0.5))
+    x_labels.add(lbl)
+
+# Tips
+tips = VGroup(
+    Text("Bar Chart Tips:", font_size=22, color=GREEN),
+    Text("• Bars don't touch (discrete data)", font_size=18),
+    Text("• Equal width bars", font_size=18),
+    Text("• Label axes clearly", font_size=18),
+    Text("• Include a title", font_size=18)
+).arrange(DOWN, buff=0.15, aligned_edge=LEFT)
+tips.shift(RIGHT * 3 + DOWN * 0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(axes), run_time=1.0)
+self.play(Create(bars), run_time=1.5)
+self.play(Write(x_labels), run_time=1.0)
+self.play(Write(tips), run_time=2.0)
+```
+
+## PIE CHART
+```python
+# Proportional data
+title = Text("Pie Charts", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Pie chart
+pie = VGroup()
+angles = [90, 120, 60, 90]  # in degrees (total = 360)
+colors_list = [RED, BLUE, GREEN, ORANGE]
+labels_text = ["25%", "33%", "17%", "25%"]
+start = 0
+
+for i, (angle, color, label) in enumerate(zip(angles, colors_list, labels_text)):
+    sector = Sector(
+        outer_radius=1.5,
+        angle=angle * DEGREES,
+        start_angle=start * DEGREES,
+        fill_color=color,  # FIXED: Use fill_color
+        fill_opacity=0.7,
+        stroke_color=color
+    )
+    sector.shift(LEFT * 2.5)
+    pie.add(sector)
+    
+    # Label - FIXED: Position at radius 1.0 (inside sector, not at edge)
+    mid_angle = (start + angle / 2) * DEGREES
+    label_pos = LEFT * 2.5 + 0.9 * np.array([np.cos(mid_angle), np.sin(mid_angle), 0])
+    lbl = Text(label, font_size=18, color=WHITE)
+    lbl.move_to(label_pos)
+    pie.add(lbl)
+    
+    start += angle
+
+# Calculation
+calc = VGroup(
+    Text("To find angle:", font_size=22, color=GREEN),
+    MathTex("\\text{Angle} = \\frac{\\text{Frequency}}{\\text{Total}} \\times 360°", font_size=28)
+).arrange(DOWN, buff=0.2)
+calc.shift(RIGHT * 3 + UP * 0.5)
+
+# Example
+example = VGroup(
+    Text("If 15 out of 60 chose red:", font_size=18, color=GRAY),
+    MathTex("\\text{Angle} = \\frac{15}{60} \\times 360° = 90°", font_size=24)
+).arrange(DOWN, buff=0.15)
+example.shift(RIGHT * 3 + DOWN * 1)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(pie), run_time=2.0)
+self.play(Write(calc), run_time=1.5)
+self.play(Write(example), run_time=1.5)
+```

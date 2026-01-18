@@ -1,0 +1,303 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# VECTORS - Direction, Magnitude, Operations
+# Arrow representations, addition, subtraction, components
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## BASIC VECTOR REPRESENTATION
+```python
+# A vector as an arrow with magnitude and direction
+title = Text("What is a Vector?", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Coordinate plane
+axes = Axes(
+    x_range=[-1, 6, 1],
+    y_range=[-1, 5, 1],
+    x_length=7,
+    y_length=5,
+    axis_config={"include_tip": True, "include_numbers": True}
+).shift(LEFT * 1)
+
+# A vector from origin to (4, 3)
+vector = Arrow(
+    axes.c2p(0, 0), 
+    axes.c2p(4, 3), 
+    color=RED, 
+    buff=0,
+    stroke_width=6
+)
+vector_label = MathTex(r"\vec{v}", font_size=36, color=RED).next_to(vector, UP, buff=0.2)
+
+# Endpoint dot
+end_dot = Dot(axes.c2p(4, 3), color=WHITE, radius=0.1)
+coordinates = MathTex("(4, 3)", font_size=28).next_to(end_dot, RIGHT, buff=0.2)
+
+# Properties
+properties = VGroup(
+    Text("A vector has:", font_size=24),
+    Text("• Magnitude (length)", font_size=22, color=GREEN),
+    Text("• Direction (angle)", font_size=22, color=BLUE)
+).arrange(DOWN, aligned_edge=LEFT, buff=0.2)
+properties.shift(RIGHT * 4)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(axes), run_time=1.0)
+self.play(Create(vector), Write(vector_label), run_time=1.5)
+self.play(Create(end_dot), Write(coordinates), run_time=0.8)
+self.play(Write(properties), run_time=1.0)
+```
+
+## VECTOR COMPONENTS
+```python
+# Show x and y components of a vector
+title = Text("Vector Components", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+axes = Axes(
+    x_range=[-1, 6, 1],
+    y_range=[-1, 5, 1],
+    x_length=7,
+    y_length=5,
+    axis_config={"include_tip": True}
+).shift(LEFT * 1)
+
+# The vector
+vector = Arrow(axes.c2p(0, 0), axes.c2p(4, 3), color=RED, buff=0, stroke_width=6)
+
+# X component (horizontal)
+x_component = Arrow(axes.c2p(0, 0), axes.c2p(4, 0), color=BLUE, buff=0, stroke_width=4)
+x_label = MathTex(r"v_x = 4", font_size=28, color=BLUE).next_to(x_component, DOWN, buff=0.2)
+
+# Y component (vertical)
+y_component = Arrow(axes.c2p(4, 0), axes.c2p(4, 3), color=GREEN, buff=0, stroke_width=4)
+y_label = MathTex(r"v_y = 3", font_size=28, color=GREEN).next_to(y_component, RIGHT, buff=0.2)
+
+# Dashed lines showing the projection
+dashed_x = DashedLine(axes.c2p(4, 3), axes.c2p(4, 0), color=WHITE, stroke_width=1)
+dashed_y = DashedLine(axes.c2p(4, 3), axes.c2p(0, 3), color=WHITE, stroke_width=1)
+
+# Component notation
+notation = MathTex(r"\vec{v} = \begin{pmatrix} 4 \\ 3 \end{pmatrix}", font_size=36)
+notation.shift(RIGHT * 4.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(axes), run_time=1.0)
+self.play(Create(vector), run_time=1.0)
+self.play(Create(dashed_x), Create(dashed_y), run_time=0.8)
+self.play(Create(x_component), Write(x_label), run_time=1.0)
+self.play(Create(y_component), Write(y_label), run_time=1.0)
+self.play(Write(notation), run_time=1.0)
+```
+
+## VECTOR MAGNITUDE (LENGTH)
+```python
+# Calculate magnitude using Pythagorean theorem
+title = Text("Vector Magnitude", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+axes = Axes(
+    x_range=[-1, 6, 1],
+    y_range=[-1, 5, 1],
+    x_length=6,
+    y_length=5
+).shift(LEFT * 2)
+
+# The vector
+vector = Arrow(axes.c2p(0, 0), axes.c2p(3, 4), color=RED, buff=0, stroke_width=6)
+v_label = MathTex(r"|\vec{v}|", font_size=28, color=RED).next_to(vector.get_center(), UP + LEFT, buff=0.2)
+
+# Components forming right triangle
+x_comp = Line(axes.c2p(0, 0), axes.c2p(3, 0), color=BLUE, stroke_width=4)
+y_comp = Line(axes.c2p(3, 0), axes.c2p(3, 4), color=GREEN, stroke_width=4)
+x_label = MathTex("3", font_size=24, color=BLUE).next_to(x_comp, DOWN, buff=0.2)
+y_label = MathTex("4", font_size=24, color=GREEN).next_to(y_comp, RIGHT, buff=0.2)
+
+# Right angle marker
+right_angle = Square(side_length=0.25, color=WHITE).move_to(axes.c2p(3, 0) + RIGHT*0.125 + UP*0.125)
+
+# Formula
+formula = VGroup(
+    MathTex(r"|\vec{v}| = \sqrt{x^2 + y^2}", font_size=32),
+    MathTex(r"|\vec{v}| = \sqrt{3^2 + 4^2}", font_size=32),
+    MathTex(r"|\vec{v}| = \sqrt{9 + 16} = \sqrt{25}", font_size=32),
+    MathTex(r"|\vec{v}| = 5", font_size=36, color=GREEN)
+).arrange(DOWN, buff=0.3)
+formula.shift(RIGHT * 3.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(axes), run_time=1.0)
+self.play(Create(x_comp), Write(x_label), run_time=0.8)
+self.play(Create(y_comp), Write(y_label), run_time=0.8)
+self.play(Create(right_angle), run_time=0.3)
+self.play(Create(vector), Write(v_label), run_time=1.0)
+self.play(Write(formula[0]), run_time=1.0)
+self.play(Write(formula[1]), run_time=0.8)
+self.play(Write(formula[2]), run_time=0.8)
+self.play(Write(formula[3]), run_time=0.8)
+```
+
+## VECTOR ADDITION (TIP-TO-TAIL)
+```python
+# Show vector addition graphically
+title = Text("Vector Addition (Tip-to-Tail)", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+axes = Axes(
+    x_range=[-1, 8, 1],
+    y_range=[-1, 6, 1],
+    x_length=8,
+    y_length=5,
+    axis_config={"include_tip": True}
+).shift(DOWN * 0.5)
+
+# Vector a: (3, 2)
+vec_a = Arrow(axes.c2p(0, 0), axes.c2p(3, 2), color=BLUE, buff=0, stroke_width=5)
+a_label = MathTex(r"\vec{a}", font_size=28, color=BLUE).next_to(vec_a.get_center(), UP, buff=0.2)
+
+# Vector b: (2, 3) starting from tip of a
+vec_b = Arrow(axes.c2p(3, 2), axes.c2p(5, 5), color=GREEN, buff=0, stroke_width=5)
+b_label = MathTex(r"\vec{b}", font_size=28, color=GREEN).next_to(vec_b.get_center(), RIGHT, buff=0.2)
+
+# Resultant vector: a + b
+vec_result = Arrow(axes.c2p(0, 0), axes.c2p(5, 5), color=RED, buff=0, stroke_width=6)
+result_label = MathTex(r"\vec{a} + \vec{b}", font_size=28, color=RED).next_to(vec_result.get_center(), LEFT, buff=0.2)
+
+# Formula
+formula = VGroup(
+    MathTex(r"\vec{a} = \begin{pmatrix} 3 \\ 2 \end{pmatrix}", font_size=28, color=BLUE),
+    MathTex(r"\vec{b} = \begin{pmatrix} 2 \\ 3 \end{pmatrix}", font_size=28, color=GREEN),
+    MathTex(r"\vec{a} + \vec{b} = \begin{pmatrix} 5 \\ 5 \end{pmatrix}", font_size=28, color=RED)
+).arrange(DOWN, buff=0.2, aligned_edge=LEFT)
+formula.to_corner(UR, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(axes), run_time=1.0)
+self.play(Create(vec_a), Write(a_label), run_time=1.0)
+self.play(Write(formula[0]), run_time=0.8)
+self.play(Create(vec_b), Write(b_label), run_time=1.0)
+self.play(Write(formula[1]), run_time=0.8)
+self.play(Create(vec_result), Write(result_label), run_time=1.5)
+self.play(Write(formula[2]), run_time=1.0)
+```
+
+## VECTOR SUBTRACTION
+```python
+# a - b = a + (-b)
+title = Text("Vector Subtraction", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+axes = Axes(
+    x_range=[-3, 6, 1],
+    y_range=[-3, 5, 1],
+    x_length=8,
+    y_length=6,
+    axis_config={"include_tip": True}
+)
+
+# Vector a: (4, 3)
+vec_a = Arrow(axes.c2p(0, 0), axes.c2p(4, 3), color=BLUE, buff=0, stroke_width=5)
+a_label = MathTex(r"\vec{a}", font_size=28, color=BLUE).next_to(vec_a.get_center(), UP, buff=0.2)
+
+# Vector b: (2, 1)
+vec_b = Arrow(axes.c2p(0, 0), axes.c2p(2, 1), color=GREEN, buff=0, stroke_width=5)
+b_label = MathTex(r"\vec{b}", font_size=28, color=GREEN).next_to(vec_b.get_center(), DOWN, buff=0.2)
+
+# -b (opposite direction)
+vec_neg_b = Arrow(axes.c2p(4, 3), axes.c2p(2, 2), color=PURPLE, buff=0, stroke_width=5)
+neg_b_label = MathTex(r"-\vec{b}", font_size=28, color=PURPLE).next_to(vec_neg_b.get_center(), UP, buff=0.2)
+
+# Resultant: a - b = (2, 2)
+vec_result = Arrow(axes.c2p(0, 0), axes.c2p(2, 2), color=RED, buff=0, stroke_width=6)
+result_label = MathTex(r"\vec{a} - \vec{b}", font_size=28, color=RED).next_to(vec_result.get_center(), LEFT, buff=0.2)
+
+# Explanation
+explanation = MathTex(r"\vec{a} - \vec{b} = \vec{a} + (-\vec{b})", font_size=32)
+explanation.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(axes), run_time=1.0)
+self.play(Create(vec_a), Write(a_label), run_time=1.0)
+self.play(Create(vec_b), Write(b_label), run_time=1.0)
+self.play(Write(explanation), run_time=1.0)
+self.play(Create(vec_neg_b), Write(neg_b_label), run_time=1.0)
+self.play(Create(vec_result), Write(result_label), run_time=1.5)
+```
+
+## SCALAR MULTIPLICATION
+```python
+# Scaling a vector
+title = Text("Scalar Multiplication", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+axes = Axes(
+    x_range=[-1, 8, 1],
+    y_range=[-1, 5, 1],
+    x_length=8,
+    y_length=5,
+    axis_config={"include_tip": True}
+).shift(DOWN * 0.5)
+
+# Original vector v = (2, 1)
+vec_v = Arrow(axes.c2p(0, 0), axes.c2p(2, 1), color=WHITE, buff=0, stroke_width=4)
+v_label = MathTex(r"\vec{v}", font_size=28).next_to(vec_v.get_center(), UP, buff=0.2)
+
+# 2v (double the length)
+vec_2v = Arrow(axes.c2p(0, 0), axes.c2p(4, 2), color=BLUE, buff=0, stroke_width=5)
+label_2v = MathTex(r"2\vec{v}", font_size=28, color=BLUE).next_to(vec_2v.get_center(), UP, buff=0.2)
+
+# 3v (triple the length)
+vec_3v = Arrow(axes.c2p(0, 0), axes.c2p(6, 3), color=GREEN, buff=0, stroke_width=5)
+label_3v = MathTex(r"3\vec{v}", font_size=28, color=GREEN).next_to(vec_3v.get_center(), UP, buff=0.2)
+
+# Explanation
+explanation = VGroup(
+    MathTex(r"\vec{v} = \begin{pmatrix} 2 \\ 1 \end{pmatrix}", font_size=28),
+    MathTex(r"2\vec{v} = \begin{pmatrix} 4 \\ 2 \end{pmatrix}", font_size=28, color=BLUE),
+    MathTex(r"3\vec{v} = \begin{pmatrix} 6 \\ 3 \end{pmatrix}", font_size=28, color=GREEN)
+).arrange(DOWN, buff=0.2, aligned_edge=LEFT)
+explanation.to_corner(UR, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(axes), run_time=1.0)
+self.play(Create(vec_v), Write(v_label), run_time=1.0)
+self.play(Write(explanation[0]), run_time=0.8)
+self.play(Transform(vec_v.copy(), vec_2v), Write(label_2v), run_time=1.5)
+self.play(Write(explanation[1]), run_time=0.8)
+self.play(Transform(vec_v.copy(), vec_3v), Write(label_3v), run_time=1.5)
+self.play(Write(explanation[2]), run_time=0.8)
+```
+
+## UNIT VECTOR
+```python
+# A vector with magnitude 1
+title = Text("Unit Vector", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Unit circle
+circle = Circle(radius=2, color=WHITE, stroke_width=2).shift(LEFT * 1.5)
+center_dot = Dot(LEFT * 1.5, color=WHITE, radius=0.08)
+
+# Several unit vectors pointing in different directions
+angles = [0, 45, 90, 135, 180, 225, 270, 315]
+colors = [RED, ORANGE, YELLOW, GREEN, TEAL, BLUE, PURPLE, PINK]
+unit_vectors = VGroup()
+
+for angle, color in zip(angles, colors):
+    rad = angle * DEGREES
+    end = LEFT * 1.5 + np.array([2 * np.cos(rad), 2 * np.sin(rad), 0])
+    vec = Arrow(LEFT * 1.5, end, color=color, buff=0, stroke_width=4)
+    unit_vectors.add(vec)
+
+# Explanation
+explanation = VGroup(
+    Text("A unit vector has:", font_size=24),
+    MathTex(r"|\hat{u}| = 1", font_size=32, color=GREEN),
+    Text("Same direction,", font_size=22),
+    Text("magnitude of 1", font_size=22)
+).arrange(DOWN, buff=0.2)
+explanation.shift(RIGHT * 3.5)
+
+# Formula
+formula = MathTex(r"\hat{u} = \frac{\vec{v}}{|\vec{v}|}", font_size=36, color=YELLOW)
+formula.shift(RIGHT * 3.5 + DOWN * 2)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(circle), Create(center_dot), run_time=1.0)
+for vec in unit_vectors:
+    self.play(Create(vec), run_time=0.3)
+self.play(Write(explanation), run_time=1.0)
+self.play(Write(formula), run_time=1.0)
+```

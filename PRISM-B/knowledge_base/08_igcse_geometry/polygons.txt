@@ -1,0 +1,695 @@
+================================================================================
+IGCSE/O-LEVEL: POLYGONS AND THEIR PROPERTIES
+================================================================================
+
+## 1. Naming Regular Polygons
+
+```python
+from manim import *
+import numpy as np
+
+class NamingRegularPolygons(Scene):
+    def construct(self):
+        title = Text("Regular Polygons", font_size=40, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Create polygons with names
+        polygons_data = [
+            (3, "Triangle", RED),
+            (4, "Square", GREEN),
+            (5, "Pentagon", YELLOW),
+            (6, "Hexagon", ORANGE),
+            (8, "Octagon", PURPLE),
+            (10, "Decagon", TEAL)
+        ]
+        
+        # First row
+        for i, (sides, name, color) in enumerate(polygons_data[:3]):
+            polygon = RegularPolygon(n=sides, color=color, fill_opacity=0.3)
+            polygon.scale(0.7)
+            polygon.shift(LEFT * 4 + RIGHT * i * 4 + UP * 0.5)
+            
+            label = Text(name, font_size=24, color=color)
+            label.next_to(polygon, DOWN)
+            
+            sides_label = Text(f"{sides} sides", font_size=18, color=WHITE)
+            sides_label.next_to(label, DOWN, buff=0.1)
+            
+            self.play(Create(polygon), Write(label), Write(sides_label), run_time=0.8)
+        
+        # Second row
+        for i, (sides, name, color) in enumerate(polygons_data[3:]):
+            polygon = RegularPolygon(n=sides, color=color, fill_opacity=0.3)
+            polygon.scale(0.7)
+            polygon.shift(LEFT * 4 + RIGHT * i * 4 + DOWN * 2.5)
+            
+            label = Text(name, font_size=24, color=color)
+            label.next_to(polygon, DOWN)
+            
+            sides_label = Text(f"{sides} sides", font_size=18, color=WHITE)
+            sides_label.next_to(label, DOWN, buff=0.1)
+            
+            self.play(Create(polygon), Write(label), Write(sides_label), run_time=0.8)
+        
+        self.wait(2)
+```
+
+## 2. Interior Angles of Polygons
+
+```python
+from manim import *
+import numpy as np
+
+class InteriorAngleFormula(Scene):
+    def construct(self):
+        title = Text("Interior Angles of Polygons", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Formula
+        formula = MathTex(r"\text{Sum of interior angles} = (n - 2) \times 180°", font_size=36)
+        formula.next_to(title, DOWN, buff=0.5)
+        self.play(Write(formula))
+        
+        # Pentagon example
+        pentagon = RegularPolygon(n=5, color=YELLOW, fill_opacity=0.2)
+        pentagon.scale(1.5)
+        pentagon.shift(LEFT * 3 + DOWN * 1)
+        self.play(Create(pentagon))
+        
+        # Draw diagonals from one vertex to show triangles
+        vertices = pentagon.get_vertices()
+        diagonals = VGroup()
+        for i in [2, 3]:
+            line = Line(vertices[0], vertices[i], color=RED)
+            diagonals.add(line)
+        
+        self.play(Create(diagonals))
+        
+        # Label triangles
+        triangle_label = Text("3 triangles", font_size=24, color=RED)
+        triangle_label.next_to(pentagon, DOWN)
+        self.play(Write(triangle_label))
+        
+        # Calculation
+        calc = VGroup(
+            MathTex(r"n = 5 \text{ (pentagon)}", font_size=28),
+            MathTex(r"\text{Sum} = (5 - 2) \times 180°", font_size=28),
+            MathTex(r"= 3 \times 180°", font_size=28),
+            MathTex(r"= 540°", font_size=28, color=GREEN)
+        ).arrange(DOWN, aligned_edge=LEFT)
+        calc.shift(RIGHT * 3 + DOWN * 0.5)
+        
+        for line in calc:
+            self.play(Write(line), run_time=0.6)
+        
+        # Each interior angle (regular)
+        each_angle = MathTex(r"\text{Each angle} = \frac{540°}{5} = 108°", font_size=28, color=YELLOW)
+        each_angle.next_to(calc, DOWN, buff=0.5)
+        self.play(Write(each_angle))
+        
+        self.wait(2)
+```
+
+## 3. Exterior Angles of Polygons
+
+```python
+from manim import *
+import numpy as np
+
+class ExteriorAngleSum(Scene):
+    def construct(self):
+        title = Text("Exterior Angles of Polygons", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Key fact
+        fact = MathTex(r"\text{Sum of exterior angles} = 360°", font_size=32, color=GREEN)
+        fact.next_to(title, DOWN, buff=0.3)
+        box = SurroundingRectangle(fact, color=GREEN)
+        self.play(Write(fact), Create(box))
+        
+        # Hexagon with exterior angles
+        hexagon = RegularPolygon(n=6, color=YELLOW)
+        hexagon.scale(1.5)
+        hexagon.shift(DOWN * 1)
+        self.play(Create(hexagon))
+        
+        vertices = hexagon.get_vertices()
+        
+        # Draw exterior angles
+        exterior_angles = VGroup()
+        angle_labels = VGroup()
+        
+        for i in range(6):
+            # Extend side outward
+            v1 = vertices[i]
+            v2 = vertices[(i + 1) % 6]
+            direction = v2 - v1
+            direction = direction / np.linalg.norm(direction)
+            
+            extension = Line(v2, v2 + direction * 0.8, color=RED)
+            exterior_angles.add(extension)
+            
+            # Angle arc
+            angle_arc = Arc(
+                radius=0.3,
+                start_angle=np.arctan2((v2 - v1)[1], (v2 - v1)[0]),
+                angle=PI/3,
+                arc_center=v2,
+                color=RED
+            )
+            exterior_angles.add(angle_arc)
+        
+        self.play(Create(exterior_angles))
+        
+        # Calculation
+        calc = VGroup(
+            MathTex(r"\text{Regular hexagon: } n = 6", font_size=26),
+            MathTex(r"\text{Each exterior angle} = \frac{360°}{6}", font_size=26),
+            MathTex(r"= 60°", font_size=26, color=RED)
+        ).arrange(DOWN, aligned_edge=LEFT)
+        calc.to_edge(RIGHT).shift(DOWN * 0.5)
+        
+        for line in calc:
+            self.play(Write(line), run_time=0.6)
+        
+        # Interior + Exterior = 180
+        relation = MathTex(r"\text{Interior} + \text{Exterior} = 180°", font_size=28, color=ORANGE)
+        relation.next_to(calc, DOWN, buff=0.5)
+        self.play(Write(relation))
+        
+        self.wait(2)
+```
+
+## 4. Properties of Quadrilaterals
+
+```python
+from manim import *
+import numpy as np
+
+class QuadrilateralProperties(Scene):
+    def construct(self):
+        title = Text("Properties of Quadrilaterals", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Square
+        square = Square(side_length=1.5, color=RED, fill_opacity=0.3)
+        square.shift(LEFT * 4 + UP * 0.5)
+        square_label = Text("Square", font_size=20, color=RED)
+        square_label.next_to(square, DOWN)
+        square_props = Text("• 4 equal sides\n• 4 right angles\n• 2 lines of symmetry", 
+                          font_size=14, color=WHITE)
+        square_props.next_to(square_label, DOWN, buff=0.2)
+        
+        self.play(Create(square), Write(square_label))
+        self.play(Write(square_props), run_time=0.8)
+        
+        # Rectangle
+        rect = Rectangle(width=2, height=1.2, color=GREEN, fill_opacity=0.3)
+        rect.shift(LEFT * 0.5 + UP * 0.5)
+        rect_label = Text("Rectangle", font_size=20, color=GREEN)
+        rect_label.next_to(rect, DOWN)
+        rect_props = Text("• Opposite sides equal\n• 4 right angles\n• 2 lines of symmetry", 
+                         font_size=14, color=WHITE)
+        rect_props.next_to(rect_label, DOWN, buff=0.2)
+        
+        self.play(Create(rect), Write(rect_label))
+        self.play(Write(rect_props), run_time=0.8)
+        
+        # Parallelogram
+        para_pts = [LEFT * 1, RIGHT * 1, RIGHT * 1.5 + UP * 1.2, LEFT * 0.5 + UP * 1.2]
+        para = Polygon(*para_pts, color=YELLOW, fill_opacity=0.3)
+        para.scale(0.7)
+        para.shift(RIGHT * 3.5 + UP * 0.5)
+        para_label = Text("Parallelogram", font_size=20, color=YELLOW)
+        para_label.next_to(para, DOWN, buff=0.3)
+        para_props = Text("• Opposite sides parallel\n• Opposite angles equal\n• No lines of symmetry", 
+                         font_size=14, color=WHITE)
+        para_props.next_to(para_label, DOWN, buff=0.2)
+        
+        self.play(Create(para), Write(para_label))
+        self.play(Write(para_props), run_time=0.8)
+        
+        # Rhombus
+        rhombus = Polygon(UP * 0.8, RIGHT * 0.6, DOWN * 0.8, LEFT * 0.6,
+                         color=PURPLE, fill_opacity=0.3)
+        rhombus.shift(LEFT * 4 + DOWN * 2.5)
+        rhombus_label = Text("Rhombus", font_size=20, color=PURPLE)
+        rhombus_label.next_to(rhombus, DOWN)
+        rhombus_props = Text("• 4 equal sides\n• Opp. angles equal\n• Diagonals perpendicular", 
+                            font_size=14, color=WHITE)
+        rhombus_props.next_to(rhombus_label, DOWN, buff=0.2)
+        
+        self.play(Create(rhombus), Write(rhombus_label))
+        self.play(Write(rhombus_props), run_time=0.8)
+        
+        # Trapezium
+        trap_pts = [LEFT * 0.6, RIGHT * 0.6, RIGHT * 1 + DOWN * 1.2, LEFT * 1 + DOWN * 1.2]
+        trap = Polygon(*trap_pts, color=ORANGE, fill_opacity=0.3)
+        trap.shift(DOWN * 2.2)
+        trap_label = Text("Trapezium", font_size=20, color=ORANGE)
+        trap_label.next_to(trap, DOWN)
+        trap_props = Text("• One pair of\n  parallel sides", font_size=14, color=WHITE)
+        trap_props.next_to(trap_label, DOWN, buff=0.2)
+        
+        self.play(Create(trap), Write(trap_label))
+        self.play(Write(trap_props), run_time=0.8)
+        
+        # Kite
+        kite = Polygon(UP * 1, RIGHT * 0.5, DOWN * 0.5, LEFT * 0.5,
+                      color=TEAL, fill_opacity=0.3)
+        kite.shift(RIGHT * 3.5 + DOWN * 2.3)
+        kite_label = Text("Kite", font_size=20, color=TEAL)
+        kite_label.next_to(kite, DOWN, buff=0.3)
+        kite_props = Text("• 2 pairs adjacent\n  sides equal\n• 1 line of symmetry", 
+                         font_size=14, color=WHITE)
+        kite_props.next_to(kite_label, DOWN, buff=0.2)
+        
+        self.play(Create(kite), Write(kite_label))
+        self.play(Write(kite_props), run_time=0.8)
+        
+        self.wait(2)
+```
+
+## 5. Tessellations
+
+```python
+from manim import *
+import numpy as np
+
+class Tessellations(Scene):
+    def construct(self):
+        title = Text("Tessellations", font_size=40, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        definition = Text("Shapes that tile with no gaps or overlaps", font_size=24, color=GRAY)
+        definition.next_to(title, DOWN, buff=0.3)
+        self.play(Write(definition))
+        
+        # Triangle tessellation
+        tri_group = VGroup()
+        for i in range(-2, 3):
+            for j in range(-1, 2):
+                tri = RegularPolygon(n=3, color=RED, fill_opacity=0.3)
+                tri.scale(0.4)
+                x_offset = i * 0.7 + (0.35 if j % 2 else 0)
+                tri.shift(LEFT * 4 + RIGHT * x_offset + UP * j * 0.6 + DOWN * 1)
+                if (i + j) % 2 == 0:
+                    tri.rotate(PI)
+                tri_group.add(tri)
+        
+        tri_label = Text("Triangles", font_size=20, color=RED)
+        tri_label.next_to(tri_group, DOWN)
+        
+        self.play(Create(tri_group), Write(tri_label))
+        
+        # Square tessellation
+        sq_group = VGroup()
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                sq = Square(side_length=0.6, color=GREEN, fill_opacity=0.3)
+                sq.shift(RIGHT * i * 0.6 + UP * j * 0.6 + DOWN * 1)
+                sq_group.add(sq)
+        
+        sq_label = Text("Squares", font_size=20, color=GREEN)
+        sq_label.next_to(sq_group, DOWN)
+        
+        self.play(Create(sq_group), Write(sq_label))
+        
+        # Hexagon tessellation
+        hex_group = VGroup()
+        hex_size = 0.35
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                hex = RegularPolygon(n=6, color=YELLOW, fill_opacity=0.3)
+                hex.scale(hex_size)
+                x_offset = i * hex_size * 1.8 + (0.9 * hex_size if j % 2 else 0)
+                hex.shift(RIGHT * 4 + RIGHT * x_offset + UP * j * hex_size * 1.5 + DOWN * 1)
+                hex_group.add(hex)
+        
+        hex_label = Text("Hexagons", font_size=20, color=YELLOW)
+        hex_label.next_to(hex_group, DOWN)
+        
+        self.play(Create(hex_group), Write(hex_label))
+        
+        # Note about angles
+        note = Text("Interior angle must divide 360° evenly", font_size=22, color=ORANGE)
+        note.to_edge(DOWN, buff=0.5)
+        box = SurroundingRectangle(note, color=ORANGE)
+        self.play(Write(note), Create(box))
+        
+        self.wait(2)
+```
+
+## 6. Similar Shapes (Scale Factor)
+
+```python
+from manim import *
+import numpy as np
+
+class SimilarShapesScaleFactor(Scene):
+    def construct(self):
+        title = Text("Similar Shapes", font_size=40, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Small triangle
+        small_tri = Polygon(
+            ORIGIN, RIGHT * 2, RIGHT * 2 + UP * 1.5,
+            color=RED, fill_opacity=0.3
+        )
+        small_tri.shift(LEFT * 4 + DOWN * 0.5)
+        
+        # Labels for small triangle
+        small_labels = VGroup(
+            MathTex("3", font_size=24).next_to(small_tri, DOWN, buff=0.1),
+            MathTex("4", font_size=24).next_to(small_tri, RIGHT, buff=0.1),
+        )
+        small_labels[0].shift(UP * 0.2)
+        
+        self.play(Create(small_tri), Write(small_labels))
+        
+        # Large triangle (scale factor 2)
+        large_tri = Polygon(
+            ORIGIN, RIGHT * 4, RIGHT * 4 + UP * 3,
+            color=GREEN, fill_opacity=0.3
+        )
+        large_tri.shift(RIGHT * 0.5 + DOWN * 1)
+        
+        # Labels for large triangle
+        large_labels = VGroup(
+            MathTex("6", font_size=28).next_to(large_tri, DOWN, buff=0.1),
+            MathTex("8", font_size=28).next_to(large_tri, RIGHT, buff=0.1),
+        )
+        large_labels[0].shift(UP * 0.2)
+        
+        self.play(Create(large_tri), Write(large_labels))
+        
+        # Scale factor calculation
+        sf_title = Text("Scale Factor", font_size=28, color=YELLOW)
+        sf_title.to_edge(RIGHT).shift(UP * 2 + LEFT * 1)
+        
+        sf_calc = VGroup(
+            MathTex(r"k = \frac{\text{new length}}{\text{original length}}", font_size=24),
+            MathTex(r"k = \frac{6}{3} = 2", font_size=28, color=GREEN)
+        ).arrange(DOWN, buff=0.3)
+        sf_calc.next_to(sf_title, DOWN, buff=0.3)
+        
+        self.play(Write(sf_title))
+        for line in sf_calc:
+            self.play(Write(line), run_time=0.6)
+        
+        # Area scale factor
+        area_note = VGroup(
+            Text("Area scale factor:", font_size=22, color=ORANGE),
+            MathTex(r"k^2 = 2^2 = 4", font_size=26, color=ORANGE)
+        ).arrange(DOWN, buff=0.2)
+        area_note.next_to(sf_calc, DOWN, buff=0.5)
+        
+        self.play(Write(area_note))
+        
+        # Arrow showing transformation
+        arrow = Arrow(small_tri.get_right(), large_tri.get_left(), color=WHITE)
+        arrow_label = MathTex(r"\times 2", font_size=24, color=WHITE)
+        arrow_label.next_to(arrow, UP, buff=0.1)
+        
+        self.play(Create(arrow), Write(arrow_label))
+        
+        self.wait(2)
+```
+
+## 7. Congruent Shapes (SSS, SAS, ASA, RHS)
+
+```python
+from manim import *
+import numpy as np
+
+class CongruenceConditions(Scene):
+    def construct(self):
+        title = Text("Congruent Triangles", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        definition = Text("Same shape AND same size", font_size=24, color=GRAY)
+        definition.next_to(title, DOWN, buff=0.2)
+        self.play(Write(definition))
+        
+        conditions = [
+            ("SSS", "Side-Side-Side", "All 3 sides equal", RED),
+            ("SAS", "Side-Angle-Side", "2 sides + included angle", GREEN),
+            ("ASA", "Angle-Side-Angle", "2 angles + included side", YELLOW),
+            ("RHS", "Right-Hypotenuse-Side", "Right angle + hypotenuse + side", PURPLE)
+        ]
+        
+        for i, (abbrev, full_name, desc, color) in enumerate(conditions):
+            row = i % 2
+            col = i // 2
+            
+            # Triangle shape
+            tri = Polygon(
+                ORIGIN, RIGHT * 1.2, RIGHT * 0.6 + UP * 0.9,
+                color=color, fill_opacity=0.3
+            )
+            tri.shift(LEFT * 4 + RIGHT * col * 5 + UP * 0.5 + DOWN * row * 2.5)
+            
+            # Labels
+            abbrev_text = Text(abbrev, font_size=28, color=color, weight=BOLD)
+            abbrev_text.next_to(tri, LEFT, buff=0.3)
+            
+            full_text = Text(full_name, font_size=18, color=WHITE)
+            full_text.next_to(tri, RIGHT, buff=0.3)
+            
+            desc_text = Text(desc, font_size=14, color=GRAY)
+            desc_text.next_to(tri, DOWN, buff=0.1)
+            
+            self.play(
+                Create(tri), 
+                Write(abbrev_text), 
+                Write(full_text),
+                Write(desc_text),
+                run_time=0.8
+            )
+        
+        # Key note
+        note = Text("Congruent shapes have equal areas and perimeters", 
+                   font_size=22, color=ORANGE)
+        note.to_edge(DOWN, buff=0.4)
+        box = SurroundingRectangle(note, color=ORANGE)
+        self.play(Write(note), Create(box))
+        
+        self.wait(2)
+```
+
+## 8. Symmetry (Line and Rotational)
+
+```python
+from manim import *
+import numpy as np
+
+class SymmetryTypes(Scene):
+    def construct(self):
+        title = Text("Types of Symmetry", font_size=40, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # LINE SYMMETRY section
+        line_title = Text("Line Symmetry", font_size=28, color=YELLOW)
+        line_title.shift(LEFT * 3.5 + UP * 1.5)
+        self.play(Write(line_title))
+        
+        # Square with 4 lines of symmetry
+        square = Square(side_length=2, color=YELLOW, fill_opacity=0.2)
+        square.shift(LEFT * 3.5 + DOWN * 0.5)
+        self.play(Create(square))
+        
+        # Draw lines of symmetry
+        lines = VGroup(
+            DashedLine(UP * 1.5, DOWN * 1.5, color=RED),
+            DashedLine(LEFT * 1.5, RIGHT * 1.5, color=RED),
+            DashedLine(UP * 1 + LEFT * 1, DOWN * 1 + RIGHT * 1, color=RED),
+            DashedLine(UP * 1 + RIGHT * 1, DOWN * 1 + LEFT * 1, color=RED),
+        )
+        lines.shift(LEFT * 3.5 + DOWN * 0.5)
+        
+        self.play(Create(lines))
+        
+        sq_label = Text("4 lines of symmetry", font_size=20, color=WHITE)
+        sq_label.next_to(square, DOWN, buff=0.3)
+        self.play(Write(sq_label))
+        
+        # ROTATIONAL SYMMETRY section
+        rot_title = Text("Rotational Symmetry", font_size=28, color=GREEN)
+        rot_title.shift(RIGHT * 3 + UP * 1.5)
+        self.play(Write(rot_title))
+        
+        # Equilateral triangle with rotational symmetry order 3
+        triangle = RegularPolygon(n=3, color=GREEN, fill_opacity=0.3)
+        triangle.scale(1.2)
+        triangle.shift(RIGHT * 3 + DOWN * 0.5)
+        self.play(Create(triangle))
+        
+        # Center dot
+        center = Dot(RIGHT * 3 + DOWN * 0.5, color=RED)
+        self.play(Create(center))
+        
+        # Show rotation
+        order_label = Text("Order 3", font_size=20, color=WHITE)
+        order_label.next_to(triangle, DOWN, buff=0.3)
+        self.play(Write(order_label))
+        
+        # Rotate the triangle
+        self.play(Rotate(triangle, angle=2*PI/3, about_point=RIGHT * 3 + DOWN * 0.5))
+        angle_label = MathTex(r"120°", font_size=20, color=RED)
+        angle_label.next_to(center, RIGHT, buff=0.2)
+        self.play(Write(angle_label))
+        
+        # Formula
+        formula = MathTex(r"\text{Angle of rotation} = \frac{360°}{\text{order}}", 
+                         font_size=24, color=ORANGE)
+        formula.to_edge(DOWN, buff=0.5)
+        self.play(Write(formula))
+        
+        self.wait(2)
+```
+
+## 9. Constructing Shapes with Compass and Ruler
+
+```python
+from manim import *
+import numpy as np
+
+class CompassConstruction(Scene):
+    def construct(self):
+        title = Text("Compass Constructions", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        subtitle = Text("Constructing an Equilateral Triangle", font_size=24, color=GRAY)
+        subtitle.next_to(title, DOWN, buff=0.2)
+        self.play(Write(subtitle))
+        
+        # Step 1: Draw base
+        step1 = Text("Step 1: Draw base AB", font_size=20, color=WHITE)
+        step1.to_edge(LEFT).shift(UP * 1)
+        
+        A = LEFT * 2 + DOWN * 1
+        B = RIGHT * 2 + DOWN * 1
+        base = Line(A, B, color=WHITE)
+        
+        A_label = MathTex("A", font_size=24).next_to(A, DOWN + LEFT, buff=0.1)
+        B_label = MathTex("B", font_size=24).next_to(B, DOWN + RIGHT, buff=0.1)
+        
+        self.play(Write(step1))
+        self.play(Create(base), Write(A_label), Write(B_label))
+        
+        # Step 2: Arc from A
+        step2 = Text("Step 2: Arc from A", font_size=20, color=WHITE)
+        step2.next_to(step1, DOWN, buff=0.3)
+        
+        radius = np.linalg.norm(B - A)
+        arc1 = Arc(radius=radius, start_angle=0, angle=PI/3, arc_center=A, color=RED)
+        
+        self.play(Write(step2))
+        self.play(Create(arc1))
+        
+        # Step 3: Arc from B
+        step3 = Text("Step 3: Arc from B", font_size=20, color=WHITE)
+        step3.next_to(step2, DOWN, buff=0.3)
+        
+        arc2 = Arc(radius=radius, start_angle=2*PI/3, angle=PI/3, arc_center=B, color=GREEN)
+        
+        self.play(Write(step3))
+        self.play(Create(arc2))
+        
+        # Step 4: Mark intersection C
+        step4 = Text("Step 4: Mark point C", font_size=20, color=WHITE)
+        step4.next_to(step3, DOWN, buff=0.3)
+        
+        # Calculate C
+        C = (A + B) / 2 + UP * radius * np.sin(PI/3)
+        C_dot = Dot(C, color=YELLOW)
+        C_label = MathTex("C", font_size=24, color=YELLOW).next_to(C, UP, buff=0.1)
+        
+        self.play(Write(step4))
+        self.play(Create(C_dot), Write(C_label))
+        
+        # Step 5: Connect to form triangle
+        step5 = Text("Step 5: Join A-C and B-C", font_size=20, color=WHITE)
+        step5.next_to(step4, DOWN, buff=0.3)
+        
+        AC = Line(A, C, color=YELLOW)
+        BC = Line(B, C, color=YELLOW)
+        
+        self.play(Write(step5))
+        self.play(Create(AC), Create(BC))
+        
+        # Final result
+        result = Text("Equilateral Triangle!", font_size=28, color=GREEN)
+        result.to_edge(DOWN, buff=0.5)
+        self.play(Write(result))
+        
+        self.wait(2)
+```
+
+## 10. Properties of Regular Polygons (Table Summary)
+
+```python
+from manim import *
+import numpy as np
+
+class PolygonSummaryTable(Scene):
+    def construct(self):
+        title = Text("Regular Polygon Summary", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Table headers
+        headers = VGroup(
+            Text("Sides", font_size=20, color=YELLOW),
+            Text("Name", font_size=20, color=YELLOW),
+            Text("Sum of\nAngles", font_size=18, color=YELLOW),
+            Text("Each\nAngle", font_size=18, color=YELLOW),
+            Text("Exterior\nAngle", font_size=18, color=YELLOW),
+        )
+        
+        # Position headers
+        for i, h in enumerate(headers):
+            h.move_to(LEFT * 5 + RIGHT * i * 2.5 + UP * 1.5)
+        
+        self.play(Write(headers))
+        
+        # Table data
+        data = [
+            (3, "Triangle", "180°", "60°", "120°"),
+            (4, "Square", "360°", "90°", "90°"),
+            (5, "Pentagon", "540°", "108°", "72°"),
+            (6, "Hexagon", "720°", "120°", "60°"),
+            (8, "Octagon", "1080°", "135°", "45°"),
+            (10, "Decagon", "1440°", "144°", "36°"),
+        ]
+        
+        for row_idx, row_data in enumerate(data):
+            row = VGroup()
+            for col_idx, val in enumerate(row_data):
+                cell = Text(str(val), font_size=18, color=WHITE)
+                cell.move_to(LEFT * 5 + RIGHT * col_idx * 2.5 + UP * 0.5 + DOWN * row_idx * 0.6)
+                row.add(cell)
+            
+            self.play(Write(row), run_time=0.4)
+        
+        # Formulas at bottom
+        formulas = VGroup(
+            MathTex(r"\text{Sum} = (n-2) \times 180°", font_size=24, color=GREEN),
+            MathTex(r"\text{Each interior} = \frac{(n-2) \times 180°}{n}", font_size=24, color=ORANGE),
+            MathTex(r"\text{Each exterior} = \frac{360°}{n}", font_size=24, color=RED),
+        ).arrange(RIGHT, buff=0.5)
+        formulas.to_edge(DOWN, buff=0.4)
+        
+        self.play(Write(formulas))
+        
+        self.wait(2)
+```

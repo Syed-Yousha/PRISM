@@ -1,0 +1,328 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# INDICES & STANDARD FORM - Powers, Laws, Scientific Notation
+# IGCSE/O-Level Number Topic
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## BASIC INDICES MEANING
+```python
+# Show what 2^5 means
+title = Text("Understanding Indices", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# The expression
+expression = MathTex("2^5", font_size=72, color=WHITE).shift(UP * 1.5)
+
+# Base and exponent labels
+base_label = Text("base", font_size=24, color=BLUE).shift(UP * 1.2 + LEFT * 0.8)
+base_arrow = Arrow(base_label.get_right(), UP * 1.5 + LEFT * 0.3, color=BLUE, buff=0.1)
+exp_label = Text("exponent/power", font_size=24, color=RED).shift(UP * 2.2 + RIGHT * 1)
+exp_arrow = Arrow(exp_label.get_bottom(), UP * 1.8 + RIGHT * 0.3, color=RED, buff=0.1)
+
+# Expanded form
+expanded = MathTex("2^5 = 2 \\times 2 \\times 2 \\times 2 \\times 2", font_size=40).shift(DOWN * 0.2)
+
+# Counting brackets
+brackets = VGroup()
+for i in range(5):
+    bracket = MathTex(f"({i+1})", font_size=20, color=GREEN)
+    bracket.shift(DOWN * 0.7 + LEFT * 1.5 + RIGHT * i * 0.85)
+    brackets.add(bracket)
+
+# Result
+result = MathTex("= 32", font_size=48, color=GREEN).shift(DOWN * 1.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(expression), run_time=1.0)
+self.play(Write(base_label), Create(base_arrow), run_time=0.8)
+self.play(Write(exp_label), Create(exp_arrow), run_time=0.8)
+self.play(Write(expanded), run_time=1.5)
+self.play(Write(brackets), run_time=1.0)
+self.play(Write(result), run_time=1.0)
+```
+
+## INDEX LAW 1: MULTIPLICATION
+```python
+# a^m × a^n = a^(m+n)
+title = Text("Index Law 1: Multiplication", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# The rule
+rule = MathTex("a^m \\times a^n = a^{m+n}", font_size=48, color=WHITE)
+rule.shift(UP * 1.5)
+rule_box = SurroundingRectangle(rule, color=YELLOW, buff=0.3)
+
+# Example
+example = VGroup(
+    MathTex("2^3 \\times 2^4", font_size=40),
+    MathTex("= 2^{3+4}", font_size=40, color=GREEN),
+    MathTex("= 2^7 = 128", font_size=40, color=GREEN)
+).arrange(DOWN, buff=0.3)
+example.shift(LEFT * 3 + DOWN * 0.5)
+
+# Proof visualization
+proof = VGroup(
+    MathTex("2^3 = 2 \\times 2 \\times 2", font_size=28, color=BLUE),
+    MathTex("2^4 = 2 \\times 2 \\times 2 \\times 2", font_size=28, color=RED),
+    MathTex("2^3 \\times 2^4 = \\underbrace{2 \\times 2 \\times 2}_{3} \\times \\underbrace{2 \\times 2 \\times 2 \\times 2}_{4}", font_size=24)
+).arrange(DOWN, buff=0.3)
+proof.shift(RIGHT * 2.5 + DOWN * 0.5)
+
+# Key point
+note = Text("Same base, ADD the powers", font_size=24, color=YELLOW).to_edge(DOWN, buff=0.8)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(rule), Create(rule_box), run_time=1.5)
+self.play(Write(example), run_time=2.0)
+self.play(Write(proof), run_time=2.0)
+self.play(Write(note), run_time=1.0)
+```
+
+## INDEX LAW 2: DIVISION
+```python
+# a^m ÷ a^n = a^(m-n)
+title = Text("Index Law 2: Division", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# The rule
+rule = MathTex("a^m \\div a^n = a^{m-n}", font_size=48, color=WHITE)
+rule.shift(UP * 1.5)
+rule_box = SurroundingRectangle(rule, color=YELLOW, buff=0.3)
+
+# Example
+example = VGroup(
+    MathTex("5^7 \\div 5^3", font_size=40),
+    MathTex("= 5^{7-3}", font_size=40, color=GREEN),
+    MathTex("= 5^4 = 625", font_size=40, color=GREEN)
+).arrange(DOWN, buff=0.3)
+example.shift(LEFT * 3 + DOWN * 0.5)
+
+# Fraction notation
+fraction = VGroup(
+    MathTex("\\frac{5^7}{5^3} = 5^{7-3} = 5^4", font_size=36, color=ORANGE)
+).shift(RIGHT * 3 + DOWN * 0.5)
+
+# Key point
+note = Text("Same base, SUBTRACT the powers", font_size=24, color=YELLOW).to_edge(DOWN, buff=0.8)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(rule), Create(rule_box), run_time=1.5)
+self.play(Write(example), run_time=2.0)
+self.play(Write(fraction), run_time=1.5)
+self.play(Write(note), run_time=1.0)
+```
+
+## INDEX LAW 3: POWER OF A POWER
+```python
+# (a^m)^n = a^(m×n)
+title = Text("Index Law 3: Power of a Power", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# The rule
+rule = MathTex("(a^m)^n = a^{m \\times n}", font_size=48, color=WHITE)
+rule.shift(UP * 1.5)
+rule_box = SurroundingRectangle(rule, color=YELLOW, buff=0.3)
+
+# Example
+example = VGroup(
+    MathTex("(3^2)^4", font_size=40),
+    MathTex("= 3^{2 \\times 4}", font_size=40, color=GREEN),
+    MathTex("= 3^8 = 6561", font_size=40, color=GREEN)
+).arrange(DOWN, buff=0.3)
+example.shift(DOWN * 0.5)
+
+# Visual proof
+proof = VGroup(
+    MathTex("(3^2)^4 = 3^2 \\times 3^2 \\times 3^2 \\times 3^2", font_size=28),
+    MathTex("= 3^{2+2+2+2} = 3^8", font_size=28, color=ORANGE)
+).arrange(DOWN, buff=0.2)
+proof.shift(DOWN * 2.2)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(rule), Create(rule_box), run_time=1.5)
+self.play(Write(example), run_time=2.0)
+self.play(Write(proof), run_time=1.5)
+```
+
+## NEGATIVE AND ZERO INDICES
+```python
+# a^0 = 1, a^(-n) = 1/a^n
+title = Text("Zero and Negative Indices", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Zero power
+zero_rule = VGroup(
+    MathTex("a^0 = 1", font_size=48, color=GREEN),
+    Text("(any number to power 0 = 1)", font_size=22, color=GRAY)
+).arrange(DOWN, buff=0.2)
+zero_rule.shift(UP * 1.2 + LEFT * 3)
+
+# Examples
+zero_ex = VGroup(
+    MathTex("5^0 = 1", font_size=32, color=GREEN),
+    MathTex("100^0 = 1", font_size=32, color=GREEN),
+    MathTex("(-3)^0 = 1", font_size=32, color=GREEN)
+).arrange(DOWN, buff=0.2, aligned_edge=LEFT)
+zero_ex.shift(UP * 1 + LEFT * 3)
+
+# Negative power
+neg_rule = VGroup(
+    MathTex("a^{-n} = \\frac{1}{a^n}", font_size=48, color=RED),
+    Text("(flip to make positive)", font_size=22, color=GRAY)
+).arrange(DOWN, buff=0.2)
+neg_rule.shift(UP * 1.2 + RIGHT * 3)
+
+# Examples
+neg_ex = VGroup(
+    MathTex("2^{-3} = \\frac{1}{2^3} = \\frac{1}{8}", font_size=28, color=RED),
+    MathTex("5^{-2} = \\frac{1}{5^2} = \\frac{1}{25}", font_size=28, color=RED),
+    MathTex("10^{-1} = \\frac{1}{10} = 0.1", font_size=28, color=RED)
+).arrange(DOWN, buff=0.2, aligned_edge=LEFT)
+neg_ex.shift(DOWN * 1.2 + RIGHT * 2)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(zero_rule), run_time=1.5)
+self.play(Write(zero_ex), run_time=1.5)
+self.play(Write(neg_rule), run_time=1.5)
+self.play(Write(neg_ex), run_time=2.0)
+```
+
+## FRACTIONAL INDICES
+```python
+# a^(1/n) = nth root, a^(m/n) = nth root of a^m
+title = Text("Fractional Indices", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Rule 1: 1/n means nth root
+rule1 = MathTex("a^{\\frac{1}{n}} = \\sqrt[n]{a}", font_size=44, color=GREEN)
+rule1.shift(UP * 1.5 + LEFT * 3)
+
+examples1 = VGroup(
+    MathTex("8^{\\frac{1}{3}} = \\sqrt[3]{8} = 2", font_size=32),
+    MathTex("16^{\\frac{1}{4}} = \\sqrt[4]{16} = 2", font_size=32),
+    MathTex("25^{\\frac{1}{2}} = \\sqrt{25} = 5", font_size=32)
+).arrange(DOWN, buff=0.25, aligned_edge=LEFT)
+examples1.shift(UP * 0 + LEFT * 3)
+
+# Rule 2: m/n means root then power (or power then root)
+rule2 = MathTex("a^{\\frac{m}{n}} = \\sqrt[n]{a^m} = (\\sqrt[n]{a})^m", font_size=40, color=BLUE)
+rule2.shift(UP * 1.5 + RIGHT * 3)
+
+examples2 = VGroup(
+    MathTex("8^{\\frac{2}{3}} = (\\sqrt[3]{8})^2 = 2^2 = 4", font_size=30),
+    MathTex("27^{\\frac{2}{3}} = (\\sqrt[3]{27})^2 = 3^2 = 9", font_size=30)
+).arrange(DOWN, buff=0.25, aligned_edge=LEFT)
+examples2.shift(DOWN * 0.5 + RIGHT * 2)
+
+# Tip
+tip = VGroup(
+    Rectangle(width=8, height=1, color=YELLOW, fill_opacity=0.1),
+    Text("Tip: ROOT first, then POWER (smaller numbers!)", font_size=22, color=YELLOW)
+)
+tip[1].move_to(tip[0])
+tip.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(rule1), run_time=1.5)
+self.play(Write(examples1), run_time=2.0)
+self.play(Write(rule2), run_time=1.5)
+self.play(Write(examples2), run_time=2.0)
+self.play(Create(tip), run_time=1.0)
+```
+
+## STANDARD FORM INTRODUCTION
+```python
+# A × 10^n where 1 ≤ A < 10
+title = Text("Standard Form (Scientific Notation)", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Format
+format_box = VGroup(
+    Rectangle(width=6, height=1.5, color=YELLOW, fill_opacity=0.1),
+    MathTex("A \\times 10^n", font_size=48, color=YELLOW),
+    MathTex("\\text{where } 1 \\leq A < 10", font_size=24, color=WHITE)
+)
+format_box[1].move_to(format_box[0].get_center() + UP * 0.2)
+format_box[2].move_to(format_box[0].get_center() + DOWN * 0.4)
+format_box.shift(UP * 1)
+
+# Large number example
+large = VGroup(
+    Text("Large numbers → Positive power", font_size=24, color=GREEN),
+    MathTex("5,600,000 = 5.6 \\times 10^6", font_size=36, color=GREEN)
+).arrange(DOWN, buff=0.2)
+large.shift(DOWN * 0.5 + LEFT * 3)
+
+# Small number example
+small = VGroup(
+    Text("Small numbers → Negative power", font_size=24, color=RED),
+    MathTex("0.00034 = 3.4 \\times 10^{-4}", font_size=36, color=RED)
+).arrange(DOWN, buff=0.2)
+small.shift(DOWN * 0.5 + RIGHT * 3)
+
+# How to count
+count_tip = VGroup(
+    Text("Count decimal places moved:", font_size=22, color=GRAY),
+    MathTex("5,600,000 \\rightarrow 5.6 \\text{ (6 places left)}", font_size=24),
+    MathTex("0.00034 \\rightarrow 3.4 \\text{ (4 places right)}", font_size=24)
+).arrange(DOWN, buff=0.2)
+count_tip.to_edge(DOWN, buff=0.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(format_box), run_time=1.5)
+self.play(Write(large), run_time=1.5)
+self.play(Write(small), run_time=1.5)
+self.play(Write(count_tip), run_time=1.5)
+```
+
+## STANDARD FORM CALCULATIONS
+```python
+# Multiply and divide in standard form
+title = Text("Calculations in Standard Form", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Multiplication
+mult_title = Text("Multiplication", font_size=28, color=BLUE).shift(UP * 1.8 + LEFT * 3)
+mult = VGroup(
+    MathTex("(3 \\times 10^4) \\times (2 \\times 10^5)", font_size=32),
+    MathTex("= (3 \\times 2) \\times (10^4 \\times 10^5)", font_size=32),
+    MathTex("= 6 \\times 10^{4+5}", font_size=32),
+    MathTex("= 6 \\times 10^9", font_size=36, color=GREEN)
+).arrange(DOWN, buff=0.25)
+mult.shift(UP * 0 + LEFT * 3)
+
+# Division
+div_title = Text("Division", font_size=28, color=RED).shift(UP * 1.8 + RIGHT * 3)
+div = VGroup(
+    MathTex("(8 \\times 10^7) \\div (4 \\times 10^3)", font_size=32),
+    MathTex("= \\frac{8}{4} \\times 10^{7-3}", font_size=32),
+    MathTex("= 2 \\times 10^4", font_size=36, color=GREEN)
+).arrange(DOWN, buff=0.25)
+div.shift(UP * 0 + RIGHT * 3)
+
+# Adjusting if A ≥ 10
+adjust = VGroup(
+    Text("If result isn't in standard form, adjust:", font_size=22, color=ORANGE),
+    MathTex("15 \\times 10^3 = 1.5 \\times 10^4", font_size=32, color=ORANGE)
+).arrange(DOWN, buff=0.2)
+adjust.to_edge(DOWN, buff=0.8)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(mult_title), Write(mult), run_time=2.5)
+self.play(Write(div_title), Write(div), run_time=2.5)
+self.play(Write(adjust), run_time=1.5)
+```
+
+## INDEX LAWS SUMMARY
+```python
+# All laws on one page
+title = Text("Index Laws Summary", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+laws = VGroup(
+    MathTex("1. \\quad a^m \\times a^n = a^{m+n}", font_size=32, color=GREEN),
+    MathTex("2. \\quad a^m \\div a^n = a^{m-n}", font_size=32, color=GREEN),
+    MathTex("3. \\quad (a^m)^n = a^{mn}", font_size=32, color=GREEN),
+    MathTex("4. \\quad a^0 = 1", font_size=32, color=BLUE),
+    MathTex("5. \\quad a^{-n} = \\frac{1}{a^n}", font_size=32, color=BLUE),
+    MathTex("6. \\quad a^{\\frac{1}{n}} = \\sqrt[n]{a}", font_size=32, color=RED),
+    MathTex("7. \\quad a^{\\frac{m}{n}} = (\\sqrt[n]{a})^m", font_size=32, color=RED),
+    MathTex("8. \\quad (ab)^n = a^n b^n", font_size=32, color=ORANGE),
+    MathTex("9. \\quad \\left(\\frac{a}{b}\\right)^n = \\frac{a^n}{b^n}", font_size=32, color=ORANGE)
+).arrange(DOWN, buff=0.25, aligned_edge=LEFT)
+laws.move_to(ORIGIN)
+
+self.play(Write(title), run_time=0.8)
+for law in laws:
+    self.play(Write(law), run_time=0.6)
+```

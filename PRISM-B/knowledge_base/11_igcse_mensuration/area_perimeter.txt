@@ -1,0 +1,643 @@
+================================================================================
+IGCSE/O-LEVEL: AREA AND PERIMETER (2D SHAPES)
+================================================================================
+
+## 1. Area and Perimeter of Rectangles
+
+```python
+from manim import *
+import numpy as np
+
+class RectangleAreaPerimeter(Scene):
+    def construct(self):
+        title = Text("Rectangle: Area & Perimeter", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Rectangle
+        rect = Rectangle(width=4, height=2.5, color=YELLOW, fill_opacity=0.3)
+        rect.shift(LEFT * 2)
+        
+        self.play(Create(rect))
+        
+        # Labels
+        length_label = MathTex("l = 8 \\text{ cm}", font_size=24, color=WHITE)
+        length_label.next_to(rect, DOWN, buff=0.2)
+        
+        width_label = MathTex("w = 5 \\text{ cm}", font_size=24, color=WHITE)
+        width_label.next_to(rect, RIGHT, buff=0.2)
+        
+        self.play(Write(length_label), Write(width_label))
+        
+        # Formulas and calculations
+        formulas = VGroup(
+            Text("Formulas:", font_size=24, color=YELLOW, weight=BOLD),
+            MathTex(r"\text{Area} = l \times w", font_size=24),
+            MathTex(r"= 8 \times 5 = 40 \text{ cm}^2", font_size=24, color=GREEN),
+            MathTex(r"\text{Perimeter} = 2(l + w)", font_size=24),
+            MathTex(r"= 2(8 + 5) = 26 \text{ cm}", font_size=24, color=GREEN),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.25)
+        formulas.shift(RIGHT * 3)
+        
+        for line in formulas:
+            self.play(Write(line), run_time=0.5)
+        
+        # Highlight area
+        area_fill = rect.copy()
+        area_fill.set_fill(GREEN, opacity=0.5)
+        self.play(Transform(rect, area_fill))
+        
+        self.wait(2)
+```
+
+## 2. Area and Perimeter of Triangles
+
+```python
+from manim import *
+import numpy as np
+
+class TriangleAreaFormulas(Scene):
+    def construct(self):
+        title = Text("Triangle: Area Formulas", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Triangle
+        triangle = Polygon(
+            LEFT * 2, RIGHT * 2, RIGHT * 0.5 + UP * 2.5,
+            color=YELLOW, fill_opacity=0.3
+        )
+        triangle.shift(LEFT * 2.5 + DOWN * 0.5)
+        
+        self.play(Create(triangle))
+        
+        # Base and height
+        base_line = Line(LEFT * 2 + DOWN * 0.5, RIGHT * 2 + DOWN * 0.5, color=RED, stroke_width=4)
+        base_line.shift(LEFT * 2.5)
+        base_label = MathTex("b = 8", font_size=20, color=RED)
+        base_label.next_to(base_line, DOWN, buff=0.1)
+        
+        height_line = DashedLine(
+            RIGHT * 0.5 + UP * 2.5 + LEFT * 2.5 + DOWN * 0.5,
+            RIGHT * 0.5 + DOWN * 0.5 + LEFT * 2.5,
+            color=GREEN
+        )
+        height_label = MathTex("h = 5", font_size=20, color=GREEN)
+        height_label.next_to(height_line, RIGHT, buff=0.1)
+        
+        self.play(Create(base_line), Write(base_label))
+        self.play(Create(height_line), Write(height_label))
+        
+        # Formula 1: Base × Height
+        formula1_title = Text("Formula 1: Base × Height", font_size=22, color=YELLOW)
+        formula1_title.shift(RIGHT * 2.5 + UP * 1.5)
+        
+        formula1 = VGroup(
+            MathTex(r"\text{Area} = \frac{1}{2} \times b \times h", font_size=24),
+            MathTex(r"= \frac{1}{2} \times 8 \times 5", font_size=24),
+            MathTex(r"= 20 \text{ cm}^2", font_size=28, color=GREEN),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.2)
+        formula1.next_to(formula1_title, DOWN, aligned_edge=LEFT, buff=0.2)
+        
+        self.play(Write(formula1_title))
+        for line in formula1:
+            self.play(Write(line), run_time=0.4)
+        
+        # Formula 2: Heron's (shown as text)
+        heron_note = VGroup(
+            Text("Heron's Formula:", font_size=18, color=ORANGE),
+            MathTex(r"A = \sqrt{s(s-a)(s-b)(s-c)}", font_size=20, color=ORANGE),
+            MathTex(r"s = \frac{a+b+c}{2}", font_size=18, color=GRAY),
+        ).arrange(DOWN, buff=0.1)
+        heron_note.to_edge(DOWN, buff=0.4)
+        
+        self.play(Write(heron_note))
+        
+        self.wait(2)
+```
+
+## 3. Area of Parallelograms and Trapeziums
+
+```python
+from manim import *
+import numpy as np
+
+class ParallelogramTrapeziumArea(Scene):
+    def construct(self):
+        title = Text("Parallelogram & Trapezium", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Parallelogram
+        para = Polygon(
+            LEFT * 2, RIGHT * 2, RIGHT * 3 + UP * 1.5, LEFT * 1 + UP * 1.5,
+            color=RED, fill_opacity=0.3
+        )
+        para.scale(0.7)
+        para.shift(LEFT * 3 + DOWN * 0.5)
+        
+        self.play(Create(para))
+        
+        # Parallelogram labels
+        para_label = Text("Parallelogram", font_size=20, color=RED)
+        para_label.next_to(para, UP, buff=0.1)
+        
+        para_b = MathTex("b", font_size=18).next_to(para, DOWN, buff=0.05)
+        para_h = MathTex("h", font_size=18).shift(LEFT * 2.2)
+        
+        self.play(Write(para_label), Write(para_b), Write(para_h))
+        
+        # Parallelogram formula
+        para_formula = MathTex(r"\text{Area} = b \times h", font_size=24, color=RED)
+        para_formula.next_to(para, DOWN, buff=0.5)
+        
+        self.play(Write(para_formula))
+        
+        # Trapezium
+        trap = Polygon(
+            LEFT * 1, RIGHT * 1, RIGHT * 1.8 + DOWN * 1.5, LEFT * 1.8 + DOWN * 1.5,
+            color=GREEN, fill_opacity=0.3
+        )
+        trap.scale(0.9)
+        trap.shift(RIGHT * 3 + UP * 0.3)
+        
+        self.play(Create(trap))
+        
+        # Trapezium labels
+        trap_label = Text("Trapezium", font_size=20, color=GREEN)
+        trap_label.next_to(trap, UP, buff=0.1)
+        
+        trap_a = MathTex("a", font_size=18).next_to(trap.get_top(), UP, buff=0.05)
+        trap_b = MathTex("b", font_size=18).next_to(trap.get_bottom(), DOWN, buff=0.05)
+        trap_h = MathTex("h", font_size=18).shift(RIGHT * 4.5 + UP * 0.3)
+        
+        self.play(Write(trap_label), Write(trap_a), Write(trap_b), Write(trap_h))
+        
+        # Trapezium formula
+        trap_formula = MathTex(r"\text{Area} = \frac{1}{2}(a + b) \times h", font_size=24, color=GREEN)
+        trap_formula.next_to(trap, DOWN, buff=0.5)
+        
+        self.play(Write(trap_formula))
+        
+        # Example calculation
+        example = VGroup(
+            Text("Example: a=4, b=8, h=5", font_size=18, color=WHITE),
+            MathTex(r"A = \frac{1}{2}(4 + 8) \times 5 = 30 \text{ cm}^2", font_size=22, color=YELLOW),
+        ).arrange(DOWN, buff=0.2)
+        example.to_edge(DOWN, buff=0.3)
+        
+        self.play(Write(example))
+        
+        self.wait(2)
+```
+
+## 4. Area and Circumference of Circles
+
+```python
+from manim import *
+import numpy as np
+
+class CircleAreaCircumference(Scene):
+    def construct(self):
+        title = Text("Circle: Area & Circumference", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Circle
+        circle = Circle(radius=1.8, color=YELLOW, fill_opacity=0.3)
+        circle.shift(LEFT * 2.5)
+        
+        center = Dot(LEFT * 2.5, color=WHITE)
+        
+        self.play(Create(circle), Create(center))
+        
+        # Radius
+        radius = Line(LEFT * 2.5, LEFT * 2.5 + RIGHT * 1.8, color=RED, stroke_width=4)
+        r_label = MathTex("r = 7 \\text{ cm}", font_size=22, color=RED)
+        r_label.next_to(radius, UP, buff=0.1)
+        
+        self.play(Create(radius), Write(r_label))
+        
+        # Formulas
+        formulas_title = Text("Formulas:", font_size=24, color=YELLOW, weight=BOLD)
+        formulas_title.shift(RIGHT * 2 + UP * 1.5)
+        
+        self.play(Write(formulas_title))
+        
+        # Circumference
+        circ_formula = VGroup(
+            MathTex(r"C = 2\pi r = \pi d", font_size=24),
+            MathTex(r"C = 2 \times \pi \times 7", font_size=22),
+            MathTex(r"= 14\pi \approx 43.98 \text{ cm}", font_size=22, color=GREEN),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        circ_formula.next_to(formulas_title, DOWN, aligned_edge=LEFT, buff=0.2)
+        
+        for line in circ_formula:
+            self.play(Write(line), run_time=0.4)
+        
+        # Area
+        area_formula = VGroup(
+            MathTex(r"A = \pi r^2", font_size=24),
+            MathTex(r"A = \pi \times 7^2", font_size=22),
+            MathTex(r"= 49\pi \approx 153.94 \text{ cm}^2", font_size=22, color=GREEN),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        area_formula.next_to(circ_formula, DOWN, aligned_edge=LEFT, buff=0.3)
+        
+        for line in area_formula:
+            self.play(Write(line), run_time=0.4)
+        
+        # Key values
+        key = VGroup(
+            MathTex(r"\pi \approx 3.14159...", font_size=20, color=GRAY),
+            Text("Use π button or 3.142", font_size=16, color=GRAY),
+        ).arrange(DOWN, buff=0.1)
+        key.to_edge(DOWN, buff=0.4)
+        
+        self.play(Write(key))
+        
+        self.wait(2)
+```
+
+## 5. Sector and Arc (Parts of Circle)
+
+```python
+from manim import *
+import numpy as np
+
+class SectorArcFormulas(Scene):
+    def construct(self):
+        title = Text("Sector and Arc", font_size=40, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Sector
+        sector = Sector(
+            outer_radius=2,
+            angle=PI/3,  # 60 degrees
+            start_angle=0,
+            fill_color=YELLOW,
+            fill_opacity=0.5,
+            stroke_color=WHITE
+        )
+        sector.shift(LEFT * 2.5 + DOWN * 0.5)
+        
+        self.play(Create(sector))
+        
+        # Labels
+        angle_arc = Arc(radius=0.5, start_angle=0, angle=PI/3, 
+                       arc_center=LEFT * 2.5 + DOWN * 0.5, color=RED)
+        angle_label = MathTex(r"\theta = 60°", font_size=20, color=RED)
+        angle_label.next_to(angle_arc, RIGHT, buff=0.2)
+        
+        radius_label = MathTex("r = 9", font_size=20, color=WHITE)
+        radius_label.shift(LEFT * 1.5 + DOWN * 0.3)
+        
+        self.play(Create(angle_arc), Write(angle_label), Write(radius_label))
+        
+        # Arc length formula
+        arc_title = Text("Arc Length:", font_size=22, color=GREEN)
+        arc_title.shift(RIGHT * 2 + UP * 1.5)
+        
+        arc_formula = VGroup(
+            MathTex(r"\text{Arc} = \frac{\theta}{360°} \times 2\pi r", font_size=22),
+            MathTex(r"= \frac{60}{360} \times 2\pi \times 9", font_size=22),
+            MathTex(r"= 3\pi \approx 9.42 \text{ cm}", font_size=22, color=GREEN),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        arc_formula.next_to(arc_title, DOWN, aligned_edge=LEFT, buff=0.15)
+        
+        self.play(Write(arc_title))
+        for line in arc_formula:
+            self.play(Write(line), run_time=0.4)
+        
+        # Sector area formula
+        sector_title = Text("Sector Area:", font_size=22, color=ORANGE)
+        sector_title.next_to(arc_formula, DOWN, aligned_edge=LEFT, buff=0.3)
+        
+        sector_formula = VGroup(
+            MathTex(r"\text{Area} = \frac{\theta}{360°} \times \pi r^2", font_size=22),
+            MathTex(r"= \frac{60}{360} \times \pi \times 81", font_size=22),
+            MathTex(r"= 13.5\pi \approx 42.41 \text{ cm}^2", font_size=22, color=ORANGE),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        sector_formula.next_to(sector_title, DOWN, aligned_edge=LEFT, buff=0.15)
+        
+        self.play(Write(sector_title))
+        for line in sector_formula:
+            self.play(Write(line), run_time=0.4)
+        
+        self.wait(2)
+```
+
+## 6. Composite Shapes (Area)
+
+```python
+from manim import *
+import numpy as np
+
+class CompositeShapeArea(Scene):
+    def construct(self):
+        title = Text("Composite Shapes", font_size=40, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        subtitle = Text("L-shaped region", font_size=24, color=GRAY)
+        subtitle.next_to(title, DOWN, buff=0.2)
+        self.play(Write(subtitle))
+        
+        # L-shape (made of two rectangles)
+        # Outer rectangle minus inner rectangle
+        outer = Rectangle(width=4, height=3, color=YELLOW, fill_opacity=0.3)
+        outer.shift(LEFT * 2 + DOWN * 0.5)
+        
+        # Inner cutout
+        inner = Rectangle(width=2, height=1.5, color=BLACK, fill_opacity=1, stroke_opacity=0)
+        inner.shift(LEFT * 1 + UP * 0.25 + DOWN * 0.5)
+        
+        self.play(Create(outer))
+        self.play(Create(inner))
+        
+        # Labels on outer
+        outer_w = MathTex("8", font_size=20).next_to(outer, DOWN, buff=0.1)
+        outer_h = MathTex("6", font_size=20).next_to(outer, LEFT, buff=0.1)
+        
+        # Labels on cutout
+        inner_w = MathTex("4", font_size=18, color=RED).next_to(inner, UP, buff=0.05)
+        inner_h = MathTex("3", font_size=18, color=RED).next_to(inner, RIGHT, buff=0.05)
+        
+        self.play(Write(outer_w), Write(outer_h), Write(inner_w), Write(inner_h))
+        
+        # Calculation
+        calc_title = Text("Method: Subtract", font_size=22, color=YELLOW)
+        calc_title.shift(RIGHT * 2.5 + UP * 1)
+        
+        calc = VGroup(
+            MathTex(r"\text{Large rectangle} = 8 \times 6 = 48", font_size=22),
+            MathTex(r"\text{Cutout} = 4 \times 3 = 12", font_size=22, color=RED),
+            MathTex(r"\text{L-shape area} = 48 - 12", font_size=22),
+            MathTex(r"= 36 \text{ cm}^2", font_size=26, color=GREEN),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.2)
+        calc.next_to(calc_title, DOWN, aligned_edge=LEFT, buff=0.2)
+        
+        self.play(Write(calc_title))
+        for line in calc:
+            self.play(Write(line), run_time=0.5)
+        
+        # Alternative method note
+        alt = Text("Alternative: Split into rectangles and add", font_size=18, color=ORANGE)
+        alt.to_edge(DOWN, buff=0.4)
+        
+        self.play(Write(alt))
+        
+        self.wait(2)
+```
+
+## 7. Shaded Regions
+
+```python
+from manim import *
+import numpy as np
+
+class ShadedRegions(Scene):
+    def construct(self):
+        title = Text("Shaded Regions", font_size=40, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Square with inscribed circle
+        square = Square(side_length=3, color=WHITE, fill_opacity=0)
+        square.shift(LEFT * 2.5)
+        
+        circle = Circle(radius=1.5, color=WHITE, fill_color=WHITE, fill_opacity=0.8)
+        circle.shift(LEFT * 2.5)
+        
+        # Show the shaded region (square minus circle)
+        self.play(Create(square))
+        
+        # Fill square with yellow
+        square_fill = square.copy()
+        square_fill.set_fill(YELLOW, opacity=0.5)
+        self.play(Transform(square, square_fill))
+        
+        # Circle covers part
+        self.play(Create(circle))
+        
+        # Labels
+        side_label = MathTex("6", font_size=20).next_to(square, DOWN, buff=0.1)
+        self.play(Write(side_label))
+        
+        # Calculation
+        calc_title = Text("Find shaded area:", font_size=22, color=YELLOW)
+        calc_title.shift(RIGHT * 2 + UP * 1.5)
+        
+        calc = VGroup(
+            MathTex(r"\text{Square} = 6^2 = 36 \text{ cm}^2", font_size=22),
+            MathTex(r"\text{Circle} = \pi \times 3^2 = 9\pi", font_size=22),
+            MathTex(r"\text{Shaded} = 36 - 9\pi", font_size=22),
+            MathTex(r"\approx 36 - 28.27", font_size=22),
+            MathTex(r"= 7.73 \text{ cm}^2", font_size=26, color=GREEN),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        calc.next_to(calc_title, DOWN, aligned_edge=LEFT, buff=0.2)
+        
+        self.play(Write(calc_title))
+        for line in calc:
+            self.play(Write(line), run_time=0.4)
+        
+        # Note
+        note = Text("Radius = side ÷ 2 = 3 cm", font_size=18, color=GRAY)
+        note.to_edge(DOWN, buff=0.4)
+        self.play(Write(note))
+        
+        self.wait(2)
+```
+
+## 8. Area of Regular Polygons
+
+```python
+from manim import *
+import numpy as np
+
+class RegularPolygonArea(Scene):
+    def construct(self):
+        title = Text("Area of Regular Polygons", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Regular hexagon
+        hexagon = RegularPolygon(n=6, color=YELLOW, fill_opacity=0.3)
+        hexagon.scale(1.8)
+        hexagon.shift(LEFT * 2.5 + DOWN * 0.5)
+        
+        self.play(Create(hexagon))
+        
+        # Show it's made of 6 triangles
+        center = LEFT * 2.5 + DOWN * 0.5
+        vertices = hexagon.get_vertices()
+        
+        triangles = VGroup()
+        for i in range(6):
+            tri = Polygon(center, vertices[i], vertices[(i+1)%6], 
+                         color=WHITE, stroke_width=1, fill_opacity=0)
+            triangles.add(tri)
+        
+        self.play(Create(triangles))
+        
+        # Label
+        hexagon_label = Text("Regular Hexagon", font_size=20, color=YELLOW)
+        hexagon_label.next_to(hexagon, DOWN, buff=0.2)
+        self.play(Write(hexagon_label))
+        
+        # Apothem
+        apothem = Line(center, (vertices[0] + vertices[1])/2, color=RED, stroke_width=3)
+        apothem_label = MathTex("a", font_size=20, color=RED)
+        apothem_label.next_to(apothem, UP, buff=0.05)
+        
+        self.play(Create(apothem), Write(apothem_label))
+        
+        # Formula
+        formula_box = VGroup(
+            Text("Formula:", font_size=22, color=YELLOW, weight=BOLD),
+            MathTex(r"A = \frac{1}{2} \times \text{perimeter} \times \text{apothem}", font_size=22),
+            MathTex(r"A = \frac{1}{2} \times p \times a", font_size=24),
+        ).arrange(DOWN, buff=0.2)
+        formula_box.shift(RIGHT * 2.5 + UP * 0.5)
+        
+        self.play(Write(formula_box))
+        
+        # Example
+        example = VGroup(
+            Text("If side = 4 cm, apothem = 3.46 cm", font_size=18, color=WHITE),
+            MathTex(r"p = 6 \times 4 = 24 \text{ cm}", font_size=20),
+            MathTex(r"A = \frac{1}{2} \times 24 \times 3.46", font_size=20),
+            MathTex(r"= 41.52 \text{ cm}^2", font_size=24, color=GREEN),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        example.next_to(formula_box, DOWN, buff=0.3)
+        
+        for line in example:
+            self.play(Write(line), run_time=0.4)
+        
+        self.wait(2)
+```
+
+## 9. Converting Units (Area)
+
+```python
+from manim import *
+import numpy as np
+
+class AreaUnitConversions(Scene):
+    def construct(self):
+        title = Text("Converting Area Units", font_size=40, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Key principle
+        principle = Text("Area units are squared!", font_size=24, color=YELLOW)
+        principle.next_to(title, DOWN, buff=0.3)
+        self.play(Write(principle))
+        
+        # Visual: 1 m² = 100 cm × 100 cm = 10000 cm²
+        big_square = Square(side_length=3, color=GREEN, fill_opacity=0.3)
+        big_square.shift(LEFT * 3)
+        
+        label_1m = MathTex("1 \\text{ m}", font_size=24)
+        label_1m.next_to(big_square, DOWN)
+        
+        self.play(Create(big_square), Write(label_1m))
+        
+        # Small squares inside
+        small_squares = VGroup()
+        for i in range(10):
+            for j in range(10):
+                sq = Square(side_length=0.3, color=RED, stroke_width=0.5)
+                sq.move_to(big_square.get_corner(DL) + RIGHT * (i + 0.5) * 0.3 + UP * (j + 0.5) * 0.3)
+                small_squares.add(sq)
+        
+        self.play(Create(small_squares), run_time=1)
+        
+        # Explanation
+        expl = VGroup(
+            MathTex(r"1 \text{ m} = 100 \text{ cm}", font_size=22),
+            MathTex(r"1 \text{ m}^2 = 100 \times 100 \text{ cm}^2", font_size=22),
+            MathTex(r"= 10000 \text{ cm}^2", font_size=26, color=GREEN),
+        ).arrange(DOWN, buff=0.2)
+        expl.shift(RIGHT * 2 + UP * 1)
+        
+        self.play(Write(expl))
+        
+        # Conversion table
+        table = VGroup(
+            Text("Conversions:", font_size=22, color=ORANGE, weight=BOLD),
+            MathTex(r"1 \text{ m}^2 = 10000 \text{ cm}^2", font_size=20),
+            MathTex(r"1 \text{ km}^2 = 1000000 \text{ m}^2", font_size=20),
+            MathTex(r"1 \text{ cm}^2 = 100 \text{ mm}^2", font_size=20),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        table.shift(RIGHT * 2 + DOWN * 1.5)
+        
+        self.play(Write(table))
+        
+        # Example
+        example = VGroup(
+            Text("Example:", font_size=18, color=WHITE),
+            MathTex(r"3.5 \text{ m}^2 = 3.5 \times 10000 = 35000 \text{ cm}^2", font_size=20, color=YELLOW),
+        ).arrange(DOWN, buff=0.1)
+        example.to_edge(DOWN, buff=0.3)
+        
+        self.play(Write(example))
+        
+        self.wait(2)
+```
+
+## 10. Word Problems: Area and Perimeter
+
+```python
+from manim import *
+import numpy as np
+
+class AreaPerimeterWordProblem(Scene):
+    def construct(self):
+        title = Text("Word Problem", font_size=40, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Problem statement
+        problem = VGroup(
+            Text("A rectangular garden is 12m by 8m.", font_size=22, color=WHITE),
+            Text("A circular pond of radius 2m is in the middle.", font_size=22, color=WHITE),
+            Text("Find the area of the lawn (not the pond).", font_size=22, color=YELLOW),
+        ).arrange(DOWN, buff=0.1)
+        problem.next_to(title, DOWN, buff=0.3)
+        
+        self.play(Write(problem))
+        
+        # Diagram
+        garden = Rectangle(width=4, height=2.7, color=GREEN, fill_opacity=0.4)
+        garden.shift(LEFT * 2.5 + DOWN * 1.5)
+        
+        pond = Circle(radius=0.6, color=BLUE, fill_opacity=0.6)
+        pond.shift(LEFT * 2.5 + DOWN * 1.5)
+        
+        self.play(Create(garden), Create(pond))
+        
+        # Labels
+        garden_w = MathTex("12m", font_size=18).next_to(garden, DOWN, buff=0.1)
+        garden_h = MathTex("8m", font_size=18).next_to(garden, LEFT, buff=0.1)
+        pond_r = MathTex("r=2m", font_size=16, color=WHITE).next_to(pond, RIGHT, buff=0.3)
+        
+        self.play(Write(garden_w), Write(garden_h), Write(pond_r))
+        
+        # Solution
+        solution = VGroup(
+            Text("Solution:", font_size=20, color=YELLOW, weight=BOLD),
+            MathTex(r"\text{Garden area} = 12 \times 8 = 96 \text{ m}^2", font_size=20),
+            MathTex(r"\text{Pond area} = \pi \times 2^2 = 4\pi \text{ m}^2", font_size=20),
+            MathTex(r"\text{Lawn area} = 96 - 4\pi", font_size=20),
+            MathTex(r"\approx 96 - 12.57", font_size=20),
+            MathTex(r"= 83.43 \text{ m}^2", font_size=24, color=GREEN),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        solution.shift(RIGHT * 2.5 + DOWN * 1)
+        
+        self.play(Write(solution[0]))
+        for line in solution[1:]:
+            self.play(Write(line), run_time=0.5)
+        
+        self.wait(2)
+```

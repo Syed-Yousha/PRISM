@@ -1,0 +1,657 @@
+================================================================================
+IGCSE/O-LEVEL: MATRIX OPERATIONS
+================================================================================
+
+## 1. Matrix Basics - Order and Notation
+
+```python
+from manim import *
+import numpy as np
+
+class MatrixBasics(Scene):
+    def construct(self):
+        title = Text("Matrix Basics", font_size=40, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # What is a matrix
+        intro = Text("A matrix is an array of numbers", font_size=24, color=WHITE)
+        intro.next_to(title, DOWN, buff=0.3)
+        self.play(Write(intro))
+        
+        # Example matrix
+        matrix = Matrix([
+            [2, 5, -1],
+            [4, 0, 3]
+        ], h_buff=1.2)
+        matrix.shift(LEFT * 2)
+        
+        self.play(Create(matrix))
+        
+        # Order explanation
+        order = VGroup(
+            Text("Order: 2 × 3", font_size=26, color=YELLOW),
+            Text("(rows × columns)", font_size=20, color=GRAY),
+        ).arrange(DOWN, buff=0.1)
+        order.next_to(matrix, RIGHT, buff=1)
+        
+        self.play(Write(order))
+        
+        # Row and column arrows
+        row_arrow = Arrow(start=LEFT * 4.5 + UP * 0.3, end=LEFT * 0.5 + UP * 0.3, 
+                         color=RED, buff=0)
+        row_label = Text("2 rows", font_size=18, color=RED)
+        row_label.next_to(row_arrow, UP, buff=0.1)
+        
+        col_arrow = Arrow(start=LEFT * 2.5 + UP * 1.3, end=LEFT * 2.5 + DOWN * 0.7,
+                         color=GREEN, buff=0)
+        col_label = Text("3 columns", font_size=18, color=GREEN)
+        col_label.next_to(col_arrow, RIGHT, buff=0.1)
+        
+        self.play(Create(row_arrow), Write(row_label))
+        self.play(Create(col_arrow), Write(col_label))
+        
+        # Element notation
+        element = MathTex(r"a_{ij} \text{ = element in row } i \text{, column } j", font_size=24)
+        element.to_edge(DOWN, buff=0.8)
+        
+        self.play(Write(element))
+        
+        self.wait(2)
+```
+
+## 2. Matrix Addition and Subtraction
+
+```python
+from manim import *
+import numpy as np
+
+class MatrixAddition(Scene):
+    def construct(self):
+        title = Text("Matrix Addition", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        rule = Text("Matrices must have the same order", font_size=22, color=YELLOW)
+        rule.next_to(title, DOWN, buff=0.2)
+        self.play(Write(rule))
+        
+        # Two matrices
+        A = Matrix([
+            [2, 5],
+            [1, 3]
+        ], h_buff=0.8)
+        A.shift(LEFT * 4)
+        A_label = MathTex("A =", font_size=28).next_to(A, LEFT)
+        
+        plus = MathTex("+", font_size=36)
+        plus.next_to(A, RIGHT, buff=0.3)
+        
+        B = Matrix([
+            [1, -2],
+            [4, 0]
+        ], h_buff=0.8)
+        B.next_to(plus, RIGHT, buff=0.3)
+        B_label = MathTex("B =", font_size=28).next_to(B, LEFT)
+        
+        equals = MathTex("=", font_size=36)
+        equals.next_to(B, RIGHT, buff=0.3)
+        
+        self.play(Create(A), Write(A_label))
+        self.play(Write(plus), Create(B))
+        
+        # Result
+        C = Matrix([
+            [3, 3],
+            [5, 3]
+        ], h_buff=0.8)
+        C.next_to(equals, RIGHT, buff=0.3)
+        
+        self.play(Write(equals), Create(C))
+        
+        # Show how each element is calculated
+        explanation = VGroup(
+            MathTex(r"2 + 1 = 3", font_size=20, color=GREEN),
+            MathTex(r"5 + (-2) = 3", font_size=20, color=GREEN),
+            MathTex(r"1 + 4 = 5", font_size=20, color=GREEN),
+            MathTex(r"3 + 0 = 3", font_size=20, color=GREEN),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        explanation.to_edge(DOWN, buff=0.5)
+        
+        self.play(Write(explanation))
+        
+        self.wait(2)
+```
+
+## 3. Scalar Multiplication
+
+```python
+from manim import *
+import numpy as np
+
+class ScalarMultiplication(Scene):
+    def construct(self):
+        title = Text("Scalar Multiplication", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        rule = Text("Multiply each element by the scalar", font_size=22, color=YELLOW)
+        rule.next_to(title, DOWN, buff=0.2)
+        self.play(Write(rule))
+        
+        # Scalar and matrix
+        scalar = MathTex("3", font_size=36, color=ORANGE)
+        scalar.shift(LEFT * 4)
+        
+        times = MathTex(r"\times", font_size=30)
+        times.next_to(scalar, RIGHT, buff=0.2)
+        
+        A = Matrix([
+            [2, -1],
+            [0, 4],
+            [5, 3]
+        ], h_buff=0.8)
+        A.next_to(times, RIGHT, buff=0.2)
+        
+        equals = MathTex("=", font_size=36)
+        equals.next_to(A, RIGHT, buff=0.3)
+        
+        result = Matrix([
+            [6, -3],
+            [0, 12],
+            [15, 9]
+        ], h_buff=0.8)
+        result.next_to(equals, RIGHT, buff=0.3)
+        
+        self.play(Write(scalar), Write(times), Create(A))
+        self.play(Write(equals), Create(result))
+        
+        # Show calculations
+        calc = VGroup(
+            MathTex(r"3 \times 2 = 6", font_size=20),
+            MathTex(r"3 \times (-1) = -3", font_size=20),
+            MathTex(r"3 \times 0 = 0", font_size=20),
+            MathTex(r"3 \times 4 = 12", font_size=20),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.1)
+        calc.to_edge(DOWN, buff=0.3)
+        
+        self.play(Write(calc))
+        
+        self.wait(2)
+```
+
+## 4. Matrix Multiplication
+
+```python
+from manim import *
+import numpy as np
+
+class MatrixMultiplication(Scene):
+    def construct(self):
+        title = Text("Matrix Multiplication", font_size=34, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        rule = Text("Columns of A must = Rows of B", font_size=20, color=YELLOW)
+        rule.next_to(title, DOWN, buff=0.15)
+        self.play(Write(rule))
+        
+        # Order rule
+        order = MathTex(r"(m \times n) \cdot (n \times p) = (m \times p)", font_size=22, color=ORANGE)
+        order.next_to(rule, DOWN, buff=0.15)
+        self.play(Write(order))
+        
+        # Matrices
+        A = Matrix([
+            [2, 3],
+            [1, 4]
+        ], h_buff=0.7)
+        A.shift(LEFT * 4 + DOWN * 0.5)
+        
+        B = Matrix([
+            [5, 1],
+            [2, 0]
+        ], h_buff=0.7)
+        B.next_to(A, RIGHT, buff=0.3)
+        
+        equals = MathTex("=", font_size=30)
+        equals.next_to(B, RIGHT, buff=0.3)
+        
+        self.play(Create(A), Create(B), Write(equals))
+        
+        # Calculate step by step
+        # First element: row 1 of A × col 1 of B
+        step1 = MathTex(r"(2)(5) + (3)(2) = 10 + 6 = 16", font_size=18, color=GREEN)
+        step1.shift(RIGHT * 2 + UP * 0.5)
+        
+        step2 = MathTex(r"(2)(1) + (3)(0) = 2 + 0 = 2", font_size=18, color=GREEN)
+        step2.next_to(step1, DOWN, buff=0.15)
+        
+        step3 = MathTex(r"(1)(5) + (4)(2) = 5 + 8 = 13", font_size=18, color=GREEN)
+        step3.next_to(step2, DOWN, buff=0.15)
+        
+        step4 = MathTex(r"(1)(1) + (4)(0) = 1 + 0 = 1", font_size=18, color=GREEN)
+        step4.next_to(step3, DOWN, buff=0.15)
+        
+        self.play(Write(step1))
+        self.play(Write(step2))
+        self.play(Write(step3))
+        self.play(Write(step4))
+        
+        # Result
+        result = Matrix([
+            [16, 2],
+            [13, 1]
+        ], h_buff=0.7)
+        result.next_to(equals, RIGHT, buff=0.3)
+        
+        self.play(Create(result))
+        
+        self.wait(2)
+```
+
+## 5. Identity Matrix
+
+```python
+from manim import *
+import numpy as np
+
+class IdentityMatrix(Scene):
+    def construct(self):
+        title = Text("Identity Matrix", font_size=40, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Definition
+        defn = Text("1s on diagonal, 0s elsewhere", font_size=24, color=YELLOW)
+        defn.next_to(title, DOWN, buff=0.2)
+        self.play(Write(defn))
+        
+        # 2x2 identity
+        I2_label = MathTex("I_2 =", font_size=28)
+        I2_label.shift(LEFT * 4 + UP * 0.5)
+        
+        I2 = Matrix([
+            [1, 0],
+            [0, 1]
+        ], h_buff=0.7)
+        I2.next_to(I2_label, RIGHT, buff=0.2)
+        
+        self.play(Write(I2_label), Create(I2))
+        
+        # 3x3 identity
+        I3_label = MathTex("I_3 =", font_size=28)
+        I3_label.shift(RIGHT * 1.5 + UP * 0.5)
+        
+        I3 = Matrix([
+            [1, 0, 0],
+            [0, 1, 0],
+            [0, 0, 1]
+        ], h_buff=0.6)
+        I3.next_to(I3_label, RIGHT, buff=0.2)
+        
+        self.play(Write(I3_label), Create(I3))
+        
+        # Property
+        prop = MathTex(r"A \times I = I \times A = A", font_size=30, color=GREEN)
+        prop.shift(DOWN * 1.5)
+        
+        self.play(Write(prop))
+        
+        note = Text("Like multiplying by 1", font_size=20, color=GRAY)
+        note.next_to(prop, DOWN, buff=0.2)
+        
+        self.play(Write(note))
+        
+        self.wait(2)
+```
+
+## 6. Determinant of 2×2 Matrix
+
+```python
+from manim import *
+import numpy as np
+
+class Determinant2x2(Scene):
+    def construct(self):
+        title = Text("Determinant of 2×2 Matrix", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # General formula
+        A = MathTex(r"A = \begin{pmatrix} a & b \\ c & d \end{pmatrix}", font_size=32)
+        A.shift(UP * 1.5)
+        
+        self.play(Write(A))
+        
+        formula = MathTex(r"\det(A) = |A| = ad - bc", font_size=32, color=YELLOW)
+        formula.next_to(A, DOWN, buff=0.4)
+        
+        box = SurroundingRectangle(formula, color=YELLOW)
+        
+        self.play(Write(formula), Create(box))
+        
+        # Example
+        example_label = Text("Example:", font_size=24, color=WHITE)
+        example_label.shift(DOWN * 0.8 + LEFT * 3)
+        
+        example = MathTex(r"B = \begin{pmatrix} 3 & 5 \\ 2 & 4 \end{pmatrix}", font_size=28)
+        example.next_to(example_label, DOWN, buff=0.2, aligned_edge=LEFT)
+        
+        self.play(Write(example_label), Write(example))
+        
+        # Calculation
+        calc = VGroup(
+            MathTex(r"|B| = (3)(4) - (5)(2)", font_size=26),
+            MathTex(r"= 12 - 10", font_size=26),
+            MathTex(r"= 2", font_size=28, color=GREEN),
+        ).arrange(DOWN, buff=0.15)
+        calc.next_to(example, RIGHT, buff=0.8)
+        
+        self.play(Write(calc))
+        
+        # Visual representation
+        visual = VGroup(
+            MathTex(r"\begin{pmatrix} 3 & 5 \\ 2 & 4 \end{pmatrix}", font_size=28),
+        ).shift(DOWN * 2.3)
+        
+        diag1 = Arrow(start=DOWN * 2.7 + LEFT * 0.6, end=DOWN * 1.9 + RIGHT * 0.1, 
+                      color=GREEN, stroke_width=2, buff=0)
+        diag2 = Arrow(start=DOWN * 1.9 + LEFT * 0.6, end=DOWN * 2.7 + RIGHT * 0.1,
+                      color=RED, stroke_width=2, buff=0)
+        
+        self.play(Create(visual), Create(diag1), Create(diag2))
+        
+        self.wait(2)
+```
+
+## 7. Inverse of 2×2 Matrix
+
+```python
+from manim import *
+import numpy as np
+
+class Inverse2x2(Scene):
+    def construct(self):
+        title = Text("Inverse of 2×2 Matrix", font_size=36, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Formula
+        formula = MathTex(
+            r"A^{-1} = \frac{1}{\det(A)} \begin{pmatrix} d & -b \\ -c & a \end{pmatrix}",
+            font_size=30
+        )
+        formula.next_to(title, DOWN, buff=0.3)
+        
+        self.play(Write(formula))
+        
+        # Steps
+        steps = VGroup(
+            Text("1. Find determinant (ad - bc)", font_size=18),
+            Text("2. Swap a and d", font_size=18),
+            Text("3. Change signs of b and c", font_size=18),
+            Text("4. Divide all by determinant", font_size=18),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.1)
+        steps.shift(LEFT * 4 + DOWN * 0.5)
+        
+        self.play(Write(steps))
+        
+        # Example
+        example = MathTex(r"A = \begin{pmatrix} 4 & 3 \\ 2 & 2 \end{pmatrix}", font_size=26)
+        example.shift(RIGHT * 2 + DOWN * 0.3)
+        
+        self.play(Write(example))
+        
+        det_calc = MathTex(r"|A| = (4)(2) - (3)(2) = 8 - 6 = 2", font_size=22)
+        det_calc.next_to(example, DOWN, buff=0.2)
+        
+        self.play(Write(det_calc))
+        
+        # Result
+        result = MathTex(
+            r"A^{-1} = \frac{1}{2} \begin{pmatrix} 2 & -3 \\ -2 & 4 \end{pmatrix}"
+            r"= \begin{pmatrix} 1 & -\frac{3}{2} \\ -1 & 2 \end{pmatrix}",
+            font_size=24, color=GREEN
+        )
+        result.to_edge(DOWN, buff=0.4)
+        
+        self.play(Write(result))
+        
+        self.wait(2)
+```
+
+## 8. Solving Simultaneous Equations with Matrices
+
+```python
+from manim import *
+import numpy as np
+
+class SimultaneousEquations(Scene):
+    def construct(self):
+        title = Text("Solving with Matrices", font_size=34, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Equations
+        eqns = VGroup(
+            MathTex(r"2x + 3y = 8", font_size=24),
+            MathTex(r"x + 2y = 5", font_size=24),
+        ).arrange(DOWN, buff=0.15)
+        eqns.next_to(title, DOWN, buff=0.2)
+        
+        self.play(Write(eqns))
+        
+        # Matrix form
+        matrix_form = MathTex(
+            r"\begin{pmatrix} 2 & 3 \\ 1 & 2 \end{pmatrix}"
+            r"\begin{pmatrix} x \\ y \end{pmatrix}"
+            r"= \begin{pmatrix} 8 \\ 5 \end{pmatrix}",
+            font_size=26
+        )
+        matrix_form.next_to(eqns, DOWN, buff=0.3)
+        
+        self.play(Write(matrix_form))
+        
+        # AX = B, so X = A⁻¹B
+        method = MathTex(r"AX = B \quad \Rightarrow \quad X = A^{-1}B", font_size=24, color=YELLOW)
+        method.next_to(matrix_form, DOWN, buff=0.2)
+        
+        self.play(Write(method))
+        
+        # Find inverse
+        det = MathTex(r"|A| = (2)(2) - (3)(1) = 4 - 3 = 1", font_size=20)
+        det.shift(DOWN * 1)
+        
+        inverse = MathTex(r"A^{-1} = \begin{pmatrix} 2 & -3 \\ -1 & 2 \end{pmatrix}", font_size=22)
+        inverse.next_to(det, DOWN, buff=0.15)
+        
+        self.play(Write(det), Write(inverse))
+        
+        # Multiply
+        mult = MathTex(
+            r"X = \begin{pmatrix} 2 & -3 \\ -1 & 2 \end{pmatrix}"
+            r"\begin{pmatrix} 8 \\ 5 \end{pmatrix}"
+            r"= \begin{pmatrix} 16-15 \\ -8+10 \end{pmatrix}"
+            r"= \begin{pmatrix} 1 \\ 2 \end{pmatrix}",
+            font_size=22
+        )
+        mult.next_to(inverse, DOWN, buff=0.2)
+        
+        self.play(Write(mult))
+        
+        # Answer
+        answer = MathTex(r"x = 1, \quad y = 2", font_size=28, color=GREEN)
+        answer.to_edge(DOWN, buff=0.3)
+        
+        box = SurroundingRectangle(answer, color=GREEN)
+        
+        self.play(Write(answer), Create(box))
+        
+        self.wait(2)
+```
+
+## 9. Transformation Matrices
+
+```python
+from manim import *
+import numpy as np
+
+class TransformationMatrices(Scene):
+    def construct(self):
+        title = Text("Transformation Matrices", font_size=34, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Common transformations
+        transforms = VGroup(
+            VGroup(
+                Text("Reflection in y-axis:", font_size=18),
+                MathTex(r"\begin{pmatrix} -1 & 0 \\ 0 & 1 \end{pmatrix}", font_size=22)
+            ).arrange(RIGHT, buff=0.3),
+            VGroup(
+                Text("Reflection in x-axis:", font_size=18),
+                MathTex(r"\begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}", font_size=22)
+            ).arrange(RIGHT, buff=0.3),
+            VGroup(
+                Text("Rotation 90° anticlockwise:", font_size=18),
+                MathTex(r"\begin{pmatrix} 0 & -1 \\ 1 & 0 \end{pmatrix}", font_size=22)
+            ).arrange(RIGHT, buff=0.3),
+            VGroup(
+                Text("Rotation 180°:", font_size=18),
+                MathTex(r"\begin{pmatrix} -1 & 0 \\ 0 & -1 \end{pmatrix}", font_size=22)
+            ).arrange(RIGHT, buff=0.3),
+            VGroup(
+                Text("Enlargement, factor k:", font_size=18),
+                MathTex(r"\begin{pmatrix} k & 0 \\ 0 & k \end{pmatrix}", font_size=22)
+            ).arrange(RIGHT, buff=0.3),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.2)
+        transforms.shift(LEFT * 1.5 + DOWN * 0.3)
+        
+        for t in transforms:
+            self.play(Write(t), run_time=0.5)
+        
+        # Note
+        note = Text("Multiply: [Matrix][Point] = [Image]", font_size=18, color=YELLOW)
+        note.to_edge(DOWN, buff=0.3)
+        
+        self.play(Write(note))
+        
+        self.wait(2)
+```
+
+## 10. Applying Transformation Matrix
+
+```python
+from manim import *
+import numpy as np
+
+class ApplyTransformationMatrix(Scene):
+    def construct(self):
+        title = Text("Applying Transformation Matrix", font_size=32, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        # Problem
+        problem = Text("Reflect point (3, 2) in the y-axis", font_size=22, color=WHITE)
+        problem.next_to(title, DOWN, buff=0.2)
+        
+        self.play(Write(problem))
+        
+        # Matrix multiplication
+        calc = VGroup(
+            MathTex(r"\text{Reflection in y-axis: } \begin{pmatrix} -1 & 0 \\ 0 & 1 \end{pmatrix}", font_size=22),
+            MathTex(r"\begin{pmatrix} -1 & 0 \\ 0 & 1 \end{pmatrix} \begin{pmatrix} 3 \\ 2 \end{pmatrix}", font_size=24),
+            MathTex(r"= \begin{pmatrix} (-1)(3) + (0)(2) \\ (0)(3) + (1)(2) \end{pmatrix}", font_size=24),
+            MathTex(r"= \begin{pmatrix} -3 \\ 2 \end{pmatrix}", font_size=26, color=GREEN),
+        ).arrange(DOWN, buff=0.3)
+        calc.shift(LEFT * 2 + DOWN * 0.5)
+        
+        for c in calc:
+            self.play(Write(c), run_time=0.6)
+        
+        # Visual
+        axes = Axes(
+            x_range=[-4, 4, 1],
+            y_range=[-1, 4, 1],
+            x_length=4,
+            y_length=3,
+            axis_config={"include_tip": True, "include_numbers": True},
+        )
+        axes.shift(RIGHT * 3 + DOWN * 0.3)
+        
+        self.play(Create(axes))
+        
+        # Points
+        original = Dot(axes.c2p(3, 2), color=YELLOW)
+        orig_label = MathTex("(3, 2)", font_size=18, color=YELLOW)
+        orig_label.next_to(original, UR, buff=0.1)
+        
+        image = Dot(axes.c2p(-3, 2), color=GREEN)
+        img_label = MathTex("(-3, 2)", font_size=18, color=GREEN)
+        img_label.next_to(image, UL, buff=0.1)
+        
+        self.play(Create(original), Write(orig_label))
+        self.play(Create(image), Write(img_label))
+        
+        # Mirror line
+        y_axis_line = DashedLine(axes.c2p(0, -0.5), axes.c2p(0, 3.5), color=RED)
+        
+        self.play(Create(y_axis_line))
+        
+        self.wait(2)
+```
+
+## 11. Matrix Properties Summary
+
+```python
+from manim import *
+import numpy as np
+
+class MatrixPropertiesSummary(Scene):
+    def construct(self):
+        title = Text("Matrix Properties Summary", font_size=34, color=BLUE)
+        title.to_edge(UP)
+        self.play(Write(title))
+        
+        properties = VGroup(
+            VGroup(
+                Text("Commutative:", font_size=18, color=YELLOW),
+                MathTex(r"A + B = B + A", font_size=22, color=GREEN),
+                MathTex(r"AB \neq BA \text{ (usually)}", font_size=22, color=RED),
+            ).arrange(DOWN, buff=0.08),
+            VGroup(
+                Text("Associative:", font_size=18, color=YELLOW),
+                MathTex(r"(AB)C = A(BC)", font_size=22),
+            ).arrange(DOWN, buff=0.08),
+            VGroup(
+                Text("Identity:", font_size=18, color=YELLOW),
+                MathTex(r"AI = IA = A", font_size=22),
+            ).arrange(DOWN, buff=0.08),
+            VGroup(
+                Text("Inverse:", font_size=18, color=YELLOW),
+                MathTex(r"AA^{-1} = A^{-1}A = I", font_size=22),
+            ).arrange(DOWN, buff=0.08),
+            VGroup(
+                Text("Distributive:", font_size=18, color=YELLOW),
+                MathTex(r"A(B + C) = AB + AC", font_size=22),
+            ).arrange(DOWN, buff=0.08),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.3)
+        properties.shift(DOWN * 0.5)
+        
+        for prop in properties:
+            self.play(Write(prop), run_time=0.6)
+        
+        # Warning box
+        warning = VGroup(
+            Text("⚠️ Important:", font_size=18, color=RED),
+            Text("Matrix multiplication is NOT commutative!", font_size=16),
+        ).arrange(DOWN, buff=0.08)
+        warning.to_edge(DOWN, buff=0.3)
+        
+        box = SurroundingRectangle(warning, color=RED)
+        
+        self.play(Write(warning), Create(box))
+        
+        self.wait(2)
+```

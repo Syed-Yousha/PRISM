@@ -1,0 +1,211 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# QUADRATIC EQUATIONS - Parabolas, Roots, and Visual Solutions
+# Graphing, factoring visualization, completing the square
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## BASIC PARABOLA PLOT
+```python
+# Plot y = x² with vertex at origin
+axes = Axes(
+    x_range=[-4, 4, 1],
+    y_range=[-1, 8, 1],
+    x_length=8,
+    y_length=6,
+    axis_config={"include_tip": True, "include_numbers": True}
+)
+
+# The parabola
+parabola = axes.plot(lambda x: x**2, color=BLUE, x_range=[-2.8, 2.8])
+
+# Vertex point
+vertex = Dot(axes.c2p(0, 0), color=RED, radius=0.12)
+vertex_label = MathTex("(0, 0)", font_size=28).next_to(vertex, DOWN + RIGHT, buff=0.2)
+
+# Equation label
+equation = MathTex(r"y = x^2", font_size=36, color=BLUE).to_edge(UP, buff=0.5)
+
+self.play(Create(axes), run_time=1.5)
+self.play(Create(parabola), run_time=2.0)
+self.play(Create(vertex), Write(vertex_label), run_time=1.0)
+self.play(Write(equation), run_time=0.8)
+```
+
+## PARABOLA WITH ROOTS (X-INTERCEPTS)
+```python
+# Plot y = x² - 4 (roots at x = -2 and x = 2)
+axes = Axes(
+    x_range=[-4, 4, 1],
+    y_range=[-5, 5, 1],
+    x_length=8,
+    y_length=6,
+    axis_config={"include_tip": True}
+)
+
+parabola = axes.plot(lambda x: x**2 - 4, color=BLUE, x_range=[-2.5, 2.5])
+
+# Mark the roots
+root1 = Dot(axes.c2p(-2, 0), color=GREEN, radius=0.15)
+root2 = Dot(axes.c2p(2, 0), color=GREEN, radius=0.15)
+root1_label = MathTex("x = -2", font_size=28, color=GREEN).next_to(root1, DOWN, buff=0.3)
+root2_label = MathTex("x = 2", font_size=28, color=GREEN).next_to(root2, DOWN, buff=0.3)
+
+# Mark the vertex
+vertex = Dot(axes.c2p(0, -4), color=RED, radius=0.12)
+vertex_label = MathTex("(0, -4)", font_size=28, color=RED).next_to(vertex, DOWN, buff=0.2)
+
+# Title
+title = MathTex(r"y = x^2 - 4 = (x+2)(x-2)", font_size=36).to_edge(UP, buff=0.5)
+
+self.play(Create(axes), run_time=1.0)
+self.play(Create(parabola), run_time=1.5)
+self.play(Create(root1), Create(root2), run_time=0.8)
+self.play(Write(root1_label), Write(root2_label), run_time=1.0)
+self.play(Create(vertex), Write(vertex_label), run_time=1.0)
+self.play(Write(title), run_time=1.0)
+```
+
+## QUADRATIC FORMULA VISUALIZATION
+```python
+# Show the quadratic formula with color-coded parts
+title = Text("The Quadratic Formula", font_size=40, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Standard form
+standard = MathTex(r"ax^2 + bx + c = 0", font_size=40).shift(UP * 1.5)
+
+# The formula with explicit parts for reliable coloring
+# FIXED: Use separate strings for each part to allow reliable selection
+formula = MathTex(
+    r"x = \frac{-b \pm \sqrt{", r"b^2 - 4ac", r"}}{2a}",
+    font_size=48
+).move_to(ORIGIN)
+
+# Highlight discriminant - now we can reliably select part [1]
+discriminant_box = SurroundingRectangle(
+    formula[1],  # FIXED: Select the discriminant part directly
+    color=YELLOW,
+    buff=0.1
+)
+disc_label = Text("Discriminant", font_size=24, color=YELLOW).next_to(discriminant_box, DOWN, buff=0.3)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(standard), run_time=1.0)
+self.play(Write(formula), run_time=2.0)
+self.play(Create(discriminant_box), Write(disc_label), run_time=1.0)
+```
+
+## DISCRIMINANT CASES (NUMBER OF SOLUTIONS)
+```python
+# Three cases based on discriminant
+title = Text("Discriminant Cases", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Create three small axes side by side
+def create_mini_axes():
+    return Axes(
+        x_range=[-3, 3, 1],
+        y_range=[-2, 4, 1],
+        x_length=3.5,
+        y_length=3,
+        axis_config={"include_tip": False}
+    )
+
+# Case 1: Two real roots (discriminant > 0)
+axes1 = create_mini_axes().shift(LEFT * 4.5 + DOWN * 0.5)
+para1 = axes1.plot(lambda x: x**2 - 1, color=BLUE, x_range=[-1.8, 1.8])
+root1a = Dot(axes1.c2p(-1, 0), color=GREEN, radius=0.1)
+root1b = Dot(axes1.c2p(1, 0), color=GREEN, radius=0.1)
+case1_label = MathTex(r"b^2 - 4ac > 0", font_size=24, color=GREEN).next_to(axes1, DOWN, buff=0.3)
+case1_title = Text("2 real roots", font_size=20, color=WHITE).next_to(case1_label, DOWN, buff=0.2)
+
+# Case 2: One real root (discriminant = 0)
+axes2 = create_mini_axes().shift(DOWN * 0.5)
+para2 = axes2.plot(lambda x: x**2, color=BLUE, x_range=[-1.5, 1.5])
+root2 = Dot(axes2.c2p(0, 0), color=YELLOW, radius=0.1)
+case2_label = MathTex(r"b^2 - 4ac = 0", font_size=24, color=YELLOW).next_to(axes2, DOWN, buff=0.3)
+case2_title = Text("1 real root", font_size=20, color=WHITE).next_to(case2_label, DOWN, buff=0.2)
+
+# Case 3: No real roots (discriminant < 0)
+axes3 = create_mini_axes().shift(RIGHT * 4.5 + DOWN * 0.5)
+para3 = axes3.plot(lambda x: x**2 + 1, color=BLUE, x_range=[-1.5, 1.5])
+case3_label = MathTex(r"b^2 - 4ac < 0", font_size=24, color=RED).next_to(axes3, DOWN, buff=0.3)
+case3_title = Text("No real roots", font_size=20, color=WHITE).next_to(case3_label, DOWN, buff=0.2)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(axes1), Create(para1), run_time=1.0)
+self.play(Create(root1a), Create(root1b), Write(case1_label), Write(case1_title), run_time=1.0)
+self.play(Create(axes2), Create(para2), run_time=1.0)
+self.play(Create(root2), Write(case2_label), Write(case2_title), run_time=1.0)
+self.play(Create(axes3), Create(para3), run_time=1.0)
+self.play(Write(case3_label), Write(case3_title), run_time=1.0)
+```
+
+## COMPLETING THE SQUARE VISUALIZATION
+```python
+# Visual representation of completing the square
+title = Text("Completing the Square", font_size=36, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Start with x² + 6x
+# Create a square of side x
+x_square = Square(side_length=2, color=BLUE, fill_opacity=0.3)
+x_label = MathTex(r"x^2", font_size=28).move_to(x_square.get_center())
+
+# Two rectangles of size x by 3
+rect1 = Rectangle(width=2, height=1, color=GREEN, fill_opacity=0.3)
+rect1.next_to(x_square, RIGHT, buff=0)
+rect1_label = MathTex(r"3x", font_size=24).move_to(rect1.get_center())
+
+rect2 = Rectangle(width=1, height=2, color=GREEN, fill_opacity=0.3)
+rect2.next_to(x_square, DOWN, buff=0)
+rect2_label = MathTex(r"3x", font_size=24).move_to(rect2.get_center())
+
+# Small square to complete (3x3 = 9)
+small_square = Square(side_length=1, color=RED, fill_opacity=0.5)
+small_square.next_to(rect1, DOWN, buff=0)
+small_label = MathTex(r"9", font_size=24, color=WHITE).move_to(small_square.get_center())
+
+# Equation progression
+eq1 = MathTex(r"x^2 + 6x", font_size=36).shift(RIGHT * 4 + UP * 1)
+eq2 = MathTex(r"x^2 + 6x + 9 - 9", font_size=36).shift(RIGHT * 4)
+eq3 = MathTex(r"(x + 3)^2 - 9", font_size=36, color=GREEN).shift(RIGHT * 4 + DOWN * 1)
+
+# Animate
+all_shapes = VGroup(x_square, rect1, rect2).shift(LEFT * 3)
+
+self.play(Write(title), run_time=0.8)
+self.play(Create(x_square), Write(x_label), run_time=1.0)
+self.play(Create(rect1), Create(rect2), Write(rect1_label), Write(rect2_label), run_time=1.0)
+self.play(Write(eq1), run_time=0.8)
+self.play(Create(small_square.shift(LEFT * 3)), Write(small_label.shift(LEFT * 3)), run_time=1.0)
+self.play(Write(eq2), run_time=1.0)
+self.play(Write(eq3), run_time=1.0)
+```
+
+## STEP-BY-STEP EXAMPLE
+```python
+# Solve x² + 4x - 5 = 0 using quadratic formula
+title = Text("Example: Solve using Quadratic Formula", font_size=32, color=YELLOW).to_edge(UP, buff=0.5)
+
+# Problem
+problem = MathTex(r"x^2 + 4x - 5 = 0", font_size=40).shift(UP * 2)
+
+# Identify a, b, c
+identify = MathTex(r"a = 1, \quad b = 4, \quad c = -5", font_size=36, color=TEAL).shift(UP * 1)
+
+# Substitute into formula
+step1 = MathTex(r"x = \frac{-4 \pm \sqrt{4^2 - 4(1)(-5)}}{2(1)}", font_size=36).shift(UP * 0)
+step2 = MathTex(r"x = \frac{-4 \pm \sqrt{16 + 20}}{2}", font_size=36).shift(DOWN * 0.8)
+step3 = MathTex(r"x = \frac{-4 \pm \sqrt{36}}{2}", font_size=36).shift(DOWN * 1.6)
+step4 = MathTex(r"x = \frac{-4 \pm 6}{2}", font_size=36).shift(DOWN * 2.4)
+
+# Final answers
+ans1 = MathTex(r"x_1 = \frac{-4 + 6}{2} = 1", font_size=36, color=GREEN).shift(DOWN * 3.2 + LEFT * 2.5)
+ans2 = MathTex(r"x_2 = \frac{-4 - 6}{2} = -5", font_size=36, color=GREEN).shift(DOWN * 3.2 + RIGHT * 2.5)
+
+self.play(Write(title), run_time=0.8)
+self.play(Write(problem), run_time=1.0)
+self.play(Write(identify), run_time=1.0)
+self.play(Write(step1), run_time=1.2)
+self.play(Write(step2), run_time=1.0)
+self.play(Write(step3), run_time=1.0)
+self.play(Write(step4), run_time=1.0)
+self.play(Write(ans1), Write(ans2), run_time=1.2)
+```
