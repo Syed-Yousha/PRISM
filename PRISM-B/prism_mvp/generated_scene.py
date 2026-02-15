@@ -1,199 +1,121 @@
-"""
-PRISM Generated Scene - Audio-Synced
-=====================================
-Topic: Fractions
-Sections: 6
-Generated: 2026-01-18 17:00:29
-Style: Khan Academy / 3Blue1Brown
-"""
-
 from manim import *
 import numpy as np
 
-config.background_color = "#1e1e1e"
-
-
 class GenScene(Scene):
-    """Auto-generated educational animation with clean 2D layout."""
-    
     def construct(self):
-
-        # ════════════════════════════════════════════════════════════
-        # SECTION 1: INTRODUCTION TO FRACTIONS (10.6s)
-        # Type: hook
-        # ════════════════════════════════════════════════════════════
-        title = Text("Introduction to Fractions", font_size=40, color=YELLOW)
-        title.to_edge(UP, buff=0.5)
-
-        formula = MathTex(r"\frac{a}{b}", font_size=44)
-        formula.move_to(ORIGIN)
-
-        notes = VGroup()
-        for note in ['Part of a whole', 'Numerator and denominator']:
-            notes.add(Text(note, font_size=24, color=TEAL))
-        notes.arrange(RIGHT, buff=0.8)
-        notes.to_edge(DOWN, buff=0.5)
-
+        # Section 1: Introduction
+        title = Text("Circle Properties", color=WHITE).scale(0.8)
+        title.to_edge(UP, buff=0.4)
         self.play(Write(title), run_time=1.5)
-        self.play(Write(formula), run_time=1.5)
-        self.play(Write(notes), run_time=0.8)
-        self.wait(10.6 - 3.8)
+        self.wait(1)
 
+        intro_text = VGroup(
+            Text("A circle is a set of points equidistant from", color=WHITE).scale(0.55),
+            Text("a central point called the ", color=WHITE).scale(0.55),
+            Text("center", color=YELLOW).scale(0.55),
+            Text("The distance from center to any point is the", color=WHITE).scale(0.55),
+            Text("radius", color=YELLOW).scale(0.55),
+            MathTex(r"C = 2\pi r", color=WHITE).scale(0.65)
+        ).arrange(DOWN, buff=0.35)
+        intro_text.to_edge(LEFT, buff=1)
 
-        # ════════════════════════════════════════════════════════════
-        # SECTION 2: FRACTION NOTATION (7.5s)
-        # Type: formula
-        # ════════════════════════════════════════════════════════════
-        # Clear previous content for clean slate
-        self.play(*[FadeOut(mob) for mob in self.mobjects], run_time=0.5)
+        # Right side visual
+        circle = Circle(radius=1.5, color=BLUE)
+        center_dot = Dot(color=YELLOW)
+        radius_line = Line(ORIGIN, RIGHT * 1.5, color=WHITE)
+        radius_label = Text("r", color=WHITE).scale(0.5)
+        radius_label.next_to(radius_line, UP, buff=0.2)
+        
+        circle_group = VGroup(circle, center_dot, radius_line, radius_label)
+        circle_group.shift(RIGHT * 3)
 
-        # Create title
-        title = Text("Fraction Notation", font_size=40, color=YELLOW)
-        title.to_edge(UP, buff=0.5)
-        self.play(Write(title), run_time=1.0)
+        self.play(FadeOut(title), run_time=0.5)
+        self.play(Write(intro_text), run_time=2)
+        self.play(
+            Create(circle),
+            FadeIn(center_dot),
+            Create(radius_line),
+            Write(radius_label),
+            run_time=2
+        )
+        self.wait(17.9)
 
-        # Create formula
-        formula = MathTex(r"a/b", font_size=44)
-        formula.move_to(ORIGIN)
-        self.play(Write(formula), run_time=1.5)
+        # Section 2: Concept Explanation
+        self.play(*[FadeOut(m) for m in self.mobjects], run_time=0.5)
 
-        # Create notes
-        notes = VGroup()
-        for note in ['Numerator', 'Denominator', 'Fraction notation']:
-            notes.add(Text(note, font_size=24, color=TEAL))
-        notes.arrange(RIGHT, buff=0.8)
-        notes.to_edge(DOWN, buff=0.5)
-        self.play(Write(notes), run_time=0.8)
+        concept_text = VGroup(
+            Text("Key Circle Components:", color=WHITE).scale(0.55),
+            Text("• Radius (r): distance from center to circle", color=WHITE).scale(0.55),
+            Text("• Diameter (d): twice the radius (d = 2r)", color=WHITE).scale(0.55),
+            Text("• Circumference (C): distance around circle", color=WHITE).scale(0.55),
+            MathTex(r"C = 2\pi r", color=WHITE).scale(0.65)
+        ).arrange(DOWN, buff=0.35)
+        concept_text.to_edge(LEFT, buff=1)
 
-        # Indicate numerator and denominator
-        numerator = Text("Numerator", font_size=24, color=TEAL)
-        numerator.next_to(formula, UP, buff=0.2)
-        denominator = Text("Denominator", font_size=24, color=TEAL)
-        denominator.next_to(formula, DOWN, buff=0.2)
-        self.play(Write(numerator), Write(denominator), run_time=1.0)
+        # Right side diagram
+        circle2 = Circle(radius=2, color=BLUE)
+        center_dot2 = Dot(color=YELLOW)
+        radius_line2 = Line(ORIGIN, RIGHT * 2, color=RED)
+        diameter_line = Line(LEFT * 2, RIGHT * 2, color=GREEN)
+        
+        labels = VGroup(
+            Text("r", color=RED).scale(0.5),
+            Text("d", color=GREEN).scale(0.5),
+            Text("C", color=BLUE).scale(0.5)
+        )
+        
+        labels[0].next_to(radius_line2, UP, buff=0.2)
+        labels[1].next_to(diameter_line, DOWN, buff=0.2)
+        labels[2].next_to(circle2, RIGHT, buff=0.2)
 
-        # Fill remaining time
-        self.wait(2.2)
+        diagram_group = VGroup(circle2, center_dot2, radius_line2, 
+                             diameter_line, labels)
+        diagram_group.shift(RIGHT * 3)
 
+        self.play(Write(concept_text), run_time=2)
+        self.play(
+            Create(circle2),
+            FadeIn(center_dot2),
+            Create(radius_line2),
+            Create(diameter_line),
+            Write(labels),
+            run_time=2
+        )
+        self.wait(21.2)
 
-        # ════════════════════════════════════════════════════════════
-        # SECTION 3: UNDERSTANDING FRACTIONS (7.8s)
-        # Type: breakdown
-        # ════════════════════════════════════════════════════════════
-        # Clear previous content for clean slate
-        self.play(*[FadeOut(mob) for mob in self.mobjects], run_time=0.5)
+        # Section 3: Worked Example
+        self.play(*[FadeOut(m) for m in self.mobjects], run_time=0.5)
 
-        # Title
-        title = Text("Understanding Fractions", font_size=40, color=YELLOW)
-        title.to_edge(UP, buff=0.5)
-        self.play(Write(title), run_time=1.0)
+        example_text = VGroup(
+            Text("Example:", color=WHITE).scale(0.55),
+            Text("Find the circumference of a circle with", color=WHITE).scale(0.55),
+            Text("radius = 4 cm", color=WHITE).scale(0.55),
+            Text("Solution:", color=WHITE).scale(0.55),
+            MathTex(r"C = 2\pi r", color=WHITE).scale(0.65),
+            MathTex(r"C = 2\pi(4)", color=WHITE).scale(0.65),
+            MathTex(r"C = 8\pi \text{ cm}", color=WHITE).scale(0.65)
+        ).arrange(DOWN, buff=0.35)
+        example_text.to_edge(LEFT, buff=1)
 
-        # Main content
-        main_content = Text("To understand fractions, we need to consider the relationship between the numerator and the denominator.", font_size=28)
-        main_content.move_to(ORIGIN)
-        self.play(Write(main_content), run_time=2.3)
+        # Right side example circle
+        example_circle = Circle(radius=1.5, color=BLUE)
+        example_radius = Line(ORIGIN, RIGHT * 1.5, color=RED)
+        example_label = Text("r = 4 cm", color=WHITE).scale(0.5)
+        example_label.next_to(example_radius, UP, buff=0.2)
 
-        # Blackboard Notes
-        notes = VGroup()
-        for note in ['Equal parts', 'Comparing fractions']:
-            notes.add(Text(note, font_size=24, color=TEAL))
-        notes.arrange(RIGHT, buff=0.8)
-        notes.to_edge(DOWN, buff=0.5)
-        self.play(Write(notes), run_time=0.8)
+        example_group = VGroup(example_circle, example_radius, example_label)
+        example_group.shift(RIGHT * 3)
 
-        # Fill remaining time
-        self.wait(7.8 - 0.5 - 1.0 - 2.3 - 0.8 - 0.2)  # 3.2 seconds remaining
+        # Answer box
+        answer_box = SurroundingRectangle(example_text[-1], color=YELLOW)
 
-
-        # ════════════════════════════════════════════════════════════
-        # SECTION 4: ADDING FRACTIONS (4.9s)
-        # Type: example
-        # ════════════════════════════════════════════════════════════
-        # Clear previous content for clean slate
-        self.play(*[FadeOut(mob) for mob in self.mobjects], run_time=0.5)
-
-        # Title
-        title = Text("Adding Fractions", font_size=40, color=YELLOW)
-        title.to_edge(UP, buff=0.5)
-        self.play(Write(title), run_time=0.8)
-
-        # Main content
-        formula = MathTex(r"\frac{a}{b} + \frac{c}{d} = \frac{ad + bc}{bd}", font_size=44)
-        formula.move_to(ORIGIN)
-        self.play(Write(formula), run_time=1.5)
-
-        # Notes
-        notes = VGroup()
-        for note in ['Common denominator', 'Adding fractions']:
-            notes.add(Text(note, font_size=24, color=TEAL))
-        notes.arrange(RIGHT, buff=0.8)
-        notes.to_edge(DOWN, buff=0.5)
-        self.play(Write(notes), run_time=0.8)
-
-        # Fill remaining time
-        self.wait(1.1)
-
-
-        # ════════════════════════════════════════════════════════════
-        # SECTION 5: FRACTION VISUALIZATION (5.6s)
-        # Type: visualization
-        # ════════════════════════════════════════════════════════════
-        # Clear previous content for clean slate
-        self.play(*[FadeOut(mob) for mob in self.mobjects], run_time=0.5)
-
-        # Create title
-        title = Text("Fraction Visualization", font_size=40, color=YELLOW)
-        title.to_edge(UP, buff=0.5)
-        self.play(Write(title), run_time=1.0)
-
-        # Create main content
-        main_content = Text("Visualizing fractions can help us better understand their relationships.", font_size=44)
-        main_content.move_to(ORIGIN)
-        self.play(Write(main_content), run_time=1.5)
-
-        # Create notes
-        notes = VGroup()
-        for note in ['Visualizing fractions', 'Circle representation']:
-            notes.add(Text(note, font_size=24, color=TEAL))
-        notes.arrange(RIGHT, buff=0.8)
-        notes.to_edge(DOWN, buff=0.5)
-        self.play(Write(notes), run_time=0.8)
-
-        # Calculate remaining time
-        remaining_time = 5.6 - 0.5 - 1.0 - 1.5 - 0.8
-        self.wait(remaining_time)
-
-
-        # ════════════════════════════════════════════════════════════
-        # SECTION 6: SUMMARY OF FRACTIONS (7.6s)
-        # Type: summary
-        # ════════════════════════════════════════════════════════════
-        # Clear previous content for clean slate
-        self.play(*[FadeOut(mob) for mob in self.mobjects], run_time=0.5)
-
-        # Title
-        title = Text("Summary of Fractions", font_size=40, color=YELLOW)
-        title.to_edge(UP, buff=0.5)
-        self.play(Write(title), run_time=1.0)
-
-        # Main content
-        main_content = Text("Fractions represent a part of a whole", font_size=44)
-        main_content.move_to(ORIGIN)
-        self.play(Write(main_content), run_time=2.0)
-
-        # Notes
-        notes = VGroup()
-        for note in ['Fractions', 'Part of a whole']:
-            notes.add(Text(note, font_size=24, color=TEAL))
-        notes.arrange(RIGHT, buff=0.8)
-        notes.to_edge(DOWN, buff=0.5)
-        self.play(Write(notes), run_time=0.8)
-
-        # Fill remaining time
-        self.wait(7.6 - 0.5 - 1.0 - 2.0 - 0.8 - 0.5)
-
-        # ═══════════════════════════════════════════════════════════
-        # END - Cleanup
-        # ═══════════════════════════════════════════════════════════
-        self.wait(0.5)
-        self.play(*[FadeOut(mob) for mob in self.mobjects], run_time=1.0)
+        self.play(Write(example_text[:-1]), run_time=2)
+        self.play(
+            Create(example_circle),
+            Create(example_radius),
+            Write(example_label),
+            run_time=2
+        )
+        self.play(Write(example_text[-1]), run_time=1)
+        self.play(Create(answer_box), run_time=1)
+        self.wait(26.3)

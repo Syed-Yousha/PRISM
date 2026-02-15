@@ -14,13 +14,13 @@ from dotenv import load_dotenv
 load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), '.env'))
 
 # ============== API KEYS ==============
-# Groq API (Script Generation + Fallback Code Gen)
+# Groq API (Script Generation + Error Fixing — fast & unlimited)
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 
-# Gemini API (Primary Code Generation)
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")  # Available: gemini-2.0-flash, gemini-2.0-flash-lite, gemini-2.5-flash
+# OpenRouter API (Manim Code Generation — Claude 3.5 Sonnet)
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
+OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "anthropic/claude-3.5-sonnet")
 
 # ============== PATHS ==============
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))

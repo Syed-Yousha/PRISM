@@ -1,0 +1,64 @@
+{
+  "topic": "Circle properties",
+  "total_duration": 0.0,
+  "segment_count": 3,
+  "output_dir": "",
+  "segments": [
+    {
+      "id": 1,
+      "title": "Introduction",
+      "narration": "Welcome to the world of circles. A circle is a set of points equidistant from a central point called the center. The distance from the center to any point on the circle is called the radius. Let's explore the formula for the circumference of a circle, which is C = 2\u03c0r, where C is the circumference and r is the radius.",
+      "blackboard_notes": [
+        "C = 2\u03c0r",
+        "r = radius"
+      ],
+      "visual_instructions": [
+        "Show title text with topic name",
+        "Display the formula for the circumference of a circle with MathTex",
+        "Highlight key terms like radius and circumference"
+      ],
+      "visual_mode": "2D",
+      "section_type": "introduction",
+      "audio_path": "",
+      "duration": 0.0
+    },
+    {
+      "id": 2,
+      "title": "Concept Explanation",
+      "narration": "Now, let's break down the concept of a circle. The radius is the distance from the center to any point on the circle. The diameter is twice the radius and passes through the center of the circle. The circumference is the distance around the circle. We can use the formula C = 2\u03c0r to calculate the circumference of a circle given its radius.",
+      "blackboard_notes": [
+        "d = 2r",
+        "C = 2\u03c0r"
+      ],
+      "visual_instructions": [
+        "Draw a labeled diagram showing the radius, diameter, and circumference of a circle",
+        "Animate the formula transformation step by step",
+        "Use color coding to highlight relationships between the radius, diameter, and circumference"
+      ],
+      "visual_mode": "2D",
+      "section_type": "concept",
+      "audio_path": "",
+      "duration": 0.0
+    },
+    {
+      "id": 3,
+      "title": "Worked Examples & Practice",
+      "narration": "Let's solve an example. If the radius of a circle is 4 cm, what is the circumference? Using the formula C = 2\u03c0r, we get C = 2\u03c0(4) = 8\u03c0 cm. Now, let's practice with some questions. What is the circumference of a circle with a radius of 6 cm? What is the radius of a circle with a circumference of 12\u03c0 cm?",
+      "blackboard_notes": [
+        "Example: C = 2\u03c0(4) = 8\u03c0 cm",
+        "Practice Q1: C = 2\u03c0(6) = 12\u03c0 cm",
+        "Practice Q2: C = 12\u03c0, r = 6 cm",
+        "Practice Q3: C = 20\u03c0, r = 10 cm"
+      ],
+      "visual_instructions": [
+        "Show the example problem",
+        "Animate the solution steps one by one",
+        "Display practice questions with answers revealed"
+      ],
+      "visual_mode": "2D",
+      "section_type": "examples",
+      "audio_path": "",
+      "duration": 0.0
+    }
+  ]
+}

@@ -23,6 +23,9 @@ from functools import lru_cache
 
 from config import DB_PATH, KNOWLEDGE_BASE_PATH, COLLECTION_NAME, DEFAULT_N_RESULTS
 
+# Local KB collection name
+LOCAL_KB_COLLECTION_NAME = "prism_local_kb"
+
 # Import Bespoke curator for verified Manim examples
 try:
     from bespoke_curator import get_bespoke_rag_context, get_bespoke_examples, initialize_bespoke_database
@@ -271,77 +274,76 @@ class RAGEngine:
     """
     Knowledge Bridge: Smart Code Retrieval Engine.
     
-    Connects to ChromaDB (Bespoke Curator database) for topic-relevant
-    Manim code examples. Ensures the LLM generates valid syntax by
-    providing real, working code as context.
+    Connects to multiple ChromaDB collections for comprehensive code retrieval:
+    1. prism_codebase: Bespoke Manim dataset (external, verified examples)
+    2. prism_local_kb: PRISM local knowledge base (IGCSE topics, style guides)
     
-    Collection: prism_codebase (bespokelabs/bespoke-manim dataset)
+    Ensures the LLM generates valid syntax by providing real, working code as context.
     
     Attributes:
         db_path: Path to ChromaDB database
-        collection_name: Name of the collection to query
+        curator_collection: Bespoke Manim collection (prism_codebase)
+        local_kb_collection: PRISM local KB collection (prism_local_kb)
         client: ChromaDB client
-        collection: Active collection
+        _connected_curator: Connection status for curator DB
+        _connected_local_kb: Connection status for local KB DB
+        _cache: Query cache
     """
     
-    def __init__(self, db_path: str = DB_PATH, collection_name: str = COLLECTION_NAME):
+    def __init__(self, db_path: str = DB_PATH):
         """
-        Initialize RAG Engine with ChromaDB connection.
+        Initialize RAG Engine with connections to both ChromaDB collections.
         
         Args:
             db_path: Path to ChromaDB persistent storage
-            collection_name: Name of collection (default: prism_codebase)
         """
         self.db_path = db_path
-        self.collection_name = collection_name
         self.client = None
-        self.collection = None
-        self._connected = self._connect()
+        self.curator_collection = None
+        self.local_kb_collection = None
+        self._connected_curator = False
+        self._connected_local_kb = False
         self._cache = {}  # Query cache
+        self._connect_all()
     
-    def _connect(self) -> bool:
+    def _connect_all(self):
         """
-        Connect to ChromaDB and get the prism_codebase collection.
-        
-        Returns:
-            True if connected successfully, False otherwise
+        Connect to both ChromaDB collections (curator and local KB).
         """
         try:
             if not os.path.exists(self.db_path):
                 print(f"   📚 RAG: Database not found at {self.db_path}")
-                print("   📚 RAG: Using built-in reference (run rag_builder.py to populate)")
-                return False
+                print("   📚 RAG: Using built-in reference (run ingestion scripts to populate)")
+                return
             
             # Connect to persistent ChromaDB
             self.client = chromadb.PersistentClient(path=self.db_path)
             
-            # Get collection by name
+            # Connect to curator collection (prism_codebase)
             try:
-                self.collection = self.client.get_collection(name=self.collection_name)
+                self.curator_collection = self.client.get_collection(name=COLLECTION_NAME)
+                curator_count = self.curator_collection.count()
+                if curator_count > 0:
+                    self._connected_curator = True
+                    print(f"   📚 RAG: Connected to curator '{COLLECTION_NAME}' ({curator_count:,} examples)")
             except Exception:
-                # Try listing available collections
-                collections = self.client.list_collections()
-                print(f"   📚 RAG: Collection '{self.collection_name}' not found")
-                if collections:
-                    print(f"   📚 RAG: Available collections: {[c.name for c in collections]}")
-                    # Use first available collection as fallback
-                    self.collection = collections[0]
-                    print(f"   📚 RAG: Using '{self.collection.name}' instead")
-                else:
-                    print("   📚 RAG: No collections available, using built-in reference")
-                    return False
+                print(f"   📚 RAG: Curator collection '{COLLECTION_NAME}' not available")
             
-            count = self.collection.count()
-            if count == 0:
-                print("   📚 RAG: Collection empty, using built-in reference")
-                return False
+            # Connect to local KB collection (prism_local_kb)
+            try:
+                self.local_kb_collection = self.client.get_collection(name=LOCAL_KB_COLLECTION_NAME)
+                local_kb_count = self.local_kb_collection.count()
+                if local_kb_count > 0:
+                    self._connected_local_kb = True
+                    print(f"   📚 RAG: Connected to local KB '{LOCAL_KB_COLLECTION_NAME}' ({local_kb_count:,} chunks)")
+            except Exception:
+                print(f"   📚 RAG: Local KB collection '{LOCAL_KB_COLLECTION_NAME}' not available")
             
-            print(f"   📚 RAG: Connected to '{self.collection.name}' ({count:,} examples)")
-            return True
-            
+            if not self._connected_curator and not self._connected_local_kb:
+                print("   📚 RAG: No collections available, using built-in reference")
+                
         except Exception as e:
             print(f"   📚 RAG: Connection failed ({e}), using built-in reference")
-            return False
     
     def get_context(self, topic: str, n_results: int = DEFAULT_N_RESULTS) -> str:
         """
@@ -387,19 +389,42 @@ class RAGEngine:
         context += MANIM_REFERENCE
         
         # Add database examples if available
-        if self._connected and self.collection:
+        context += self._get_database_examples(topic, n_results)
+        
+        # Limit total context size (prevent token overflow)
+        context = context[:15000]
+        
+        # Cache result
+        self._cache[cache_key] = context
+        
+        return context
+    
+    def _get_database_examples(self, topic: str, n_results: int) -> str:
+        """
+        Get relevant examples from both curator and local KB collections.
+        
+        Args:
+            topic: Educational topic
+            n_results: Number of results per collection
+            
+        Returns:
+            Formatted string with examples from both collections
+        """
+        context = ""
+        
+        # Query curator collection (Bespoke Manim dataset)
+        if self._connected_curator and self.curator_collection:
             try:
-                # Query ChromaDB for relevant examples
-                results = self.collection.query(
+                results = self.curator_collection.query(
                     query_texts=[topic],
                     n_results=n_results,
                     include=["metadatas", "documents"]
                 )
                 
                 if results and results.get('ids') and results['ids'][0]:
-                    context += "\n\n=== RELEVANT CODE EXAMPLES FROM KNOWLEDGE BASE ===\n"
+                    context += "\n\n=== BESPOKE MANIM EXAMPLES ===\n"
                     context += f"Topic: {topic}\n"
-                    context += f"Retrieved: {len(results['ids'][0])} examples\n"
+                    context += f"Retrieved: {len(results['ids'][0])} verified examples\n"
                     
                     for i, metadata in enumerate(results.get('metadatas', [[]])[0]):
                         prompt = metadata.get('prompt', 'Unknown task')[:150]
@@ -411,73 +436,140 @@ class RAGEngine:
                             context += f"{'─' * 50}\n"
                             context += code[:4000] + "\n"  # Limit code length
                     
-                    context += "\n=== END KNOWLEDGE BASE EXAMPLES ===\n"
+                    context += "\n=== END BESPOKE EXAMPLES ===\n"
                     
             except Exception as e:
-                # Silently fall back to built-in reference
-                pass
+                print(f"   ⚠️ Curator query failed: {e}")
         
-        # Limit total context size (prevent token overflow)
-        context = context[:15000]
-        
-        # Cache result
-        self._cache[cache_key] = context
+        # Query local KB collection (PRISM knowledge base)
+        if self._connected_local_kb and self.local_kb_collection:
+            try:
+                results = self.local_kb_collection.query(
+                    query_texts=[topic],
+                    n_results=n_results,
+                    include=["metadatas", "documents"]
+                )
+                
+                if results and results.get('ids') and results['ids'][0]:
+                    context += "\n\n=== PRISM LOCAL KNOWLEDGE BASE ===\n"
+                    context += f"Topic: {topic}\n"
+                    context += f"Retrieved: {len(results['ids'][0])} local examples\n"
+                    
+                    for i, (metadata, document) in enumerate(zip(results.get('metadatas', [[]])[0], results.get('documents', [[]])[0])):
+                        topic_name = metadata.get('topic', 'Unknown')
+                        section = metadata.get('section', 'Unknown')
+                        chunk_type = metadata.get('type', 'text')
+                        filename = metadata.get('filename', 'Unknown')
+                        
+                        context += f"\n{'─' * 50}\n"
+                        context += f"Example {i+1}: {topic_name}/{section} ({chunk_type})\n"
+                        context += f"File: {filename}.txt\n"
+                        context += f"{'─' * 50}\n"
+                        context += document[:3000] + "\n"  # Limit content length
+                    
+                    context += "\n=== END LOCAL KB EXAMPLES ===\n"
+                    
+            except Exception as e:
+                print(f"   ⚠️ Local KB query failed: {e}")
         
         return context
     
     def search(self, query: str, n_results: int = 5) -> List[Dict]:
         """
-        Search for specific code patterns in the knowledge base.
-        
-        More granular than get_context() - returns structured results.
+        Search for specific code patterns in both knowledge bases.
         
         Args:
             query: Search query (e.g., "3D rotation animation", "graph plotting")
-            n_results: Number of results to return
+            n_results: Number of results to return per collection
             
         Returns:
-            List of dicts with: prompt, code, relevance score
+            List of dicts with: prompt, code, relevance score, source
         """
-        if not self._connected or not self.collection:
-            return []
+        all_results = []
         
-        try:
-            results = self.collection.query(
-                query_texts=[query],
-                n_results=n_results,
-                include=["metadatas", "documents", "distances"]
-            )
-            
-            snippets = []
-            metadatas = results.get('metadatas', [[]])[0]
-            distances = results.get('distances', [[]])[0]
-            
-            for i, metadata in enumerate(metadatas):
-                # Convert distance to relevance score (lower distance = higher relevance)
-                distance = distances[i] if i < len(distances) else 1.0
-                relevance = max(0, 1.0 - (distance / 2.0))  # Normalize to 0-1
+        # Search curator collection
+        if self._connected_curator and self.curator_collection:
+            try:
+                results = self.curator_collection.query(
+                    query_texts=[query],
+                    n_results=n_results,
+                    include=["metadatas", "documents", "distances"]
+                )
                 
-                snippets.append({
-                    'prompt': metadata.get('prompt', ''),
-                    'code': metadata.get('code', ''),
-                    'relevance': round(relevance, 3)
-                })
-            
-            return snippets
-            
-        except Exception:
-            return []
+                metadatas = results.get('metadatas', [[]])[0]
+                distances = results.get('distances', [[]])[0]
+                
+                for i, metadata in enumerate(metadatas):
+                    distance = distances[i] if i < len(distances) else 1.0
+                    relevance = max(0, 1.0 - (distance / 2.0))
+                    
+                    all_results.append({
+                        'prompt': metadata.get('prompt', ''),
+                        'code': metadata.get('code', ''),
+                        'relevance': round(relevance, 3),
+                        'source': 'bespoke_curator',
+                        'topic': metadata.get('topic', ''),
+                        'subject': metadata.get('subject', '')
+                    })
+                    
+            except Exception as e:
+                print(f"   ⚠️ Curator search failed: {e}")
+        
+        # Search local KB collection
+        if self._connected_local_kb and self.local_kb_collection:
+            try:
+                results = self.local_kb_collection.query(
+                    query_texts=[query],
+                    n_results=n_results,
+                    include=["metadatas", "documents", "distances"]
+                )
+                
+                metadatas = results.get('metadatas', [[]])[0]
+                documents = results.get('documents', [[]])[0]
+                distances = results.get('distances', [[]])[0]
+                
+                for i, (metadata, document) in enumerate(zip(metadatas, documents)):
+                    distance = distances[i] if i < len(distances) else 1.0
+                    relevance = max(0, 1.0 - (distance / 2.0))
+                    
+                    # Extract code from document if it's a code chunk
+                    code = ""
+                    if metadata.get('type') == 'code':
+                        code = document
+                    elif '```python' in document:
+                        # Extract code blocks
+                        import re
+                        code_blocks = re.findall(r'```python\s*\n(.*?)\n```', document, re.DOTALL)
+                        code = '\n\n'.join(code_blocks)
+                    
+                    all_results.append({
+                        'prompt': f"{metadata.get('topic', '')} - {metadata.get('section', '')}",
+                        'code': code,
+                        'relevance': round(relevance, 3),
+                        'source': 'prism_local_kb',
+                        'topic': metadata.get('topic', ''),
+                        'section': metadata.get('section', ''),
+                        'filename': metadata.get('filename', ''),
+                        'type': metadata.get('type', 'text')
+                    })
+                    
+            except Exception as e:
+                print(f"   ⚠️ Local KB search failed: {e}")
+        
+        # Sort by relevance and return top results
+        all_results.sort(key=lambda x: x['relevance'], reverse=True)
+        return all_results[:n_results]
     
     def get_examples_for_mode(self, mode: str, n_results: int = 2) -> List[Dict]:
         """
-        Get examples specific to 2D or 3D mode.
+        Get examples specific to 2D or 3D mode from both collections.
         
         Args:
             mode: "2D" or "3D"
-            n_results: Number of examples
+            n_results: Number of results per collection
             
         Returns:
-            List of relevant code examples
+            List of relevant code examples from both sources
         """
         if mode.upper() == "3D":
             query = "3D scene ThreeDScene camera rotation sphere cube"
@@ -496,15 +588,28 @@ class RAGEngine:
     
     @property
     def is_connected(self) -> bool:
-        """Check if database is connected."""
-        return self._connected
+        """Check if any database is connected."""
+        return self._connected_curator or self._connected_local_kb
     
     @property
-    def document_count(self) -> int:
-        """Get number of documents in collection."""
-        if self._connected and self.collection:
-            return self.collection.count()
-        return 0
+    def curator_connected(self) -> bool:
+        """Check if curator database is connected."""
+        return self._connected_curator
+    
+    @property
+    def local_kb_connected(self) -> bool:
+        """Check if local KB database is connected."""
+        return self._connected_local_kb
+    
+    @property
+    def document_count(self) -> Dict[str, int]:
+        """Get number of documents in each collection."""
+        counts = {}
+        if self._connected_curator and self.curator_collection:
+            counts['curator'] = self.curator_collection.count()
+        if self._connected_local_kb and self.local_kb_collection:
+            counts['local_kb'] = self.local_kb_collection.count()
+        return counts
 
 
 # ============== CONVENIENCE FUNCTIONS ==============
@@ -537,11 +642,14 @@ if __name__ == "__main__":
     
     print(f"\n📊 Status:")
     print(f"   Connected: {engine.is_connected}")
+    print(f"   Curator DB: {engine.curator_connected}")
+    print(f"   Local KB DB: {engine.local_kb_connected}")
     print(f"   Database: {engine.db_path}")
-    print(f"   Collection: {engine.collection_name}")
     
-    if engine.is_connected:
-        print(f"   Documents: {engine.document_count:,}")
+    doc_counts = engine.document_count
+    if doc_counts:
+        for source, count in doc_counts.items():
+            print(f"   {source.title()}: {count:,} documents")
     
     # Test queries
     test_topics = [
@@ -559,21 +667,33 @@ if __name__ == "__main__":
         print(f"   Context length: {len(context):,} chars")
         
         # Show RAG examples if found
-        if "RELEVANT CODE EXAMPLES" in context:
-            start = context.find("=== RELEVANT")
-            end = context.find("=== END KNOWLEDGE")
-            if end > start:
-                snippet = context[start:start+800]
-                print(f"\n   Preview:\n{snippet}...")
+        if "BESPOKE MANIM EXAMPLES" in context or "PRISM LOCAL KNOWLEDGE BASE" in context:
+            # Show a preview of found examples
+            if "BESPOKE MANIM EXAMPLES" in context:
+                start = context.find("=== BESPOKE MANIM EXAMPLES")
+                end = context.find("=== END BESPOKE EXAMPLES")
+                if end > start:
+                    snippet = context[start:start+600]
+                    print(f"\n   Bespoke Examples Preview:\n{snippet}...")
+            
+            if "PRISM LOCAL KNOWLEDGE BASE" in context:
+                start = context.find("=== PRISM LOCAL KNOWLEDGE BASE")
+                end = context.find("=== END LOCAL KB EXAMPLES")
+                if end > start:
+                    snippet = context[start:start+600]
+                    print(f"\n   Local KB Preview:\n{snippet}...")
         else:
             print("   (Using built-in reference only)")
         
         # Test search
-        results = engine.search(topic, n_results=2)
+        results = engine.search(topic, n_results=3)
         if results:
             print(f"\n   Search results: {len(results)} matches")
             for r in results:
-                print(f"   - {r['prompt'][:60]}... (relevance: {r['relevance']})")
+                source = r.get('source', 'unknown')
+                prompt = r['prompt'][:60]
+                relevance = r['relevance']
+                print(f"   - [{source}] {prompt}... (relevance: {relevance})")
     
     print(f"\n{'═' * 60}")
     print("✅ RAG Engine test complete")

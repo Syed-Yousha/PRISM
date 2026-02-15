@@ -1,438 +1,425 @@
 """
-PRISM - Audio-First Video Generator
-====================================
-TWO-STEP LLM ARCHITECTURE:
+PRISM Main Pipeline - Video Generation Orchestrator
+====================================================
+Orchestrates the full video generation pipeline:
 
-┌─────────────────────────────────────────────────────────────────┐
-│                    PRISM v3.1 PIPELINE                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ┌──────────────┐      ┌──────────────┐      ┌──────────────┐  │
-│  │   RAG        │      │  LLM STEP 1  │      │  LLM STEP 2  │  │
-│  │  Knowledge   │─────>│   PROMPT     │─────>│    CODE      │  │
-│  │   Fetch      │      │    MAKER     │      │  GENERATOR   │  │
-│  └──────────────┘      └──────────────┘      └──────────────┘  │
-│         │                     │                      │          │
-│   Manim Examples        AnimationScript         Manim Code     │
-│                                                                 │
-├─────────────────────────────────────────────────────────────────┤
-│  Then: Audio Generation → Render → Merge                        │
-└─────────────────────────────────────────────────────────────────┘
+  Phase 1: RAG Context     — Retrieve Manim examples from ChromaDB
+  Phase 2: Script (Call 1) — Generate 3-section animation script via Groq (free)
+  Phase 3: Audio (TTS)     — Generate narration audio via gTTS (free, no API call)
+  Phase 4: Code (Call 2)   — Generate Manim code via Gemini (1 call, free tier)
+  Phase 5: Render          — Render Manim scene to video
+  Phase 6: Merge           — Combine video + audio into final output
 
-STEP 1 (PromptMaker): Topic + RAG → Detailed Animation Script
-STEP 2 (ManimEngine): Animation Script → Executable Manim Code
+API CALLS: 2 total
+  Call 1: Groq  → animation script  (free, unlimited)
+  Call 2: Gemini → Manim code       (free tier, 1 call)
+  (optional): Groq → error fix retry (free)
 
-WHY TWO STEPS:
-- Step 1 focuses on PEDAGOGY and VISUAL PLANNING
-- Step 2 focuses on CORRECT MANIM SYNTAX
-- Separation of concerns = fewer errors!
+Usage:
+  python main.py                          # Interactive — asks for topic
+  python main.py "Pythagorean Theorem"    # Direct topic
+  python main.py "Quadratic Formula" -q m # With quality
 """
 
 import os
 import sys
 import time
-import glob
-import urllib.request
+import argparse
+import json
+import subprocess as sp
+import platform
 from typing import Optional
 
-from moviepy import (
-    VideoFileClip,
-    AudioFileClip,
-    concatenate_audioclips,
-    CompositeAudioClip,
-    vfx
+from config import (
+    SCRIPT_DIR, MEDIA_DIR, RENDER_QUALITY,
+    BGM_ENABLED, BGM_VOLUME, BGM_URLS,
 )
-
+from rag_engine import RAGEngine
+from prompt_maker import PromptMaker
 from audio_engine import AudioEngine
 from manim_engine import ManimEngine
-from rag_engine import RAGEngine
-from prompt_maker import PromptMaker, AnimationScript
 from data_models import VideoScript
-from config import (
-    SCRIPT_DIR, MUSIC_DIR, RENDER_QUALITY, BGM_VOLUME, BGM_URLS,
-    GENERATED_SCRIPT_PATH, BGM_ENABLED
-)
-
-# Import Bespoke curator for verified Manim examples
-try:
-    from bespoke_curator import initialize_bespoke_database
-    BESPOKE_AVAILABLE = True
-except ImportError:
-    BESPOKE_AVAILABLE = False
 
 
-# ============== AUDIO HELPERS ==============
+def run_pipeline(topic: str, quality: str = RENDER_QUALITY) -> Optional[str]:
+    """
+    Run the full PRISM video generation pipeline.
+    
+    Args:
+        topic: Educational math topic (e.g., "Pythagorean Theorem")
+        quality: Render quality ('l'=480p, 'm'=720p, 'h'=1080p)
+        
+    Returns:
+        Path to final video file, or None on failure
+    """
+    print("\n" + "=" * 60)
+    print(f"🔮 PRISM Video Generator")
+    print(f"   Topic: {topic}")
+    print(f"   Quality: {quality}")
+    print("=" * 60)
+    
+    pipeline_start = time.time()
+    
+    # Override quality if specified
+    if quality != RENDER_QUALITY:
+        import config
+        config.RENDER_QUALITY = quality
+    
+    # ──── Phase 1: RAG Context ────
+    print("\n📚 Phase 1: Retrieving RAG context...")
+    phase_start = time.time()
+    try:
+        rag_engine = RAGEngine()
+        rag_context = rag_engine.get_context(topic)
+        print(f"   ✅ RAG context: {len(rag_context):,} chars ({time.time() - phase_start:.1f}s)")
+    except Exception as e:
+        print(f"   ⚠️ RAG failed ({e}), continuing without context")
+        rag_context = ""
+    
+    # ──── Phase 2: Script Generation (API Call 1) ────
+    print("\n📝 Phase 2: Generating animation script (API Call 1)...")
+    phase_start = time.time()
+    try:
+        prompt_maker = PromptMaker()
+        video_script = prompt_maker.generate_script(topic, rag_context)
+        print(f"   ✅ Script: {len(video_script.segments)} sections ({time.time() - phase_start:.1f}s)")
+    except Exception as e:
+        print(f"   ❌ Script generation failed: {e}")
+        return None
+    
+    # Save script for debugging
+    _save_debug_output(video_script, "animation_script.json")
+    
+    # ──── Phase 3: Audio Generation (gTTS, no API call) ────
+    print("\n🔊 Phase 3: Generating audio (gTTS)...")
+    phase_start = time.time()
+    try:
+        audio_engine = AudioEngine()
+        audio_paths = audio_engine.generate_audio_from_script(video_script)
+        if not audio_paths:
+            print("   ❌ Audio generation failed")
+            return None
+        print(f"   ✅ Audio: {len(audio_paths)} files, {video_script.total_duration:.1f}s total ({time.time() - phase_start:.1f}s)")
+    except Exception as e:
+        print(f"   ❌ Audio failed: {e}")
+        return None
+    
+    # ──── Phase 4: Code Generation (API Call 2 — OpenRouter) ────
+    print("\n🎬 Phase 4: Generating Manim code (API Call 2 — Claude)...")
+    phase_start = time.time()
+    try:
+        manim_engine = ManimEngine()
+        video_path = manim_engine.generate_and_render(video_script, rag_context)
+        print(f"   ⏱️ Code + Render took {time.time() - phase_start:.1f}s")
+    except Exception as e:
+        print(f"   ❌ Code generation/render failed: {e}")
+        video_path = None
+    
+    if not video_path:
+        print("\n   ❌ Video rendering failed after all retries")
+        return None
+    
+    # ──── Phase 5: Merge Audio + Video ────
+    print("\n🎵 Phase 5: Merging audio and video...")
+    phase_start = time.time()
+    try:
+        final_path = merge_video_audio(video_path, audio_paths, topic)
+        if final_path:
+            print(f"   ✅ Final video: {final_path} ({time.time() - phase_start:.1f}s)")
+        else:
+            print("   ⚠️ Merge failed, returning raw video")
+            final_path = video_path
+    except Exception as e:
+        print(f"   ⚠️ Merge error ({e}), returning raw video")
+        final_path = video_path
+    
+    # ──── Summary ────
+    total_time = time.time() - pipeline_start
+    print("\n" + "=" * 60)
+    print(f"✅ PRISM Complete!")
+    print(f"   Topic: {topic}")
+    print(f"   Duration: {video_script.total_duration:.1f}s video")
+    print(f"   Pipeline: {total_time:.1f}s total")
+    print(f"   API Calls: Groq=1 (script) + Claude=1 (code)")
+    print(f"   Output: {final_path}")
+    print("=" * 60 + "\n")
+    
+    # Auto-open the video
+    _open_video(final_path)
+    
+    return final_path
+
+
+def merge_video_audio(video_path: str, audio_paths: list, topic: str) -> Optional[str]:
+    """
+    Merge rendered video with audio narration using ffmpeg (reliable).
+    Falls back to moviepy if ffmpeg is not available.
+    
+    Args:
+        video_path: Path to rendered .mp4
+        audio_paths: List of audio .mp3 files (one per section)
+        topic: Topic name for output filename
+        
+    Returns:
+        Path to final merged video, or None
+    """
+    if not audio_paths:
+        return video_path
+    
+    # Output path
+    safe_topic = "".join(c if c.isalnum() or c in " _-" else "_" for c in topic)[:50]
+    output_dir = os.path.join(MEDIA_DIR, "videos", "final")
+    os.makedirs(output_dir, exist_ok=True)
+    output_path = os.path.join(output_dir, f"PRISM_{safe_topic}.mp4")
+    
+    # Step 1: Concatenate all audio files into one
+    concat_audio = os.path.join(MEDIA_DIR, "audio", "_combined.mp3")
+    valid_paths = [p for p in audio_paths if p and os.path.exists(p)]
+    if not valid_paths:
+        return video_path
+    
+    # Try ffmpeg first (most reliable)
+    if _ffmpeg_available():
+        try:
+            result = _merge_with_ffmpeg(video_path, valid_paths, concat_audio, output_path)
+            if result:
+                return result
+        except Exception as e:
+            print(f"   ⚠️ ffmpeg merge failed: {e}, trying moviepy...")
+    
+    # Fallback: moviepy
+    return _merge_with_moviepy(video_path, valid_paths, output_path)
+
+
+def _ffmpeg_available() -> bool:
+    """Check if ffmpeg is installed."""
+    try:
+        sp.run(["ffmpeg", "-version"], capture_output=True, timeout=5)
+        return True
+    except Exception:
+        return False
+
+
+def _merge_with_ffmpeg(video_path: str, audio_paths: list, concat_audio: str, output_path: str) -> Optional[str]:
+    """Merge video + audio using ffmpeg (most reliable method)."""
+    
+    # Step 1: Create a concat list file for audio
+    list_file = os.path.join(os.path.dirname(concat_audio), "_audiolist.txt")
+    with open(list_file, 'w', encoding='utf-8') as f:
+        for p in audio_paths:
+            # ffmpeg concat needs forward slashes and escaped quotes
+            safe_p = p.replace('\\', '/')
+            f.write(f"file '{safe_p}'\n")
+    
+    # Step 2: Concatenate audio files
+    concat_cmd = [
+        "ffmpeg", "-y", "-f", "concat", "-safe", "0",
+        "-i", list_file, "-c", "copy", concat_audio
+    ]
+    result = sp.run(concat_cmd, capture_output=True, text=True, timeout=60)
+    if result.returncode != 0:
+        print(f"   ⚠️ Audio concat failed: {result.stderr[:300]}")
+        # Fallback: just use first audio
+        concat_audio = audio_paths[0]
+    
+    # Step 3: Merge video + audio
+    merge_cmd = [
+        "ffmpeg", "-y",
+        "-i", video_path,
+        "-i", concat_audio,
+        "-c:v", "copy",
+        "-c:a", "aac",
+        "-b:a", "128k",
+        "-shortest",
+        "-map", "0:v:0",
+        "-map", "1:a:0",
+        output_path,
+    ]
+    result = sp.run(merge_cmd, capture_output=True, text=True, timeout=120)
+    
+    # Cleanup temp files
+    for f in [list_file]:
+        if os.path.exists(f):
+            try:
+                os.remove(f)
+            except Exception:
+                pass
+    
+    if result.returncode == 0 and os.path.exists(output_path) and os.path.getsize(output_path) > 1000:
+        print(f"   ✅ Merged with ffmpeg: {output_path}")
+        return output_path
+    else:
+        print(f"   ⚠️ ffmpeg merge error: {result.stderr[:300]}")
+        return None
+
+
+def _merge_with_moviepy(video_path: str, audio_paths: list, output_path: str) -> Optional[str]:
+    """Fallback: merge video + audio using moviepy."""
+    try:
+        from moviepy.editor import (
+            VideoFileClip, AudioFileClip,
+            concatenate_audioclips,
+        )
+    except ImportError:
+        print("   ⚠️ Neither ffmpeg nor moviepy available — returning raw video (no audio)")
+        return video_path
+    
+    try:
+        video = VideoFileClip(video_path)
+        
+        audio_clips = []
+        for path in audio_paths:
+            audio_clips.append(AudioFileClip(path))
+        
+        combined_audio = concatenate_audioclips(audio_clips)
+        
+        # Trim audio to video length if needed
+        if combined_audio.duration > video.duration:
+            combined_audio = combined_audio.subclip(0, video.duration)
+        
+        final = video.set_audio(combined_audio)
+        
+        final.write_videofile(
+            output_path,
+            codec='libx264',
+            audio_codec='aac',
+            bitrate='2000k',
+            audio_bitrate='128k',
+            logger=None,
+        )
+        
+        # Cleanup
+        video.close()
+        for clip in audio_clips:
+            clip.close()
+        combined_audio.close()
+        final.close()
+        
+        if os.path.exists(output_path) and os.path.getsize(output_path) > 1000:
+            print(f"   ✅ Merged with moviepy: {output_path}")
+            return output_path
+            
+    except Exception as e:
+        print(f"   ❌ moviepy merge failed: {e}")
+    
+    return video_path
+
+
+def _open_video(path: str) -> None:
+    """Auto-open the video file with the default system player."""
+    if not path or not os.path.exists(path):
+        return
+    
+    print(f"\n   🎬 Opening video...")
+    try:
+        if platform.system() == "Windows":
+            os.startfile(path)
+        elif platform.system() == "Darwin":  # macOS
+            sp.Popen(["open", path])
+        else:  # Linux
+            sp.Popen(["xdg-open", path])
+    except Exception as e:
+        print(f"   ⚠️ Could not auto-open video: {e}")
+        print(f"   📂 Open manually: {path}")
+
+
 def get_bgm() -> Optional[str]:
-    """Download or get cached background music."""
-    os.makedirs(MUSIC_DIR, exist_ok=True)
-    path = os.path.join(MUSIC_DIR, "bgm.mp3")
+    """Download background music if BGM is enabled."""
+    if not BGM_ENABLED:
+        return None
     
-    if os.path.exists(path) and os.path.getsize(path) > 10000:
-        return path
+    music_dir = os.path.join(MEDIA_DIR, "music")
+    os.makedirs(music_dir, exist_ok=True)
     
+    bgm_path = os.path.join(music_dir, "bgm.mp3")
+    if os.path.exists(bgm_path):
+        return bgm_path
+    
+    import urllib.request
     for url in BGM_URLS:
         try:
-            print(f"   🎵 Downloading background music...")
-            req = urllib.request.Request(url, headers={
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-            })
-            with urllib.request.urlopen(req, timeout=15) as response:
-                with open(path, 'wb') as f:
-                    f.write(response.read())
-            if os.path.exists(path) and os.path.getsize(path) > 10000:
-                print("   ✅ BGM downloaded")
-                return path
+            print(f"   🎵 Downloading BGM...")
+            urllib.request.urlretrieve(url, bgm_path)
+            if os.path.exists(bgm_path) and os.path.getsize(bgm_path) > 1000:
+                return bgm_path
         except Exception:
             continue
     
-    print("   ⚠️ All BGM sources failed - video will have narration only")
     return None
 
 
-def merge_audio(video_script: VideoScript) -> Optional[str]:
-    """Concatenate segment audio into single track."""
-    clips = []
+def _save_debug_output(video_script: VideoScript, filename: str) -> None:
+    """Save intermediate output for debugging."""
+    debug_dir = os.path.join(SCRIPT_DIR, "prompt_outputs")
+    os.makedirs(debug_dir, exist_ok=True)
     
-    for seg in video_script.segments:
-        if seg.audio_path and os.path.exists(seg.audio_path):
-            try:
-                clips.append(AudioFileClip(seg.audio_path))
-            except Exception as e:
-                print(f"   ⚠️ Could not load audio for segment {seg.id}: {e}")
-    
-    if not clips:
-        print("   ⚠️ No audio clips to merge")
-        return None
-    
-    merged = concatenate_audioclips(clips)
-    output = os.path.join(video_script.output_dir, "narration.mp3")
-    merged.write_audiofile(output, logger=None)
-    
-    for c in clips:
-        c.close()
-    merged.close()
-    
-    return output
-
-
-def mix_bgm(voice_path: str, output_path: str) -> str:
-    """Mix voiceover with background music (if enabled)."""
-    # Check if BGM is disabled
-    if not BGM_ENABLED:
-        return voice_path
-    
+    filepath = os.path.join(debug_dir, filename)
     try:
-        voice = AudioFileClip(voice_path)
-        bgm_path = get_bgm()
-        
-        if not bgm_path:
-            return voice_path
-        
-        bgm = AudioFileClip(bgm_path)
-        
-        if bgm.duration < voice.duration:
-            loops = int(voice.duration / bgm.duration) + 1
-            bgm = concatenate_audioclips([bgm] * loops)
-        
-        bgm = bgm.with_duration(voice.duration).with_volume_scaled(BGM_VOLUME)
-        mixed = CompositeAudioClip([voice, bgm])
-        mixed.write_audiofile(output_path, logger=None)
-        
-        voice.close()
-        bgm.close()
-        mixed.close()
-        
-        return output_path
-        
-    except Exception as e:
-        print(f"   ⚠️ BGM mixing failed: {e}")
-        return voice_path
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(video_script.to_json())
+    except Exception:
+        pass
 
 
-def merge_video_audio(video_path: str, audio_path: str, output_path: str) -> str:
-    """Combine video with audio track."""
-    video = VideoFileClip(video_path)
-    audio = AudioFileClip(audio_path)
-    
-    # Handle duration mismatch
-    if video.duration < audio.duration - 0.5:
-        shortfall = audio.duration - video.duration + 0.5
-        video = video.with_effects([vfx.Freeze(t=video.duration - 0.1, freeze_duration=shortfall)])
-        print(f"   ℹ️ Extended video by {shortfall:.1f}s")
-    
-    if audio.duration > video.duration:
-        audio = audio.with_duration(video.duration)
-    
-    final = video.with_audio(audio)
-    final.write_videofile(
-        output_path,
-        codec='libx264',
-        audio_codec='aac',
-        temp_audiofile='temp-audio.m4a',
-        remove_temp=True,
-        logger=None
-    )
-    
-    video.close()
-    audio.close()
-    final.close()
-    
-    return output_path
-
-
-def cleanup_temp_files(output_dir: str):
-    """Remove temporary files."""
-    patterns = ["temp*.mp3", "temp*.m4a", "temp*.wav", "temp-audio.*"]
-    
-    for pattern in patterns:
-        for f in glob.glob(os.path.join(output_dir, pattern)):
-            try:
-                os.remove(f)
-            except:
-                pass
-    
-    for f in glob.glob(os.path.join(SCRIPT_DIR, "temp*")):
-        try:
-            os.remove(f)
-        except:
-            pass
-
-
-# ============== MAIN PIPELINE ==============
-def run_pipeline(topic: str, quality: str = RENDER_QUALITY, cleanup: bool = True) -> str:
+def generate_video(topic: str, quality: str = "l") -> Optional[str]:
     """
-    Full Pipeline: Topic → Video
+    Public API for video generation.
     
-    TWO-STEP LLM ARCHITECTURE:
-    1. RAG Fetch - Get working code examples
-    2. LLM Step 1 (PromptMaker) - Generate detailed animation script
-    3. Audio Generation - Create narration audio with exact durations
-    4. LLM Step 2 (ManimEngine) - Generate Manim code from script
-    5. Render - Execute Manim
-    6. Merge - Combine audio + video + BGM
+    Args:
+        topic: Math topic to explain
+        quality: 'l' (480p), 'm' (720p), 'h' (1080p)
+        
+    Returns:
+        Path to final video, or None
     """
-    start = time.time()
-    
-    # Header
-    quality_names = {'l': '480p', 'm': '720p', 'h': '1080p'}
-    print("\n" + "═" * 60)
-    print("   🔮 PRISM Video Generator v3.1")
-    print("   Two-Step LLM Architecture")
-    print("═" * 60)
-    print(f"   📚 Topic: {topic}")
-    print(f"   🎬 Quality: {quality} ({quality_names.get(quality, '720p')})")
-    print("═" * 60)
-    
-    # ═══════════════════════════════════════════════════════════
-    # PHASE 1: RAG - Knowledge Fetch + Bespoke Database
-    # ═══════════════════════════════════════════════════════════
-    print("\n📚 PHASE 1: Loading knowledge base (RAG)...")
-    phase_start = time.time()
-    
-    # Initialize Bespoke Manim database (verified examples)
-    if BESPOKE_AVAILABLE:
-        print("   🎬 Initializing Bespoke Manim database...")
-        try:
-            initialize_bespoke_database()
-        except Exception as e:
-            print(f"   ⚠️ Bespoke init failed: {e}")
-    
-    rag = RAGEngine()
-    rag_context = rag.get_context(topic)
-    
-    rag_time = time.time() - phase_start
-    print(f"   ✅ RAG complete ({len(rag_context):,} chars, {rag_time:.1f}s)")
-    
-    # ═══════════════════════════════════════════════════════════
-    # PHASE 2: LLM STEP 1 - Prompt Maker (Animation Script)
-    # ═══════════════════════════════════════════════════════════
-    print("\n📝 PHASE 2: LLM Step 1 - PromptMaker creating animation script...")
-    phase_start = time.time()
-    
-    prompt_maker = PromptMaker()
-    animation_script = prompt_maker.generate_prompt(topic, rag_context)
-    
-    if not animation_script or not animation_script.sections:
-        print("   ❌ PromptMaker failed to create animation script")
-        return ""
-    
-    promptmaker_time = time.time() - phase_start
-    print(f"   ✅ Animation Script: {len(animation_script.sections)} sections (~{animation_script.total_duration}s)")
-    
-    # Show section details
-    for section in animation_script.sections:
-        print(f"      Section {section.get('id')}: {section.get('title')} ({section.get('type')})")
-    
-    # ═══════════════════════════════════════════════════════════
-    # PHASE 3: AUDIO - Generate narration with exact durations
-    # ═══════════════════════════════════════════════════════════
-    print("\n🎤 PHASE 3: Generating audio narration...")
-    phase_start = time.time()
-    
-    director = AudioEngine()
-    # Convert AnimationScript to VideoScript format for audio generation
-    video_script = director.generate_audio_from_script(topic, animation_script)
-    
-    if not video_script or not video_script.segments:
-        print("   ❌ Audio generation failed")
-        return ""
-    
-    audio_time = time.time() - phase_start
-    print(f"   ✅ Audio: {video_script.total_duration:.1f}s total ({audio_time:.1f}s)")
-    
-    # ═══════════════════════════════════════════════════════════
-    # PHASE 4: LLM STEP 2 - Code Generator (Manim Code)
-    # ═══════════════════════════════════════════════════════════
-    print("\n🔧 PHASE 4: LLM Step 2 - ManimEngine generating code...")
-    phase_start = time.time()
-    
-    engineer = ManimEngine(quality=quality)
-    code = engineer.generate_from_script(animation_script, video_script)
-    
-    if not code:
-        print("   ❌ Code Generator failed")
-        return ""
-    
-    codegen_time = time.time() - phase_start
-    print(f"   ✅ Code: {len(code):,} chars ({codegen_time:.1f}s)")
-    
-    # ═══════════════════════════════════════════════════════════
-    # PHASE 5: RENDER - Manim Execution (with retry)
-    # ═══════════════════════════════════════════════════════════
-    print("\n🎨 PHASE 5: Rendering video...")
-    phase_start = time.time()
-    
-    video_path = engineer.render(code, topic)
-    
-    if not video_path or not os.path.exists(video_path):
-        print(f"   ❌ Render failed. Debug: {GENERATED_SCRIPT_PATH}")
-        return ""
-    
-    render_time = time.time() - phase_start
-    print(f"   ✅ Rendered ({render_time:.1f}s)")
-    
-    # ═══════════════════════════════════════════════════════════
-    # PHASE 6: MERGE - Audio + Video + BGM
-    # ═══════════════════════════════════════════════════════════
-    print("\n🔧 PHASE 6: Merging audio + video...")
-    phase_start = time.time()
-    
-    narration = merge_audio(video_script)
-    if not narration:
-        print("   ⚠️ No narration, returning raw video")
-        return video_path
-    
-    mixed = os.path.join(video_script.output_dir, "mixed.mp3")
-    final_audio = mix_bgm(narration, mixed)
-    
-    safe_name = topic.replace(" ", "_")[:25]
-    timestamp = int(time.time())
-    final_path = os.path.join(os.path.dirname(video_path), f"PRISM_{safe_name}_{timestamp}.mp4")
-    
-    final = merge_video_audio(video_path, final_audio, final_path)
-    
-    merge_time = time.time() - phase_start
-    print(f"   ✅ Merged ({merge_time:.1f}s)")
-    
-    # ═══════════════════════════════════════════════════════════
-    # PHASE 7: CLEANUP
-    # ═══════════════════════════════════════════════════════════
-    if cleanup:
-        cleanup_temp_files(video_script.output_dir)
-        cleanup_temp_files(SCRIPT_DIR)
-    
-    # ═══════════════════════════════════════════════════════════
-    # COMPLETE
-    # ═══════════════════════════════════════════════════════════
-    elapsed = time.time() - start
-    
-    print("\n" + "═" * 60)
-    print("   🎉 VIDEO COMPLETE!")
-    print("═" * 60)
-    print(f"   📁 Output: {final}")
-    print(f"   📊 Duration: {video_script.total_duration:.0f}s")
-    print(f"   ⏱️  Total Time: {elapsed:.0f}s")
-    print(f"   📈 Breakdown (2-Step LLM Pipeline):")
-    print(f"       RAG:              {rag_time:.1f}s")
-    print(f"       LLM Step 1:       {promptmaker_time:.1f}s  (PromptMaker)")
-    print(f"       Audio Gen:        {audio_time:.1f}s")
-    print(f"       LLM Step 2:       {codegen_time:.1f}s  (CodeGenerator)")
-    print(f"       Render:           {render_time:.1f}s")
-    print(f"       Merge:            {merge_time:.1f}s")
-    print("═" * 60)
-    
-    # ═══════════════════════════════════════════════════════════
-    # AUTO-OPEN VIDEO
-    # ═══════════════════════════════════════════════════════════
-    if final and os.path.exists(final):
-        print(f"\n🎥 Opening video...")
-        try:
-            if sys.platform == "win32":
-                os.startfile(final)
-            elif sys.platform == "darwin":
-                os.system(f'open "{final}"')
-            else:
-                os.system(f'xdg-open "{final}"')
-        except Exception as e:
-            print(f"   ⚠️ Could not auto-open video: {e}")
-    
-    return final
+    return run_pipeline(topic, quality)
 
 
 # ============== CLI ==============
 def main():
-    """CLI Entry Point."""
-    print("\n" + "═" * 60)
-    print("   🔮 PRISM v3.1 - Two-Step LLM Video Generator")
-    print("   RAG → PromptMaker (Step 1) → CodeGenerator (Step 2)")
-    print("═" * 60)
+    parser = argparse.ArgumentParser(
+        description="PRISM - AI Educational Video Generator",
+        epilog="Example: python main.py \"Pythagorean Theorem\" --quality m",
+    )
+    parser.add_argument(
+        "topic",
+        type=str,
+        nargs="?",       # Make topic OPTIONAL
+        default=None,
+        help="Math topic to generate a video for (will prompt if not provided)",
+    )
+    parser.add_argument(
+        "--quality", "-q",
+        choices=["l", "m", "h"],
+        default=RENDER_QUALITY,
+        help="Render quality: l=480p, m=720p, h=1080p (default: l)",
+    )
     
-    topic = input("\n📝 Enter topic: ").strip()
+    args = parser.parse_args()
+    
+    topic = args.topic
+    
+    # Interactive prompt if no topic provided
     if not topic:
-        topic = "Quadratic Formula"
-        print(f"   Using default: {topic}")
+        print("\n" + "=" * 60)
+        print("🔮 PRISM - AI Educational Video Generator")
+        print("=" * 60)
+        print("\nAPI Usage: Groq (script) + Claude (code) = 2 calls total")
+        print("Audio: gTTS (free, no API key needed)\n")
+        topic = input("📚 Enter a math topic (e.g., Pythagorean Theorem): ").strip()
+        if not topic:
+            print("❌ No topic entered. Exiting.")
+            sys.exit(1)
     
-    print("\n🎬 Quality options:")
-    print("   l = 480p  (fastest, ~1 min)")
-    print("   m = 720p  (recommended, ~2 min)")
-    print("   h = 1080p (best, ~4 min)")
-    quality = input("Select quality [l]: ").strip().lower()
-    if quality not in ['l', 'm', 'h']:
-        quality = 'l'
+    result = run_pipeline(topic, args.quality)
     
-    video = run_pipeline(topic, quality=quality)
-    
-    if video and os.path.exists(video):
-        print(f"\n🎥 Opening video...")
-        if sys.platform == "win32":
-            os.startfile(video)
-        elif sys.platform == "darwin":
-            os.system(f'open "{video}"')
-        else:
-            os.system(f'xdg-open "{video}"')
+    if result:
+        print(f"\n🎉 Video saved to: {result}")
+        sys.exit(0)
     else:
         print("\n❌ Video generation failed.")
-
-
-# ============== API ==============
-def generate_video(topic: str, quality: str = "l", cleanup: bool = True) -> str:
-    """
-    Programmatic API for video generation.
-    
-    Args:
-        topic: Educational topic
-        quality: 'l' (480p), 'm' (720p), 'h' (1080p)
-        cleanup: Remove temp files after success
-        
-    Returns:
-        Path to generated video
-    """
-    return run_pipeline(topic, quality=quality, cleanup=cleanup)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        topic = " ".join(sys.argv[1:])
-        video = run_pipeline(topic, quality='l')
-    else:
-        main()
+    main()
